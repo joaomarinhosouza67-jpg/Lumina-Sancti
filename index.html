@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO e Compartilhamento (Open Graph para Redes Sociais e WhatsApp) -->
+  <title>Lumina Sancti | Luz dos Santos</title>
+  <meta name="description" content="Um refúgio digital dedicado a preservar e compartilhar a vida, a fé e o legado dos Santos da Igreja, com o Santo do Dia, doutores, beatos e santos jovens.">
+
+  <meta property="og:title" content="Lumina Sancti | Luz dos Santos">
+  <meta property="og:description" content="Descubra a bela trilha da santidade no cotidiano de todas as épocas através de biografias inspiradoras e do Santo do Dia.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1519817650390-64a93db51149">
+  <meta property="og:url" content="https://seusite.com">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lumina Sancti | Luz dos Santos">
+  <meta name="twitter:description" content="Descubra a bela trilha da santidade e o legado dos Santos da Igreja.">
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1519817650390-64a93db51149">
+
+  <!-- Fontes Elegantes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Chuva de meteoros no fundo do site inteiro (fica atrás de tudo) -->
+  <div id="meteor-layer" class="meteor-layer" aria-hidden="true"></div>
+
+  <!-- TELA DE INTRODUÇÃO ("Estrela da Luz": brilho > estrela > raios > nome > clarão) -->
+  <div id="intro-screen" class="intro-screen" aria-hidden="true">
+    <div id="intro-sky" class="intro-sky"></div>
+
+    <div class="intro-star-container">
+      <div id="intro-converge" class="intro-converge"></div>
+      <div class="intro-glow"></div>
+      <div class="intro-halo"></div>
+
+      <!-- Raios dourados que nascem do centro da estrela -->
+      <div class="sun-ray r1"></div>
+      <div class="sun-ray r2"></div>
+      <div class="sun-ray r3"></div>
+      <div class="sun-ray r4"></div>
+      <div class="sun-ray r5"></div>
+      <div class="sun-ray r6"></div>
+      <div class="sun-ray r7"></div>
+      <div class="sun-ray r8"></div>
+      <div class="sun-ray r9"></div>
+      <div class="sun-ray r10"></div>
+      <div class="sun-ray r11"></div>
+      <div class="sun-ray r12"></div>
+
+      <svg class="intro-star" viewBox="0 0 100 100" width="100" height="100" fill="var(--primary-color)">
+        <path d="M50 0 C52 35 65 48 100 50 C65 52 52 65 50 100 C48 65 35 52 0 50 C35 48 48 35 50 0 Z" opacity="0.9"/>
+        <path d="M50 15 C52 38 62 48 85 50 C62 52 52 62 50 85 C48 62 38 52 15 50 C38 48 48 38 50 15 Z" opacity="0.6" transform="rotate(45 50 50)"/>
+      </svg>
+    </div>
+    <div class="intro-brand">Lumina Sancti</div>
+    <div class="intro-skip-hint">Toque para pular</div>
+    <div class="intro-flash"></div>
+  </div>
+
+  <!-- Barra de Navegação Limpa -->
+  <header id="navbar" class="navbar">
+    <div class="nav-container">
+      <button id="menu-btn" class="icon-btn" aria-label="Abrir Menu">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      </button>
+      <h1 class="nav-brand">Lumina Sancti</h1>
+      <div class="nav-right-actions">
+        <!-- Botão Modo Escuro -->
+        <button id="theme-btn" class="icon-btn" aria-label="Alternar Tema" style="margin-right: 10px;">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <button id="search-btn" class="icon-btn" aria-label="Pesquisar">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        </button>
+        <button id="ai-btn" class="icon-btn" aria-label="Perguntar a uma IA sobre um santo" style="margin-left: 10px;">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.34 6.34l2.83 2.83M14.83 14.83l2.83 2.83M17.66 6.34l-2.83 2.83M9.17 14.83l-2.83 2.83"/><circle cx="12" cy="12" r="2.2" fill="currentColor" stroke="none"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Modal de Pesquisa -->
+  <div id="search-modal" class="search-modal">
+    <div class="search-modal-content">
+      <div class="search-header">
+        <h3>Pesquisar Santo ou Beato</h3>
+        <button id="close-search-btn" class="icon-btn" aria-label="Fechar Pesquisa">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="search-input-wrapper">
+        <input type="text" id="search-input" placeholder="Digite o nome do santo..." autocomplete="off">
+      </div>
+      <div id="search-results" class="search-results"></div>
+    </div>
+  </div>
+
+  <!-- Modal Perguntar a uma IA -->
+  <div id="ai-modal" class="search-modal">
+    <div class="search-modal-content">
+      <div class="search-header">
+        <h3>Perguntar a uma IA</h3>
+        <button id="close-ai-btn" class="icon-btn" aria-label="Fechar">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <p class="ai-modal-desc">Digite o nome de qualquer santo, beato, doutor da Igreja ou anjo — mesmo um que não esteja no nosso catálogo — e pergunte à IA do site. Ela só responde sobre esses temas.</p>
+      <div class="search-input-wrapper">
+        <input type="text" id="ai-input" placeholder="Nome do santo..." autocomplete="off">
+      </div>
+      <button id="ai-copy-btn" class="filter-btn active ai-copy-btn">Perguntar</button>
+      <div id="ai-feedback" class="ai-feedback" aria-live="polite"></div>
+      <div id="ai-resposta" class="ai-resposta" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <!-- Menu Lateral (Sidebar) -->
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <h2>Catálogo</h2>
+      <button id="close-menu-btn" class="icon-btn" aria-label="Fechar Menu">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="filter-btn side-filter active" data-filter="todos">Todos os Santos</button>
+      <button class="filter-btn side-filter" data-filter="sagrada-familia">Sagrada Família</button>
+      <button class="filter-btn side-filter" data-filter="arcanjos">Arcanjos</button>
+      <button class="filter-btn side-filter" data-filter="doutores">Doutores da Igreja</button>
+      <button class="filter-btn side-filter" data-filter="grandes-santos">Grandes Santos</button>
+      <button class="filter-btn side-filter" data-filter="santos-jovens">Santos Jovens</button>
+      <button class="filter-btn side-filter" data-filter="beatos">Beatos</button>
+    </nav>
+
+    <div class="sidebar-decoration">
+      <svg viewBox="0 0 100 100" width="50" height="50" fill="var(--primary-color)"><path d="M50 0 L55 45 L100 50 L55 55 L50 100 L45 55 L0 50 L45 45 Z" opacity="0.3"/></svg>
+    </div>
+  </aside>
+  <div id="overlay" class="overlay"></div>
+
+  <main id="main-content">
+
+    <!-- TELA INICIAL -->
+    <section id="view-home" class="view active">
+      <section class="hero">
+        <div class="hero-content">
+          <div class="hero-icon-container">
+            <svg class="hero-icon" viewBox="0 0 100 100" width="75" height="75" fill="var(--primary-color)">
+              <path d="M50 0 C52 35 65 48 100 50 C65 52 52 65 50 100 C48 65 35 52 0 50 C35 48 48 35 50 0 Z" opacity="0.9"/>
+              <path d="M50 15 C52 38 62 48 85 50 C62 52 52 62 50 85 C48 62 38 52 15 50 C38 48 48 38 50 15 Z" opacity="0.6" transform="rotate(45 50 50)"/>
+            </svg>
+          </div>
+          <h1 class="hero-title">Lumina Sancti</h1>
+          <p class="hero-subtitle">Luz dos Santos</p>
+          <p class="hero-quote">"A santidade não é o luxo de alguns, mas um chamado silencioso e ardente ao coração de todos nós, iluminando o mundo em cada época."</p>
+        </div>
+      </section>
+
+      <!-- Santo do Dia -->
+      <section class="santo-do-dia container reveal-on-scroll" id="santo-do-dia">
+        <!-- Conteúdo injetado via JS -->
+      </section>
+
+      <!-- Sobre o Lumina Sancti -->
+      <section class="about container reveal-on-scroll">
+        <h2 class="section-title">Sobre o Lumina Sancti</h2>
+        <div class="title-divider"></div>
+        <p class="about-text">
+          O <strong>Lumina Sancti</strong> (Luz dos Santos) é um refúgio digital dedicado a preservar e compartilhar a vida, a fé e o legado daqueles que deixaram um rastro inextinguível de luz na história. Este espaço foi criado para revelar que a santidade não é algo distante, mas uma trilha bela, possível e acessível no cotidiano de qualquer época ou idade.
+        </p>
+      </section>
+
+      <section class="catalog container reveal-on-scroll" id="materias">
+        <div class="filters-container">
+          <button class="filter-btn active" data-filter="todos">Todos</button>
+          <button class="filter-btn" data-filter="sagrada-familia">Sagrada Família</button>
+          <button class="filter-btn" data-filter="arcanjos">Arcanjos</button>
+          <button class="filter-btn" data-filter="doutores">Doutores</button>
+          <button class="filter-btn" data-filter="grandes-santos">Grandes Santos</button>
+          <button class="filter-btn" data-filter="santos-jovens">Santos Jovens</button>
+          <button class="filter-btn" data-filter="beatos">Beatos</button>
+        </div>
+
+        <div id="cards-grid" class="cards-grid">
+          <!-- Cartões injetados via JS -->
+        </div>
+      </section>
+    </section>
+
+    <!-- TELA DE BIOGRAFIA -->
+    <section id="view-detail" class="view">
+      <div class="container bio-container" id="bio-container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <button id="btn-back" class="btn-back">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Voltar para o início
+          </button>
+          <!-- Botão Compartilhar -->
+          <button id="btn-share" class="icon-btn" aria-label="Compartilhar" style="color: var(--primary-color);">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          </button>
+        </div>
+        <article id="bio-article" class="bio-article">
+          <!-- Biografia injetada via JS -->
+        </article>
+      </div>
+    </section>
+
+  </main>
+
+  <svg style="display: none;">
+    <defs>
+      <g id="icon-aureola">
+        <circle cx="12" cy="8" r="6" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-dasharray="2 2" opacity="0.8"/>
+        <path d="M12 14c-4.4 0-8 2.7-8 6v2h16v-2c0-3.3-3.6-6-8-6z" fill="var(--primary-color)" opacity="0.3"/>
+      </g>
+    </defs>
+  </svg>
+
+  <script src="script.js"></script>
+</body>
+</html>
