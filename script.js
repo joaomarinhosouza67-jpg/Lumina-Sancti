@@ -776,8 +776,867 @@ const santosData = [
       <p>Ordenado padre jesuíta em meio à violenta perseguição anticlerical no México, Miguel Pro exercia seu ministério clandestinamente, disfarçando-se das mais variadas formas para celebrar missas, batizados e confissões sem ser descoberto pelas autoridades — muitas vezes com bom humor apesar do perigo constante.</p>
       <p>Acusado injustamente de um atentado que não cometeu, foi condenado à morte sem julgamento formal. Diante do pelotão de fuzilamento, recusou a venda nos olhos, abriu os braços em forma de cruz e gritou "Viva Cristo Rei!" no instante de sua morte, em 1927. Foi beatificado em 1988.</p>
     `
+  },
+
+  // ================================================================
+  //  GRANDE EXPANSÃO DO CALENDÁRIO — para o Santo do Dia ter uma
+  //  data real coberta na maior parte do ano, não só uma vez a cada
+  //  tantos dias. Organizado por mês.
+  // ================================================================
+
+  // ---------------- JANEIRO ----------------
+  {
+    id: 'basilio-magno',
+    nome: 'São Basílio Magno',
+    wiki: 'Basílio de Cesareia',
+    categoria: ['doutores'],
+    festa: '01-02',
+    resumo: 'Bispo grego que organizou a vida monástica oriental e defendeu a fé diante dos arianos.',
+    texto: `<p>Um dos grandes Padres da Igreja do Oriente, Basílio organizou a vida monástica ao redor de comunidades dedicadas à oração e ao trabalho, além de fundar um enorme complexo de assistência aos pobres e doentes em Cesareia. Defendeu com firmeza a divindade de Cristo contra os arianos e é considerado Doutor da Igreja.</p>`
+  },
+  {
+    id: 'isabel-ana-seton',
+    nome: 'Santa Isabel Ana Seton',
+    wiki: 'Elizabeth Ann Seton',
+    categoria: ['grandes-santos'],
+    festa: '01-04',
+    resumo: 'Viúva americana que fundou as primeiras escolas paroquiais dos Estados Unidos.',
+    texto: `<p>Nascida em uma família protestante de Nova York, converteu-se ao catolicismo após enviuvar jovem e com cinco filhos para criar. Fundou a primeira congregação de irmãs religiosas nascida nos Estados Unidos e organizou o sistema de escolas paroquiais católicas do país. Foi a primeira pessoa nascida nos Estados Unidos a ser canonizada.</p>`
+  },
+  {
+    id: 'andre-bessette',
+    nome: 'São André Bessette',
+    wiki: 'André Bessette',
+    categoria: ['grandes-santos'],
+    festa: '01-06',
+    resumo: 'Irmão leigo canadense, porteiro de convento conhecido por curas atribuídas à sua oração.',
+    texto: `<p>De saúde frágil e pouca instrução, foi aceito como irmão leigo pela Congregação da Santa Cruz apenas para os serviços mais simples — passou décadas como porteiro de colégio. Sua fé simples e devoção a São José atraíam multidões em busca de cura, o que o levou a construir o Oratório de São José em Montreal, hoje um dos maiores santuários do mundo.</p>`
+  },
+  {
+    id: 'raimundo-penafort',
+    nome: 'São Raimundo de Peñafort',
+    wiki: 'Raimundo de Penhafort',
+    categoria: ['grandes-santos'],
+    festa: '01-07',
+    resumo: 'Frade dominicano espanhol que organizou o direito canônico da Igreja.',
+    texto: `<p>Jurista de formação, entrou para os dominicanos já adulto e dedicou-se a organizar e sistematizar as leis da Igreja, produzindo uma coletânea de decretais que serviu de referência por séculos. Também se dedicou à conversão pacífica de muçulmanos e judeus na Espanha, incentivando o estudo de línguas para o diálogo.</p>`
+  },
+  {
+    id: 'hilario-poitiers',
+    nome: 'Santo Hilário de Poitiers',
+    wiki: 'Hilário de Poitiers',
+    categoria: ['doutores'],
+    festa: '01-13',
+    resumo: 'Bispo francês exilado por defender a divindade de Cristo contra o arianismo.',
+    texto: `<p>Convertido do paganismo já adulto após estudar as Escrituras por conta própria, tornou-se bispo de Poitiers e um dos maiores defensores da fé em Cristo verdadeiro Deus, o que lhe custou anos de exílio imposto pelo imperador ariano Constâncio II. É considerado "Martelo dos Arianos" e Doutor da Igreja.</p>`
+  },
+  {
+    id: 'antao-grande',
+    nome: 'Santo Antão, o Grande',
+    wiki: 'Antão, o Grande',
+    categoria: ['grandes-santos'],
+    festa: '01-17',
+    resumo: 'O pai dos monges, que se retirou ao deserto egípcio em busca de Deus.',
+    texto: `<p>Depois de ouvir na missa a passagem em que Jesus pede para vender tudo e segui-lo, Antão distribuiu toda a sua herança aos pobres e retirou-se para o deserto do Egito, vivendo décadas em solidão, oração e combate espiritual. Discípulos foram se juntando a ele, dando origem à vida monástica cristã. É invocado como protetor dos animais.</p>`
+  },
+  {
+    id: 'ines-roma',
+    nome: 'Santa Inês de Roma',
+    wiki: 'Inês de Roma',
+    categoria: ['santos-jovens'],
+    festa: '01-21',
+    resumo: 'Jovem mártir romana que preferiu a morte a trair sua consagração a Cristo.',
+    texto: `<p>Ainda menina, consagrou sua virgindade a Cristo e recusou vários pretendentes de família nobre, o que a levou a ser denunciada como cristã durante as perseguições romanas. Enfrentou o martírio com serenidade impressionante para sua pouca idade, tornando-se, desde os primeiros séculos do cristianismo, um dos símbolos mais fortes de pureza e fidelidade.</p>`
+  },
+  {
+    id: 'conversao-paulo',
+    nome: 'Conversão de São Paulo Apóstolo',
+    wiki: 'Paulo de Tarso',
+    categoria: ['grandes-santos'],
+    festa: '01-25',
+    resumo: 'O perseguidor dos cristãos derrubado pela luz de Cristo no caminho de Damasco.',
+    texto: `<p>Fariseu zeloso, Saulo de Tarso perseguia ferozmente os primeiros cristãos até ser derrubado por uma luz do céu no caminho de Damasco, ouvindo a voz de Cristo perguntar "por que me persegues?". Cego por três dias, foi batizado e tornou-se Paulo, o maior missionário da história do cristianismo, percorrendo o Império Romano e escrevendo boa parte do Novo Testamento.</p>`
+  },
+  {
+    id: 'angela-merici',
+    nome: 'Santa Ângela Merici',
+    wiki: 'Ângela Merici',
+    categoria: ['grandes-santos'],
+    festa: '01-27',
+    resumo: 'Fundadora da primeira ordem dedicada à educação de meninas.',
+    texto: `<p>Órfã ainda jovem, Ângela dedicou-se a leigos consagrados dedicados à oração e ao ensino, fundando a Companhia de Santa Úrsula, primeira instituição voltada especificamente para a educação de meninas na Europa. Sua visão pioneira de que mulheres poderiam viver consagradas fora da clausura tradicional influenciou gerações de congregações educadoras.</p>`
+  },
+
+  // ---------------- FEVEREIRO ----------------
+  {
+    id: 'sao-bras',
+    nome: 'São Brás',
+    wiki: 'Brás de Sebaste',
+    categoria: ['grandes-santos'],
+    festa: '02-03',
+    resumo: 'Bispo e médico mártir, invocado como protetor da garganta.',
+    texto: `<p>Médico antes de se tornar bispo, Brás retirou-se para viver como eremita numa gruta, onde os animais selvagens o procuravam para serem curados. Preso durante as perseguições romanas, é lembrado por ter salvado, a caminho da prisão, uma criança que engasgava com uma espinha de peixe — por isso é invocado até hoje contra males de garganta.</p>`
+  },
+  {
+    id: 'santa-agueda',
+    nome: 'Santa Águeda',
+    wiki: 'Ágata da Sicília',
+    categoria: ['santos-jovens'],
+    festa: '02-05',
+    resumo: 'Jovem siciliana martirizada por recusar as investidas de um governador romano.',
+    texto: `<p>De família nobre e consagrada a Deus desde jovem, Águeda foi perseguida por um governador romano que, rejeitado por ela, a denunciou como cristã durante a perseguição de Décio. Suportou torturas terríveis sem renegar a fé. É padroeira de enfermeiras e, por seu martírio, invocada contra doenças do peito.</p>`
+  },
+  {
+    id: 'paulo-miki',
+    nome: 'São Paulo Miki e Companheiros',
+    wiki: 'Paulo Miki',
+    categoria: ['grandes-santos'],
+    festa: '02-06',
+    resumo: 'Jesuíta japonês crucificado com 25 companheiros durante a perseguição aos cristãos no Japão.',
+    texto: `<p>Jovem seminarista jesuíta japonês, Paulo Miki pregava com eloquência mesmo a caminho do próprio martírio: foi crucificado em Nagasaki ao lado de outros 25 cristãos — padres, religiosos e leigos, entre eles crianças — durante a violenta perseguição ao cristianismo no Japão de 1597. Do alto da cruz, ainda pregou perdão aos seus algozes.</p>`
+  },
+  {
+    id: 'josefina-bakhita',
+    nome: 'Santa Josefina Bakhita',
+    wiki: 'Josefina Bakhita',
+    categoria: ['grandes-santos'],
+    festa: '02-08',
+    resumo: 'Sequestrada e escravizada na infância no Sudão, tornou-se freira na Itália.',
+    texto: `<p>Sequestrada ainda menina no Sudão e vendida como escrava, sofreu anos de maus-tratos até ser levada à Itália, onde finalmente conheceu a liberdade e a fé cristã. Tornou-se religiosa canossiana, vivendo o resto da vida com uma serenidade que impressionava a todos, apesar do sofrimento vivido. É padroeira do Sudão e símbolo da luta contra o tráfico de pessoas.</p>`
+  },
+  {
+    id: 'cirilo-metodio',
+    nome: 'São Cirilo e São Metódio',
+    wiki: 'Cirilo e Metódio',
+    categoria: ['grandes-santos'],
+    festa: '02-14',
+    resumo: 'Irmãos missionários que evangelizaram os povos eslavos e criaram seu alfabeto.',
+    texto: `<p>Irmãos gregos enviados como missionários aos povos eslavos, criaram um alfabeto próprio para traduzir a Bíblia e a liturgia à língua do povo — origem do alfabeto cirílico usado até hoje. Enfrentaram forte resistência do clero que insistia no uso exclusivo do latim, mas seu trabalho lançou as bases da fé e da cultura escrita entre os eslavos. São copadroeiros da Europa.</p>`
+  },
+  {
+    id: 'pedro-damiao',
+    nome: 'São Pedro Damião',
+    wiki: 'Pedro Damião',
+    categoria: ['doutores'],
+    festa: '02-21',
+    resumo: 'Monge e cardeal italiano que trabalhou pela reforma da vida do clero.',
+    texto: `<p>Órfão criado com dureza por um irmão mais velho, encontrou na vida monástica beneditina o rigor espiritual que buscava. Tornou-se conselheiro de vários papas, empenhando-se incansavelmente na reforma da disciplina e da moral do clero de sua época, mesmo quando isso significava enfrentar bispos e cardeais poderosos. Foi declarado Doutor da Igreja.</p>`
+  },
+  {
+    id: 'policarpo',
+    nome: 'São Policarpo',
+    wiki: 'Policarpo de Esmirna',
+    categoria: ['grandes-santos'],
+    festa: '02-23',
+    resumo: 'Discípulo do apóstolo João, bispo mártir queimado por recusar negar a Cristo aos 86 anos.',
+    texto: `<p>Ainda jovem, foi discípulo direto do apóstolo João, tornando-se elo vivo entre a geração apostólica e a Igreja seguinte como bispo de Esmirna. Já idoso, foi preso durante uma perseguição e, ao ser pressionado a amaldiçoar Cristo para salvar a vida, respondeu: "Há oitenta e seis anos o sirvo, e ele nunca me fez mal algum — como posso blasfemar contra meu Rei e Salvador?" Foi queimado vivo.</p>`
+  },
+
+  // ---------------- MARÇO ----------------
+  {
+    id: 'cassimiro',
+    nome: 'São Cassimiro',
+    wiki: 'Cassimiro da Polônia',
+    categoria: ['santos-jovens'],
+    festa: '03-04',
+    resumo: 'Príncipe polonês que recusou o trono e a guerra em nome da fé.',
+    texto: `<p>Filho do rei da Polônia, recusou-se a liderar uma invasão militar que considerava injusta, preferindo a oração à ambição política. Viveu com simplicidade apesar do berço real, dedicando-se aos pobres e à devoção mariana, e morreu ainda jovem, de tuberculose. É padroeiro da Polônia e da Lituânia.</p>`
+  },
+  {
+    id: 'perpetua-felicidade',
+    nome: 'Santas Perpétua e Felicidade',
+    wiki: 'Perpétua e Felicidade',
+    categoria: ['grandes-santos'],
+    festa: '03-07',
+    resumo: 'Jovem nobre e sua escrava, martirizadas juntas na arena de Cartago.',
+    texto: `<p>Perpétua, jovem mãe de família nobre, e Felicidade, sua escrava grávida, foram presas juntas em Cartago por serem cristãs e enfrentaram a arena lado a lado, recusando renegar a fé mesmo diante das súplicas do próprio pai de Perpétua. O relato de seu martírio, em parte escrito pela própria Perpétua na prisão, é um dos textos cristãos mais antigos que chegaram até hoje.</p>`
+  },
+  {
+    id: 'joao-de-deus',
+    nome: 'São João de Deus',
+    wiki: 'João de Deus',
+    categoria: ['grandes-santos'],
+    festa: '03-08',
+    resumo: 'Ex-soldado português que dedicou a vida ao cuidado dos doentes pobres.',
+    texto: `<p>Depois de anos como soldado e uma vida errante, uma pregação de João de Ávila o levou a uma conversão radical. Passou a recolher e cuidar pessoalmente dos doentes mais pobres e abandonados das ruas, fundando hospitais que deram origem à Ordem Hospitaleira de São João de Deus, hoje presente em dezenas de países. É padroeiro dos hospitais e enfermeiros.</p>`
+  },
+  {
+    id: 'francisca-romana',
+    nome: 'Santa Francisca Romana',
+    wiki: 'Francisca Romana',
+    categoria: ['grandes-santos'],
+    festa: '03-09',
+    resumo: 'Nobre romana que conciliou a vida de esposa e mãe com intensa caridade e mística.',
+    texto: `<p>Casada ainda adolescente contra sua vontade, tornou-se com o tempo uma esposa e mãe dedicada, sem abandonar a vida espiritual intensa: relata-se que via seu anjo da guarda constantemente. Fundou uma comunidade de mulheres leigas dedicadas à oração e à assistência aos pobres de Roma, mostrando que a santidade cabe também na vida familiar comum.</p>`
+  },
+  {
+    id: 'sao-patricio',
+    nome: 'São Patrício',
+    wiki: 'Patrício da Irlanda',
+    categoria: ['grandes-santos'],
+    festa: '03-17',
+    resumo: 'Escravizado ainda jovem na Irlanda, voltou como missionário e a converteu ao cristianismo.',
+    texto: `<p>Sequestrado por piratas irlandeses aos dezesseis anos e vendido como escravo pastor de ovelhas, Patrício viveu anos de solidão que aprofundaram sua fé. Conseguiu fugir, mas anos depois sentiu o chamado de retornar como missionário à própria terra de seu cativeiro, evangelizando praticamente toda a Irlanda. É padroeiro do país e sua festa é celebrada por irlandeses no mundo inteiro.</p>`
+  },
+  {
+    id: 'cirilo-jerusalem',
+    nome: 'São Cirilo de Jerusalém',
+    wiki: 'Cirilo de Jerusalém',
+    categoria: ['doutores'],
+    festa: '03-18',
+    resumo: 'Bispo de Jerusalém, exilado três vezes por defender a fé ortodoxa contra os arianos.',
+    texto: `<p>Bispo da cidade santa de Jerusalém, Cirilo dedicou-se sobretudo à instrução dos catecúmenos, deixando catequeses que são hoje fonte preciosa sobre a fé e a liturgia dos primeiros séculos. Sua fidelidade à doutrina ortodoxa lhe custou três exílios impostos por facções arianas, mas ele sempre retornou à sua sé. É Doutor da Igreja.</p>`
+  },
+  {
+    id: 'turibio-mogrovejo',
+    nome: 'São Turíbio de Mogrovejo',
+    wiki: 'Turíbio de Mogrovejo',
+    categoria: ['grandes-santos'],
+    festa: '03-23',
+    resumo: 'Bispo espanhol que percorreu a pé o Peru colonial evangelizando e defendendo os indígenas.',
+    texto: `<p>Jurista leigo enviado inesperadamente como arcebispo de Lima, Turíbio percorreu a cavalo e a pé, por décadas, um território imenso do Peru colonial, aprendendo línguas indígenas e denunciando os abusos dos colonizadores contra a população nativa. Batizou, segundo a tradição, futuros santos como Rosa de Lima e Martín de Porres.</p>`
+  },
+
+  // ---------------- ABRIL ----------------
+  {
+    id: 'francisco-paula',
+    nome: 'São Francisco de Paula',
+    wiki: 'Francisco de Paula',
+    categoria: ['grandes-santos'],
+    festa: '04-02',
+    resumo: 'Eremita italiano fundador dos Mínimos, famoso por atravessar o mar sobre a própria capa.',
+    texto: `<p>Viveu ainda menino como eremita numa gruta, dando início a uma vida de austeridade radical que atraiu discípulos e deu origem à Ordem dos Mínimos. A tradição popular conta que, recusado por um barqueiro, atravessou o Estreito de Messina sobre sua própria capa estendida na água. Tornou-se conselheiro espiritual de reis franceses.</p>`
+  },
+  {
+    id: 'isidoro-sevilha',
+    nome: 'Santo Isidoro de Sevilha',
+    wiki: 'Isidoro de Sevilha',
+    categoria: ['doutores'],
+    festa: '04-04',
+    resumo: 'Bispo espanhol que compilou todo o saber de seu tempo em uma enciclopédia.',
+    texto: `<p>Um dos últimos grandes eruditos do mundo antigo, Isidoro escreveu as "Etimologias", uma vasta enciclopédia que reuniu e preservou o conhecimento greco-romano durante a Idade Média, quando tantas obras antigas se perdiam. Como bispo de Sevilha, também se dedicou à organização da liturgia hispânica. É considerado, por sua obra, patrono da internet.</p>`
+  },
+  {
+    id: 'vicente-ferrer',
+    nome: 'São Vicente Ferrer',
+    wiki: 'Vicente Ferrer',
+    categoria: ['grandes-santos'],
+    festa: '04-05',
+    resumo: 'Frade dominicano espanhol, pregador itinerante que percorreu a Europa chamando à conversão.',
+    texto: `<p>Dominicano de eloquência extraordinária, Vicente Ferrer passou os últimos vinte anos de vida percorrendo a pé Espanha, França, Itália e Suíça, pregando ao ar livre para multidões sobre a conversão e o juízo final. Relata-se que, apesar de pregar apenas em valenciano, era compreendido por ouvintes de línguas diferentes.</p>`
+  },
+  {
+    id: 'joao-batista-lasalle',
+    nome: 'São João Batista de La Salle',
+    wiki: 'João Batista de La Salle',
+    categoria: ['grandes-santos'],
+    festa: '04-07',
+    resumo: 'Padre francês que fundou escolas gratuitas para meninos pobres.',
+    texto: `<p>Sacerdote de família nobre, renunciou a benefícios eclesiásticos e à própria fortuna para se dedicar inteiramente à educação de meninos pobres, criando um método de ensino em turmas (em vez de aulas individuais) que se tornaria padrão nas escolas. Fundou os Irmãos das Escolas Cristãs. É considerado patrono dos professores.</p>`
+  },
+  {
+    id: 'estanislau',
+    nome: 'Santo Estanislau',
+    wiki: 'Estanislau de Szczepanów',
+    categoria: ['grandes-santos'],
+    festa: '04-11',
+    resumo: 'Bispo polonês martirizado pelo próprio rei por denunciar suas injustiças.',
+    texto: `<p>Bispo de Cracóvia conhecido por sua coragem em denunciar publicamente as injustiças cometidas pelo rei Boleslau II, chegando a excomungá-lo. Em represália, foi morto pelo próprio rei enquanto celebrava a missa. Tornou-se símbolo da liberdade da Igreja diante do poder político e é padroeiro da Polônia.</p>`
+  },
+  {
+    id: 'anselmo',
+    nome: 'Santo Anselmo',
+    wiki: 'Anselmo de Cantuária',
+    categoria: ['doutores'],
+    festa: '04-21',
+    resumo: 'Monge beneditino italiano, considerado o pai da filosofia escolástica.',
+    texto: `<p>Monge beneditino que se tornou arcebispo de Cantuária, Anselmo é lembrado como pioneiro do método escolástico, buscando compreender racionalmente as verdades da fé — resumiu sua busca no lema "fé em busca de entendimento". Enfrentou dois exílios por defender a independência da Igreja diante dos reis ingleses.</p>`
+  },
+  {
+    id: 'fidelis-sigmaringen',
+    nome: 'São Fidélis de Sigmaringen',
+    wiki: 'Fidélis de Sigmaringen',
+    categoria: ['grandes-santos'],
+    festa: '04-24',
+    resumo: 'Advogado alemão que se tornou frade capuchinho e missionário mártir.',
+    texto: `<p>Advogado brilhante e bem-sucedido, Fidélis abandonou a carreira ao perceber a corrupção que via nos tribunais, tornando-se frade capuchinho dedicado aos pobres. Enviado como missionário para reconciliar protestantes calvinistas com a Igreja na Suíça, foi emboscado e morto por um grupo hostil à sua pregação.</p>`
+  },
+  {
+    id: 'marcos-evangelista',
+    nome: 'São Marcos Evangelista',
+    wiki: 'Marcos, o Evangelista',
+    categoria: ['grandes-santos'],
+    festa: '04-25',
+    resumo: 'Autor do segundo Evangelho, discípulo de Pedro e fundador da Igreja de Alexandria.',
+    texto: `<p>Companheiro de Paulo, Barnabé e, sobretudo, intérprete de Pedro em Roma, Marcos registrou por escrito as pregações do apóstolo, dando origem ao Evangelho mais antigo do Novo Testamento. Tradição forte o identifica como fundador da Igreja de Alexandria, no Egito, onde teria sido martirizado. É representado por um leão alado e é padroeiro de Veneza.</p>`
+  },
+
+  // ---------------- MAIO ----------------
+  {
+    id: 'jose-operario',
+    nome: 'São José Operário',
+    wiki: 'José de Nazaré',
+    categoria: ['sagrada-familia'],
+    festa: '05-01',
+    resumo: 'A mesma figura de São José, celebrada nesta data como padroeiro dos trabalhadores.',
+    texto: `<p>Instituída pelo Papa Pio XII em 1955, esta segunda festa de São José no calendário — no Dia do Trabalhador — celebra especificamente sua dedicação ao trabalho manual como carpinteiro em Nazaré, apresentando-o como modelo e protetor de todos os operários e trabalhadores do mundo.</p>`
+  },
+  {
+    id: 'atanasio',
+    nome: 'Santo Atanásio',
+    wiki: 'Atanásio de Alexandria',
+    categoria: ['doutores'],
+    festa: '05-02',
+    resumo: 'Bispo de Alexandria, incansável defensor da divindade de Cristo contra o arianismo.',
+    texto: `<p>Ainda jovem diácono, participou do Concílio de Niceia defendendo que Cristo é verdadeiramente Deus, contra a heresia ariana que negava isso. Como bispo de Alexandria, foi exilado cinco vezes por diferentes imperadores por sua firmeza doutrinal, chegando a passar anos escondido no deserto entre monges. É um dos maiores Doutores da Igreja oriental.</p>`
+  },
+  {
+    id: 'filipe-tiago',
+    nome: 'São Filipe e São Tiago Apóstolos',
+    wiki: 'Filipe, o Apóstolo',
+    categoria: ['grandes-santos'],
+    festa: '05-03',
+    resumo: 'Dois dos doze apóstolos de Jesus, celebrados juntos desde a Antiguidade.',
+    texto: `<p>Filipe foi quem apresentou Natanael a Jesus e, na Última Ceia, pediu a Cristo: "Mostra-nos o Pai, e isso nos basta" — recebendo a resposta de que quem vê Jesus vê o Pai. Tiago, chamado "o Menor", liderou a Igreja de Jerusalém e é tradicionalmente identificado como autor da Carta de Tiago. Ambos deram a vida pregando o Evangelho após o Pentecostes.</p>`
+  },
+  {
+    id: 'matias-apostolo',
+    nome: 'Santo Matias Apóstolo',
+    wiki: 'Matias, o Apóstolo',
+    categoria: ['grandes-santos'],
+    festa: '05-14',
+    resumo: 'Escolhido por sorteio para substituir Judas Iscariotes entre os doze apóstolos.',
+    texto: `<p>Segundo os Atos dos Apóstolos, depois da traição e morte de Judas Iscariotes, a comunidade cristã escolheu por sorteio, entre discípulos que haviam acompanhado Jesus desde o início, quem completaria novamente o número de doze apóstolos — e a sorte recaiu sobre Matias. A tradição situa sua pregação e martírio na região da atual Geórgia.</p>`
+  },
+  {
+    id: 'isidro-lavrador',
+    nome: 'Santo Isidro Lavrador',
+    wiki: 'Isidro Lavrador',
+    categoria: ['grandes-santos'],
+    festa: '05-15',
+    resumo: 'Camponês espanhol conhecido por sua vida de oração constante enquanto trabalhava a terra.',
+    texto: `<p>Trabalhador rural humilde em Madri, Isidro era conhecido por rezar continuamente enquanto lavrava a terra, e relatos populares contam que anjos o ajudavam no arado enquanto ele orava. Casado com Santa Maria da Cabeça, viveu uma vida simples de trabalho, oração e caridade com os mais pobres. É padroeiro dos agricultores.</p>`
+  },
+  {
+    id: 'bernardino-sena',
+    nome: 'São Bernardino de Sena',
+    wiki: 'Bernardino de Sena',
+    categoria: ['grandes-santos'],
+    festa: '05-20',
+    resumo: 'Frade franciscano italiano famoso por sua pregação e devoção ao nome de Jesus.',
+    texto: `<p>Depois de cuidar de doentes durante uma epidemia de peste, contraiu a própria doença e, ao se recuperar, decidiu entrar para os franciscanos. Tornou-se um dos maiores pregadores populares de seu tempo, difundindo a devoção às iniciais "IHS" (nome de Jesus em grego) como símbolo de reconciliação entre famílias e cidades rivais.</p>`
+  },
+  {
+    id: 'beda-veneravel',
+    nome: 'São Beda, o Venerável',
+    wiki: 'Beda, o Venerável',
+    categoria: ['doutores'],
+    festa: '05-25',
+    resumo: 'Monge inglês que escreveu a primeira grande história da Igreja na Inglaterra.',
+    texto: `<p>Entregue ainda menino a um mosteiro na Nortúmbria, Beda praticamente nunca saiu dali, dedicando a vida inteira ao estudo, ao ensino e à escrita. Sua "História Eclesiástica do Povo Inglês" é a principal fonte sobre os primeiros séculos do cristianismo na Inglaterra. Foi também um dos primeiros a popularizar a contagem de anos a partir do nascimento de Cristo.</p>`
+  },
+  {
+    id: 'filipe-neri',
+    nome: 'São Filipe Néri',
+    wiki: 'Filipe Néri',
+    categoria: ['grandes-santos'],
+    festa: '05-26',
+    resumo: 'O "santo da alegria", que evangelizava Roma com bom humor e brincadeiras.',
+    texto: `<p>Conhecido por seu jeito bem-humorado e brincalhão, Filipe Néri evangelizava os jovens de Roma reunindo-os para orações, música e passeios, convencido de que a alegria era caminho para a santidade, não obstáculo. Fundou o Oratório, congregação de padres seculares dedicados à formação espiritual através de encontros informais. É padroeiro de Roma e do humor.</p>`
+  },
+
+  // ---------------- JUNHO ----------------
+  {
+    id: 'justino-martir',
+    nome: 'São Justino Mártir',
+    wiki: 'Justino, o Mártir',
+    categoria: ['grandes-santos'],
+    festa: '06-01',
+    resumo: 'Filósofo pagão convertido, primeiro grande apologista cristão diante da cultura grega.',
+    texto: `<p>Filósofo grego que peregrinou por diversas escolas de pensamento em busca da verdade, encontrou-a finalmente no cristianismo através do encontro com um ancião cristão. Continuou vestindo o manto de filósofo, agora para defender e explicar a fé cristã à cultura greco-romana em suas "Apologias". Foi decapitado em Roma por se recusar a sacrificar aos deuses pagãos.</p>`
+  },
+  {
+    id: 'carlos-lwanga',
+    nome: 'São Carlos Lwanga e Companheiros',
+    wiki: 'Carlos Lwanga',
+    categoria: ['santos-jovens'],
+    festa: '06-03',
+    resumo: 'Jovens mártires ugandenses, queimados vivos por se recusarem a abandonar a fé.',
+    texto: `<p>Pajens da corte do rei de Buganda, Carlos Lwanga e um grupo de outros jovens cristãos foram condenados à morte por recusarem tanto abandonar sua fé quanto ceder às investidas do próprio rei. Muitos foram queimados vivos ainda adolescentes, enfrentando o martírio com uma coragem que impressionou toda a região e impulsionou o crescimento do cristianismo na África.</p>`
+  },
+  {
+    id: 'bonifacio',
+    nome: 'Santo Bonifácio',
+    wiki: 'Bonifácio de Mogúncia',
+    categoria: ['grandes-santos'],
+    festa: '06-05',
+    resumo: 'Monge inglês, "Apóstolo da Alemanha", martirizado já idoso evangelizando povos germânicos.',
+    texto: `<p>Monge beneditino inglês que dedicou décadas a evangelizar os povos germânicos, organizando dioceses e mosteiros por toda a região. Ficou famoso por derrubar pessoalmente um carvalho sagrado dos pagãos em Geismar sem que nenhum raio divino o impedisse, provocando muitas conversões. Foi morto já idoso por um grupo hostil enquanto aguardava um grupo de catecúmenos para o crisma.</p>`
+  },
+  {
+    id: 'barnabe-apostolo',
+    nome: 'São Barnabé Apóstolo',
+    wiki: 'Barnabé',
+    categoria: ['grandes-santos'],
+    festa: '06-11',
+    resumo: 'Companheiro de Paulo nas primeiras viagens missionárias, chamado apóstolo pela tradição.',
+    texto: `<p>Levita de Chipre que vendeu suas terras para colocar tudo aos pés dos apóstolos, Barnabé foi quem apresentou o recém-convertido Paulo à comunidade cristã de Jerusalém, ainda desconfiada dele. Tornou-se seu companheiro nas primeiras grandes viagens missionárias, sendo chamado de "apóstolo" mesmo sem ter feito parte do grupo original dos doze.</p>`
+  },
+  {
+    id: 'luis-gonzaga',
+    nome: 'São Luís Gonzaga',
+    wiki: 'Luís Gonzaga',
+    categoria: ['santos-jovens'],
+    festa: '06-21',
+    resumo: 'Jovem nobre italiano que renunciou ao título de marquês para servir os doentes de peste.',
+    texto: `<p>Herdeiro de um marquesado italiano, Luís renunciou à sucessão e entrou para os jesuítas ainda adolescente, contra a vontade do pai. Durante uma epidemia em Roma, dedicou-se a carregar e cuidar pessoalmente de doentes moribundos recolhidos das ruas, contraindo a doença que o matou aos 23 anos. É padroeiro da juventude.</p>`
+  },
+  {
+    id: 'tomas-more',
+    nome: 'São Tomás More',
+    wiki: 'Tomás Morus',
+    categoria: ['grandes-santos'],
+    festa: '06-22',
+    resumo: 'Chanceler da Inglaterra, decapitado por Henrique VIII por não aceitar o rei como chefe da Igreja.',
+    texto: `<p>Advogado, escritor e chanceler do rei Henrique VIII, Tomás More foi um dos homens mais respeitados de seu tempo. Renunciou ao cargo e depois foi preso por se recusar a jurar lealdade ao rei como novo chefe da Igreja na Inglaterra, negando validade ao divórcio real. Subiu ao cadafalso dizendo morrer "bom servo do rei, mas primeiro de Deus".</p>`
+  },
+  {
+    id: 'nascimento-joao-batista',
+    nome: 'Nascimento de São João Batista',
+    wiki: 'João Batista',
+    categoria: ['grandes-santos'],
+    festa: '06-24',
+    resumo: 'O precursor de Cristo, que "saltou de alegria" no ventre de sua mãe diante de Maria.',
+    texto: `<p>Filho de Isabel e Zacarias, concebido já na velhice de seus pais como sinal do poder de Deus, João é o único santo, além de Jesus e Maria, cujo nascimento a Igreja celebra com festa própria — por ter sido santificado ainda no ventre materno, quando "saltou de alegria" ao ouvir a saudação de Maria grávida. Tornou-se o profeta que preparou o caminho do Messias.</p>`
+  },
+  {
+    id: 'ireneu-lyon',
+    nome: 'Santo Ireneu de Lyon',
+    wiki: 'Ireneu de Lyon',
+    categoria: ['doutores'],
+    festa: '06-28',
+    resumo: 'Bispo grego radicado na Gália, grande combatente das heresias gnósticas.',
+    texto: `<p>Discípulo de Policarpo, que por sua vez fora discípulo do apóstolo João, Ireneu tornou-se bispo de Lyon, na Gália, e dedicou sua obra "Contra as Heresias" a refutar sistematicamente o gnosticismo, defendendo a unidade da fé transmitida pelos apóstolos. Trabalhou também pela paz entre Roma e as Igrejas do Oriente. Foi declarado Doutor da Igreja em 2022, com o título de "Doutor da Unidade".</p>`
+  },
+  {
+    id: 'pedro-paulo-apostolos',
+    nome: 'São Pedro e São Paulo Apóstolos',
+    wiki: 'Pedro (apóstolo)',
+    categoria: ['grandes-santos'],
+    festa: '06-29',
+    resumo: 'As duas maiores colunas da Igreja primitiva, celebradas juntos desde os primeiros séculos.',
+    texto: `<p>Pedro, o pescador que Jesus chamou de "rocha" sobre a qual construiria sua Igreja, e Paulo, o perseguidor convertido em maior missionário, são celebrados na mesma data por serem, juntos, os dois maiores pilares da Igreja primitiva — ambos martirizados em Roma sob o imperador Nero, Pedro crucificado de cabeça para baixo por se considerar indigno de morrer como Cristo.</p>`
+  },
+
+  // ---------------- JULHO ----------------
+  {
+    id: 'junipero-serra',
+    nome: 'São Junípero Serra',
+    wiki: 'Junípero Serra',
+    categoria: ['grandes-santos'],
+    festa: '07-01',
+    resumo: 'Frade franciscano espanhol, fundador das missões que deram origem a cidades da Califórnia.',
+    texto: `<p>Professor de filosofia na Espanha, Junípero Serra deixou a vida acadêmica para se tornar missionário nas Américas, já com quase quarenta anos. Apesar de uma perna ferida que o acompanhou o resto da vida, caminhou milhares de quilômetros fundando missões na Califórnia que deram origem a cidades como San Francisco e Los Angeles.</p>`
+  },
+  {
+    id: 'tome-apostolo',
+    nome: 'São Tomé Apóstolo',
+    wiki: 'Tomé (apóstolo)',
+    categoria: ['grandes-santos'],
+    festa: '07-03',
+    resumo: 'O apóstolo que duvidou da ressurreição até tocar as chagas de Cristo.',
+    texto: `<p>Ficou conhecido como "o incrédulo" por se recusar a acreditar no relato dos outros apóstolos sobre a ressurreição sem ver e tocar as chagas de Jesus com as próprias mãos — pedido que Cristo atendeu, levando Tomé à célebre confissão "Meu Senhor e meu Deus!". A tradição situa sua missão evangelizadora na Índia, onde teria fundado comunidades cristãs ainda existentes hoje.</p>`
+  },
+  {
+    id: 'henrique-imperador',
+    nome: 'Santo Henrique',
+    wiki: 'Henrique II, Sacro Imperador Romano-Germânico',
+    categoria: ['grandes-santos'],
+    festa: '07-13',
+    resumo: 'Imperador germânico que governou colocando a fé e a Igreja acima do poder pessoal.',
+    texto: `<p>Imperador do Sacro Império Romano-Germânico, Henrique usou seu poder para fundar dioceses, mosteiros e igrejas, e é lembrado por ter vivido, junto com a esposa Santa Cunegunda, um casamento dedicado inteiramente a Deus. Empenhou-se em reformar a disciplina eclesiástica de seu tempo, sendo um raro exemplo de governante canonizado pela santidade de seu próprio governo.</p>`
+  },
+  {
+    id: 'lourenco-brindes',
+    nome: 'São Lourenço de Brindes',
+    wiki: 'Lourenço de Brindes',
+    categoria: ['doutores'],
+    festa: '07-21',
+    resumo: 'Frade capuchinho poliglota, pregador e diplomata a serviço da paz na Europa.',
+    texto: `<p>Dotado de facilidade extraordinária para línguas — falava fluentemente cerca de dez idiomas —, Lourenço de Brindes pregava em cada região na própria língua do povo. Serviu como diplomata papal em várias cortes europeias, ajudando a organizar a resistência cristã contra invasões otomanas. Foi declarado Doutor da Igreja em 1959.</p>`
+  },
+  {
+    id: 'maria-madalena',
+    nome: 'Santa Maria Madalena',
+    wiki: 'Maria Madalena',
+    categoria: ['grandes-santos'],
+    festa: '07-22',
+    resumo: 'A primeira testemunha da ressurreição, chamada "apóstola dos apóstolos".',
+    texto: `<p>Liberta por Jesus de um sofrimento profundo, Maria Madalena tornou-se uma de suas seguidoras mais fiéis, permanecendo ao pé da cruz quando quase todos os apóstolos haviam fugido. Foi a primeira pessoa a encontrar Jesus ressuscitado, sendo enviada por ele mesmo para anunciar a notícia aos apóstolos — por isso é chamada, desde os primeiros séculos, "apóstola dos apóstolos".</p>`
+  },
+  {
+    id: 'brigida-suecia',
+    nome: 'Santa Brígida da Suécia',
+    wiki: 'Brígida da Suécia',
+    categoria: ['grandes-santos'],
+    festa: '07-23',
+    resumo: 'Nobre e mística sueca, mãe de família que depois de viúva fundou uma nova ordem religiosa.',
+    texto: `<p>Casada e mãe de oito filhos, entre eles Santa Catarina da Suécia, Brígida viveu décadas de intensa vida familiar antes de, já viúva, dedicar-se inteiramente à vida mística e fundar a Ordem do Santíssimo Salvador. Relatou numerosas revelações e visões místicas sobre a paixão de Cristo, registradas em seus escritos. É copadroeira da Europa.</p>`
+  },
+  {
+    id: 'joaquim-ana',
+    nome: 'São Joaquim e Sant\'Ana',
+    wiki: 'Joaquim (pai de Maria)',
+    categoria: ['sagrada-familia'],
+    festa: '07-26',
+    resumo: 'Os pais da Virgem Maria, avós de Jesus, segundo a tradição cristã.',
+    texto: `<p>Não mencionados diretamente na Bíblia, Joaquim e Ana são conhecidos pela tradição cristã antiga como os pais de Maria, que teriam esperado longos anos por um filho antes de receberem, já idosos, o anúncio de sua chegada. São venerados como avós de Jesus e padroeiros dos avós e das famílias.</p>`
+  },
+  {
+    id: 'marta-maria-lazaro',
+    nome: 'Santas Marta, Maria e São Lázaro',
+    wiki: 'Marta de Betânia',
+    categoria: ['grandes-santos'],
+    festa: '07-29',
+    resumo: 'Os três irmãos de Betânia, amigos íntimos de Jesus, que ele ressuscitou dos mortos.',
+    texto: `<p>Marta, Maria e Lázaro, de Betânia, formavam uma das famílias mais próximas de Jesus, que hospedava-se em sua casa. Marta é lembrada por seu zelo prático no serviço, Maria por sentar-se aos pés de Jesus para ouvi-lo, e Lázaro pelo maior dos milagres: foi ressuscitado por Jesus quatro dias depois de morto, diante de uma multidão.</p>`
+  },
+
+  // ---------------- AGOSTO ----------------
+  {
+    id: 'joao-maria-vianney',
+    nome: 'São João Maria Vianney',
+    wiki: 'João Maria Vianney',
+    categoria: ['grandes-santos'],
+    festa: '08-04',
+    resumo: 'O "Cura d\'Ars", padre humilde que passava até 16 horas por dia no confessionário.',
+    texto: `<p>Considerado fraco aluno no seminário, quase não foi ordenado padre, mas tornou-se um dos maiores confessores da história da Igreja. Enviado para a paróquia pobre e sem fé de Ars, na França, transformou-a por completo, atraindo mais de cem mil peregrinos por ano que vinham de toda a Europa só para se confessar com ele. É padroeiro dos padres.</p>`
+  },
+  {
+    id: 'domingos-gusmao',
+    nome: 'São Domingos de Gusmão',
+    wiki: 'Domingos de Gusmão',
+    categoria: ['grandes-santos'],
+    festa: '08-08',
+    resumo: 'Fundador da Ordem dos Pregadores (dominicanos), dedicada ao estudo e à pregação.',
+    texto: `<p>Cônego espanhol que, ao encontrar-se com a heresia cátara no sul da França, percebeu que ela só seria combatida com pregação bem fundamentada e vida de pobreza radical — não com a força. Fundou a Ordem dos Pregadores, os dominicanos, unindo profundo estudo teológico à vida mendicante. É tradicionalmente associado também à difusão do Santo Rosário.</p>`
+  },
+  {
+    id: 'maximiliano-kolbe',
+    nome: 'São Maximiliano Kolbe',
+    wiki: 'Maximiliano Kolbe',
+    categoria: ['grandes-santos'],
+    festa: '08-14',
+    resumo: 'Frade franciscano polonês que se ofereceu para morrer no lugar de um pai de família em Auschwitz.',
+    texto: `<p>Frade franciscano e jornalista, foi preso pelos nazistas e enviado ao campo de concentração de Auschwitz. Quando um prisioneiro foi sorteado para morrer de fome como punição por uma fuga, Kolbe se ofereceu para morrer em seu lugar, dizendo ser padre e não ter família. Sobreviveu semanas no bunker da fome e foi finalmente morto por injeção letal. É padroeiro dos jornalistas e das famílias em dificuldade.</p>`
+  },
+  {
+    id: 'bernardo-claraval',
+    nome: 'São Bernardo de Claraval',
+    wiki: 'Bernardo de Claraval',
+    categoria: ['doutores'],
+    festa: '08-20',
+    resumo: 'Monge cisterciense, "Doutor Mielado", conselheiro de papas e grande devoto de Maria.',
+    texto: `<p>Entrou para o mosteiro de Cister levando consigo cerca de trinta parentes e amigos, tamanha era sua capacidade de persuasão. Fundou a abadia de Claraval, de onde se espalhariam dezenas de novos mosteiros cistercienses pela Europa. Foi conselheiro de papas e reis, e sua devoção terna à Virgem Maria lhe rendeu o apelido de "Doutor Mielado", por suas pregações tão doces quanto o mel.</p>`
+  },
+  {
+    id: 'pio-x',
+    nome: 'São Pio X',
+    wiki: 'Papa Pio X',
+    categoria: ['grandes-santos'],
+    festa: '08-21',
+    resumo: 'Papa de origem camponesa, conhecido por antecipar a idade da Primeira Comunhão das crianças.',
+    texto: `<p>Nascido em família humilde de camponeses italianos, Giuseppe Sarto tornou-se papa sem nunca perder sua simplicidade de origem. É lembrado sobretudo por reduzir a idade mínima para a Primeira Comunhão, entendendo que as crianças não deveriam esperar tanto para receber a Eucaristia, e por reformar a música sacra e o catecismo da Igreja.</p>`
+  },
+  {
+    id: 'rosa-lima',
+    nome: 'Santa Rosa de Lima',
+    wiki: 'Rosa de Lima',
+    categoria: ['santos-jovens'],
+    festa: '08-23',
+    resumo: 'Primeira santa das Américas, mística peruana de vida austera dedicada aos doentes.',
+    texto: `<p>De extraordinária beleza, que ela via como obstáculo à vida espiritual que desejava, Rosa viveu uma existência de intensa penitência e oração em Lima, dedicando-se ao cuidado de crianças, idosos e doentes indígenas em um pequeno quarto que construiu no jardim de casa. Foi a primeira pessoa nascida nas Américas a ser canonizada, em 1671.</p>`
+  },
+  {
+    id: 'bartolomeu-apostolo',
+    nome: 'São Bartolomeu Apóstolo',
+    wiki: 'Bartolomeu (apóstolo)',
+    categoria: ['grandes-santos'],
+    festa: '08-24',
+    resumo: 'Um dos doze apóstolos, tradicionalmente identificado com Natanael, esfolado vivo pela fé.',
+    texto: `<p>Muitos estudiosos identificam Bartolomeu com Natanael, aquele que Jesus descreveu como "um israelita sem malícia" ao ser apresentado por Filipe. A tradição situa sua pregação missionária em terras distantes como a Armênia e a Índia, onde teria sido martirizado sendo esfolado vivo — martírio pelo qual é frequentemente representado nas artes, segurando a própria pele.</p>`
+  },
+  {
+    id: 'luis-ix-franca',
+    nome: 'São Luís IX da França',
+    wiki: 'Luís IX de França',
+    categoria: ['grandes-santos'],
+    festa: '08-25',
+    resumo: 'Rei da França que governou com profunda justiça e devoção cristã.',
+    texto: `<p>Coroado rei ainda menino, Luís IX governou a França por décadas unindo firmeza política a uma fé profunda, ouvindo pessoalmente as queixas dos súditos mais simples debaixo de um carvalho e reformando as leis do reino em nome da justiça. Participou de cruzadas e é lembrado como modelo raro de governante que exerceu o poder a serviço do bem comum.</p>`
+  },
+
+  // ---------------- SETEMBRO ----------------
+  {
+    id: 'pedro-claver',
+    nome: 'São Pedro Cláver',
+    wiki: 'Pedro Cláver',
+    categoria: ['grandes-santos'],
+    festa: '09-09',
+    resumo: 'Jesuíta espanhol que dedicou a vida a acolher escravizados recém-chegados à América.',
+    texto: `<p>Missionário jesuíta na Colômbia colonial, Pedro Cláver subia pessoalmente a bordo dos navios negreiros assim que atracavam em Cartagena, levando água, comida e cuidados médicos aos africanos escravizados amontoados em condições desumanas. Declarou-se "escravo dos escravos para sempre", batizando e defendendo a dignidade de milhares de pessoas ao longo de quatro décadas.</p>`
+  },
+  {
+    id: 'cornelio-cipriano',
+    nome: 'São Cornélio e São Cipriano',
+    wiki: 'Cipriano de Cartago',
+    categoria: ['grandes-santos'],
+    festa: '09-16',
+    resumo: 'Papa e bispo, amigos e mártires, que enfrentaram juntos crises de perseguição e cisma.',
+    texto: `<p>Cornélio, papa em Roma, e Cipriano, bispo de Cartago, mantiveram intensa correspondência e amizade enquanto lidavam juntos com uma das maiores crises da Igreja primitiva: como acolher de volta cristãos que haviam renegado a fé sob perseguição. Ambos foram martirizados por sua liderança firme e caridosa nesses tempos difíceis.</p>`
+  },
+  {
+    id: 'sao-januario',
+    nome: 'São Januário',
+    wiki: 'Januário',
+    categoria: ['grandes-santos'],
+    festa: '09-19',
+    resumo: 'Bispo napolitano mártir, cujo sangue relicário até hoje intriga cientistas ao se liquefazer.',
+    texto: `<p>Bispo de Benevento, na Itália, foi decapitado durante a perseguição de Diocleciano por se recusar a renegar a fé. Ficou famoso por um fenômeno que se repete há séculos em Nápoles: uma ampola com seu sangue, guardada como relíquia, aparentemente se liquefaz em datas específicas do ano, atraindo fiéis e curiosidade científica até hoje.</p>`
+  },
+  {
+    id: 'andre-kim-taegon',
+    nome: 'São André Kim Taegon e Companheiros',
+    wiki: 'Andrew Kim Taegon',
+    categoria: ['grandes-santos'],
+    festa: '09-20',
+    resumo: 'Primeiro padre coreano, martirizado com mais de cem companheiros leigos.',
+    texto: `<p>Filho de uma família convertida ao cristianismo em segredo em uma Coreia hostil à fé cristã, André Kim tornou-se o primeiro padre nascido coreano, ordenado após estudar clandestinamente no exterior. Foi decapitado aos 25 anos junto com o pai e é celebrado ao lado de mais de cem mártires coreanos, leigos em sua maioria, que deram a vida entre os séculos XVIII e XIX.</p>`
+  },
+  {
+    id: 'mateus-apostolo',
+    nome: 'São Mateus Apóstolo',
+    wiki: 'Mateus, o Evangelista',
+    categoria: ['grandes-santos'],
+    festa: '09-21',
+    resumo: 'Cobrador de impostos que largou tudo ao ouvir Jesus chamá-lo, tornando-se apóstolo e evangelista.',
+    texto: `<p>Cobrador de impostos romano — profissão desprezada pelos judeus de sua época por servir ao invasor —, Mateus estava sentado à sua mesa de cobrança quando Jesus simplesmente disse "Segue-me", e ele largou tudo imediatamente. Tornou-se apóstolo e autor do primeiro Evangelho, escrito especialmente para mostrar aos judeus que Jesus era o Messias prometido nas Escrituras.</p>`
+  },
+
+  // ---------------- OUTUBRO ----------------
+  {
+    id: 'anjos-guarda',
+    nome: 'Santos Anjos da Guarda',
+    wiki: 'Anjo da guarda',
+    categoria: ['arcanjos'],
+    festa: '10-02',
+    resumo: 'A crença de que cada pessoa recebe um anjo próprio, designado por Deus para protegê-la.',
+    texto: `<p>Desde os primeiros séculos, a Igreja ensina que cada pessoa recebe de Deus um anjo próprio, encarregado de guiá-la e protegê-la ao longo de toda a vida terrena. Jesus mesmo faz referência a essa crença no Evangelho, ao dizer que os anjos das crianças "sempre veem a face do Pai que está nos Céus". É costume rezar diariamente ao próprio anjo da guarda pedindo sua proteção.</p>`
+  },
+  {
+    id: 'sao-bruno',
+    nome: 'São Bruno',
+    wiki: 'Bruno de Colônia',
+    categoria: ['grandes-santos'],
+    festa: '10-06',
+    resumo: 'Professor alemão que abandonou tudo para viver em silêncio e fundar os cartuxos.',
+    texto: `<p>Professor respeitado de teologia em Reims, Bruno abandonou a vida acadêmica de sucesso para se retirar, com alguns companheiros, a um vale isolado nos Alpes franceses, dando origem à Ordem dos Cartuxos — dedicada a um estilo de vida raro de silêncio quase absoluto e solidão contemplativa, combinando eremitismo com vida em comunidade.</p>`
+  },
+  {
+    id: 'margarida-maria-alacoque',
+    nome: 'Santa Margarida Maria Alacoque',
+    wiki: 'Margarida Maria Alacoque',
+    categoria: ['grandes-santos'],
+    festa: '10-16',
+    resumo: 'Freira francesa a quem Jesus revelou a devoção ao Sagrado Coração.',
+    texto: `<p>Religiosa francesa da Visitação, relatou ter recebido diversas aparições de Jesus revelando seu Sagrado Coração como símbolo de seu amor infinito pela humanidade, pedindo que essa devoção fosse difundida por toda a Igreja. Enfrentou anos de desconfiança e oposição, inclusive de suas próprias superioras, antes que a devoção fosse reconhecida e se espalhasse pelo mundo.</p>`
+  },
+  {
+    id: 'lucas-evangelista',
+    nome: 'São Lucas Evangelista',
+    wiki: 'Lucas (evangelista)',
+    categoria: ['grandes-santos'],
+    festa: '10-18',
+    resumo: 'Médico grego, companheiro de Paulo, autor do terceiro Evangelho e dos Atos dos Apóstolos.',
+    texto: `<p>Médico de formação grega e o único evangelista que não era judeu, Lucas acompanhou Paulo em várias de suas viagens missionárias, relatadas com riqueza de detalhes no livro dos Atos dos Apóstolos, que ele também escreveu. Seu Evangelho dá atenção especial aos pobres, às mulheres e à misericórdia de Deus. É considerado patrono dos médicos e também dos artistas, por antiga tradição de tê-lo como pintor.</p>`
+  },
+  {
+    id: 'joao-brebeuf',
+    nome: 'São João de Brébeuf e Companheiros',
+    wiki: 'Jean de Brébeuf',
+    categoria: ['grandes-santos'],
+    festa: '10-19',
+    resumo: 'Missionários jesuítas martirizados entre os povos indígenas do Canadá.',
+    texto: `<p>Jesuíta francês de saúde frágil mas força de vontade extraordinária, João de Brébeuf dedicou décadas à missão entre os hurões no que é hoje o Canadá, aprendendo profundamente sua língua e costumes. Foi capturado e torturado até a morte junto com outros missionários jesuítas durante conflitos entre povos indígenas rivais. São os protomártires do Canadá.</p>`
+  },
+  {
+    id: 'joao-capistrano',
+    nome: 'São João de Capistrano',
+    wiki: 'João de Capistrano',
+    categoria: ['grandes-santos'],
+    festa: '10-23',
+    resumo: 'Frade franciscano e ex-juiz que liderou a defesa de Belgrado contra invasão otomana já idoso.',
+    texto: `<p>Juiz de sucesso antes de se tornar frade franciscano, João de Capistrano se tornou pregador itinerante famoso por atrair multidões enormes. Já com 70 anos, ajudou a organizar e liderar espiritualmente a resistência cristã que defendeu a cidade de Belgrado de uma grande invasão otomana em 1456, morrendo poucos meses depois da vitória.</p>`
+  },
+
+  // ---------------- NOVEMBRO ----------------
+  {
+    id: 'martin-porres',
+    nome: 'São Martín de Porres',
+    wiki: 'Martín de Porres',
+    categoria: ['grandes-santos'],
+    festa: '11-03',
+    resumo: 'Frade dominicano peruano, filho de escravizada, dedicado aos pobres, doentes e animais.',
+    texto: `<p>Filho de um nobre espanhol e de uma mulher afroperuana liberta, Martín enfrentou o preconceito racial de sua época mesmo dentro do convento dominicano, sendo aceito inicialmente apenas como leigo auxiliar. Dedicou a vida ao cuidado dos doentes mais pobres de Lima, sem distinção de origem, e é lembrado também por seu cuidado extraordinário com animais.</p>`
+  },
+  {
+    id: 'carlos-borromeu',
+    nome: 'São Carlos Borromeu',
+    wiki: 'Carlos Borromeu',
+    categoria: ['grandes-santos'],
+    festa: '11-04',
+    resumo: 'Cardeal e arcebispo de Milão, figura central na reforma da Igreja após o Concílio de Trento.',
+    texto: `<p>Sobrinho de um papa, tornou-se cardeal e arcebispo de Milão ainda jovem, mas dedicou-se com seriedade incomum à reforma da Igreja proposta pelo Concílio de Trento, criando seminários para melhor formação dos padres e reorganizando a vida pastoral da diocese. Durante uma peste em Milão, permaneceu na cidade cuidando pessoalmente dos doentes quando muitos fugiram.</p>`
+  },
+  {
+    id: 'leao-magno',
+    nome: 'São Leão Magno',
+    wiki: 'Papa Leão I',
+    categoria: ['doutores'],
+    festa: '11-10',
+    resumo: 'Papa que convenceu Átila, o Huno, a não invadir Roma, e defendeu a doutrina sobre Cristo.',
+    texto: `<p>Um dos papas mais influentes da Antiguidade, Leão é lembrado por ter saído pessoalmente ao encontro de Átila, o Huno, convencendo-o a não avançar sobre Roma. Sua carta doutrinal sobre as duas naturezas de Cristo, humana e divina, foi decisiva no Concílio de Calcedônia. É Doutor da Igreja e recebeu, ainda em vida, o título de "Magno" — o Grande.</p>`
+  },
+  {
+    id: 'martinho-tours',
+    nome: 'São Martinho de Tours',
+    wiki: 'Martinho de Tours',
+    categoria: ['grandes-santos'],
+    festa: '11-11',
+    resumo: 'Soldado romano que dividiu sua capa com um mendigo e depois se tornou bispo.',
+    texto: `<p>Ainda soldado romano, Martinho cortou ao meio sua própria capa militar para dividi-la com um mendigo enregelado de frio numa noite de inverno; naquela noite, sonhou com Cristo vestindo a metade da capa que havia doado. Deixou o exército, tornou-se monge e depois bispo de Tours, sendo um dos primeiros santos venerados sem ter sido mártir.</p>`
+  },
+  {
+    id: 'josafat',
+    nome: 'São Josafat',
+    wiki: 'Josafat Kuntsevych',
+    categoria: ['grandes-santos'],
+    festa: '11-12',
+    resumo: 'Bispo ucraniano de rito oriental, martirizado por seu trabalho pela unidade da Igreja.',
+    texto: `<p>Monge e depois bispo da Igreja Greco-Católica Ucraniana, Josafat dedicou-se incansavelmente a promover a comunhão entre os cristãos orientais de rito bizantino e Roma, o que gerava forte resistência de grupos contrários à união. Foi assassinado por uma multidão hostil enquanto visitava uma paróquia, tornando-se o primeiro santo oriental canonizado formalmente por Roma.</p>`
+  },
+  {
+    id: 'frances-cabrini',
+    nome: 'Santa Frances Xavier Cabrini',
+    wiki: 'Francesca Xavier Cabrini',
+    categoria: ['grandes-santos'],
+    festa: '11-13',
+    resumo: 'Freira italiana que fundou dezenas de instituições para imigrantes nos Estados Unidos.',
+    texto: `<p>Apesar de ter medo de água por quase se afogar quando criança, Francesca Cabrini atravessou o oceano dezenas de vezes a serviço dos imigrantes italianos pobres nos Estados Unidos, fundando escolas, orfanatos e hospitais por todo o país. Naturalizou-se americana e foi a primeira cidadã dos Estados Unidos a ser canonizada.</p>`
+  },
+  {
+    id: 'gertrudes',
+    nome: 'Santa Gertrudes',
+    wiki: 'Gertrudes, a Grande',
+    categoria: ['grandes-santos'],
+    festa: '11-16',
+    resumo: 'Monja alemã mística, uma das grandes propagadoras da devoção ao Coração de Jesus.',
+    texto: `<p>Entregue ainda criança a um mosteiro beneditino na Alemanha, Gertrudes recebeu excelente formação intelectual antes de viver, já adulta, uma profunda conversão mística que a levou a registrar por escrito suas experiências de união com Cristo. Seus escritos antecipam em séculos a devoção ao Sagrado Coração de Jesus, difundida depois por Santa Margarida Maria Alacoque.</p>`
+  },
+  {
+    id: 'andre-dung-lac',
+    nome: 'São André Dung-Lac e Companheiros',
+    wiki: 'André Dũng-Lạc',
+    categoria: ['grandes-santos'],
+    festa: '11-24',
+    resumo: 'Padre vietnamita, celebrado junto com mais de cem mártires do Vietnã.',
+    texto: `<p>Padre vietnamita executado durante décadas de intensa perseguição aos cristãos no Vietnã, André Dung-Lac é celebrado ao lado de mais de cem outros mártires — padres, religiosos e leigos vietnamitas, além de missionários estrangeiros — que deram a vida entre os séculos XVII e XIX, recusando pisar sobre a cruz para provar que haviam renegado a fé.</p>`
+  },
+  {
+    id: 'catarina-alexandria',
+    nome: 'Santa Catarina de Alexandria',
+    wiki: 'Catarina de Alexandria',
+    categoria: ['santos-jovens'],
+    festa: '11-25',
+    resumo: 'Jovem erudita egípcia que debateu e converteu filósofos pagãos antes do martírio.',
+    texto: `<p>Segundo a tradição, Catarina era uma jovem de extraordinária inteligência em Alexandria que, ainda adolescente, confrontou o imperador por perseguir os cristãos, debatendo e convertendo à fé um grupo de filósofos pagãos enviados para refutá-la. Recusou-se a casar com o imperador e foi martirizada. É padroeira dos estudantes, filósofos e bibliotecários.</p>`
+  },
+  {
+    id: 'andre-apostolo',
+    nome: 'Santo André Apóstolo',
+    wiki: 'André (apóstolo)',
+    categoria: ['grandes-santos'],
+    festa: '11-30',
+    resumo: 'O primeiro apóstolo chamado por Jesus, irmão de Pedro, crucificado em cruz em forma de X.',
+    texto: `<p>Pescador como o irmão Simão Pedro, André foi discípulo de João Batista antes de ser um dos primeiros a seguir Jesus, sendo por isso chamado de "Protóclito" (o primeiro chamado). A tradição situa sua pregação e martírio na Grécia, crucificado numa cruz em forma de X que hoje leva seu nome. É padroeiro da Escócia, Grécia e Rússia.</p>`
+  },
+
+  // ---------------- DEZEMBRO ----------------
+  {
+    id: 'sao-nicolau',
+    nome: 'São Nicolau',
+    wiki: 'Nicolau de Myra',
+    categoria: ['grandes-santos'],
+    festa: '12-06',
+    resumo: 'Bispo grego famoso por sua generosidade secreta, origem histórica do Papai Noel.',
+    texto: `<p>Bispo de Myra, na atual Turquia, Nicolau ficou famoso por sua generosidade discreta — a tradição mais conhecida conta que jogou secretamente moedas de ouro pela janela de uma família pobre para salvar três irmãs de um destino cruel, sem querer ser reconhecido. Essa fama de doador secreto e protetor de crianças deu origem, ao longo dos séculos, à figura do Papai Noel.</p>`
+  },
+  {
+    id: 'juan-diego',
+    nome: 'São Juan Diego',
+    wiki: 'Juan Diego',
+    categoria: ['grandes-santos'],
+    festa: '12-09',
+    resumo: 'Indígena mexicano a quem Nossa Senhora de Guadalupe apareceu em 1531.',
+    texto: `<p>Indígena convertido ao cristianismo no México colonial, Juan Diego foi quem recebeu as aparições de Nossa Senhora de Guadalupe na colina do Tepeyac, sendo enviado por ela para pedir ao bispo a construção de um santuário. Como sinal, sua tilma (manto) ficou impressa com a imagem de Maria, ainda venerada hoje por milhões de peregrinos. Foi o primeiro indígena das Américas canonizado.</p>`
+  },
+  {
+    id: 'santa-luzia',
+    nome: 'Santa Luzia',
+    wiki: 'Luzia de Siracusa',
+    categoria: ['santos-jovens'],
+    festa: '12-13',
+    resumo: 'Jovem siciliana mártir, invocada como protetora da visão.',
+    texto: `<p>Jovem consagrada a Deus na Sicília, Luzia distribuía seu dote entre os pobres em vez de se casar, o que levou seu próprio noivo rejeitado a denunciá-la como cristã. Seu nome, ligado à palavra latina para "luz", fez com que a tradição popular a associasse à proteção dos olhos e da visão, sendo por isso uma das santas mais invocadas por quem sofre de problemas oculares.</p>`
+  },
+  {
+    id: 'pedro-canisio',
+    nome: 'São Pedro Canísio',
+    wiki: 'Pedro Canísio',
+    categoria: ['doutores'],
+    festa: '12-21',
+    resumo: 'Jesuíta holandês que escreveu catecismos decisivos na reforma católica.',
+    texto: `<p>Um dos primeiros jesuítas, Pedro Canísio dedicou a vida a fortalecer a fé católica em regiões da Europa fortemente abaladas pela Reforma Protestante, sobretudo na Alemanha e na Áustria. Seus catecismos, escritos em linguagem clara e acessível, foram reeditados centenas de vezes e usados na formação de gerações de católicos. É Doutor da Igreja.</p>`
+  },
+  {
+    id: 'estevao-protomartir',
+    nome: 'Santo Estêvão, Protomártir',
+    wiki: 'Estêvão (protomártir)',
+    categoria: ['grandes-santos'],
+    festa: '12-26',
+    resumo: 'O primeiro mártir cristão, apedrejado enquanto perdoava seus algozes.',
+    texto: `<p>Um dos primeiros diáconos escolhidos pela comunidade cristã de Jerusalém para cuidar dos pobres, Estêvão foi acusado de blasfêmia por seus discursos sobre Cristo e apedrejado até a morte por uma multidão enfurecida. Morreu perdoando seus algozes e orando por eles, diante de um jovem fariseu chamado Saulo que guardava as capas de quem o apedrejava — o mesmo Saulo que depois se tornaria São Paulo.</p>`
+  },
+  {
+    id: 'joao-evangelista',
+    nome: 'São João Evangelista',
+    wiki: 'João, o Evangelista',
+    categoria: ['grandes-santos'],
+    festa: '12-27',
+    resumo: 'O "discípulo amado", único apóstolo que não foi martirizado, autor do quarto Evangelho.',
+    texto: `<p>Chamado de "o discípulo que Jesus amava", João foi o único apóstolo que permaneceu ao pé da cruz, recebendo de Jesus moribundo o cuidado de sua própria mãe. Autor do quarto Evangelho, de três cartas e do livro do Apocalipse, é o único entre os doze apóstolos que não foi martirizado, vivendo até idade avançada em Éfeso.</p>`
+  },
+  {
+    id: 'tomas-becket',
+    nome: 'São Tomás Becket',
+    wiki: 'Thomas Becket',
+    categoria: ['grandes-santos'],
+    festa: '12-29',
+    resumo: 'Arcebispo de Cantuária, assassinado dentro da própria catedral por defender a Igreja diante do rei.',
+    texto: `<p>Amigo próximo e chanceler do rei Henrique II da Inglaterra, Tomás Becket surpreendeu a todos ao se tornar, como arcebispo de Cantuária, um firme defensor da independência da Igreja diante do poder real — o que rompeu sua amizade com o rei. Foi assassinado por cavaleiros dentro da própria catedral, tornando-se um dos símbolos mais fortes da liberdade da Igreja diante do Estado.</p>`
   }
 ];
+
 
 // ============================================================
 //  INTRODUÇÃO — "Estrela da Luz"
@@ -967,7 +1826,6 @@ const searchInput = document.getElementById('search-input');
 const searchResults = document.getElementById('search-results');
 const bioContainer = document.getElementById('bio-container');
 
-const themeBtn = document.getElementById('theme-btn');
 const btnShare = document.getElementById('btn-share');
 
 const aiBtn = document.getElementById('ai-btn');
@@ -977,10 +1835,6 @@ const aiInput = document.getElementById('ai-input');
 const aiCopyBtn = document.getElementById('ai-copy-btn');
 const aiFeedback = document.getElementById('ai-feedback');
 const aiResposta = document.getElementById('ai-resposta');
-
-themeBtn.addEventListener('click', () => {
-  document.body.classList.toggle('dark-mode');
-});
 
 // ============================================================
 //  PERGUNTAR A UMA IA
@@ -1008,7 +1862,7 @@ themeBtn.addEventListener('click', () => {
 // ███  arquivo do site. Veja o passo a passo completo em    ███
 // ███  CONFIGURAR-IA.md)                                    ███
 // ██████████████████████████████████████████████████████████
-const AI_FUNCTION_URL = '';
+const AI_FUNCTION_URL = 'https://SEU-PROJETO.supabase.co/functions/v1/perguntar-sobre-santo';
 // ██████████████████████████████████████████████████████████
 
 function gerarPerguntaIA(nomeSanto) {
@@ -1119,7 +1973,20 @@ function iniciarRevelacaoAoRolar() {
     });
   }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 
-  alvos.forEach(el => observador.observe(el));
+  alvos.forEach(el => {
+    // Reforço: se o elemento já está visível na tela no exato
+    // momento em que começamos a observar (comum em conteúdo perto
+    // do topo da página), revela na hora — sem depender só do
+    // primeiro retorno assíncrono do IntersectionObserver, que em
+    // alguns navegadores pode demorar ou não disparar de imediato.
+    const retangulo = el.getBoundingClientRect();
+    const jaVisivel = retangulo.top < window.innerHeight && retangulo.bottom > 0;
+    if (jaVisivel) {
+      el.classList.add('revealed');
+    } else {
+      observador.observe(el);
+    }
+  });
 }
 
 // ============================================================
@@ -1135,8 +2002,7 @@ function iniciarChuvaDeMeteoros() {
 
   function criarMeteoro() {
     const meteoro = document.createElement('div');
-    const cor = Math.random() < 0.65 ? 'gold' : 'white'; // predomina dourado, combinando com o site
-    meteoro.className = `meteor ${cor}`;
+    meteoro.className = 'meteor gold'; // todos dourados
 
     const inicioX = (Math.random() * 90).toFixed(1);   // vw — nasce em qualquer ponto horizontal
     const inicioY = (Math.random() * 45).toFixed(1);   // vh — principalmente no terço/metade de cima
@@ -1155,14 +2021,13 @@ function iniciarChuvaDeMeteoros() {
     setTimeout(() => meteoro.remove(), duracao * 1000 + 200);
   }
 
+  // Fluxo contínuo, sem pausas longas: um meteoro novo a cada
+  // fração de segundo, sempre havendo vários cruzando a tela ao
+  // mesmo tempo (já que cada um dura de 1,4 a 2,7s na tela).
   function agendarProximoMeteoro() {
-    const espera = 1800 + Math.random() * 4200; // entre 1.8s e 6s
+    const espera = 220 + Math.random() * 380; // entre 0.22s e 0.6s
     setTimeout(() => {
       criarMeteoro();
-      // De vez em quando, dois quase juntos, como numa chuva de verdade
-      if (Math.random() < 0.25) {
-        setTimeout(criarMeteoro, 250 + Math.random() * 400);
-      }
       agendarProximoMeteoro();
     }, espera);
   }
@@ -1173,45 +2038,46 @@ function iniciarChuvaDeMeteoros() {
 // ============================================================
 //  SANTO DO DIA
 // ============================================================
-// Verifica se algum santo do catálogo tem festa litúrgica
-// hoje — usando o dia e o mês do relógio LOCAL de quem está
-// vendo a página (por isso o site já sabe, sozinho, se hoje é
-// dia 26 ou qualquer outro dia, sem depender de fuso horário
-// de servidor). Se houver um santo com festa exata, ele é
-// destacado. Se não houver nenhum na data exata, a seção nunca
-// fica vazia: um santo é destacado de forma rotativa (baseada
-// no dia do ano), para sempre convidar à descoberta de uma nova
-// história.
-function getSantoDoDia() {
+// Duas coisas DIFERENTES, mostradas separadamente pra não gerar
+// confusão (por exemplo: Carlo Acutis aparecendo destacado num
+// dia que não é o dia de festa dele de verdade):
+//
+//   • "Santo de Hoje" — só aparece nos dias em que algum santo
+//     do catálogo tem a festa litúrgica batendo com a data real
+//     de hoje. Some nos outros dias, pra nunca afirmar algo que
+//     não é verdade.
+//
+//   • "Santo em Destaque" — aparece TODO santo dia, girando pelo
+//     catálogo (baseado no dia do ano), só pra convidar a
+//     descobrir uma nova história. Nunca repete o mesmo santo que
+//     já está no "Santo de Hoje", quando os dois aparecem juntos.
+function getSantoDeHoje() {
   const hoje = new Date();
   const mm = String(hoje.getMonth() + 1).padStart(2, '0');
   const dd = String(hoje.getDate()).padStart(2, '0');
   const chaveHoje = `${mm}-${dd}`;
-
-  const celebradosHoje = santosData.filter(s => s.festa === chaveHoje);
-  if (celebradosHoje.length > 0) {
-    return { santo: celebradosHoje[0], oficial: true };
-  }
-
-  const inicioDoAno = new Date(hoje.getFullYear(), 0, 0);
-  const diaDoAno = Math.floor((hoje - inicioDoAno) / 86400000);
-  const indice = diaDoAno % santosData.length;
-  return { santo: santosData[indice], oficial: false };
+  return santosData.find(s => s.festa === chaveHoje) || null;
 }
 
-function renderSantoDoDia() {
-  const container = document.getElementById('santo-do-dia');
-  if (!container) return;
+function getSantoEmDestaque(idParaEvitar) {
+  const hoje = new Date();
+  const inicioDoAno = new Date(hoje.getFullYear(), 0, 0);
+  const diaDoAno = Math.floor((hoje - inicioDoAno) / 86400000);
+  let indice = diaDoAno % santosData.length;
+  let santo = santosData[indice];
+  if (idParaEvitar && santo.id === idParaEvitar) {
+    indice = (indice + 1) % santosData.length;
+    santo = santosData[indice];
+  }
+  return santo;
+}
 
-  const { santo, oficial } = getSantoDoDia();
-  const dataFormatada = new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' });
-  const rotulo = oficial ? `Hoje, ${dataFormatada}, a Igreja celebra` : 'Santo em destaque hoje';
-
-  container.innerHTML = `
-    <div class="sdd-card" id="sdd-card" role="button" tabindex="0" aria-label="Ver a história de ${santo.nome}">
+function montarCartaoSantoDoDia(santo, rotulo, idBase) {
+  return `
+    <div class="sdd-card" id="${idBase}-card" role="button" tabindex="0" aria-label="Ver a história de ${santo.nome}">
       <span class="sdd-label">${rotulo}</span>
       <div class="sdd-body">
-        <div class="sdd-img-wrapper" id="sdd-img-wrapper">
+        <div class="sdd-img-wrapper" id="${idBase}-img-wrapper">
           <svg class="card-img-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-aureola"></use></svg>
         </div>
         <div class="sdd-info">
@@ -1222,8 +2088,11 @@ function renderSantoDoDia() {
       </div>
     </div>
   `;
+}
 
-  const card = document.getElementById('sdd-card');
+function ligarCartaoSantoDoDia(idBase, santo) {
+  const card = document.getElementById(`${idBase}-card`);
+  if (!card) return;
   card.addEventListener('click', () => showDetail(santo.id));
   card.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -1231,13 +2100,32 @@ function renderSantoDoDia() {
       showDetail(santo.id);
     }
   });
-
   buscarImagemSanto(santo).then(imgUrl => {
-    const wrapper = document.getElementById('sdd-img-wrapper');
+    const wrapper = document.getElementById(`${idBase}-img-wrapper`);
     if (imgUrl && wrapper) {
       wrapper.innerHTML = `<img src="${imgUrl}" alt="${santo.nome}" class="card-img" loading="lazy">`;
     }
   });
+}
+
+function renderSantoDoDia() {
+  const container = document.getElementById('santo-do-dia');
+  if (!container) return;
+
+  const dataFormatada = new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' });
+  const santoDeHoje = getSantoDeHoje();
+  const santoDestaque = getSantoEmDestaque(santoDeHoje ? santoDeHoje.id : null);
+
+  let html = '';
+  if (santoDeHoje) {
+    html += montarCartaoSantoDoDia(santoDeHoje, `Hoje, ${dataFormatada}, a Igreja celebra`, 'sdd-hoje');
+  }
+  html += montarCartaoSantoDoDia(santoDestaque, 'Santo em destaque', 'sdd-destaque');
+
+  container.innerHTML = html;
+
+  if (santoDeHoje) ligarCartaoSantoDoDia('sdd-hoje', santoDeHoje);
+  ligarCartaoSantoDoDia('sdd-destaque', santoDestaque);
 }
 
 // Calendário inteligente: o Santo do Dia se atualiza sozinho
@@ -1291,13 +2179,89 @@ document.addEventListener('visibilitychange', () => {
 // ============================================================
 //  CATÁLOGO (GRADE DE CARTÕES)
 // ============================================================
+// ============================================================
+//  FAVORITOS
+// ============================================================
+// Guardados só no navegador da própria pessoa (localStorage) —
+// cada visitante tem sua própria listinha, sem precisar de login.
+const CHAVE_FAVORITOS = 'lumina-sancti-favoritos';
+
+function getFavoritos() {
+  try {
+    const salvos = localStorage.getItem(CHAVE_FAVORITOS);
+    return salvos ? JSON.parse(salvos) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function ehFavorito(id) {
+  return getFavoritos().includes(id);
+}
+
+function toggleFavorito(id) {
+  const favoritos = getFavoritos();
+  const indice = favoritos.indexOf(id);
+  if (indice >= 0) {
+    favoritos.splice(indice, 1);
+  } else {
+    favoritos.push(id);
+  }
+  try {
+    localStorage.setItem(CHAVE_FAVORITOS, JSON.stringify(favoritos));
+  } catch (e) {
+    // Se o navegador bloquear localStorage (modo privado, por exemplo),
+    // o favorito simplesmente não persiste — sem quebrar o site.
+  }
+  return favoritos.includes(id);
+}
+
+function iconeCoracao(preenchido) {
+  return preenchido
+    ? `<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>`
+    : `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>`;
+}
+
+function ligarBotaoFavorito(botao, id) {
+  function atualizarAparencia() {
+    const ativo = ehFavorito(id);
+    botao.innerHTML = iconeCoracao(ativo);
+    botao.classList.toggle('favorito-ativo', ativo);
+    botao.setAttribute('aria-label', ativo ? 'Remover dos favoritos' : 'Adicionar aos favoritos');
+    botao.setAttribute('aria-pressed', ativo ? 'true' : 'false');
+  }
+  atualizarAparencia();
+  botao.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleFavorito(id);
+    atualizarAparencia();
+    // Se estivermos filtrando só os favoritos, o cartão precisa sumir
+    // assim que deixar de ser favorito.
+    if (filtroAtual === 'favoritos') {
+      renderGrid('favoritos');
+    }
+  });
+}
+
+let filtroAtual = 'todos';
+
+// ============================================================
+//  CATÁLOGO (GRADE DE CARTÕES)
+// ============================================================
 function renderGrid(filter = 'todos') {
+  filtroAtual = filter;
   cardsGrid.innerHTML = '';
 
   const filtrados = santosData.filter(s => {
     if (filter === 'todos') return true;
+    if (filter === 'favoritos') return ehFavorito(s.id);
     return s.categoria.includes(filter);
   });
+
+  if (filter === 'favoritos' && filtrados.length === 0) {
+    cardsGrid.innerHTML = `<p class="not-found-msg" style="grid-column: 1 / -1;">Você ainda não tem santos favoritos. Toque no coração de um cartão para guardá-lo aqui.</p>`;
+    return;
+  }
 
   filtrados.forEach((santo, index) => {
     const card = document.createElement('div');
@@ -1311,6 +2275,7 @@ function renderGrid(filter = 'todos') {
           <use href="#icon-aureola"></use>
         </svg>
       </div>
+      <button class="btn-favorito" aria-label="Adicionar aos favoritos" aria-pressed="false"></button>
       <div class="card-content">
         <h3 class="card-title">
           <svg class="card-icon" viewBox="0 0 24 24"><use href="#icon-aureola"></use></svg>
@@ -1321,6 +2286,7 @@ function renderGrid(filter = 'todos') {
     `;
 
     cardsGrid.appendChild(card);
+    ligarBotaoFavorito(card.querySelector('.btn-favorito'), santo.id);
 
     buscarImagemSanto(santo).then(imgUrl => {
       const wrapper = document.getElementById(`img-wrapper-${santo.id}`);
@@ -1506,9 +2472,20 @@ window.addEventListener('scroll', () => {
   lastScroll = currentScroll;
 });
 
+// Cada parte roda isolada das outras: se uma falhar por algum
+// motivo inesperado, isso é registrado no console, mas não impede
+// as demais de funcionar normalmente.
+function rodarComSeguranca(nome, funcao) {
+  try {
+    funcao();
+  } catch (erro) {
+    console.error(`Lumina Sancti — falha ao iniciar "${nome}":`, erro);
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-  renderGrid();
-  renderSantoDoDia();
-  iniciarRevelacaoAoRolar();
-  iniciarChuvaDeMeteoros();
+  rodarComSeguranca('grade de santos', renderGrid);
+  rodarComSeguranca('santo do dia', renderSantoDoDia);
+  rodarComSeguranca('revelação ao rolar', iniciarRevelacaoAoRolar);
+  rodarComSeguranca('chuva de meteoros', iniciarChuvaDeMeteoros);
 });

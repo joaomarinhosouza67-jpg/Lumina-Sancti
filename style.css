@@ -1,26 +1,16 @@
 :root {
   --primary-color: #d4af37;
-  --primary-dark: #b5952f;
-  --secondary-color: #fbf8f1;
-  --bg-color: #fcfcfc;
-  --bg-alt: #ffffff;
-  --text-main: #1e293b;
-  --text-muted: #64748b;
-  --nav-bg: rgba(252, 252, 252, 0.92);
-  --font-title: 'Cormorant Garamond', serif;
-  --font-text: 'Inter', sans-serif;
-  --shadow-md: 0 4px 15px rgba(212, 175, 55, 0.15);
-  --transition: all 0.3s ease;
-}
-
-body.dark-mode {
+  --primary-dark: #e8c667;
+  --secondary-color: #334155;
   --bg-color: #0f172a;
   --bg-alt: #1e293b;
-  --secondary-color: #334155;
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
   --nav-bg: rgba(15, 23, 42, 0.92);
+  --font-title: 'Cormorant Garamond', serif;
+  --font-text: 'Inter', sans-serif;
   --shadow-md: 0 4px 15px rgba(0, 0, 0, 0.4);
+  --transition: all 0.3s ease;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -62,20 +52,12 @@ body {
   box-shadow: 0 0 8px 1px rgba(255, 215, 0, 0.65);
 }
 
-.meteor.white {
-  background: linear-gradient(90deg, transparent, #ffffff 55%, #ffffff);
-  box-shadow: 0 0 8px 1px rgba(255, 255, 255, 0.55);
-}
-
 @keyframes meteorStreak {
   0%   { opacity: 0; transform: rotate(var(--ang)) translateX(0); }
   10%  { opacity: 1; }
   78%  { opacity: 1; }
   100% { opacity: 0; transform: rotate(var(--ang)) translateX(var(--dist)); }
 }
-
-/* Modo escuro: meteoros um pouco mais discretos sobre o fundo já escuro */
-body.dark-mode .meteor.white { box-shadow: 0 0 6px 1px rgba(255, 255, 255, 0.4); }
 
 /* Foco visível para navegação por teclado (acessibilidade) */
 a:focus-visible,
@@ -637,6 +619,7 @@ input:focus-visible,
   box-shadow: var(--shadow-md);
   transition: var(--transition);
 }
+.sdd-card + .sdd-card { margin-top: 16px; }
 .sdd-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 14px 32px rgba(212, 175, 55, 0.25);
@@ -723,7 +706,7 @@ input:focus-visible,
 .animate-card { animation: fadeScaleUp 0.5s ease forwards; }
 .card:hover { transform: translateY(-6px); box-shadow: 0 10px 25px rgba(212, 175, 55, 0.2); border-color: var(--primary-color); }
 
-.card-img-wrapper { width: 100%; height: 200px; background: var(--secondary-color); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.card-img-wrapper { width: 100%; aspect-ratio: 4 / 3; background: var(--secondary-color); display: flex; align-items: center; justify-content: center; overflow: hidden; }
 .card-img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
 .card:hover .card-img { transform: scale(1.05); }
 .card-img-placeholder { width: 45px; height: 45px; color: var(--primary-color); opacity: 0.5; }
@@ -740,16 +723,13 @@ input:focus-visible,
 
 .bio-article { background: var(--bg-alt); padding: 30px; border-radius: 14px; box-shadow: var(--shadow-md); border: 1px solid var(--secondary-color); }
 .bio-title { font-family: var(--font-title); font-size: 2.1rem; color: var(--primary-color); margin-bottom: 20px; }
-/* Altura FIXA (não max-height) para que a imagem sempre preencha
-   100% do espaço de forma idêntica em qualquer navegador — em
-   computador ou celular. Combinar max-height no contêiner com
-   height:100% na imagem é o que causava a inconsistência entre
-   telas, porque a porcentagem de altura fica ambígua sem uma
-   altura explícita no elemento pai. */
-.bio-img-wrapper { width: 100%; height: 340px; border-radius: 10px; overflow: hidden; margin-bottom: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+/* Proporção FIXA (aspect-ratio) em vez de altura fixa em pixels.
+   Antes, uma altura de 340px virava um retângulo bem mais largo e
+   raso no computador (contêiner de até 750px) do que no celular
+   (tela mais estreita) — por isso a mesma foto parecia cortada de
+   um jeito no computador e de outro no celular. Com aspect-ratio,
+   a moldura sempre mantém a mesma proporção (e o mesmo enquadramento
+   da foto) em qualquer tamanho de tela. */
+.bio-img-wrapper { width: 100%; aspect-ratio: 3 / 2; border-radius: 10px; overflow: hidden; margin-bottom: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 .bio-img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-@media (max-width: 480px) {
-  .bio-img-wrapper { height: 230px; }
-}
 .bio-text { font-size: 1.05rem; color: var(--text-main); line-height: 1.8; display: flex; flex-direction: column; gap: 15px; }
