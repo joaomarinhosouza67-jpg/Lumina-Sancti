@@ -11,20 +11,31 @@
   <meta property="og:title" content="Lumina Sancti | Luz dos Santos">
   <meta property="og:description" content="Descubra a bela trilha da santidade no cotidiano de todas as épocas através de biografias inspiradoras e do Santo do Dia.">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://images.unsplash.com/photo-1519817650390-64a93db51149">
+  <meta property="og:image" content="og-image.png">
   <meta property="og:url" content="https://seusite.com">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Lumina Sancti | Luz dos Santos">
   <meta name="twitter:description" content="Descubra a bela trilha da santidade e o legado dos Santos da Igreja.">
-  <meta name="twitter:image" content="https://images.unsplash.com/photo-1519817650390-64a93db51149">
+  <meta name="twitter:image" content="og-image.png">
 
   <!-- Fontes Elegantes -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+
+  <!-- Favicon: a mesma estrela do site. A versão animada (girando e
+       brilhando) é usada por navegadores que suportam SVG animado
+       (Firefox mostra a animação na aba; outros mostram o primeiro
+       quadro, ainda assim a estrela dourada). -->
+  <link rel="icon" type="image/svg+xml" href="favicon-animado.svg">
+  <link rel="alternate icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="apple-touch-icon" href="favicon.svg">
+
+  <!-- Biblioteca do Supabase (contas de usuário + banco de dados) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -72,12 +83,32 @@
       </button>
       <h1 class="nav-brand">Lumina Sancti</h1>
       <div class="nav-right-actions">
-        <button id="search-btn" class="icon-btn" aria-label="Pesquisar">
+        <div class="idioma-wrapper">
+          <button id="idioma-btn" class="icon-btn" aria-label="Mudar idioma / Change language" aria-haspopup="true" aria-expanded="false">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z"/></svg>
+          </button>
+          <div id="idioma-menu" class="idioma-menu">
+            <button class="idioma-opcao" data-lang="pt"><span>🇧🇷</span> Português</button>
+            <button class="idioma-opcao" data-lang="en"><span>🇺🇸</span> English</button>
+            <button class="idioma-opcao" data-lang="es"><span>🇪🇸</span> Español</button>
+          </div>
+        </div>
+        <button id="search-btn" class="icon-btn" aria-label="Pesquisar" data-i18n-aria="aria_pesquisar" style="margin-left: 10px;">
           <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
         </button>
-        <button id="ai-btn" class="icon-btn" aria-label="Perguntar a uma IA sobre um santo" style="margin-left: 10px;">
+        <button id="lumina-btn" class="icon-btn" aria-label="Conversar com a Lumina" style="margin-left: 10px;">
           <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.34 6.34l2.83 2.83M14.83 14.83l2.83 2.83M17.66 6.34l-2.83 2.83M9.17 14.83l-2.83 2.83"/><circle cx="12" cy="12" r="2.2" fill="currentColor" stroke="none"/></svg>
         </button>
+        <div class="conta-wrapper">
+          <button id="conta-btn" class="icon-btn" aria-label="Minha conta" aria-haspopup="true" aria-expanded="false" style="margin-left: 10px;">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </button>
+          <div id="conta-menu" class="idioma-menu">
+            <button id="conta-menu-entrar" class="idioma-opcao" data-i18n="conta_entrar">Entrar / Criar conta</button>
+            <button id="conta-menu-perfil" class="idioma-opcao" style="display:none;" data-i18n="conta_perfil">Meu perfil</button>
+            <button id="conta-menu-sair" class="idioma-opcao" style="display:none;" data-i18n="conta_sair">Sair</button>
+          </div>
+        </div>
       </div>
     </div>
   </header>
@@ -86,54 +117,36 @@
   <div id="search-modal" class="search-modal">
     <div class="search-modal-content">
       <div class="search-header">
-        <h3>Pesquisar Santo ou Beato</h3>
+        <h3 data-i18n="pesquisar_titulo">Pesquisar Santo ou Beato</h3>
         <button id="close-search-btn" class="icon-btn" aria-label="Fechar Pesquisa">
           <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
       </div>
       <div class="search-input-wrapper">
-        <input type="text" id="search-input" placeholder="Digite o nome do santo..." autocomplete="off">
+        <input type="text" id="search-input" placeholder="Digite o nome do santo..." data-i18n-placeholder="pesquisar_placeholder" autocomplete="off">
       </div>
       <div id="search-results" class="search-results"></div>
-    </div>
-  </div>
-
-  <!-- Modal Perguntar a uma IA -->
-  <div id="ai-modal" class="search-modal">
-    <div class="search-modal-content">
-      <div class="search-header">
-        <h3>Perguntar a uma IA</h3>
-        <button id="close-ai-btn" class="icon-btn" aria-label="Fechar">
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-        </button>
-      </div>
-      <p class="ai-modal-desc">Digite o nome de qualquer santo, beato, doutor da Igreja ou anjo — mesmo um que não esteja no nosso catálogo — e pergunte à IA do site. Ela só responde sobre esses temas.</p>
-      <div class="search-input-wrapper">
-        <input type="text" id="ai-input" placeholder="Nome do santo..." autocomplete="off">
-      </div>
-      <button id="ai-copy-btn" class="filter-btn active ai-copy-btn">Perguntar</button>
-      <div id="ai-feedback" class="ai-feedback" aria-live="polite"></div>
-      <div id="ai-resposta" class="ai-resposta" aria-live="polite"></div>
     </div>
   </div>
 
   <!-- Menu Lateral (Sidebar) -->
   <aside id="sidebar" class="sidebar">
     <div class="sidebar-header">
-      <h2>Catálogo</h2>
+      <h2 data-i18n="catalogo_titulo">Catálogo</h2>
       <button id="close-menu-btn" class="icon-btn" aria-label="Fechar Menu">
         <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>
     </div>
 
     <nav class="sidebar-nav">
-      <button class="filter-btn side-filter active" data-filter="todos">Todos os Santos</button>
-      <button class="filter-btn side-filter" data-filter="sagrada-familia">Sagrada Família</button>
-      <button class="filter-btn side-filter" data-filter="arcanjos">Arcanjos</button>
-      <button class="filter-btn side-filter" data-filter="doutores">Doutores da Igreja</button>
-      <button class="filter-btn side-filter" data-filter="grandes-santos">Grandes Santos</button>
-      <button class="filter-btn side-filter" data-filter="santos-jovens">Santos Jovens</button>
-      <button class="filter-btn side-filter" data-filter="beatos">Beatos</button>
+      <button class="filter-btn side-filter active" data-filter="todos" data-i18n="filtro_todos">Todos os Santos</button>
+      <button class="filter-btn side-filter" data-filter="favoritos" data-i18n="filtro_favoritos">❤ Favoritos</button>
+      <button class="filter-btn side-filter" data-filter="sagrada-familia" data-i18n="filtro_sagrada_familia">Sagrada Família</button>
+      <button class="filter-btn side-filter" data-filter="arcanjos" data-i18n="filtro_arcanjos">Arcanjos</button>
+      <button class="filter-btn side-filter" data-filter="doutores" data-i18n="filtro_doutores">Doutores da Igreja</button>
+      <button class="filter-btn side-filter" data-filter="grandes-santos" data-i18n="filtro_grandes_santos">Grandes Santos</button>
+      <button class="filter-btn side-filter" data-filter="santos-jovens" data-i18n="filtro_santos_jovens">Santos Jovens</button>
+      <button class="filter-btn side-filter" data-filter="beatos" data-i18n="filtro_beatos">Beatos</button>
     </nav>
 
     <div class="sidebar-decoration">
@@ -155,8 +168,8 @@
             </svg>
           </div>
           <h1 class="hero-title">Lumina Sancti</h1>
-          <p class="hero-subtitle">Luz dos Santos</p>
-          <p class="hero-quote">"A santidade não é o luxo de alguns, mas um chamado silencioso e ardente ao coração de todos nós, iluminando o mundo em cada época."</p>
+          <p class="hero-subtitle" data-i18n="hero_subtitulo">Luz dos Santos</p>
+          <p class="hero-quote" data-i18n="hero_citacao">"A santidade não é o luxo de alguns, mas um chamado silencioso e ardente ao coração de todos nós, iluminando o mundo em cada época."</p>
         </div>
       </section>
 
@@ -166,23 +179,24 @@
       </section>
 
       <!-- Sobre o Lumina Sancti -->
-      <section class="about container reveal-on-scroll">
-        <h2 class="section-title">Sobre o Lumina Sancti</h2>
+      <section class="about container">
+        <h2 class="section-title" data-i18n="sobre_titulo">Sobre o Lumina Sancti</h2>
         <div class="title-divider"></div>
-        <p class="about-text">
+        <p class="about-text" data-i18n="sobre_texto">
           O <strong>Lumina Sancti</strong> (Luz dos Santos) é um refúgio digital dedicado a preservar e compartilhar a vida, a fé e o legado daqueles que deixaram um rastro inextinguível de luz na história. Este espaço foi criado para revelar que a santidade não é algo distante, mas uma trilha bela, possível e acessível no cotidiano de qualquer época ou idade.
         </p>
       </section>
 
-      <section class="catalog container reveal-on-scroll" id="materias">
+      <section class="catalog container" id="materias">
         <div class="filters-container">
-          <button class="filter-btn active" data-filter="todos">Todos</button>
-          <button class="filter-btn" data-filter="sagrada-familia">Sagrada Família</button>
-          <button class="filter-btn" data-filter="arcanjos">Arcanjos</button>
-          <button class="filter-btn" data-filter="doutores">Doutores</button>
-          <button class="filter-btn" data-filter="grandes-santos">Grandes Santos</button>
-          <button class="filter-btn" data-filter="santos-jovens">Santos Jovens</button>
-          <button class="filter-btn" data-filter="beatos">Beatos</button>
+          <button class="filter-btn active" data-filter="todos" data-i18n="filtro_todos_curto">Todos</button>
+          <button class="filter-btn" data-filter="favoritos" data-i18n="filtro_favoritos">❤ Favoritos</button>
+          <button class="filter-btn" data-filter="sagrada-familia" data-i18n="filtro_sagrada_familia">Sagrada Família</button>
+          <button class="filter-btn" data-filter="arcanjos" data-i18n="filtro_arcanjos">Arcanjos</button>
+          <button class="filter-btn" data-filter="doutores" data-i18n="filtro_doutores_curto">Doutores</button>
+          <button class="filter-btn" data-filter="grandes-santos" data-i18n="filtro_grandes_santos">Grandes Santos</button>
+          <button class="filter-btn" data-filter="santos-jovens" data-i18n="filtro_santos_jovens">Santos Jovens</button>
+          <button class="filter-btn" data-filter="beatos" data-i18n="filtro_beatos">Beatos</button>
         </div>
 
         <div id="cards-grid" class="cards-grid">
@@ -197,7 +211,7 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
           <button id="btn-back" class="btn-back">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-            Voltar para o início
+            <span data-i18n="voltar_inicio">Voltar para o início</span>
           </button>
           <!-- Botão Compartilhar -->
           <button id="btn-share" class="icon-btn" aria-label="Compartilhar" style="color: var(--primary-color);">
@@ -210,7 +224,130 @@
       </div>
     </section>
 
+    <!-- PÁGINA DA LUMINA (IA exclusiva do site) -->
+    <section id="view-ia" class="view">
+      <div class="container lumina-container">
+        <button class="btn-back" id="btn-back-lumina">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span data-i18n="voltar_inicio">Voltar para o início</span>
+        </button>
+
+        <div class="lumina-header">
+          <div class="lumina-avatar">
+            <svg viewBox="0 0 100 100" width="46" height="46" fill="var(--primary-color)">
+              <path d="M50 0 C52 35 65 48 100 50 C65 52 52 65 50 100 C48 65 35 52 0 50 C35 48 48 35 50 0 Z" opacity="0.9"/>
+              <path d="M50 15 C52 38 62 48 85 50 C62 52 52 62 50 85 C48 62 38 52 15 50 C38 48 48 38 50 15 Z" opacity="0.6" transform="rotate(45 50 50)"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="lumina-titulo">Lumina</h2>
+            <p class="lumina-subtitulo" data-i18n="lumina_subtitulo">A assistente exclusiva do Lumina Sancti — só sobre santos, beatos, veneráveis, doutores e anjos.</p>
+          </div>
+        </div>
+
+        <!-- Visível só sem login -->
+        <div id="lumina-precisa-login" class="lumina-aviso" style="display:none;">
+          <p data-i18n="lumina_precisa_login">Para conversar com a Lumina, entre na sua conta (é rápido e gratuito).</p>
+          <button id="lumina-ir-login" class="filter-btn active" data-i18n="conta_entrar">Entrar / Criar conta</button>
+        </div>
+
+        <!-- Visível só com login -->
+        <div id="lumina-chat-area" style="display:none;">
+          <p class="lumina-restantes" id="lumina-restantes"></p>
+
+          <div id="lumina-resposta-area" class="lumina-resposta-area"></div>
+
+          <div id="lumina-pensando" class="lumina-pensando" style="display:none;">
+            <span></span><span></span><span></span>
+          </div>
+
+          <div class="lumina-input-row">
+            <input type="text" id="lumina-input" class="lumina-input" data-i18n-placeholder="lumina_placeholder" placeholder="Pergunte sobre um santo, beato, doutor ou anjo...">
+            <button id="lumina-enviar" class="btn-lumina-enviar" aria-label="Enviar">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+          <p class="lumina-erro" id="lumina-erro" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PÁGINA DE ENTRAR / CRIAR CONTA -->
+    <section id="view-auth" class="view">
+      <div class="container auth-container">
+        <button class="btn-back" id="btn-back-auth">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span data-i18n="voltar_inicio">Voltar para o início</span>
+        </button>
+
+        <div class="auth-card">
+          <div class="auth-tabs">
+            <button class="auth-tab active" id="auth-tab-entrar" data-i18n="conta_entrar_aba">Entrar</button>
+            <button class="auth-tab" id="auth-tab-cadastrar" data-i18n="conta_cadastrar_aba">Criar conta</button>
+          </div>
+
+          <form id="auth-form-entrar" class="auth-form">
+            <label data-i18n="conta_email">E-mail</label>
+            <input type="email" id="entrar-email" required autocomplete="email">
+            <label data-i18n="conta_senha">Senha</label>
+            <input type="password" id="entrar-senha" required autocomplete="current-password">
+            <button type="submit" class="filter-btn active" data-i18n="conta_entrar_botao">Entrar</button>
+          </form>
+
+          <form id="auth-form-cadastrar" class="auth-form" style="display:none;">
+            <label data-i18n="conta_nome">Nome</label>
+            <input type="text" id="cadastrar-nome" required autocomplete="name">
+            <label data-i18n="conta_email">E-mail</label>
+            <input type="email" id="cadastrar-email" required autocomplete="email">
+            <label data-i18n="conta_senha">Senha (mínimo 6 caracteres)</label>
+            <input type="password" id="cadastrar-senha" required minlength="6" autocomplete="new-password">
+            <button type="submit" class="filter-btn active" data-i18n="conta_cadastrar_botao">Criar minha conta</button>
+          </form>
+
+          <p class="auth-feedback" id="auth-feedback" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PÁGINA DE PERFIL -->
+    <section id="view-perfil" class="view">
+      <div class="container auth-container">
+        <button class="btn-back" id="btn-back-perfil">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span data-i18n="voltar_inicio">Voltar para o início</span>
+        </button>
+
+        <div class="auth-card">
+          <h2 class="section-title" data-i18n="perfil_titulo" style="text-align:left; margin-bottom:20px;">Meu perfil</h2>
+
+          <form id="perfil-form" class="auth-form">
+            <label data-i18n="conta_nome">Nome</label>
+            <input type="text" id="perfil-nome" required>
+            <p class="auth-email-fixo" id="perfil-email"></p>
+            <button type="submit" class="filter-btn active" data-i18n="perfil_salvar">Salvar alterações</button>
+          </form>
+          <p class="auth-feedback" id="perfil-feedback" aria-live="polite"></p>
+
+          <div class="perfil-zona-perigo">
+            <h3 data-i18n="perfil_zona_perigo">Excluir conta</h3>
+            <p data-i18n="perfil_excluir_aviso">Isso apaga sua conta e todos os dados ligados a ela, para sempre. Não tem como desfazer.</p>
+            <button id="perfil-excluir-btn" class="btn-excluir-conta" data-i18n="perfil_excluir_botao">Excluir minha conta</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <svg class="footer-icon" viewBox="0 0 100 100" width="28" height="28" fill="var(--primary-color)">
+        <path d="M50 0 C52 35 65 48 100 50 C65 52 52 65 50 100 C48 65 35 52 0 50 C35 48 48 35 50 0 Z" opacity="0.9"/>
+      </svg>
+      <p class="footer-nome">Lumina Sancti</p>
+      <p class="footer-contato" data-i18n="footer_fale_conosco">Fale conosco: <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a></p>
+    </div>
+  </footer>
 
   <svg style="display: none;">
     <defs>

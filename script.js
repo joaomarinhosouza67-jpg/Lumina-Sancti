@@ -1645,6 +1645,54 @@ const santosData = [
 // nome → clarão), que respeita quem prefere menos animação
 // (prefers-reduced-motion) e pode ser pulada a qualquer
 // momento com um toque na tela.
+// ============================================================
+//  SOM DE BRILHO (sintetizado, sem precisar de arquivo de áudio)
+// ============================================================
+// Um acorde curto e cintilante, tocado no exato momento em que a
+// estrela brilha na introdução. Navegadores bloqueiam áudio
+// automático até haver alguma interação da pessoa com a página —
+// por isso, se a primeira tentativa for bloqueada, uma segunda
+// tentativa acontece no primeiro toque/clique na tela.
+let somDeBrilhoJaTocou = false;
+
+function tocarSomDeBrilho() {
+  if (somDeBrilhoJaTocou) return;
+  try {
+    const AudioContextClasse = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClasse) return;
+    const ctx = new AudioContextClasse();
+
+    const tocar = () => {
+      const agora = ctx.currentTime;
+      // Acorde brilhante (Dó maior com nona), como um sino suave
+      const frequencias = [1046.5, 1318.5, 1568.0, 2093.0];
+      frequencias.forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const ganho = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        const inicio = agora + i * 0.07;
+        ganho.gain.setValueAtTime(0, inicio);
+        ganho.gain.linearRampToValueAtTime(0.07, inicio + 0.04);
+        ganho.gain.exponentialRampToValueAtTime(0.0001, inicio + 1.3);
+        osc.connect(ganho);
+        ganho.connect(ctx.destination);
+        osc.start(inicio);
+        osc.stop(inicio + 1.4);
+      });
+      somDeBrilhoJaTocou = true;
+    };
+
+    if (ctx.state === 'suspended') {
+      ctx.resume().then(tocar).catch(() => {});
+    } else {
+      tocar();
+    }
+  } catch (e) {
+    // Sem áudio, o site continua normalmente — é só um detalhe a mais.
+  }
+}
+
 (function iniciarIntro() {
   const introScreen = document.getElementById('intro-screen');
   if (!introScreen) return;
@@ -1699,6 +1747,12 @@ const santosData = [
     }
     convergencia.appendChild(fragmento2);
   }
+
+  // Toca o som bem no instante em que o clarão da estrela acontece
+  setTimeout(tocarSomDeBrilho, 900);
+  // Reserva: se o navegador bloqueou o som automático, toca no
+  // primeiro toque/clique em qualquer lugar da página.
+  document.addEventListener('click', tocarSomDeBrilho, { once: true });
 
   function encerrarIntro() {
     if (introEncerrada) return;
@@ -1828,165 +1882,589 @@ const bioContainer = document.getElementById('bio-container');
 
 const btnShare = document.getElementById('btn-share');
 
-const aiBtn = document.getElementById('ai-btn');
-const aiModal = document.getElementById('ai-modal');
-const closeAiBtn = document.getElementById('close-ai-btn');
-const aiInput = document.getElementById('ai-input');
-const aiCopyBtn = document.getElementById('ai-copy-btn');
-const aiFeedback = document.getElementById('ai-feedback');
-const aiResposta = document.getElementById('ai-resposta');
-
 // ============================================================
-//  PERGUNTAR A UMA IA
+//  IDIOMAS (pt / en / es)
 // ============================================================
-// A IA roda "por fora" do código do site: quem responde é uma
-// Edge Function do Supabase, que guarda a chave da IA em
-// segredo no servidor (nunca no navegador da pessoa) e só
-// aceita perguntas sobre santos, beatos, doutores da Igreja e
-// anjos — qualquer outro assunto é recusado pela própria IA,
-// por instrução no "system prompt" dela.
-//
-// Enquanto a linha abaixo não estiver configurada — ou se a
-// função cair por qualquer motivo — o site cai sozinho no modo
-// seguro: copia a pergunta para colar em qualquer IA que a
-// pessoa já usa.
-//
-// ██████████████████████████████████████████████████████████
-// ███  COLOQUE SUAS CREDENCIAIS AQUI (só esta linha)       ███
-// ███  Troque pela URL real da SUA Edge Function do        ███
-// ███  Supabase — você a encontra no painel do Supabase em ███
-// ███  Edge Functions → perguntar-sobre-santo, algo como:  ███
-// ███  https://abcdefgh.supabase.co/functions/v1/...       ███
-// ███  (A chave da Anthropic NÃO entra aqui — ela vai como ███
-// ███  "Secret" dentro do próprio Supabase, nunca em um     ███
-// ███  arquivo do site. Veja o passo a passo completo em    ███
-// ███  CONFIGURAR-IA.md)                                    ███
-// ██████████████████████████████████████████████████████████
-const AI_FUNCTION_URL = 'https://SEU-PROJETO.supabase.co/functions/v1/perguntar-sobre-santo';
-// ██████████████████████████████████████████████████████████
+// Traduz a interface do site (menus, botões, textos fixos). As
+// biografias dos santos, por enquanto, continuam só em português —
+// são muito extensas para traduzir todas de uma vez; um aviso
+// aparece na biografia quando o idioma escolhido não é o português,
+// explicando isso com transparência.
+const TRADUCOES = {
+  pt: {
+    hero_subtitulo: 'Luz dos Santos',
+    hero_citacao: '"A santidade não é o luxo de alguns, mas um chamado silencioso e ardente ao coração de todos nós, iluminando o mundo em cada época."',
+    sobre_titulo: 'Sobre o Lumina Sancti',
+    sobre_texto: 'O <strong>Lumina Sancti</strong> (Luz dos Santos) é um refúgio digital dedicado a preservar e compartilhar a vida, a fé e o legado daqueles que deixaram um rastro inextinguível de luz na história. Este espaço foi criado para revelar que a santidade não é algo distante, mas uma trilha bela, possível e acessível no cotidiano de qualquer época ou idade.',
+    filtro_todos_curto: 'Todos',
+    filtro_todos: 'Todos os Santos',
+    filtro_favoritos: '❤ Favoritos',
+    filtro_sagrada_familia: 'Sagrada Família',
+    filtro_arcanjos: 'Arcanjos',
+    filtro_doutores_curto: 'Doutores',
+    filtro_doutores: 'Doutores da Igreja',
+    filtro_grandes_santos: 'Grandes Santos',
+    filtro_santos_jovens: 'Santos Jovens',
+    filtro_beatos: 'Beatos',
+    catalogo_titulo: 'Catálogo',
+    pesquisar_titulo: 'Pesquisar Santo ou Beato',
+    pesquisar_placeholder: 'Digite o nome do santo...',
+    ia_titulo: 'Perguntar a uma IA',
+    ia_descricao: 'Digite o nome de qualquer santo, beato, doutor da Igreja ou anjo — mesmo um que não esteja no nosso catálogo — e pergunte à IA do site. Ela só responde sobre esses temas.',
+    ia_placeholder: 'Nome do santo...',
+    ia_botao: 'Perguntar',
+    voltar_inicio: 'Voltar para o início',
+    aviso_traducao: 'Esta biografia ainda está disponível apenas em português. A tradução completa está a caminho.',
+    conta_entrar: 'Entrar / Criar conta',
+    conta_perfil: 'Meu perfil',
+    conta_sair: 'Sair',
+    conta_entrar_aba: 'Entrar',
+    conta_cadastrar_aba: 'Criar conta',
+    conta_email: 'E-mail',
+    conta_senha: 'Senha',
+    conta_nome: 'Nome',
+    conta_entrar_botao: 'Entrar',
+    conta_cadastrar_botao: 'Criar minha conta',
+    lumina_subtitulo: 'A assistente exclusiva do Lumina Sancti — só sobre santos, beatos, veneráveis, doutores e anjos.',
+    lumina_precisa_login: 'Para conversar com a Lumina, entre na sua conta (é rápido e gratuito).',
+    lumina_placeholder: 'Pergunte sobre um santo, beato, doutor ou anjo...',
+    perfil_titulo: 'Meu perfil',
+    perfil_salvar: 'Salvar alterações',
+    perfil_zona_perigo: 'Excluir conta',
+    perfil_excluir_aviso: 'Isso apaga sua conta e todos os dados ligados a ela, para sempre. Não tem como desfazer.',
+    perfil_excluir_botao: 'Excluir minha conta',
+    footer_fale_conosco: 'Fale conosco: <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a>',
+  },
+  en: {
+    hero_subtitulo: 'Light of the Saints',
+    hero_citacao: '"Holiness is not the luxury of a few, but a quiet, burning call in the heart of every one of us, lighting up the world in every age."',
+    sobre_titulo: 'About Lumina Sancti',
+    sobre_texto: '<strong>Lumina Sancti</strong> (Light of the Saints) is a digital refuge dedicated to preserving and sharing the life, faith and legacy of those who left an unquenchable trail of light in history. This space was created to reveal that holiness is not something distant, but a beautiful path, possible and accessible in the everyday life of any era or age.',
+    filtro_todos_curto: 'All',
+    filtro_todos: 'All Saints',
+    filtro_favoritos: '❤ Favorites',
+    filtro_sagrada_familia: 'Holy Family',
+    filtro_arcanjos: 'Archangels',
+    filtro_doutores_curto: 'Doctors',
+    filtro_doutores: 'Doctors of the Church',
+    filtro_grandes_santos: 'Great Saints',
+    filtro_santos_jovens: 'Young Saints',
+    filtro_beatos: 'Blesseds',
+    catalogo_titulo: 'Catalog',
+    pesquisar_titulo: 'Search Saint or Blessed',
+    pesquisar_placeholder: 'Type the saint\'s name...',
+    ia_titulo: 'Ask an AI',
+    ia_descricao: 'Type the name of any saint, blessed, doctor of the Church or angel — even one not in our catalog — and ask the site\'s AI. It only answers about these topics.',
+    ia_placeholder: 'Saint\'s name...',
+    ia_botao: 'Ask',
+    voltar_inicio: 'Back to home',
+    aviso_traducao: 'This biography is currently available in Portuguese only. Full translation is on its way.',
+    conta_entrar: 'Sign in / Create account',
+    conta_perfil: 'My profile',
+    conta_sair: 'Sign out',
+    conta_entrar_aba: 'Sign in',
+    conta_cadastrar_aba: 'Create account',
+    conta_email: 'Email',
+    conta_senha: 'Password',
+    conta_nome: 'Name',
+    conta_entrar_botao: 'Sign in',
+    conta_cadastrar_botao: 'Create my account',
+    lumina_subtitulo: "Lumina Sancti's own assistant — only about saints, blesseds, venerables, doctors and angels.",
+    lumina_precisa_login: 'To talk with Lumina, sign in to your account (it\'s quick and free).',
+    lumina_placeholder: 'Ask about a saint, blessed, doctor or angel...',
+    perfil_titulo: 'My profile',
+    perfil_salvar: 'Save changes',
+    perfil_zona_perigo: 'Delete account',
+    perfil_excluir_aviso: 'This permanently deletes your account and all data linked to it. This cannot be undone.',
+    perfil_excluir_botao: 'Delete my account',
+    footer_fale_conosco: 'Contact us: <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a>',
+  },
+  es: {
+    hero_subtitulo: 'Luz de los Santos',
+    hero_citacao: '"La santidad no es el lujo de unos pocos, sino un llamado silencioso y ardiente en el corazón de todos nosotros, iluminando el mundo en cada época."',
+    sobre_titulo: 'Sobre Lumina Sancti',
+    sobre_texto: '<strong>Lumina Sancti</strong> (Luz de los Santos) es un refugio digital dedicado a preservar y compartir la vida, la fe y el legado de quienes dejaron un rastro inextinguible de luz en la historia. Este espacio fue creado para revelar que la santidad no es algo distante, sino un camino bello, posible y accesible en la vida cotidiana de cualquier época o edad.',
+    filtro_todos_curto: 'Todos',
+    filtro_todos: 'Todos los Santos',
+    filtro_favoritos: '❤ Favoritos',
+    filtro_sagrada_familia: 'Sagrada Familia',
+    filtro_arcanjos: 'Arcángeles',
+    filtro_doutores_curto: 'Doctores',
+    filtro_doutores: 'Doctores de la Iglesia',
+    filtro_grandes_santos: 'Grandes Santos',
+    filtro_santos_jovens: 'Santos Jóvenes',
+    filtro_beatos: 'Beatos',
+    catalogo_titulo: 'Catálogo',
+    pesquisar_titulo: 'Buscar Santo o Beato',
+    pesquisar_placeholder: 'Escribe el nombre del santo...',
+    ia_titulo: 'Preguntar a una IA',
+    ia_descricao: 'Escribe el nombre de cualquier santo, beato, doctor de la Iglesia o ángel — incluso uno que no esté en nuestro catálogo — y pregunta a la IA del sitio. Ella solo responde sobre estos temas.',
+    ia_placeholder: 'Nombre del santo...',
+    ia_botao: 'Preguntar',
+    voltar_inicio: 'Volver al inicio',
+    aviso_traducao: 'Esta biografía todavía está disponible solo en portugués. La traducción completa está en camino.',
+    conta_entrar: 'Entrar / Crear cuenta',
+    conta_perfil: 'Mi perfil',
+    conta_sair: 'Salir',
+    conta_entrar_aba: 'Entrar',
+    conta_cadastrar_aba: 'Crear cuenta',
+    conta_email: 'Correo electrónico',
+    conta_senha: 'Contraseña',
+    conta_nome: 'Nombre',
+    conta_entrar_botao: 'Entrar',
+    conta_cadastrar_botao: 'Crear mi cuenta',
+    lumina_subtitulo: 'La asistente exclusiva de Lumina Sancti — solo sobre santos, beatos, venerables, doctores y ángeles.',
+    lumina_precisa_login: 'Para hablar con Lumina, entra en tu cuenta (es rápido y gratis).',
+    lumina_placeholder: 'Pregunta sobre un santo, beato, doctor o ángel...',
+    perfil_titulo: 'Mi perfil',
+    perfil_salvar: 'Guardar cambios',
+    perfil_zona_perigo: 'Eliminar cuenta',
+    perfil_excluir_aviso: 'Esto elimina tu cuenta y todos los datos asociados, para siempre. No se puede deshacer.',
+    perfil_excluir_botao: 'Eliminar mi cuenta',
+    footer_fale_conosco: 'Contáctanos: <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a>',
+  },
+};
 
-function gerarPerguntaIA(nomeSanto) {
-  return `Me conte sobre ${nomeSanto}: sua vida, sua fé, seus milagres (se houver) e sua importância para a Igreja Católica.`;
-}
+const CHAVE_IDIOMA = 'lumina-sancti-idioma';
+let idiomaAtual = 'pt';
 
-function abrirModalIA(nomePreenchido) {
-  aiInput.value = nomePreenchido || '';
-  aiFeedback.textContent = '';
-  aiResposta.style.display = 'none';
-  aiResposta.textContent = '';
-  aiModal.classList.add('active');
-  setTimeout(() => aiInput.focus(), 100);
-}
-
-function fecharModalIA() {
-  aiModal.classList.remove('active');
-}
-
-async function copiarComoReserva(pergunta, motivo) {
+function getIdiomaSalvo() {
   try {
-    await navigator.clipboard.writeText(pergunta);
-    aiFeedback.textContent = `${motivo} Copiei a pergunta — cole na sua IA favorita.`;
+    return localStorage.getItem(CHAVE_IDIOMA) || 'pt';
   } catch (e) {
-    aiFeedback.textContent = pergunta;
+    return 'pt';
   }
 }
 
-async function perguntarIA() {
-  const nome = aiInput.value.trim();
-  if (!nome) {
-    aiFeedback.textContent = 'Digite o nome de um santo primeiro.';
-    aiInput.focus();
-    return;
-  }
+function aplicarIdioma(codigo) {
+  const dicionario = TRADUCOES[codigo] || TRADUCOES.pt;
+  idiomaAtual = codigo;
 
-  const pergunta = gerarPerguntaIA(nome);
-  aiFeedback.textContent = '';
-  aiResposta.style.display = 'none';
-  aiResposta.textContent = '';
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const chave = el.dataset.i18n;
+    if (dicionario[chave] !== undefined) {
+      el.innerHTML = dicionario[chave];
+    }
+  });
 
-  // Ainda não configurado: nem tenta, já usa o modo seguro
-  if (!AI_FUNCTION_URL || AI_FUNCTION_URL.includes('SEU-PROJETO')) {
-    await copiarComoReserva(pergunta, 'A IA embutida ainda não foi configurada.');
-    return;
-  }
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const chave = el.dataset.i18nPlaceholder;
+    if (dicionario[chave] !== undefined) {
+      el.setAttribute('placeholder', dicionario[chave]);
+    }
+  });
 
-  aiCopyBtn.disabled = true;
-  const textoOriginalBtn = aiCopyBtn.textContent;
-  aiCopyBtn.textContent = 'Perguntando...';
+  document.documentElement.lang = codigo === 'pt' ? 'pt-BR' : codigo;
+
+  document.querySelectorAll('.idioma-opcao').forEach(btn => {
+    btn.classList.toggle('idioma-ativa', btn.dataset.lang === codigo);
+  });
 
   try {
-    const resp = await fetch(AI_FUNCTION_URL, {
+    localStorage.setItem(CHAVE_IDIOMA, codigo);
+  } catch (e) {
+    // segue sem salvar a preferência, sem quebrar o site
+  }
+}
+
+function iniciarSeletorDeIdioma() {
+  const botao = document.getElementById('idioma-btn');
+  const menu = document.getElementById('idioma-menu');
+  if (!botao || !menu) return;
+
+  botao.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const abrindo = !menu.classList.contains('aberto');
+    menu.classList.toggle('aberto', abrindo);
+    botao.setAttribute('aria-expanded', abrindo ? 'true' : 'false');
+  });
+
+  document.querySelectorAll('.idioma-opcao').forEach(opcao => {
+    opcao.addEventListener('click', () => {
+      aplicarIdioma(opcao.dataset.lang);
+      menu.classList.remove('aberto');
+      botao.setAttribute('aria-expanded', 'false');
+      // Se a pessoa estiver vendo a biografia de um santo, atualiza
+      // o aviso de tradução na hora, sem precisar voltar e entrar de novo.
+      const idAtual = bioArticle && bioArticle.dataset.santoId;
+      if (idAtual) showDetail(idAtual);
+    });
+  });
+
+  document.addEventListener('click', () => {
+    menu.classList.remove('aberto');
+    botao.setAttribute('aria-expanded', 'false');
+  });
+
+  aplicarIdioma(getIdiomaSalvo());
+}
+
+// ============================================================
+//  SUPABASE — CONTAS E BANCO DE DADOS
+// ============================================================
+// ██████████████████████████████████████████████████████████
+// ███  COLOQUE SUAS CREDENCIAIS AQUI                        ███
+// ███  Vá no painel do Supabase → Project Settings → API.   ███
+// ███  "Project URL" vai em SUPABASE_URL. A chave "anon" /  ███
+// ███  "publishable" (a pública, NUNCA a "service_role")    ███
+// ███  vai em SUPABASE_ANON_KEY. Essas duas são seguras     ███
+// ███  para ficar no código do navegador — foram feitas     ███
+// ███  para isso.                                            ███
+// ██████████████████████████████████████████████████████████
+const SUPABASE_URL = 'https://SEU-PROJETO.supabase.co';
+const SUPABASE_ANON_KEY = 'SUA-CHAVE-ANON-OU-PUBLISHABLE-AQUI';
+// ██████████████████████████████████████████████████████████
+
+const supabaseCliente = (SUPABASE_URL.includes('SEU-PROJETO') || !window.supabase)
+  ? null
+  : window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let sessaoAtual = null;
+
+async function iniciarAutenticacao() {
+  if (!supabaseCliente) return; // Supabase ainda não configurado — o site funciona normal, só sem login
+
+  const { data } = await supabaseCliente.auth.getSession();
+  sessaoAtual = data.session;
+  atualizarInterfaceDeConta();
+
+  supabaseCliente.auth.onAuthStateChange((_evento, sessao) => {
+    sessaoAtual = sessao;
+    atualizarInterfaceDeConta();
+  });
+}
+
+function atualizarInterfaceDeConta() {
+  const logado = !!sessaoAtual;
+  const btnEntrar = document.getElementById('conta-menu-entrar');
+  const btnPerfil = document.getElementById('conta-menu-perfil');
+  const btnSair = document.getElementById('conta-menu-sair');
+  if (btnEntrar) btnEntrar.style.display = logado ? 'none' : 'block';
+  if (btnPerfil) btnPerfil.style.display = logado ? 'block' : 'none';
+  if (btnSair) btnSair.style.display = logado ? 'block' : 'none';
+
+  const precisaLogin = document.getElementById('lumina-precisa-login');
+  const chatArea = document.getElementById('lumina-chat-area');
+  if (precisaLogin && chatArea) {
+    precisaLogin.style.display = logado ? 'none' : 'block';
+    chatArea.style.display = logado ? 'block' : 'none';
+  }
+}
+
+// ============================================================
+//  NAVEGAÇÃO ENTRE PÁGINAS (home, biografia, Lumina, conta, perfil)
+// ============================================================
+function mudarDeView(idNovaView) {
+  const todasAsViews = ['view-home', 'view-detail', 'view-ia', 'view-auth', 'view-perfil'];
+  const viewAtual = todasAsViews.map(id => document.getElementById(id)).find(v => v && v.classList.contains('active'));
+
+  const trocar = () => {
+    todasAsViews.forEach(id => {
+      const v = document.getElementById(id);
+      if (v) v.style.display = 'none';
+    });
+    const proxima = document.getElementById(idNovaView);
+    if (proxima) {
+      proxima.style.display = 'block';
+      setTimeout(() => proxima.classList.add('active'), 20);
+    }
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  };
+
+  if (viewAtual) {
+    viewAtual.classList.remove('active');
+    setTimeout(trocar, 250);
+  } else {
+    trocar();
+  }
+}
+
+// ============================================================
+//  ENTRAR / CRIAR CONTA
+// ============================================================
+function irParaLogin() {
+  mudarDeView('view-auth');
+}
+
+function iniciarPaginaDeAutenticacao() {
+  const abaEntrar = document.getElementById('auth-tab-entrar');
+  const abaCadastrar = document.getElementById('auth-tab-cadastrar');
+  const formEntrar = document.getElementById('auth-form-entrar');
+  const formCadastrar = document.getElementById('auth-form-cadastrar');
+  const feedback = document.getElementById('auth-feedback');
+  if (!abaEntrar) return;
+
+  abaEntrar.addEventListener('click', () => {
+    abaEntrar.classList.add('active');
+    abaCadastrar.classList.remove('active');
+    formEntrar.style.display = 'flex';
+    formCadastrar.style.display = 'none';
+    feedback.textContent = '';
+  });
+  abaCadastrar.addEventListener('click', () => {
+    abaCadastrar.classList.add('active');
+    abaEntrar.classList.remove('active');
+    formCadastrar.style.display = 'flex';
+    formEntrar.style.display = 'none';
+    feedback.textContent = '';
+  });
+
+  formEntrar.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!supabaseCliente) { feedback.textContent = 'Contas ainda não configuradas neste site.'; return; }
+    feedback.textContent = 'Entrando...';
+    const email = document.getElementById('entrar-email').value.trim();
+    const senha = document.getElementById('entrar-senha').value;
+    const { error } = await supabaseCliente.auth.signInWithPassword({ email, password: senha });
+    if (error) {
+      feedback.textContent = 'E-mail ou senha incorretos.';
+      return;
+    }
+    feedback.textContent = '';
+    mudarDeView('view-home');
+  });
+
+  formCadastrar.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!supabaseCliente) { feedback.textContent = 'Contas ainda não configuradas neste site.'; return; }
+    feedback.textContent = 'Criando sua conta...';
+    const nome = document.getElementById('cadastrar-nome').value.trim();
+    const email = document.getElementById('cadastrar-email').value.trim();
+    const senha = document.getElementById('cadastrar-senha').value;
+    const { data, error } = await supabaseCliente.auth.signUp({
+      email,
+      password: senha,
+      options: { data: { nome } },
+    });
+    if (error) {
+      feedback.textContent = error.message.includes('already registered')
+        ? 'Esse e-mail já tem uma conta.'
+        : 'Não foi possível criar a conta. Tente de novo.';
+      return;
+    }
+    if (data.session) {
+      // Confirmação de e-mail desligada no projeto: já entra direto
+      feedback.textContent = '';
+      mudarDeView('view-home');
+    } else {
+      feedback.textContent = 'Quase lá! Enviamos um e-mail de confirmação — verifique sua caixa de entrada.';
+    }
+  });
+}
+
+// ============================================================
+//  PERFIL E EXCLUSÃO DE CONTA
+// ============================================================
+async function carregarPaginaDePerfil() {
+  const feedback = document.getElementById('perfil-feedback');
+  if (!supabaseCliente || !sessaoAtual) { mudarDeView('view-auth'); return; }
+
+  document.getElementById('perfil-email').textContent = sessaoAtual.user.email;
+  const { data: perfil } = await supabaseCliente
+    .from('perfis')
+    .select('nome')
+    .eq('id', sessaoAtual.user.id)
+    .maybeSingle();
+  document.getElementById('perfil-nome').value = perfil?.nome || '';
+  if (feedback) feedback.textContent = '';
+}
+
+function iniciarPaginaDePerfil() {
+  const form = document.getElementById('perfil-form');
+  const feedback = document.getElementById('perfil-feedback');
+  if (!form) return;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const novoNome = document.getElementById('perfil-nome').value.trim();
+    const { error } = await supabaseCliente
+      .from('perfis')
+      .update({ nome: novoNome })
+      .eq('id', sessaoAtual.user.id);
+    feedback.textContent = error ? 'Não foi possível salvar agora.' : 'Salvo!';
+  });
+
+  // Excluir conta: exige duas confirmações separadas, de propósito,
+  // pra ninguém apagar a conta sem querer.
+  document.getElementById('perfil-excluir-btn').addEventListener('click', async () => {
+    const primeira = confirm('Tem certeza que quer excluir sua conta do Lumina Sancti? Essa ação não pode ser desfeita.');
+    if (!primeira) return;
+    const segunda = confirm('Só para confirmar de novo: excluir sua conta APAGA TUDO para sempre. Continuar mesmo assim?');
+    if (!segunda) return;
+
+    feedback.textContent = 'Excluindo sua conta...';
+    try {
+      const { data: sessaoDados } = await supabaseCliente.auth.getSession();
+      const token = sessaoDados.session?.access_token;
+      const resp = await fetch(`${SUPABASE_URL}/functions/v1/excluir-conta`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      });
+      const dados = await resp.json().catch(() => null);
+      if (!resp.ok || !dados?.sucesso) throw new Error('falha');
+      await supabaseCliente.auth.signOut();
+      mudarDeView('view-home');
+    } catch (e) {
+      feedback.textContent = 'Não foi possível excluir a conta agora. Tente novamente.';
+    }
+  });
+}
+
+// ============================================================
+//  PÁGINA DA LUMINA — a IA exclusiva do Lumina Sancti
+// ============================================================
+// Ela roda "por fora" do código do site: quem responde é uma
+// Edge Function do Supabase, que guarda a chave da IA em segredo
+// no servidor (nunca no navegador da pessoa), exige login e só
+// aceita perguntas sobre santos, beatos, doutores da Igreja e
+// anjos — qualquer outro assunto é recusado pela própria Lumina,
+// por instrução no "system prompt" dela.
+const AI_FUNCTION_URL = () => `${SUPABASE_URL}/functions/v1/perguntar-sobre-santo`;
+
+function criarIndicadorPensando() {
+  const div = document.getElementById('lumina-pensando');
+  if (div) div.style.display = 'flex';
+}
+function esconderIndicadorPensando() {
+  const div = document.getElementById('lumina-pensando');
+  if (div) div.style.display = 'none';
+}
+
+// Efeito "máquina de escrever": o texto aparece caractere por
+// caractere, de forma fluida, até fixar na tela por completo.
+function efeitoMaquinaDeEscrever(elemento, textoCompleto, velocidadeMs = 18) {
+  return new Promise((resolve) => {
+    elemento.textContent = '';
+    elemento.classList.add('cursor-digitando');
+    let i = 0;
+    function proximaLetra() {
+      if (i < textoCompleto.length) {
+        elemento.textContent += textoCompleto.charAt(i);
+        i++;
+        setTimeout(proximaLetra, velocidadeMs);
+      } else {
+        elemento.classList.remove('cursor-digitando');
+        resolve();
+      }
+    }
+    proximaLetra();
+  });
+}
+
+async function enviarPerguntaLumina() {
+  const input = document.getElementById('lumina-input');
+  const botaoEnviar = document.getElementById('lumina-enviar');
+  const areaResposta = document.getElementById('lumina-resposta-area');
+  const erroEl = document.getElementById('lumina-erro');
+  const restantesEl = document.getElementById('lumina-restantes');
+
+  const pergunta = input.value.trim();
+  if (!pergunta) { input.focus(); return; }
+  if (!sessaoAtual) { irParaLogin(); return; }
+
+  erroEl.textContent = '';
+  input.value = '';
+  input.disabled = true;
+  botaoEnviar.disabled = true;
+
+  const blocoPergunta = document.createElement('div');
+  blocoPergunta.className = 'lumina-mensagem lumina-mensagem-pergunta';
+  blocoPergunta.textContent = pergunta;
+  areaResposta.appendChild(blocoPergunta);
+  areaResposta.scrollTop = areaResposta.scrollHeight;
+
+  criarIndicadorPensando();
+
+  try {
+    const token = sessaoAtual.access_token;
+    const resp = await fetch(AI_FUNCTION_URL(), {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       body: JSON.stringify({ pergunta }),
     });
-
     const dados = await resp.json().catch(() => null);
 
-    if (!resp.ok || !dados || !dados.resposta) {
-      const mensagemErro = dados && dados.erro ? dados.erro : null;
-      if (mensagemErro) {
-        aiFeedback.textContent = mensagemErro;
-      } else {
-        await copiarComoReserva(pergunta, 'Não consegui falar com a IA agora.');
+    esconderIndicadorPensando();
+
+    if (!resp.ok || !dados?.resposta) {
+      if (dados?.precisaLogin) {
+        await supabaseCliente.auth.signOut();
+        irParaLogin();
+        return;
       }
+      erroEl.textContent = dados?.erro || 'Não consegui falar com a Lumina agora. Tente de novo em instantes.';
       return;
     }
 
-    aiResposta.textContent = dados.resposta;
-    aiResposta.style.display = 'block';
-  } catch (e) {
-    await copiarComoReserva(pergunta, 'Não consegui falar com a IA agora.');
-  } finally {
-    aiCopyBtn.disabled = false;
-    aiCopyBtn.textContent = textoOriginalBtn;
-  }
-}
+    const blocoResposta = document.createElement('div');
+    blocoResposta.className = 'lumina-mensagem';
+    areaResposta.appendChild(blocoResposta);
+    await efeitoMaquinaDeEscrever(blocoResposta, dados.resposta);
+    areaResposta.scrollTop = areaResposta.scrollHeight;
 
-if (aiBtn) {
-  aiBtn.addEventListener('click', () => abrirModalIA());
-  closeAiBtn.addEventListener('click', fecharModalIA);
-  aiCopyBtn.addEventListener('click', perguntarIA);
-  aiInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') perguntarIA();
-  });
-}
-
-// ============================================================
-//  REVELAÇÃO SUAVE AO ROLAR A PÁGINA
-// ============================================================
-function iniciarRevelacaoAoRolar() {
-  const prefereMenosMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const alvos = document.querySelectorAll('.reveal-on-scroll');
-
-  if (prefereMenosMovimento || !('IntersectionObserver' in window)) {
-    alvos.forEach(el => el.classList.add('revealed'));
-    return;
-  }
-
-  const observador = new IntersectionObserver((entradas) => {
-    entradas.forEach(entrada => {
-      if (entrada.isIntersecting) {
-        entrada.target.classList.add('revealed');
-        observador.unobserve(entrada.target);
-      }
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-
-  alvos.forEach(el => {
-    // Reforço: se o elemento já está visível na tela no exato
-    // momento em que começamos a observar (comum em conteúdo perto
-    // do topo da página), revela na hora — sem depender só do
-    // primeiro retorno assíncrono do IntersectionObserver, que em
-    // alguns navegadores pode demorar ou não disparar de imediato.
-    const retangulo = el.getBoundingClientRect();
-    const jaVisivel = retangulo.top < window.innerHeight && retangulo.bottom > 0;
-    if (jaVisivel) {
-      el.classList.add('revealed');
-    } else {
-      observador.observe(el);
+    if (typeof dados.perguntasRestantesHoje === 'number') {
+      restantesEl.textContent = `${dados.perguntasRestantesHoje} pergunta(s) restante(s) hoje`;
     }
+  } catch (e) {
+    esconderIndicadorPensando();
+    erroEl.textContent = 'Não consegui falar com a Lumina agora. Verifique sua internet e tente de novo.';
+  } finally {
+    input.disabled = false;
+    botaoEnviar.disabled = false;
+    input.focus();
+  }
+}
+
+function iniciarPaginaDaLumina() {
+  const enviar = document.getElementById('lumina-enviar');
+  const input = document.getElementById('lumina-input');
+  const irLogin = document.getElementById('lumina-ir-login');
+  if (!enviar) return;
+
+  enviar.addEventListener('click', enviarPerguntaLumina);
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') enviarPerguntaLumina();
   });
+  irLogin.addEventListener('click', irParaLogin);
+}
+
+// ============================================================
+//  BOTÕES DA BARRA DE NAVEGAÇÃO (Lumina, Conta, voltar)
+// ============================================================
+function iniciarNavegacaoDeContas() {
+  const luminaBtn = document.getElementById('lumina-btn');
+  if (luminaBtn) luminaBtn.addEventListener('click', () => mudarDeView('view-ia'));
+
+  const contaBtn = document.getElementById('conta-btn');
+  const contaMenu = document.getElementById('conta-menu');
+  if (contaBtn) {
+    contaBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const abrindo = !contaMenu.classList.contains('aberto');
+      contaMenu.classList.toggle('aberto', abrindo);
+      contaBtn.setAttribute('aria-expanded', abrindo ? 'true' : 'false');
+    });
+    document.addEventListener('click', () => contaMenu.classList.remove('aberto'));
+  }
+
+  const menuEntrar = document.getElementById('conta-menu-entrar');
+  const menuPerfil = document.getElementById('conta-menu-perfil');
+  const menuSair = document.getElementById('conta-menu-sair');
+  if (menuEntrar) menuEntrar.addEventListener('click', irParaLogin);
+  if (menuPerfil) menuPerfil.addEventListener('click', () => { mudarDeView('view-perfil'); carregarPaginaDePerfil(); });
+  if (menuSair) menuSair.addEventListener('click', async () => {
+    if (supabaseCliente) await supabaseCliente.auth.signOut();
+    mudarDeView('view-home');
+  });
+
+  ['btn-back-lumina', 'btn-back-auth', 'btn-back-perfil'].forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) btn.addEventListener('click', () => mudarDeView('view-home'));
+  });
+
+  iniciarPaginaDeAutenticacao();
+  iniciarPaginaDePerfil();
+  iniciarPaginaDaLumina();
 }
 
 // ============================================================
@@ -2304,11 +2782,16 @@ function showDetail(id) {
   closeSidebar();
   closeSearch();
   bioContainer.classList.remove('animate-in');
+  bioArticle.dataset.santoId = santo.id;
 
   viewHome.classList.remove('active');
   setTimeout(() => {
     viewHome.style.display = 'none';
     viewDetail.style.display = 'block';
+
+    const avisoTraducao = (typeof idiomaAtual !== 'undefined' && idiomaAtual !== 'pt')
+      ? `<p class="bio-aviso-traducao" data-i18n="aviso_traducao">${(TRADUCOES[idiomaAtual] || {}).aviso_traducao || ''}</p>`
+      : '';
 
     bioArticle.innerHTML = `
       <div class="bio-header">
@@ -2318,18 +2801,28 @@ function showDetail(id) {
         </h2>
       </div>
       <div class="bio-img-wrapper" id="bio-img-wrapper"></div>
+      ${avisoTraducao}
       <div class="bio-text">
         ${santo.texto}
       </div>
       <button class="btn-ask-ai" id="btn-ask-ai-santo">
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.34 6.34l2.83 2.83M14.83 14.83l2.83 2.83M17.66 6.34l-2.83 2.83M9.17 14.83l-2.83 2.83"/><circle cx="12" cy="12" r="2.2" fill="currentColor" stroke="none"/></svg>
-        Perguntar mais a uma IA sobre ${santo.nome}
+        Perguntar à Lumina sobre ${santo.nome}
       </button>
     `;
 
     const btnAskAiSanto = document.getElementById('btn-ask-ai-santo');
     if (btnAskAiSanto) {
-      btnAskAiSanto.addEventListener('click', () => abrirModalIA(santo.nome));
+      btnAskAiSanto.addEventListener('click', () => {
+        mudarDeView('view-ia');
+        setTimeout(() => {
+          const luminaInput = document.getElementById('lumina-input');
+          if (luminaInput) {
+            luminaInput.value = `Me conte sobre ${santo.nome}.`;
+            luminaInput.focus();
+          }
+        }, 300);
+      });
     }
 
     buscarImagemSanto(santo).then(imgUrl => {
@@ -2486,6 +2979,8 @@ function rodarComSeguranca(nome, funcao) {
 document.addEventListener('DOMContentLoaded', () => {
   rodarComSeguranca('grade de santos', renderGrid);
   rodarComSeguranca('santo do dia', renderSantoDoDia);
-  rodarComSeguranca('revelação ao rolar', iniciarRevelacaoAoRolar);
   rodarComSeguranca('chuva de meteoros', iniciarChuvaDeMeteoros);
+  rodarComSeguranca('seletor de idioma', iniciarSeletorDeIdioma);
+  rodarComSeguranca('navegação de contas', iniciarNavegacaoDeContas);
+  rodarComSeguranca('autenticação', iniciarAutenticacao);
 });
