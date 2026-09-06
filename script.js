@@ -2155,7 +2155,7 @@ function atualizarInterfaceDeConta() {
 //  NAVEGAÇÃO ENTRE PÁGINAS (home, biografia, Lumina, conta, perfil)
 // ============================================================
 function mudarDeView(idNovaView) {
-  const todasAsViews = ['view-home', 'view-detail', 'view-ia', 'view-auth', 'view-perfil'];
+  const todasAsViews = ['view-home', 'view-detail', 'view-ia', 'view-auth', 'view-perfil', 'view-oracoes', 'view-terco', 'view-padroeiro'];
   const viewAtual = todasAsViews.map(id => document.getElementById(id)).find(v => v && v.classList.contains('active'));
 
   const trocar = () => {
@@ -2553,7 +2553,12 @@ function getSantoEmDestaque(idParaEvitar) {
 function montarCartaoSantoDoDia(santo, rotulo, idBase) {
   return `
     <div class="sdd-card" id="${idBase}-card" role="button" tabindex="0" aria-label="Ver a história de ${santo.nome}">
-      <span class="sdd-label">${rotulo}</span>
+      <div class="sdd-topo">
+        <span class="sdd-label">${rotulo}</span>
+        <button class="btn-compartilhar-sdd" id="${idBase}-compartilhar" aria-label="Baixar cartão para compartilhar">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        </button>
+      </div>
       <div class="sdd-body">
         <div class="sdd-img-wrapper" id="${idBase}-img-wrapper">
           <svg class="card-img-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-aureola"></use></svg>
@@ -2568,6 +2573,138 @@ function montarCartaoSantoDoDia(santo, rotulo, idBase) {
   `;
 }
 
+// ============================================================
+//  CARTÃO DE COMPARTILHAMENTO (gerado na hora, com Canvas)
+// ============================================================
+function carregarImagemComCors(url) {
+  return new Promise((resolve) => {
+    if (!url) { resolve(null); return; }
+    const img = new Image();
+    img.crossOrigin = 'anonymous'; // necessário pra depois poder exportar o canvas
+    img.onload = () => resolve(img);
+    img.onerror = () => resolve(null); // sem foto: o cartão sai só com a estrela
+    img.src = url;
+  });
+}
+
+function quebrarTexto(ctx, texto, larguraMax) {
+  const palavras = texto.split(' ');
+  const linhas = [];
+  let linhaAtual = '';
+  palavras.forEach((palavra) => {
+    const tentativa = linhaAtual ? `${linhaAtual} ${palavra}` : palavra;
+    if (ctx.measureText(tentativa).width > larguraMax && linhaAtual) {
+      linhas.push(linhaAtual);
+      linhaAtual = palavra;
+    } else {
+      linhaAtual = tentativa;
+    }
+  });
+  if (linhaAtual) linhas.push(linhaAtual);
+  return linhas;
+}
+
+async function gerarCartaoDeCompartilhamento(santo) {
+  const T = 1080;
+  const canvas = document.createElement('canvas');
+  canvas.width = T;
+  canvas.height = T;
+  const ctx = canvas.getContext('2d');
+
+  // Fundo escuro com um leve gradiente radial, igual ao site
+  const gradiente = ctx.createRadialGradient(T / 2, T * 0.38, T * 0.05, T / 2, T * 0.38, T * 0.75);
+  gradiente.addColorStop(0, '#1a2338');
+  gradiente.addColorStop(1, '#0f172a');
+  ctx.fillStyle = gradiente;
+  ctx.fillRect(0, 0, T, T);
+
+  // Foto do santo (se carregar), em círculo
+  const imgUrl = await buscarImagemSanto(santo);
+  const img = await carregarImagemComCors(imgUrl);
+  const raioFoto = T * 0.20;
+  const centroX = T / 2;
+  const centroY = T * 0.33;
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(centroX, centroY, raioFoto, 0, Math.PI * 2);
+  ctx.closePath();
+  ctx.fillStyle = '#334155';
+  ctx.fill();
+  if (img) {
+    ctx.clip();
+    const lado = Math.min(img.width, img.height);
+    ctx.drawImage(
+      img,
+      (img.width - lado) / 2, (img.height - lado) / 2, lado, lado,
+      centroX - raioFoto, centroY - raioFoto, raioFoto * 2, raioFoto * 2
+    );
+  }
+  ctx.restore();
+
+  ctx.strokeStyle = '#d4af37';
+  ctx.lineWidth = 6;
+  ctx.beginPath();
+  ctx.arc(centroX, centroY, raioFoto, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Nome do santo
+  ctx.fillStyle = '#d4af37';
+  ctx.textAlign = 'center';
+  ctx.font = 'bold 54px Georgia, serif';
+  const linhasNome = quebrarTexto(ctx, santo.nome, T * 0.85);
+  let y = centroY + raioFoto + 80;
+  linhasNome.forEach((linha) => { ctx.fillText(linha, centroX, y); y += 62; });
+
+  // Resumo
+  ctx.fillStyle = '#cbd5e1';
+  ctx.font = '30px Georgia, serif';
+  y += 20;
+  const linhasResumo = quebrarTexto(ctx, santo.resumo, T * 0.78);
+  linhasResumo.forEach((linha) => { ctx.fillText(linha, centroX, y); y += 42; });
+
+  // Marca do site, no rodapé do cartão
+  ctx.fillStyle = '#d4af37';
+  ctx.font = 'bold 32px Georgia, serif';
+  ctx.fillText('LUMINA SANCTI', centroX, T - 90);
+  ctx.fillStyle = '#64748b';
+  ctx.font = '22px Georgia, serif';
+  ctx.fillText('luminasancti.com', centroX, T - 55);
+
+  return canvas;
+}
+
+async function compartilharSantoDoDia(santo, botao) {
+  const rotuloOriginal = botao.innerHTML;
+  botao.disabled = true;
+  botao.innerHTML = '⏳';
+  try {
+    const canvas = await gerarCartaoDeCompartilhamento(santo);
+    canvas.toBlob(async (blob) => {
+      if (!blob) return;
+      const arquivo = new File([blob], `lumina-sancti-${santo.id}.png`, { type: 'image/png' });
+
+      if (navigator.share && navigator.canShare && navigator.canShare({ files: [arquivo] })) {
+        try {
+          await navigator.share({ files: [arquivo], title: santo.nome, text: `Conheça ${santo.nome} — Lumina Sancti` });
+        } catch (e) { /* pessoa cancelou o compartilhamento — tudo bem */ }
+      } else {
+        // Sem suporte a compartilhar arquivos: baixa a imagem direto
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `lumina-sancti-${santo.id}.png`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+      }
+    }, 'image/png');
+  } catch (e) {
+    console.error('Não foi possível gerar o cartão:', e);
+  } finally {
+    botao.disabled = false;
+    botao.innerHTML = rotuloOriginal;
+  }
+}
+
 function ligarCartaoSantoDoDia(idBase, santo) {
   const card = document.getElementById(`${idBase}-card`);
   if (!card) return;
@@ -2578,6 +2715,15 @@ function ligarCartaoSantoDoDia(idBase, santo) {
       showDetail(santo.id);
     }
   });
+
+  const btnCompartilhar = document.getElementById(`${idBase}-compartilhar`);
+  if (btnCompartilhar) {
+    btnCompartilhar.addEventListener('click', (e) => {
+      e.stopPropagation();
+      compartilharSantoDoDia(santo, btnCompartilhar);
+    });
+  }
+
   buscarImagemSanto(santo).then(imgUrl => {
     const wrapper = document.getElementById(`${idBase}-img-wrapper`);
     if (imgUrl && wrapper) {
@@ -2775,10 +2921,65 @@ function renderGrid(filter = 'todos') {
   });
 }
 
+// ============================================================
+//  OUVIR BIOGRAFIA (voz nativa do navegador, sem arquivo de áudio)
+// ============================================================
+function pararLeituraDeBiografia() {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+  }
+}
+
+function textoLimpo(html) {
+  return html
+    .replace(/<[^>]+>/g, ' ') // remove as tags HTML
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function ligarBotaoOuvir(santo) {
+  const botao = document.getElementById('btn-ouvir-bio');
+  const rotulo = document.getElementById('btn-ouvir-texto');
+  if (!botao) return;
+
+  if (!('speechSynthesis' in window)) {
+    botao.style.display = 'none'; // navegador sem suporte: some, sem quebrar nada
+    return;
+  }
+
+  botao.addEventListener('click', () => {
+    if (window.speechSynthesis.speaking) {
+      pararLeituraDeBiografia();
+      rotulo.textContent = 'Ouvir biografia';
+      botao.classList.remove('ouvindo');
+      return;
+    }
+
+    const texto = `${santo.nome}. ${textoLimpo(santo.texto)}`;
+    const fala = new SpeechSynthesisUtterance(texto);
+    fala.lang = 'pt-BR';
+    fala.rate = 0.95;
+
+    fala.onend = () => {
+      rotulo.textContent = 'Ouvir biografia';
+      botao.classList.remove('ouvindo');
+    };
+    fala.onerror = () => {
+      rotulo.textContent = 'Ouvir biografia';
+      botao.classList.remove('ouvindo');
+    };
+
+    window.speechSynthesis.speak(fala);
+    rotulo.textContent = 'Parar leitura';
+    botao.classList.add('ouvindo');
+  });
+}
+
 function showDetail(id) {
   const santo = santosData.find(s => s.id === id);
   if (!santo) return;
 
+  pararLeituraDeBiografia();
   closeSidebar();
   closeSearch();
   bioContainer.classList.remove('animate-in');
@@ -2802,6 +3003,10 @@ function showDetail(id) {
       </div>
       <div class="bio-img-wrapper" id="bio-img-wrapper"></div>
       ${avisoTraducao}
+      <button class="btn-ouvir" id="btn-ouvir-bio">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+        <span id="btn-ouvir-texto">Ouvir biografia</span>
+      </button>
       <div class="bio-text">
         ${santo.texto}
       </div>
@@ -2810,6 +3015,8 @@ function showDetail(id) {
         Perguntar à Lumina sobre ${santo.nome}
       </button>
     `;
+
+    ligarBotaoOuvir(santo);
 
     const btnAskAiSanto = document.getElementById('btn-ask-ai-santo');
     if (btnAskAiSanto) {
@@ -2858,6 +3065,7 @@ function showDetail(id) {
 }
 
 btnBack.addEventListener('click', () => {
+  pararLeituraDeBiografia();
   viewDetail.classList.remove('active');
   bioContainer.classList.remove('animate-in');
   setTimeout(() => {
@@ -2983,4 +3191,297 @@ document.addEventListener('DOMContentLoaded', () => {
   rodarComSeguranca('seletor de idioma', iniciarSeletorDeIdioma);
   rodarComSeguranca('navegação de contas', iniciarNavegacaoDeContas);
   rodarComSeguranca('autenticação', iniciarAutenticacao);
+  rodarComSeguranca('página de orações', iniciarPaginaDeOracoes);
+  rodarComSeguranca('página do terço', iniciarPaginaDoTerco);
+  rodarComSeguranca('página de padroeiro', iniciarPaginaDePadroeiro);
+  rodarComSeguranca('menu lateral (novas páginas)', iniciarNavegacaoDoMenuLateral);
 });
+
+// ============================================================
+//  ORAÇÕES DO DIA A DIA
+// ============================================================
+const ORACOES = [
+  { titulo: 'Sinal da Cruz', texto: 'Em nome do Pai, e do Filho, e do Espírito Santo. Amém.' },
+  { titulo: 'Pai Nosso', texto: 'Pai Nosso que estais nos Céus,\nsantificado seja o Vosso nome,\nvenha a nós o Vosso reino,\nseja feita a Vossa vontade,\nassim na terra como no Céu.\nO pão nosso de cada dia nos dai hoje,\nperdoai-nos as nossas ofensas,\nassim como nós perdoamos a quem nos tem ofendido,\ne não nos deixeis cair em tentação,\nmas livrai-nos do mal.\nAmém.' },
+  { titulo: 'Ave Maria', texto: 'Ave Maria, cheia de graça, o Senhor é convosco,\nbendita sois vós entre as mulheres,\ne bendito é o fruto do vosso ventre, Jesus.\nSanta Maria, Mãe de Deus,\nrogai por nós, pecadores,\nagora e na hora da nossa morte.\nAmém.' },
+  { titulo: 'Glória ao Pai', texto: 'Glória ao Pai, e ao Filho, e ao Espírito Santo,\ncomo era no princípio, agora e sempre.\nAmém.' },
+  { titulo: 'Credo dos Apóstolos', texto: 'Creio em Deus Pai todo-poderoso, Criador do Céu e da Terra;\ne em Jesus Cristo, Seu único Filho, nosso Senhor,\nque foi concebido pelo poder do Espírito Santo,\nnasceu da Virgem Maria,\npadeceu sob Pôncio Pilatos, foi crucificado, morto e sepultado,\ndesceu à mansão dos mortos,\nressuscitou ao terceiro dia,\nsubiu aos Céus,\nestá sentado à direita de Deus Pai todo-poderoso,\ndonde há de vir a julgar os vivos e os mortos.\nCreio no Espírito Santo,\nna Santa Igreja Católica,\nna comunhão dos Santos,\nna remissão dos pecados,\nna ressurreição da carne,\nna vida eterna.\nAmém.' },
+  { titulo: 'Salve Rainha', texto: 'Salve, Rainha, Mãe de misericórdia,\nvida, doçura e esperança nossa, salve!\nA vós bradamos, os degredados filhos de Eva.\nA vós suspiramos, gemendo e chorando\nneste vale de lágrimas.\nEia, pois, advogada nossa,\nesses vossos olhos misericordiosos a nós volvei.\nE depois deste desterro, mostrai-nos Jesus,\nbendito fruto do vosso ventre, ó clemente, ó piedosa,\nó doce sempre Virgem Maria.\nRogai por nós, Santa Mãe de Deus,\npara que sejamos dignos das promessas de Cristo.\nAmém.' },
+  { titulo: 'Anjo da Guarda', texto: 'Anjo do Senhor, meu zeloso guarda,\npois a bondade divina me confiou a vós,\neu vos agradeço e vos peço que me assistais e defendais\nem todos os perigos, e me alcanceis o perdão de Deus.\nAmém.' },
+  { titulo: 'Ato de Contrição', texto: 'Meu Deus, eu me arrependo de todo o coração de todos os meus pecados,\ne os detesto porque, pecando, mereci Vossos castigos,\ne, sobretudo, porque Vos ofendi a Vós, que sois infinitamente bom e digno de ser amado sobre todas as coisas.\nProponho firmemente, com o auxílio da Vossa graça,\nnão mais pecar e evitar as ocasiões de pecado.\nAmém.' },
+  { titulo: 'Angelus (O Anjo do Senhor)', texto: 'O Anjo do Senhor anunciou a Maria, e ela concebeu do Espírito Santo. Ave Maria...\nEis aqui a serva do Senhor. Faça-se em mim segundo a Vossa palavra. Ave Maria...\nE o Verbo se fez carne. E habitou entre nós. Ave Maria...\nRogai por nós, Santa Mãe de Deus, para que sejamos dignos das promessas de Cristo.\nOremos: Infundi, Senhor, a Vossa graça em nossas almas, para que nós, que pela anunciação do Anjo conhecemos a encarnação de Vosso Filho, pela Sua paixão e cruz sejamos conduzidos à glória da ressurreição. Por Cristo, Senhor Nosso. Amém.' },
+  { titulo: 'Oração a São Miguel Arcanjo', texto: 'São Miguel Arcanjo, defendei-nos no combate,\nsede o nosso refúgio contra as maldades e ciladas do demônio.\nOs vós ordene Deus, instantemente o pedimos,\ne vós, príncipe da milícia celeste,\ncom o poder que Deus vos conferiu,\nprecipitai no inferno a Satanás\ne a todos os espíritos malignos,\nque andam pelo mundo para perder as almas.\nAmém.' },
+];
+
+function iniciarPaginaDeOracoes() {
+  const container = document.getElementById('lista-oracoes');
+  if (!container) return;
+
+  container.innerHTML = ORACOES.map((o, i) => `
+    <div class="oracao-item" id="oracao-${i}">
+      <button class="oracao-pergunta">
+        <span>${o.titulo}</span>
+        <svg class="oracao-seta" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="oracao-corpo"><p class="oracao-texto">${o.texto}</p></div>
+    </div>
+  `).join('');
+
+  container.querySelectorAll('.oracao-item').forEach(item => {
+    item.querySelector('.oracao-pergunta').addEventListener('click', () => {
+      item.classList.toggle('aberta');
+    });
+  });
+
+  const btnVoltar = document.getElementById('btn-back-oracoes');
+  if (btnVoltar) btnVoltar.addEventListener('click', () => mudarDeView('view-home'));
+}
+
+// ============================================================
+//  TERÇO GUIADO
+// ============================================================
+const MISTERIOS_DO_TERCO = {
+  gozosos: {
+    nome: 'Mistérios Gozosos',
+    dias: 'Segunda-feira e Sábado',
+    lista: [
+      { titulo: '1º Mistério Gozoso — A Anunciação', texto: 'O anjo Gabriel anuncia a Maria que ela será a mãe do Salvador, e ela responde com um "sim" total: "Eis aqui a serva do Senhor". Peçamos a graça da humildade.' },
+      { titulo: '2º Mistério Gozoso — A Visitação', texto: 'Maria visita sua prima Isabel, grávida de João Batista, e a criança salta de alegria no ventre. Peçamos a graça da caridade com o próximo.' },
+      { titulo: '3º Mistério Gozoso — A Natividade', texto: 'Jesus nasce em Belém, numa manjedoura, na mais simples pobreza. Peçamos a graça do desapego e da simplicidade de coração.' },
+      { titulo: '4º Mistério Gozoso — A Apresentação no Templo', texto: 'Maria e José apresentam o Menino Jesus no Templo, cumprindo a Lei, e o ancião Simeão o reconhece como o Salvador. Peçamos a graça da obediência.' },
+      { titulo: '5º Mistério Gozoso — O Encontro de Jesus no Templo', texto: 'Depois de perdê-lo por três dias, Maria e José encontram o Menino Jesus ensinando os doutores no Templo. Peçamos a graça de buscar sempre a Deus.' },
+    ],
+  },
+  dolorosos: {
+    nome: 'Mistérios Dolorosos',
+    dias: 'Terça-feira e Sexta-feira',
+    lista: [
+      { titulo: '1º Mistério Doloroso — A Agonia no Horto', texto: 'Jesus, no Horto das Oliveiras, sua sangue diante da angústia da paixão que se aproxima, mas se entrega à vontade do Pai. Peçamos a graça da confiança em Deus.' },
+      { titulo: '2º Mistério Doloroso — A Flagelação', texto: 'Jesus é açoitado cruelmente por ordem de Pilatos. Peçamos a graça da pureza e do domínio dos sentidos.' },
+      { titulo: '3º Mistério Doloroso — A Coroação de Espinhos', texto: 'Os soldados zombam de Jesus, coroando-o de espinhos como "rei dos judeus". Peçamos a graça de suportar as humilhações com paciência.' },
+      { titulo: '4º Mistério Doloroso — Jesus Carrega a Cruz', texto: 'Jesus carrega a cruz pesada até o Calvário, caindo e se levantando. Peçamos a graça da paciência nas provações da vida.' },
+      { titulo: '5º Mistério Doloroso — A Crucificação e Morte de Jesus', texto: 'Jesus morre na cruz por amor a cada um de nós, perdoando até seus algozes. Peçamos a graça de saber perdoar como Ele perdoou.' },
+    ],
+  },
+  gloriosos: {
+    nome: 'Mistérios Gloriosos',
+    dias: 'Quarta-feira e Domingo',
+    lista: [
+      { titulo: '1º Mistério Glorioso — A Ressurreição', texto: 'Jesus ressuscita ao terceiro dia, vencendo definitivamente a morte. Peçamos a graça da fé viva.' },
+      { titulo: '2º Mistério Glorioso — A Ascensão', texto: 'Jesus sobe aos Céus diante dos apóstolos, prometendo enviar o Espírito Santo. Peçamos a graça da esperança na vida eterna.' },
+      { titulo: '3º Mistério Glorioso — A Descida do Espírito Santo', texto: 'O Espírito Santo desce sobre Maria e os apóstolos em Pentecostes, dando início à missão da Igreja. Peçamos os dons do Espírito Santo.' },
+      { titulo: '4º Mistério Glorioso — A Assunção de Nossa Senhora', texto: 'Maria é levada, de corpo e alma, à glória do Céu. Peçamos a graça de uma vida voltada para as coisas do alto.' },
+      { titulo: '5º Mistério Glorioso — A Coroação de Nossa Senhora', texto: 'Maria é coroada Rainha do Céu e da Terra. Peçamos a graça de sermos fiéis a Cristo até o fim, como ela foi.' },
+    ],
+  },
+  luminosos: {
+    nome: 'Mistérios Luminosos',
+    dias: 'Quinta-feira',
+    lista: [
+      { titulo: '1º Mistério Luminoso — O Batismo de Jesus no Jordão', texto: 'Jesus é batizado por João Batista, e o Pai o proclama "Filho amado" enquanto o Espírito desce como pomba. Peçamos a graça de viver o nosso próprio batismo.' },
+      { titulo: '2º Mistério Luminoso — As Bodas de Caná', texto: 'Jesus realiza seu primeiro milagre a pedido de Maria, transformando água em vinho. Peçamos a graça de confiar na intercessão de Maria.' },
+      { titulo: '3º Mistério Luminoso — O Anúncio do Reino de Deus', texto: 'Jesus anuncia o Reino de Deus e chama todos à conversão e à misericórdia. Peçamos a graça de uma conversão sincera.' },
+      { titulo: '4º Mistério Luminoso — A Transfiguração', texto: 'Jesus se transfigura diante de Pedro, Tiago e João, revelando sua glória divina. Peçamos a graça de reconhecer a presença de Deus em nossa vida.' },
+      { titulo: '5º Mistério Luminoso — A Instituição da Eucaristia', texto: 'Na Última Ceia, Jesus institui a Eucaristia, entregando-se como pão e vinho. Peçamos a graça de amar cada vez mais a Eucaristia.' },
+    ],
+  },
+};
+
+function misterioSugeridoHoje() {
+  const diaSemana = new Date().getDay(); // 0=domingo ... 6=sábado
+  if (diaSemana === 1 || diaSemana === 6) return 'gozosos';
+  if (diaSemana === 2 || diaSemana === 5) return 'dolorosos';
+  if (diaSemana === 4) return 'luminosos';
+  return 'gloriosos'; // quarta e domingo
+}
+
+function montarPassosDoTerco(chaveMisterio) {
+  const conjunto = MISTERIOS_DO_TERCO[chaveMisterio];
+  const passos = [
+    { titulo: 'Sinal da Cruz', texto: ORACOES[0].texto },
+    { titulo: 'Credo dos Apóstolos', texto: ORACOES[4].texto },
+    { titulo: 'Pai Nosso', texto: ORACOES[1].texto },
+    { titulo: '3 Ave-Marias (fé, esperança e caridade)', texto: ORACOES[2].texto },
+    { titulo: 'Glória ao Pai', texto: ORACOES[3].texto },
+  ];
+
+  conjunto.lista.forEach((misterio) => {
+    passos.push({ titulo: misterio.titulo, texto: misterio.texto });
+    passos.push({ titulo: 'Pai Nosso', texto: ORACOES[1].texto });
+    passos.push({ titulo: '10 Ave-Marias', texto: ORACOES[2].texto });
+    passos.push({ titulo: 'Glória ao Pai + Jaculatória', texto: `${ORACOES[3].texto}\n\nÓ meu Jesus, perdoai-nos, livrai-nos do fogo do inferno, levai as almas todas para o Céu, principalmente as que mais precisarem.` });
+  });
+
+  passos.push({ titulo: 'Salve Rainha', texto: ORACOES[5].texto });
+  passos.push({ titulo: 'Para encerrar', texto: 'Em nome do Pai, e do Filho, e do Espírito Santo. Amém.\n\nQue Nossa Senhora abençoe o seu dia.' });
+
+  return passos;
+}
+
+let passosTercoAtual = [];
+let indicePassoTerco = 0;
+
+function renderizarPassoDoTerco() {
+  const passo = passosTercoAtual[indicePassoTerco];
+  document.getElementById('terco-passo-atual').textContent = indicePassoTerco + 1;
+  document.getElementById('terco-passo-total').textContent = passosTercoAtual.length;
+  document.getElementById('terco-titulo-passo').textContent = passo.titulo;
+  document.getElementById('terco-texto-passo').textContent = passo.texto;
+
+  const btnAnterior = document.getElementById('terco-anterior');
+  const btnProximo = document.getElementById('terco-proximo');
+  btnAnterior.disabled = indicePassoTerco === 0;
+  btnProximo.textContent = (indicePassoTerco === passosTercoAtual.length - 1) ? 'Concluir ✓' : 'Próxima →';
+}
+
+function iniciarTerco(chaveMisterio) {
+  passosTercoAtual = montarPassosDoTerco(chaveMisterio);
+  indicePassoTerco = 0;
+  document.getElementById('terco-escolha').style.display = 'none';
+  document.getElementById('terco-rezando').style.display = 'block';
+  renderizarPassoDoTerco();
+}
+
+function iniciarPaginaDoTerco() {
+  const containerBotoes = document.getElementById('terco-botoes-misterio');
+  if (!containerBotoes) return;
+
+  const sugerido = misterioSugeridoHoje();
+  containerBotoes.innerHTML = Object.entries(MISTERIOS_DO_TERCO).map(([chave, conjunto]) => `
+    <button class="terco-btn-misterio ${chave === sugerido ? 'sugerido' : ''}" data-misterio="${chave}">
+      <div class="nome">${conjunto.nome}</div>
+      <div class="tag">${chave === sugerido ? '✦ sugerido para hoje · ' : ''}${conjunto.dias}</div>
+    </button>
+  `).join('');
+
+  containerBotoes.querySelectorAll('.terco-btn-misterio').forEach(btn => {
+    btn.addEventListener('click', () => iniciarTerco(btn.dataset.misterio));
+  });
+
+  document.getElementById('terco-anterior').addEventListener('click', () => {
+    if (indicePassoTerco > 0) { indicePassoTerco--; renderizarPassoDoTerco(); }
+  });
+  document.getElementById('terco-proximo').addEventListener('click', () => {
+    if (indicePassoTerco < passosTercoAtual.length - 1) {
+      indicePassoTerco++;
+      renderizarPassoDoTerco();
+    } else {
+      document.getElementById('terco-rezando').style.display = 'none';
+      document.getElementById('terco-escolha').style.display = 'block';
+    }
+  });
+  document.getElementById('terco-sair').addEventListener('click', () => {
+    document.getElementById('terco-rezando').style.display = 'none';
+    document.getElementById('terco-escolha').style.display = 'block';
+  });
+
+  const btnVoltar = document.getElementById('btn-back-terco');
+  if (btnVoltar) btnVoltar.addEventListener('click', () => {
+    document.getElementById('terco-rezando').style.display = 'none';
+    document.getElementById('terco-escolha').style.display = 'block';
+    mudarDeView('view-home');
+  });
+}
+
+// ============================================================
+//  PADROEIRO DE... (buscar santo por necessidade/causa)
+// ============================================================
+// Mapeia palavras-chave de necessidades a IDs de santos já
+// presentes no catálogo (baseado nos padroados mencionados nas
+// próprias biografias).
+const PADROEIROS = {
+  'viagem|viajante|estrada|motorista|trânsito': ['cristovao', 'rafael'],
+  'saude|saúde|doenca|doença|cura|hospital|enfermeira|enfermeiro|medico|médico': ['rafael', 'joao-de-deus', 'bernadete'],
+  'trabalho|emprego|operario|operário|trabalhador': ['jose', 'jose-operario'],
+  'estudante|estudo|prova|escola|universidade': ['tomas-aquino', 'catarina-alexandria', 'alberto-magno'],
+  'causa impossivel|causa impossível|desespero|urgente|urgencia|urgência': ['judas-tadeu', 'expedito', 'rita-cassia'],
+  'familia|família|mae|mãe|pai|filhos': ['sagrada-familia', 'jose', 'monica'],
+  'gravidez|gestante|parto': ['joaquim-ana'],
+  'internet|tecnologia|programador|computador': ['carlo-acutis', 'isidoro-sevilha'],
+  'musico|músico|musica|música|cantor': ['cecilia'],
+  'jornalista|escritor|comunicacao|comunicação': ['francisco-sales', 'gabriel'],
+  'medo|protecao|proteção|perigo': ['miguel', 'jorge', 'sao-bras'],
+  'perda de objeto|objeto perdido|achar algo': ['antonio-padua'],
+  'juventude|jovem|adolescente': ['luis-gonzaga', 'domingos-savio', 'maria-goretti'],
+  'artista|pintor|escultor': ['lucas-evangelista'],
+  'advogado|justica|justiça|juiz': ['tomas-more', 'raimundo-penafort'],
+  'professor|educador|ensino': ['joao-batista-lasalle', 'joao-bosco'],
+  'pobres|caridade|esmola': ['vicente-paulo', 'dulce-pobres', 'martin-porres'],
+  'animais|bichos|pets': ['antao-grande', 'francisco-assis'],
+};
+
+function buscarPadroeiro(termo) {
+  const termoNormalizado = termo.toLowerCase().trim();
+  if (!termoNormalizado) return [];
+
+  const idsEncontrados = new Set();
+  Object.entries(PADROEIROS).forEach(([chaves, ids]) => {
+    const partes = chaves.split('|');
+    if (partes.some(p => termoNormalizado.includes(p) || p.includes(termoNormalizado))) {
+      ids.forEach(id => idsEncontrados.add(id));
+    }
+  });
+
+  return santosData.filter(s => idsEncontrados.has(s.id));
+}
+
+function iniciarPaginaDePadroeiro() {
+  const input = document.getElementById('padroeiro-input');
+  const resultados = document.getElementById('padroeiro-resultados');
+  if (!input) return;
+
+  input.addEventListener('input', () => {
+    const encontrados = buscarPadroeiro(input.value);
+    if (input.value.trim() && encontrados.length === 0) {
+      resultados.innerHTML = `<p class="not-found-msg" style="grid-column: 1 / -1;">Nenhum santo do nosso catálogo encontrado para "${input.value}". Tente outra palavra, ou pergunte à Lumina!</p>`;
+      return;
+    }
+    resultados.innerHTML = '';
+    encontrados.forEach((santo, index) => {
+      const card = document.createElement('div');
+      card.className = 'card animate-card';
+      card.style.animationDelay = `${index * 0.05}s`;
+      card.onclick = () => showDetail(santo.id);
+      card.innerHTML = `
+        <div class="card-img-wrapper" id="img-wrapper-padroeiro-${santo.id}">
+          <svg class="card-img-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-aureola"></use></svg>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title"><svg class="card-icon" viewBox="0 0 24 24"><use href="#icon-aureola"></use></svg>${santo.nome}</h3>
+          <p class="card-desc">${santo.resumo}</p>
+        </div>
+      `;
+      resultados.appendChild(card);
+      buscarImagemSanto(santo).then(imgUrl => {
+        const wrapper = document.getElementById(`img-wrapper-padroeiro-${santo.id}`);
+        if (imgUrl && wrapper) wrapper.innerHTML = `<img src="${imgUrl}" alt="${santo.nome}" class="card-img" loading="lazy">`;
+      });
+    });
+  });
+
+  const btnVoltar = document.getElementById('btn-back-padroeiro');
+  if (btnVoltar) btnVoltar.addEventListener('click', () => mudarDeView('view-home'));
+}
+
+// ============================================================
+//  LIGAÇÕES DO MENU LATERAL COM AS NOVAS PÁGINAS
+// ============================================================
+function iniciarNavegacaoDoMenuLateral() {
+  const navOracoes = document.getElementById('nav-oracoes');
+  const navTerco = document.getElementById('nav-terco');
+  const navPadroeiro = document.getElementById('nav-padroeiro');
+
+  if (navOracoes) navOracoes.addEventListener('click', () => { closeSidebar(); mudarDeView('view-oracoes'); });
+  if (navTerco) navTerco.addEventListener('click', () => { closeSidebar(); mudarDeView('view-terco'); });
+  if (navPadroeiro) navPadroeiro.addEventListener('click', () => { closeSidebar(); mudarDeView('view-padroeiro'); });
+}
+
+// PWA: registra o service worker, que deixa o site instalável e
+// funcionando parcialmente offline. Se o navegador não suportar,
+// ou o arquivo não existir ainda no servidor, o site continua
+// funcionando normalmente do mesmo jeito.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}

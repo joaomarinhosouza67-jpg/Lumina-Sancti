@@ -334,6 +334,15 @@ input:focus-visible,
   text-transform: uppercase;
   letter-spacing: 1.5px;
   font-weight: 700;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .nav-brand { font-size: 1rem; letter-spacing: 0.5px; }
+  .nav-right-actions .icon-btn { padding: 3px; }
+}
+@media (max-width: 380px) {
+  .nav-brand { font-size: 0.85rem; letter-spacing: 0.3px; }
 }
 
 .nav-right-actions { display: flex; align-items: center; }
@@ -518,6 +527,25 @@ input:focus-visible,
   gap: 6px;
 }
 .btn-ask-ai:hover { background: var(--primary-color); color: #fff; }
+
+.btn-ouvir {
+  background: none;
+  border: 1px solid var(--secondary-color);
+  color: var(--text-muted);
+  font-family: var(--font-text);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+.btn-ouvir:hover { border-color: var(--primary-color); color: var(--primary-color); }
+.btn-ouvir.ouvindo { background: var(--primary-color); color: #0f172a; border-color: var(--primary-color); }
 
 /* Menu de conta (mesma aparência do menu de idioma) */
 .conta-wrapper { position: relative; }
@@ -726,6 +754,115 @@ input:focus-visible,
 .footer-contato a { color: var(--primary-color); text-decoration: none; }
 .footer-contato a:hover { text-decoration: underline; }
 
+/* Divisor e links de navegação extra no menu lateral */
+.sidebar-divisor { height: 1px; background: var(--secondary-color); margin: 12px 0; }
+.side-nav-link {
+  text-align: left;
+  background: none;
+  border: none;
+  font-family: var(--font-text);
+  font-size: 0.95rem;
+  color: var(--text-main);
+  cursor: pointer;
+  padding: 8px 10px;
+  border-radius: 6px;
+  transition: var(--transition);
+}
+.side-nav-link:hover { background: var(--secondary-color); color: var(--primary-dark); padding-left: 15px; }
+
+/* ------------------------------------------------- */
+/* ORAÇÕES DO DIA A DIA                                */
+/* ------------------------------------------------- */
+.oracoes-container { max-width: 700px; }
+.lista-oracoes { display: flex; flex-direction: column; gap: 12px; }
+.oracao-item {
+  background: var(--bg-alt);
+  border: 1px solid var(--secondary-color);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.oracao-pergunta {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 16px 18px;
+  font-family: var(--font-title);
+  font-size: 1.2rem;
+  color: var(--primary-color);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.oracao-seta { transition: transform 0.25s ease; }
+.oracao-item.aberta .oracao-seta { transform: rotate(180deg); }
+.oracao-corpo {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+.oracao-item.aberta .oracao-corpo { max-height: 600px; }
+.oracao-texto {
+  padding: 0 18px 18px;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--text-main);
+  white-space: pre-line;
+}
+
+/* ------------------------------------------------- */
+/* TERÇO GUIADO                                        */
+/* ------------------------------------------------- */
+.terco-container { max-width: 650px; }
+.terco-intro { color: var(--text-muted); margin-bottom: 20px; line-height: 1.6; }
+.terco-botoes-misterio { display: flex; flex-direction: column; gap: 12px; }
+.terco-btn-misterio {
+  text-align: left;
+  background: var(--bg-alt);
+  border: 1px solid var(--secondary-color);
+  border-radius: 10px;
+  padding: 16px 18px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.terco-btn-misterio:hover, .terco-btn-misterio.sugerido { border-color: var(--primary-color); }
+.terco-btn-misterio .nome { font-family: var(--font-title); font-size: 1.15rem; color: var(--text-main); }
+.terco-btn-misterio .tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--primary-color);
+  margin-top: 4px;
+}
+
+.terco-rezando { text-align: center; }
+.terco-progresso { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 16px; }
+.terco-conta-visual {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--primary-color), var(--primary-dark));
+  margin: 0 auto 20px;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+  animation: contaPulso 2s ease-in-out infinite;
+}
+@keyframes contaPulso { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+.terco-titulo-passo { font-family: var(--font-title); font-size: 1.6rem; color: var(--primary-color); margin-bottom: 16px; }
+.terco-texto-passo { font-size: 1.1rem; line-height: 1.9; color: var(--text-main); white-space: pre-line; max-width: 520px; margin: 0 auto; }
+.terco-navegacao { display: flex; justify-content: center; gap: 12px; margin-top: 30px; }
+
+/* ------------------------------------------------- */
+/* PADROEIRO DE...                                     */
+/* ------------------------------------------------- */
+#padroeiro-resultados:empty::after {
+  content: 'Digite algo acima para ver os santos ligados a essa causa.';
+  color: var(--text-muted);
+  font-style: italic;
+  grid-column: 1 / -1;
+}
+
+
 
 
 .sidebar {
@@ -855,6 +992,7 @@ input:focus-visible,
   box-shadow: 0 14px 32px rgba(212, 175, 55, 0.25);
 }
 
+.sdd-topo { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
 .sdd-label {
   display: inline-block;
   font-family: var(--font-text);
@@ -863,8 +1001,19 @@ input:focus-visible,
   letter-spacing: 1.5px;
   color: var(--primary-dark);
   font-weight: 700;
-  margin-bottom: 14px;
 }
+.btn-compartilhar-sdd {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  flex-shrink: 0;
+  transition: var(--transition);
+  border-radius: 6px;
+}
+.btn-compartilhar-sdd:hover { color: var(--primary-color); background: var(--secondary-color); }
+.btn-compartilhar-sdd:disabled { opacity: 0.5; cursor: wait; }
 
 .sdd-body { display: flex; gap: 22px; align-items: center; }
 

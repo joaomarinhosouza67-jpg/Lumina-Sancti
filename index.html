@@ -34,11 +34,16 @@
   <link rel="alternate icon" type="image/svg+xml" href="favicon.svg">
   <link rel="apple-touch-icon" href="favicon.svg">
 
+  <!-- PWA: deixa o site instalável como um app -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <!-- Diz pro navegador que o site JÁ é escuro de propósito, pra ele
+       não tentar aplicar um "modo escuro automático" por cima (isso
+       é o que causava aquele azul estranho e feio no celular). -->
+  <meta name="color-scheme" content="dark">
+
   <!-- Biblioteca do Supabase (contas de usuário + banco de dados) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script defer src="/_vercel/insights/script.js"></script>
-
 </head>
 <body>
 
@@ -150,6 +155,11 @@
       <button class="filter-btn side-filter" data-filter="grandes-santos" data-i18n="filtro_grandes_santos">Grandes Santos</button>
       <button class="filter-btn side-filter" data-filter="santos-jovens" data-i18n="filtro_santos_jovens">Santos Jovens</button>
       <button class="filter-btn side-filter" data-filter="beatos" data-i18n="filtro_beatos">Beatos</button>
+
+      <div class="sidebar-divisor"></div>
+      <button class="side-nav-link" id="nav-oracoes" data-i18n="nav_oracoes">🙏 Orações do dia a dia</button>
+      <button class="side-nav-link" id="nav-terco" data-i18n="nav_terco">📿 Terço guiado</button>
+      <button class="side-nav-link" id="nav-padroeiro" data-i18n="nav_padroeiro">🔍 Padroeiro de...</button>
     </nav>
 
     <div class="sidebar-decoration">
@@ -309,6 +319,68 @@
 
           <p class="auth-feedback" id="auth-feedback" aria-live="polite"></p>
         </div>
+      </div>
+    </section>
+
+    <!-- PÁGINA DE ORAÇÕES -->
+    <section id="view-oracoes" class="view">
+      <div class="container oracoes-container">
+        <button class="btn-back" id="btn-back-oracoes">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span data-i18n="voltar_inicio">Voltar para o início</span>
+        </button>
+        <h2 class="section-title" style="text-align:left; margin: 10px 0 4px;">Orações do dia a dia</h2>
+        <div class="title-divider" style="margin: 0 0 24px;"></div>
+
+        <div id="lista-oracoes" class="lista-oracoes"><!-- Injetado via JS --></div>
+      </div>
+    </section>
+
+    <!-- PÁGINA DO TERÇO GUIADO -->
+    <section id="view-terco" class="view">
+      <div class="container terco-container">
+        <button class="btn-back" id="btn-back-terco">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span data-i18n="voltar_inicio">Voltar para o início</span>
+        </button>
+
+        <div id="terco-escolha" class="terco-escolha">
+          <h2 class="section-title" style="text-align:left; margin: 10px 0 4px;">Terço guiado</h2>
+          <div class="title-divider" style="margin: 0 0 20px;"></div>
+          <p class="terco-intro">Escolha o mistério de hoje (já sugerimos o tradicional do dia da semana) e rezaremos juntos, passo a passo.</p>
+          <div id="terco-botoes-misterio" class="terco-botoes-misterio"></div>
+        </div>
+
+        <div id="terco-rezando" class="terco-rezando" style="display:none;">
+          <div class="terco-progresso">
+            <span id="terco-passo-atual">1</span> / <span id="terco-passo-total">1</span>
+          </div>
+          <div id="terco-conta-visual" class="terco-conta-visual"></div>
+          <h3 id="terco-titulo-passo" class="terco-titulo-passo"></h3>
+          <p id="terco-texto-passo" class="terco-texto-passo"></p>
+          <div class="terco-navegacao">
+            <button id="terco-anterior" class="filter-btn">← Anterior</button>
+            <button id="terco-proximo" class="filter-btn active">Próxima →</button>
+          </div>
+          <button id="terco-sair" class="btn-back" style="margin-top:24px;">Encerrar o terço</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PÁGINA "PADROEIRO DE..." -->
+    <section id="view-padroeiro" class="view">
+      <div class="container">
+        <button class="btn-back" id="btn-back-padroeiro">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span data-i18n="voltar_inicio">Voltar para o início</span>
+        </button>
+        <h2 class="section-title" style="text-align:left; margin: 10px 0 4px;">Padroeiro de...</h2>
+        <div class="title-divider" style="margin: 0 0 16px;"></div>
+        <p class="terco-intro">Digite uma necessidade, profissão ou situação — viagem, saúde, estudos, família — e veja quais santos são tradicionalmente invocados para isso.</p>
+        <div class="search-input-wrapper" style="margin: 16px 0;">
+          <input type="text" id="padroeiro-input" placeholder="Ex.: viagem, doença, trabalho, estudantes..." autocomplete="off">
+        </div>
+        <div id="padroeiro-resultados" class="cards-grid"></div>
       </div>
     </section>
 
