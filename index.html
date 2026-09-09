@@ -117,9 +117,48 @@
             <button id="conta-menu-sair" class="idioma-opcao" style="display:none;" data-i18n="conta_sair">Sair</button>
           </div>
         </div>
+        <a href="https://www.instagram.com/luminasancti" target="_blank" rel="noopener noreferrer" class="icon-btn" aria-label="Lumina Sancti no Instagram" style="margin-left: 10px;">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        </a>
       </div>
     </div>
   </header>
+
+  <!-- Modal de Novidades (aparece só uma vez por pessoa) -->
+  <div id="novidades-modal" class="search-modal">
+    <div class="search-modal-content novidades-content">
+      <div class="search-header">
+        <h3>✦ Novidades</h3>
+        <button id="close-novidades-btn" class="icon-btn" aria-label="Fechar">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="novidades-lista">
+        <div class="novidade-item">
+          <span class="novidade-icone">📱</span>
+          <div>
+            <h4>App na Play Store</h4>
+            <p>Prepare-se: em breve o Lumina Sancti chega também como aplicativo na Play Store!</p>
+          </div>
+        </div>
+        <div class="novidade-item">
+          <span class="novidade-icone">✨</span>
+          <div>
+            <h4>A Lumina está chegando</h4>
+            <p>Nossa assistente de IA exclusiva, a Lumina, chega ao site em poucos dias — pronta para conversar sobre santos, beatos, doutores e anjos.</p>
+          </div>
+        </div>
+        <div class="novidade-item">
+          <span class="novidade-icone">🤫</span>
+          <div>
+            <h4>Uma surpresa secreta</h4>
+            <p>Estamos preparando mais uma novidade especial. Em breve, anunciaremos!</p>
+          </div>
+        </div>
+      </div>
+      <button id="novidades-entendi-btn" class="filter-btn active novidades-botao">Entendi!</button>
+    </div>
+  </div>
 
   <!-- Modal de Pesquisa -->
   <div id="search-modal" class="search-modal">
@@ -160,6 +199,10 @@
       <button class="side-nav-link" id="nav-oracoes" data-i18n="nav_oracoes">🙏 Orações do dia a dia</button>
       <button class="side-nav-link" id="nav-terco" data-i18n="nav_terco">📿 Terço guiado</button>
       <button class="side-nav-link" id="nav-padroeiro" data-i18n="nav_padroeiro">🔍 Padroeiro de...</button>
+
+      <div class="sidebar-divisor"></div>
+      <button class="side-nav-link" id="nav-compartilhar-site" data-i18n="nav_compartilhar">💛 Compartilhar o site</button>
+      <a href="https://www.instagram.com/luminasancti" target="_blank" rel="noopener noreferrer" class="side-nav-link" style="display:block; text-decoration:none;">📷 Siga no Instagram</a>
     </nav>
 
     <div class="sidebar-decoration">
@@ -420,6 +463,19 @@
         <path d="M50 0 C52 35 65 48 100 50 C65 52 52 65 50 100 C48 65 35 52 0 50 C35 48 48 35 50 0 Z" opacity="0.9"/>
       </svg>
       <p class="footer-nome">Lumina Sancti</p>
+
+      <div class="footer-compartilhe">
+        <p data-i18n="footer_compartilhe_texto">Ajude o Lumina Sancti a chegar a mais pessoas e iluminar a vida delas 💛</p>
+        <button id="footer-compartilhar-btn" class="filter-btn" data-i18n="footer_compartilhe_botao">Compartilhar o site</button>
+      </div>
+
+      <div class="footer-social">
+        <a href="https://www.instagram.com/luminasancti" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="Lumina Sancti no Instagram">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          <span>@luminasancti</span>
+        </a>
+      </div>
+
       <p class="footer-contato" data-i18n="footer_fale_conosco">Fale conosco: <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a></p>
     </div>
   </footer>
