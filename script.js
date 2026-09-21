@@ -1710,11 +1710,14 @@ function tocarSomDeBrilho() {
   const ceu = document.getElementById('intro-sky');
   if (ceu) {
     const fragmento = document.createDocumentFragment();
-    const quantidade = 26;
+    const quantidade = 70;
     for (let i = 0; i < quantidade; i++) {
       const ponto = document.createElement('div');
-      ponto.className = 'intro-star-dot';
-      const tamanho = (Math.random() * 1.8 + 0.8).toFixed(1);
+      const sorteio = Math.random();
+      ponto.className = 'intro-star-dot'
+        + (sorteio < 0.22 ? ' dourada' : '')
+        + (sorteio > 0.9 ? ' cintilante' : '');
+      const tamanho = (sorteio > 0.9 ? Math.random() * 1.5 + 2.2 : Math.random() * 1.8 + 0.8).toFixed(1);
       ponto.style.top = `${(Math.random() * 100).toFixed(1)}%`;
       ponto.style.left = `${(Math.random() * 100).toFixed(1)}%`;
       ponto.style.width = `${tamanho}px`;
@@ -1898,7 +1901,7 @@ const TRADUCOES = {
     sobre_texto: 'O <strong>Lumina Sancti</strong> (Luz dos Santos) é um refúgio digital dedicado a preservar e compartilhar a vida, a fé e o legado daqueles que deixaram um rastro inextinguível de luz na história. Este espaço foi criado para revelar que a santidade não é algo distante, mas uma trilha bela, possível e acessível no cotidiano de qualquer época ou idade.',
     filtro_todos_curto: 'Todos',
     filtro_todos: 'Todos os Santos',
-    filtro_favoritos: '❤ Favoritos',
+    filtro_favoritos: 'Favoritos',
     filtro_sagrada_familia: 'Sagrada Família',
     filtro_arcanjos: 'Arcanjos',
     filtro_doutores_curto: 'Doutores',
@@ -1925,6 +1928,10 @@ const TRADUCOES = {
     conta_nome: 'Nome',
     conta_entrar_botao: 'Entrar',
     conta_cadastrar_botao: 'Criar minha conta',
+    conta_codigo_desc: 'Enviamos um código de 6 dígitos para o seu e-mail. Digite-o abaixo para confirmar sua conta.',
+    conta_codigo_label: 'Código de confirmação',
+    conta_codigo_botao: 'Confirmar código',
+    conta_reenviar: 'Reenviar código',
     lumina_subtitulo: 'A assistente exclusiva do Lumina Sancti — só sobre santos, beatos, veneráveis, doutores e anjos.',
     lumina_precisa_login: 'Para conversar com a Lumina, entre na sua conta (é rápido e gratuito).',
     lumina_placeholder: 'Pergunte sobre um santo, beato, doutor ou anjo...',
@@ -1934,6 +1941,9 @@ const TRADUCOES = {
     perfil_excluir_aviso: 'Isso apaga sua conta e todos os dados ligados a ela, para sempre. Não tem como desfazer.',
     perfil_excluir_botao: 'Excluir minha conta',
     footer_fale_conosco: 'Fale conosco: <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a>',
+    nav_compartilhar: 'Compartilhar o site',
+    footer_compartilhe_texto: 'Ajude o Lumina Sancti a chegar a mais pessoas e iluminar a vida delas.',
+    footer_compartilhe_botao: 'Compartilhar o site',
   },
   en: {
     hero_subtitulo: 'Light of the Saints',
@@ -1942,7 +1952,7 @@ const TRADUCOES = {
     sobre_texto: '<strong>Lumina Sancti</strong> (Light of the Saints) is a digital refuge dedicated to preserving and sharing the life, faith and legacy of those who left an unquenchable trail of light in history. This space was created to reveal that holiness is not something distant, but a beautiful path, possible and accessible in the everyday life of any era or age.',
     filtro_todos_curto: 'All',
     filtro_todos: 'All Saints',
-    filtro_favoritos: '❤ Favorites',
+    filtro_favoritos: 'Favorites',
     filtro_sagrada_familia: 'Holy Family',
     filtro_arcanjos: 'Archangels',
     filtro_doutores_curto: 'Doctors',
@@ -1969,6 +1979,10 @@ const TRADUCOES = {
     conta_nome: 'Name',
     conta_entrar_botao: 'Sign in',
     conta_cadastrar_botao: 'Create my account',
+    conta_codigo_desc: 'We sent a 6-digit code to your email. Enter it below to confirm your account.',
+    conta_codigo_label: 'Confirmation code',
+    conta_codigo_botao: 'Confirm code',
+    conta_reenviar: 'Resend code',
     lumina_subtitulo: "Lumina Sancti's own assistant — only about saints, blesseds, venerables, doctors and angels.",
     lumina_precisa_login: 'To talk with Lumina, sign in to your account (it\'s quick and free).',
     lumina_placeholder: 'Ask about a saint, blessed, doctor or angel...',
@@ -1978,6 +1992,9 @@ const TRADUCOES = {
     perfil_excluir_aviso: 'This permanently deletes your account and all data linked to it. This cannot be undone.',
     perfil_excluir_botao: 'Delete my account',
     footer_fale_conosco: 'Contact us: <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a>',
+    nav_compartilhar: 'Share the site',
+    footer_compartilhe_texto: 'Help Lumina Sancti reach more people and light up their lives.',
+    footer_compartilhe_botao: 'Share the site',
   },
   es: {
     hero_subtitulo: 'Luz de los Santos',
@@ -1986,7 +2003,7 @@ const TRADUCOES = {
     sobre_texto: '<strong>Lumina Sancti</strong> (Luz de los Santos) es un refugio digital dedicado a preservar y compartir la vida, la fe y el legado de quienes dejaron un rastro inextinguible de luz en la historia. Este espacio fue creado para revelar que la santidad no es algo distante, sino un camino bello, posible y accesible en la vida cotidiana de cualquier época o edad.',
     filtro_todos_curto: 'Todos',
     filtro_todos: 'Todos los Santos',
-    filtro_favoritos: '❤ Favoritos',
+    filtro_favoritos: 'Favoritos',
     filtro_sagrada_familia: 'Sagrada Familia',
     filtro_arcanjos: 'Arcángeles',
     filtro_doutores_curto: 'Doctores',
@@ -2013,6 +2030,10 @@ const TRADUCOES = {
     conta_nome: 'Nombre',
     conta_entrar_botao: 'Entrar',
     conta_cadastrar_botao: 'Crear mi cuenta',
+    conta_codigo_desc: 'Enviamos un código de 6 dígitos a tu correo. Escríbelo abajo para confirmar tu cuenta.',
+    conta_codigo_label: 'Código de confirmación',
+    conta_codigo_botao: 'Confirmar código',
+    conta_reenviar: 'Reenviar código',
     lumina_subtitulo: 'La asistente exclusiva de Lumina Sancti — solo sobre santos, beatos, venerables, doctores y ángeles.',
     lumina_precisa_login: 'Para hablar con Lumina, entra en tu cuenta (es rápido y gratis).',
     lumina_placeholder: 'Pregunta sobre un santo, beato, doctor o ángel...',
@@ -2022,11 +2043,54 @@ const TRADUCOES = {
     perfil_excluir_aviso: 'Esto elimina tu cuenta y todos los datos asociados, para siempre. No se puede deshacer.',
     perfil_excluir_botao: 'Eliminar mi cuenta',
     footer_fale_conosco: 'Contáctanos: <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a>',
+    nav_compartilhar: 'Compartir el sitio',
+    footer_compartilhe_texto: 'Ayuda a Lumina Sancti a llegar a más personas e iluminar sus vidas.',
+    footer_compartilhe_botao: 'Compartir el sitio',
   },
 };
 
 const CHAVE_IDIOMA = 'lumina-sancti-idioma';
 let idiomaAtual = 'pt';
+
+// Biografias em inglês e espanhol: ficam em biografias-en.js e
+// biografias-es.js e só são baixadas quando a pessoa escolhe o
+// idioma. Santo ainda sem tradução continua em português.
+const biografiasCarregadas = {};
+
+function carregarBiografiasDoIdioma(codigo) {
+  if (codigo === 'pt') return Promise.resolve();
+  if (biografiasCarregadas[codigo]) return biografiasCarregadas[codigo];
+  biografiasCarregadas[codigo] = new Promise((resolve) => {
+    const script = document.createElement('script');
+    script.src = `biografias-${codigo}.js`;
+    script.onload = () => resolve();
+    script.onerror = () => { delete biografiasCarregadas[codigo]; resolve(); };
+    (document.head || document.body).appendChild(script);
+  });
+  return biografiasCarregadas[codigo];
+}
+
+// Nome, resumo e biografia do santo no idioma escolhido.
+function textoDoSanto(santo) {
+  const todas = typeof window !== 'undefined' ? window.BIOGRAFIAS_TRADUZIDAS : null;
+  const traducao = idiomaAtual !== 'pt' && todas && todas[idiomaAtual] ? todas[idiomaAtual][santo.id] : null;
+  if (!traducao) {
+    return { nome: santo.nome, resumo: santo.resumo, texto: santo.texto, traduzido: idiomaAtual === 'pt' };
+  }
+  return {
+    nome: traducao.nome || santo.nome,
+    resumo: traducao.resumo || santo.resumo,
+    texto: traducao.texto || santo.texto,
+    traduzido: true,
+  };
+}
+
+function reaplicarTextosDosSantos() {
+  if (typeof cardsGrid !== 'undefined' && cardsGrid) renderGrid(filtroAtual);
+  renderSantoDoDia();
+  const detalhe = document.getElementById('view-detail');
+  if (detalhe && detalhe.style.display === 'block' && bioArticle.dataset.santoId) showDetail(bioArticle.dataset.santoId);
+}
 
 function getIdiomaSalvo() {
   try {
@@ -2038,6 +2102,7 @@ function getIdiomaSalvo() {
 
 function aplicarIdioma(codigo) {
   const dicionario = TRADUCOES[codigo] || TRADUCOES.pt;
+  const idiomaAnterior = idiomaAtual;
   idiomaAtual = codigo;
 
   document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -2064,6 +2129,10 @@ function aplicarIdioma(codigo) {
     localStorage.setItem(CHAVE_IDIOMA, codigo);
   } catch (e) {
     // segue sem salvar a preferência, sem quebrar o site
+  }
+
+  if (codigo !== idiomaAnterior) {
+    carregarBiografiasDoIdioma(codigo).then(reaplicarTextosDosSantos);
   }
 }
 
@@ -2127,11 +2196,76 @@ async function iniciarAutenticacao() {
   const { data } = await supabaseCliente.auth.getSession();
   sessaoAtual = data.session;
   atualizarInterfaceDeConta();
+  verificarCadastroCompleto();
 
   supabaseCliente.auth.onAuthStateChange((_evento, sessao) => {
     sessaoAtual = sessao;
     atualizarInterfaceDeConta();
+    verificarCadastroCompleto();
   });
+}
+
+// ============================================================
+//  ENTRAR COM GOOGLE — a pessoa só ESCOLHE a conta; o cadastro
+//  só fica completo depois que ela digita o próprio nome.
+// ============================================================
+// Tudo fica salvo no Supabase (não no Lovable): a conta do Google
+// vira uma conta normal do site, e o nome vai junto com ela.
+async function entrarComGoogle() {
+  const feedback = document.getElementById('auth-feedback');
+  if (!supabaseCliente) {
+    if (feedback) feedback.textContent = 'Contas ainda não configuradas neste site.';
+    return;
+  }
+  const { error } = await supabaseCliente.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: window.location.origin + window.location.pathname,
+      queryParams: { prompt: 'select_account' }, // sempre mostra a lista de contas para escolher
+    },
+  });
+  if (error && feedback) feedback.textContent = 'Não foi possível abrir o login do Google agora.';
+}
+
+function cadastroCompleto(usuario) {
+  if (!usuario) return true;
+  const dados = usuario.user_metadata || {};
+  if (dados.cadastro_completo === true) return true;
+  // Contas criadas por e-mail antes desta versão já têm o nome
+  const provedor = usuario.app_metadata && usuario.app_metadata.provider;
+  return provedor === 'email' && !!dados.nome;
+}
+
+function verificarCadastroCompleto() {
+  if (!sessaoAtual || cadastroCompleto(sessaoAtual.user)) return;
+  const campo = document.getElementById('completar-nome');
+  const feedback = document.getElementById('completar-feedback');
+  if (campo) campo.value = '';
+  if (feedback) feedback.textContent = '';
+  mudarDeView('view-completar');
+}
+
+async function concluirCadastro(evento) {
+  evento.preventDefault();
+  const nome = document.getElementById('completar-nome').value.trim();
+  const feedback = document.getElementById('completar-feedback');
+  if (nome.length < 2) {
+    feedback.textContent = 'Digite o seu nome.';
+    return;
+  }
+  feedback.textContent = 'Salvando...';
+  const { error } = await supabaseCliente.auth.updateUser({ data: { nome, cadastro_completo: true } });
+  if (error) {
+    feedback.textContent = 'Não foi possível salvar agora. Tente de novo.';
+    return;
+  }
+  feedback.textContent = '';
+  irDepoisDeEntrar();
+}
+
+async function usarOutraConta() {
+  if (supabaseCliente) await supabaseCliente.auth.signOut();
+  irParaLogin();
 }
 
 function atualizarInterfaceDeConta() {
@@ -2142,6 +2276,8 @@ function atualizarInterfaceDeConta() {
   if (btnEntrar) btnEntrar.style.display = logado ? 'none' : 'block';
   if (btnPerfil) btnPerfil.style.display = logado ? 'block' : 'none';
   if (btnSair) btnSair.style.display = logado ? 'block' : 'none';
+  const btnPerfis = document.getElementById('conta-menu-perfis');
+  if (btnPerfis) btnPerfis.style.display = logado ? 'block' : 'none';
 
   const precisaLogin = document.getElementById('lumina-precisa-login');
   const chatArea = document.getElementById('lumina-chat-area');
@@ -2155,7 +2291,7 @@ function atualizarInterfaceDeConta() {
 //  NAVEGAÇÃO ENTRE PÁGINAS (home, biografia, Lumina, conta, perfil)
 // ============================================================
 function mudarDeView(idNovaView) {
-  const todasAsViews = ['view-home', 'view-detail', 'view-ia', 'view-auth', 'view-perfil', 'view-oracoes', 'view-terco', 'view-padroeiro'];
+  const todasAsViews = ['view-home', 'view-detail', 'view-ia', 'view-auth', 'view-perfil', 'view-oracoes', 'view-terco', 'view-padroeiro', 'view-trilhas', 'view-licao', 'view-perfis', 'view-ranking', 'view-planos', 'view-completar'];
   const viewAtual = todasAsViews.map(id => document.getElementById(id)).find(v => v && v.classList.contains('active'));
 
   const trocar = () => {
@@ -2186,26 +2322,69 @@ function irParaLogin() {
   mudarDeView('view-auth');
 }
 
+// Confirma o código de 6 dígitos que chegou por e-mail. O Supabase
+// aceita esse código como tipo 'email' (forma atual); se o projeto
+// só aceitar o tipo antigo 'signup', tenta de novo desse jeito.
+async function confirmarCodigoDeCadastro(email, codigo) {
+  let { error } = await supabaseCliente.auth.verifyOtp({ email, token: codigo, type: 'email' });
+  if (error) {
+    ({ error } = await supabaseCliente.auth.verifyOtp({ email, token: codigo, type: 'signup' }));
+  }
+  return error;
+}
+
+// Pede ao servidor o e-mail fraterno de boas-vindas. Ele só sai uma
+// vez por conta (o servidor garante isso), e qualquer falha aqui é
+// silenciosa — a pessoa entra no site normalmente de qualquer jeito.
+async function enviarEmailDeBoasVindas() {
+  try {
+    if (!supabaseCliente) return;
+    const { data } = await supabaseCliente.auth.getSession();
+    const token = data.session && data.session.access_token;
+    if (!token) return;
+    await fetch(`${SUPABASE_URL}/functions/v1/enviar-boas-vindas`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+    });
+  } catch (e) {
+    // sem boas-vindas por e-mail agora; nada quebra no site
+  }
+}
+
+// Depois de entrar na conta, mostra a escolha de perfis (estilo
+// streaming). Se o perfis.js não estiver carregado, vai pro início.
+function irDepoisDeEntrar() {
+  if (typeof aposEntrarNaConta === 'function') aposEntrarNaConta();
+  else mudarDeView('view-home');
+}
+
+let emailAguardandoConfirmacao = '';
+
 function iniciarPaginaDeAutenticacao() {
   const abaEntrar = document.getElementById('auth-tab-entrar');
   const abaCadastrar = document.getElementById('auth-tab-cadastrar');
   const formEntrar = document.getElementById('auth-form-entrar');
   const formCadastrar = document.getElementById('auth-form-cadastrar');
+  const formCodigo = document.getElementById('auth-form-codigo');
   const feedback = document.getElementById('auth-feedback');
   if (!abaEntrar) return;
 
-  abaEntrar.addEventListener('click', () => {
+  function mostrarAbaEntrar() {
     abaEntrar.classList.add('active');
     abaCadastrar.classList.remove('active');
     formEntrar.style.display = 'flex';
     formCadastrar.style.display = 'none';
+    formCodigo.style.display = 'none';
     feedback.textContent = '';
-  });
+  }
+
+  abaEntrar.addEventListener('click', mostrarAbaEntrar);
   abaCadastrar.addEventListener('click', () => {
     abaCadastrar.classList.add('active');
     abaEntrar.classList.remove('active');
     formCadastrar.style.display = 'flex';
     formEntrar.style.display = 'none';
+    formCodigo.style.display = 'none';
     feedback.textContent = '';
   });
 
@@ -2221,7 +2400,7 @@ function iniciarPaginaDeAutenticacao() {
       return;
     }
     feedback.textContent = '';
-    mudarDeView('view-home');
+    irDepoisDeEntrar();
   });
 
   formCadastrar.addEventListener('submit', async (e) => {
@@ -2234,7 +2413,7 @@ function iniciarPaginaDeAutenticacao() {
     const { data, error } = await supabaseCliente.auth.signUp({
       email,
       password: senha,
-      options: { data: { nome } },
+      options: { data: { nome, cadastro_completo: true } },
     });
     if (error) {
       feedback.textContent = error.message.includes('already registered')
@@ -2245,11 +2424,44 @@ function iniciarPaginaDeAutenticacao() {
     if (data.session) {
       // Confirmação de e-mail desligada no projeto: já entra direto
       feedback.textContent = '';
-      mudarDeView('view-home');
+      enviarEmailDeBoasVindas();
+      irDepoisDeEntrar();
     } else {
-      feedback.textContent = 'Quase lá! Enviamos um e-mail de confirmação — verifique sua caixa de entrada.';
+      // Fluxo normal: mostra a tela pra digitar o código de 6 dígitos
+      // que chegou por e-mail.
+      emailAguardandoConfirmacao = email;
+      formCadastrar.style.display = 'none';
+      formCodigo.style.display = 'flex';
+      document.getElementById('codigo-confirmacao').value = '';
+      feedback.textContent = `Enviamos um código para ${email}. Confira sua caixa de entrada (e o spam, só por garantia).`;
     }
   });
+
+  formCodigo.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!supabaseCliente || !emailAguardandoConfirmacao) return;
+    const codigo = document.getElementById('codigo-confirmacao').value.trim();
+    feedback.textContent = 'Confirmando...';
+    const erro = await confirmarCodigoDeCadastro(emailAguardandoConfirmacao, codigo);
+    if (erro) {
+      feedback.textContent = 'Código incorreto ou expirado. Confira e tente de novo, ou peça um novo código.';
+      return;
+    }
+    feedback.textContent = '';
+    emailAguardandoConfirmacao = '';
+    enviarEmailDeBoasVindas(); // sai em segundo plano, sem travar a tela
+    irDepoisDeEntrar();
+  });
+
+  const btnReenviar = document.getElementById('reenviar-codigo-btn');
+  if (btnReenviar) {
+    btnReenviar.addEventListener('click', async () => {
+      if (!emailAguardandoConfirmacao) return;
+      feedback.textContent = 'Enviando novo código...';
+      const { error } = await supabaseCliente.auth.resend({ type: 'signup', email: emailAguardandoConfirmacao });
+      feedback.textContent = error ? 'Não foi possível reenviar agora. Tente novamente em instantes.' : 'Novo código enviado!';
+    });
+  }
 }
 
 // ============================================================
@@ -2551,8 +2763,9 @@ function getSantoEmDestaque(idParaEvitar) {
 }
 
 function montarCartaoSantoDoDia(santo, rotulo, idBase) {
+  const textos = textoDoSanto(santo);
   return `
-    <div class="sdd-card" id="${idBase}-card" role="button" tabindex="0" aria-label="Ver a história de ${santo.nome}">
+    <div class="sdd-card" id="${idBase}-card" role="button" tabindex="0" aria-label="Ver a história de ${textos.nome}">
       <div class="sdd-topo">
         <span class="sdd-label">${rotulo}</span>
         <button class="btn-compartilhar-sdd" id="${idBase}-compartilhar" aria-label="Baixar cartão para compartilhar">
@@ -2564,8 +2777,8 @@ function montarCartaoSantoDoDia(santo, rotulo, idBase) {
           <svg class="card-img-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-aureola"></use></svg>
         </div>
         <div class="sdd-info">
-          <h3 class="sdd-nome">${santo.nome}</h3>
-          <p class="sdd-resumo">${santo.resumo}</p>
+          <h3 class="sdd-nome">${textos.nome}</h3>
+          <p class="sdd-resumo">${textos.resumo}</p>
           <span class="sdd-cta">Conhecer a história →</span>
         </div>
       </div>
@@ -2652,7 +2865,7 @@ async function gerarCartaoDeCompartilhamento(santo) {
   ctx.fillStyle = '#d4af37';
   ctx.textAlign = 'center';
   ctx.font = 'bold 54px Georgia, serif';
-  const linhasNome = quebrarTexto(ctx, santo.nome, T * 0.85);
+  const linhasNome = quebrarTexto(ctx, textoDoSanto(santo).nome, T * 0.85);
   let y = centroY + raioFoto + 80;
   linhasNome.forEach((linha) => { ctx.fillText(linha, centroX, y); y += 62; });
 
@@ -2660,7 +2873,7 @@ async function gerarCartaoDeCompartilhamento(santo) {
   ctx.fillStyle = '#cbd5e1';
   ctx.font = '30px Georgia, serif';
   y += 20;
-  const linhasResumo = quebrarTexto(ctx, santo.resumo, T * 0.78);
+  const linhasResumo = quebrarTexto(ctx, textoDoSanto(santo).resumo, T * 0.78);
   linhasResumo.forEach((linha) => { ctx.fillText(linha, centroX, y); y += 42; });
 
   // Marca do site, no rodapé do cartão
@@ -2677,7 +2890,7 @@ async function gerarCartaoDeCompartilhamento(santo) {
 async function compartilharSantoDoDia(santo, botao) {
   const rotuloOriginal = botao.innerHTML;
   botao.disabled = true;
-  botao.innerHTML = '⏳';
+  botao.innerHTML = '<span class="mini-carregando" aria-label="Gerando"></span>';
   try {
     const canvas = await gerarCartaoDeCompartilhamento(santo);
     canvas.toBlob(async (blob) => {
@@ -2903,9 +3116,9 @@ function renderGrid(filter = 'todos') {
       <div class="card-content">
         <h3 class="card-title">
           <svg class="card-icon" viewBox="0 0 24 24"><use href="#icon-aureola"></use></svg>
-          ${santo.nome}
+          ${textoDoSanto(santo).nome}
         </h3>
-        <p class="card-desc">${santo.resumo}</p>
+        <p class="card-desc">${textoDoSanto(santo).resumo}</p>
       </div>
     `;
 
@@ -2955,9 +3168,10 @@ function ligarBotaoOuvir(santo) {
       return;
     }
 
-    const texto = `${santo.nome}. ${textoLimpo(santo.texto)}`;
+    const textos = textoDoSanto(santo);
+    const texto = `${textos.nome}. ${textoLimpo(textos.texto)}`;
     const fala = new SpeechSynthesisUtterance(texto);
-    fala.lang = 'pt-BR';
+    fala.lang = (!textos.traduzido || idiomaAtual === 'pt') ? 'pt-BR' : (idiomaAtual === 'en' ? 'en-US' : 'es-ES');
     fala.rate = 0.95;
 
     fala.onend = () => {
@@ -2985,20 +3199,29 @@ function showDetail(id) {
   bioContainer.classList.remove('animate-in');
   bioArticle.dataset.santoId = santo.id;
 
-  viewHome.classList.remove('active');
+  // Esconde qualquer outra página aberta (início, trilhas, padroeiro,
+  // lição...), não só o início — senão duas páginas ficavam na tela.
+  document.querySelectorAll('.view').forEach(v => {
+    if (v !== viewDetail) v.classList.remove('active');
+  });
   setTimeout(() => {
-    viewHome.style.display = 'none';
+    document.querySelectorAll('.view').forEach(v => {
+      if (v !== viewDetail) v.style.display = 'none';
+    });
     viewDetail.style.display = 'block';
 
-    const avisoTraducao = (typeof idiomaAtual !== 'undefined' && idiomaAtual !== 'pt')
+    const textos = textoDoSanto(santo);
+    const avisoTraducao = (!textos.traduzido)
       ? `<p class="bio-aviso-traducao" data-i18n="aviso_traducao">${(TRADUCOES[idiomaAtual] || {}).aviso_traducao || ''}</p>`
       : '';
+
+    const trilhaDoSanto = (typeof TRILHAS !== 'undefined') ? TRILHAS.find(t => t.santoId === santo.id) : null;
 
     bioArticle.innerHTML = `
       <div class="bio-header">
         <h2 class="bio-title">
           <svg viewBox="0 0 24 24" width="30" height="30" style="vertical-align: middle; margin-right:8px;"><use href="#icon-aureola"></use></svg>
-          ${santo.nome}
+          ${textos.nome}
         </h2>
       </div>
       <div class="bio-img-wrapper" id="bio-img-wrapper"></div>
@@ -3008,8 +3231,13 @@ function showDetail(id) {
         <span id="btn-ouvir-texto">Ouvir biografia</span>
       </button>
       <div class="bio-text">
-        ${santo.texto}
+        ${textos.texto}
       </div>
+      ${trilhaDoSanto ? `
+      <button class="btn-ask-ai btn-fazer-trilha" id="btn-fazer-trilha">
+        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-trilha"></use></svg>
+        Fazer a trilha de ${trilhaDoSanto.santo}
+      </button>` : ''}
       <button class="btn-ask-ai" id="btn-ask-ai-santo">
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.34 6.34l2.83 2.83M14.83 14.83l2.83 2.83M17.66 6.34l-2.83 2.83M9.17 14.83l-2.83 2.83"/><circle cx="12" cy="12" r="2.2" fill="currentColor" stroke="none"/></svg>
         Perguntar à Lumina sobre ${santo.nome}
@@ -3017,6 +3245,14 @@ function showDetail(id) {
     `;
 
     ligarBotaoOuvir(santo);
+
+    const btnFazerTrilha = document.getElementById('btn-fazer-trilha');
+    if (btnFazerTrilha && trilhaDoSanto) {
+      btnFazerTrilha.addEventListener('click', () => {
+        pararLeituraDeBiografia();
+        abrirTrilhas(trilhaDoSanto.slug);
+      });
+    }
 
     const btnAskAiSanto = document.getElementById('btn-ask-ai-santo');
     if (btnAskAiSanto) {
@@ -3043,8 +3279,8 @@ function showDetail(id) {
 
     btnShare.onclick = () => {
       const shareData = {
-        title: `Lumina Sancti - ${santo.nome}`,
-        text: `Leia a inspiradora história de ${santo.nome} no Lumina Sancti!`,
+        title: `Lumina Sancti - ${textoDoSanto(santo).nome}`,
+        text: `Leia a inspiradora história de ${textoDoSanto(santo).nome} no Lumina Sancti!`,
         url: window.location.href,
       };
       if (navigator.share) {
@@ -3081,7 +3317,7 @@ btnBack.addEventListener('click', () => {
 
 filterBtns.forEach(btn => {
   btn.addEventListener('click', (e) => {
-    const filter = e.target.dataset.filter;
+    const filter = btn.dataset.filter;
 
     filterBtns.forEach(b => b.classList.remove('active'));
 
@@ -3140,9 +3376,10 @@ searchInput.addEventListener('input', (e) => {
 
   if (query.length < 2) return;
 
-  const match = santosData.filter(s =>
-    s.nome.toLowerCase().includes(query) || s.resumo.toLowerCase().includes(query)
-  );
+  const match = santosData.filter(s => {
+    const t = textoDoSanto(s);
+    return s.nome.toLowerCase().includes(query) || t.nome.toLowerCase().includes(query) || t.resumo.toLowerCase().includes(query);
+  });
 
   if (match.length === 0) {
     searchResults.innerHTML = '<div class="not-found-msg">Nenhum santo ou beato encontrado.</div>';
@@ -3154,8 +3391,8 @@ searchInput.addEventListener('input', (e) => {
     item.className = 'search-result-item';
     item.style.animationDelay = `${index * 0.05}s`;
     item.innerHTML = `
-      <div class="search-result-title">${santo.nome}</div>
-      <div class="search-result-desc">${santo.resumo.substring(0, 70)}...</div>
+      <div class="search-result-title">${textoDoSanto(santo).nome}</div>
+      <div class="search-result-desc">${textoDoSanto(santo).resumo.substring(0, 70)}...</div>
     `;
     item.onclick = () => showDetail(santo.id);
     searchResults.appendChild(item);
@@ -3195,6 +3432,8 @@ document.addEventListener('DOMContentLoaded', () => {
   rodarComSeguranca('página do terço', iniciarPaginaDoTerco);
   rodarComSeguranca('página de padroeiro', iniciarPaginaDePadroeiro);
   rodarComSeguranca('menu lateral (novas páginas)', iniciarNavegacaoDoMenuLateral);
+  rodarComSeguranca('compartilhar site', iniciarCompartilharSite);
+  rodarComSeguranca('google, planos e instalar o app', iniciarContaGooglePlanosEApp);
 });
 
 // ============================================================
@@ -3331,7 +3570,7 @@ function renderizarPassoDoTerco() {
   const btnAnterior = document.getElementById('terco-anterior');
   const btnProximo = document.getElementById('terco-proximo');
   btnAnterior.disabled = indicePassoTerco === 0;
-  btnProximo.textContent = (indicePassoTerco === passosTercoAtual.length - 1) ? 'Concluir ✓' : 'Próxima →';
+  btnProximo.textContent = (indicePassoTerco === passosTercoAtual.length - 1) ? 'Concluir' : 'Próxima →';
 }
 
 function iniciarTerco(chaveMisterio) {
@@ -3350,7 +3589,7 @@ function iniciarPaginaDoTerco() {
   containerBotoes.innerHTML = Object.entries(MISTERIOS_DO_TERCO).map(([chave, conjunto]) => `
     <button class="terco-btn-misterio ${chave === sugerido ? 'sugerido' : ''}" data-misterio="${chave}">
       <div class="nome">${conjunto.nome}</div>
-      <div class="tag">${chave === sugerido ? '✦ sugerido para hoje · ' : ''}${conjunto.dias}</div>
+      <div class="tag">${chave === sugerido ? 'Sugerido para hoje · ' : ''}${conjunto.dias}</div>
     </button>
   `).join('');
 
@@ -3447,8 +3686,8 @@ function iniciarPaginaDePadroeiro() {
           <svg class="card-img-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-aureola"></use></svg>
         </div>
         <div class="card-content">
-          <h3 class="card-title"><svg class="card-icon" viewBox="0 0 24 24"><use href="#icon-aureola"></use></svg>${santo.nome}</h3>
-          <p class="card-desc">${santo.resumo}</p>
+          <h3 class="card-title"><svg class="card-icon" viewBox="0 0 24 24"><use href="#icon-aureola"></use></svg>${textoDoSanto(santo).nome}</h3>
+          <p class="card-desc">${textoDoSanto(santo).resumo}</p>
         </div>
       `;
       resultados.appendChild(card);
@@ -3466,6 +3705,37 @@ function iniciarPaginaDePadroeiro() {
 // ============================================================
 //  LIGAÇÕES DO MENU LATERAL COM AS NOVAS PÁGINAS
 // ============================================================
+// ============================================================
+//  COMPARTILHAR O SITE
+// ============================================================
+async function compartilharSite() {
+  const dados = {
+    title: 'Lumina Sancti — Luz dos Santos',
+    text: 'Descubra a vida, a fé e o legado dos santos, beatos, doutores da Igreja e anjos no Lumina Sancti.',
+    url: window.location.origin + window.location.pathname,
+  };
+  if (navigator.share) {
+    try { await navigator.share(dados); } catch (e) { /* pessoa cancelou — tudo bem */ }
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(dados.url);
+    alert('Link copiado! Agora é só colar e compartilhar com quem você ama.');
+  } catch (e) {
+    alert(dados.url);
+  }
+}
+
+function iniciarCompartilharSite() {
+  const btnRodape = document.getElementById('footer-compartilhar-btn');
+  const btnMenu = document.getElementById('nav-compartilhar-site');
+  if (btnRodape) btnRodape.addEventListener('click', compartilharSite);
+  if (btnMenu) btnMenu.addEventListener('click', () => { closeSidebar(); compartilharSite(); });
+}
+
+// ============================================================
+//  LIGAÇÕES DO MENU LATERAL COM AS NOVAS PÁGINAS
+// ============================================================
 function iniciarNavegacaoDoMenuLateral() {
   const navOracoes = document.getElementById('nav-oracoes');
   const navTerco = document.getElementById('nav-terco');
@@ -3474,6 +3744,132 @@ function iniciarNavegacaoDoMenuLateral() {
   if (navOracoes) navOracoes.addEventListener('click', () => { closeSidebar(); mudarDeView('view-oracoes'); });
   if (navTerco) navTerco.addEventListener('click', () => { closeSidebar(); mudarDeView('view-terco'); });
   if (navPadroeiro) navPadroeiro.addEventListener('click', () => { closeSidebar(); mudarDeView('view-padroeiro'); });
+}
+
+// ============================================================
+//  INSTALAR O APP (no celular ou no computador)
+// ============================================================
+let pedidoDeInstalacao = null;
+
+function appJaInstalado() {
+  const standalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+  return !!standalone || (typeof navigator !== 'undefined' && navigator.standalone === true);
+}
+
+function aparelhoApple() {
+  const agente = (navigator && navigator.userAgent) || '';
+  return /iphone|ipad|ipod/i.test(agente) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+
+function atualizarBotoesDeInstalar() {
+  const mostrar = !appJaInstalado();
+  ['nav-instalar', 'footer-instalar'].forEach((id) => {
+    const botao = document.getElementById(id);
+    if (botao) botao.hidden = !mostrar;
+  });
+}
+
+async function instalarApp() {
+  if (typeof closeSidebar === 'function') closeSidebar();
+  // Android e computador: o próprio navegador abre a janela de instalar
+  if (pedidoDeInstalacao) {
+    pedidoDeInstalacao.prompt();
+    try { await pedidoDeInstalacao.userChoice; } catch (e) { /* pessoa fechou */ }
+    pedidoDeInstalacao = null;
+    atualizarBotoesDeInstalar();
+    return;
+  }
+  // iPhone (ou navegador sem instalação automática): passo a passo
+  const janela = document.getElementById('instalar-modal');
+  const instrucoes = document.getElementById('instalar-instrucoes');
+  if (!janela || !instrucoes) return;
+  instrucoes.innerHTML = aparelhoApple()
+    ? `<ol class="instalar-passos">
+         <li>Abra o site no <b>Safari</b>.</li>
+         <li>Toque no botão <b>Compartilhar</b> (o quadrado com a seta para cima).</li>
+         <li>Escolha <b>Adicionar à Tela de Início</b> e confirme.</li>
+       </ol>`
+    : `<ol class="instalar-passos">
+         <li>Abra o menu do navegador (os três pontinhos).</li>
+         <li>Toque em <b>Instalar app</b> ou <b>Adicionar à tela inicial</b>.</li>
+         <li>Pronto: a estrela do Lumina Sancti aparece junto dos seus apps.</li>
+       </ol>`;
+  janela.classList.add('active');
+}
+
+function iniciarInstalacaoDoApp() {
+  window.addEventListener('beforeinstallprompt', (evento) => {
+    evento.preventDefault();
+    pedidoDeInstalacao = evento;
+    atualizarBotoesDeInstalar();
+  });
+  window.addEventListener('appinstalled', () => {
+    pedidoDeInstalacao = null;
+    atualizarBotoesDeInstalar();
+  });
+  ['nav-instalar', 'footer-instalar'].forEach((id) => {
+    const botao = document.getElementById(id);
+    if (botao) botao.addEventListener('click', instalarApp);
+  });
+  const janela = document.getElementById('instalar-modal');
+  const fechar = document.getElementById('instalar-fechar');
+  if (fechar) fechar.addEventListener('click', () => janela.classList.remove('active'));
+  if (janela) janela.addEventListener('click', (e) => { if (e.target === janela) janela.classList.remove('active'); });
+  atualizarBotoesDeInstalar();
+}
+
+// ============================================================
+//  PLANOS (vitrine — ainda sem cobrança)
+// ============================================================
+// Quando os preços forem definidos, é só preencher "preco" (por
+// exemplo 'R$ 9,90/mês'). Enquanto estiver null, aparece "Em breve".
+const PLANOS = [
+  { id: 'gratuito', nome: 'Gratuito', preco: 'Grátis', perfis: '1 perfil', destaque: false,
+    itens: ['Todas as biografias dos santos', 'Santo do Dia, orações e terço guiado', 'Trilhas dos Santos', 'Lumina: 5 perguntas por dia'] },
+  { id: 'individual', nome: 'Individual', preco: null, perfis: '1 perfil', destaque: false,
+    itens: ['Tudo do plano Gratuito', 'Quiz dos Santos criado por IA', 'Narração com voz natural', 'Mais perguntas à Lumina'] },
+  { id: 'duo', nome: 'Duo', preco: null, perfis: '2 perfis', destaque: false,
+    itens: ['Tudo do plano Individual', 'Para duas pessoas', 'Ranking entre vocês dois'] },
+  { id: 'familia', nome: 'Família', preco: null, perfis: 'Até 6 perfis', destaque: true,
+    itens: ['Tudo do plano Individual', 'Perfis de adultos e crianças', 'Modo Kids', 'Ranking da família'] },
+];
+
+function renderizarPlanos() {
+  const grade = document.getElementById('planos-grade');
+  if (!grade) return;
+  grade.innerHTML = PLANOS.map((plano) => `
+    <div class="plano-cartao${plano.destaque ? ' destaque' : ''}">
+      ${plano.destaque ? '<span class="plano-selo">Mais completo</span>' : ''}
+      <h3 class="plano-nome">${plano.nome}</h3>
+      <p class="plano-perfis">${plano.perfis}</p>
+      <p class="plano-preco">${plano.preco || 'Em breve'}</p>
+      <ul class="plano-itens">
+        ${plano.itens.map((item) => `<li>${icone('check')}<span>${item}</span></li>`).join('')}
+      </ul>
+      <button class="plano-botao" disabled>${plano.id === 'gratuito' ? 'Plano atual' : 'Em breve'}</button>
+    </div>`).join('');
+}
+
+function abrirPlanos() {
+  if (typeof closeSidebar === 'function') closeSidebar();
+  mudarDeView('view-planos');
+  renderizarPlanos();
+}
+
+function iniciarContaGooglePlanosEApp() {
+  const google = document.getElementById('auth-google');
+  if (google) google.addEventListener('click', entrarComGoogle);
+  const completar = document.getElementById('completar-form');
+  if (completar) completar.addEventListener('submit', concluirCadastro);
+  const outraConta = document.getElementById('completar-outra-conta');
+  if (outraConta) outraConta.addEventListener('click', usarOutraConta);
+
+  const planos = document.getElementById('nav-planos');
+  if (planos) planos.addEventListener('click', abrirPlanos);
+  const voltarPlanos = document.getElementById('btn-back-planos');
+  if (voltarPlanos) voltarPlanos.addEventListener('click', () => mudarDeView('view-home'));
+
+  iniciarInstalacaoDoApp();
 }
 
 // PWA: registra o service worker, que deixa o site instalável e

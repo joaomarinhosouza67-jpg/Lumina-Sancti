@@ -339,10 +339,12 @@ input:focus-visible,
 
 @media (max-width: 480px) {
   .nav-brand { font-size: 1rem; letter-spacing: 0.5px; }
-  .nav-right-actions .icon-btn { padding: 3px; }
+  .nav-right-actions .icon-btn { padding: 3px; margin-left: 6px !important; }
 }
 @media (max-width: 380px) {
   .nav-brand { font-size: 0.85rem; letter-spacing: 0.3px; }
+  .nav-right-actions .icon-btn { margin-left: 4px !important; }
+  .nav-right-actions .icon-btn svg { width: 19px; height: 19px; }
 }
 
 .nav-right-actions { display: flex; align-items: center; }
@@ -712,6 +714,26 @@ input:focus-visible,
 .auth-feedback { margin-top: 16px; text-align: center; font-size: 0.9rem; color: var(--primary-dark); min-height: 1.2em; }
 .auth-email-fixo { color: var(--text-muted); font-size: 0.9rem; margin-top: 4px; }
 
+.auth-codigo-desc { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 4px; }
+#codigo-confirmacao {
+  text-align: center;
+  font-size: 1.5rem;
+  letter-spacing: 8px;
+  font-weight: 700;
+}
+.btn-reenviar-codigo {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  font-family: var(--font-text);
+  font-size: 0.85rem;
+  cursor: pointer;
+  margin-top: 12px;
+  text-decoration: underline;
+  align-self: center;
+}
+.btn-reenviar-codigo:hover { color: var(--primary-dark); }
+
 .perfil-zona-perigo {
   margin-top: 32px;
   padding-top: 22px;
@@ -753,6 +775,22 @@ input:focus-visible,
 .footer-contato { font-size: 0.85rem; color: var(--text-muted); }
 .footer-contato a { color: var(--primary-color); text-decoration: none; }
 .footer-contato a:hover { text-decoration: underline; }
+
+.footer-compartilhe { margin: 18px 0; padding: 16px; background: var(--bg-alt); border-radius: 10px; border: 1px solid var(--secondary-color); }
+.footer-compartilhe p { font-size: 0.88rem; color: var(--text-main); margin-bottom: 10px; }
+.footer-compartilhe .filter-btn { font-size: 0.85rem; padding: 8px 20px; }
+
+.footer-social { margin-bottom: 16px; }
+.footer-social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: var(--transition);
+}
+.footer-social-link:hover { color: var(--primary-color); }
 
 /* Divisor e links de navegação extra no menu lateral */
 .sidebar-divisor { height: 1px; background: var(--secondary-color); margin: 12px 0; }
@@ -861,6 +899,7 @@ input:focus-visible,
   font-style: italic;
   grid-column: 1 / -1;
 }
+
 
 
 
@@ -1112,3 +1151,819 @@ input:focus-visible,
 .bio-img-wrapper { width: 100%; aspect-ratio: 3 / 2; border-radius: 10px; overflow: hidden; margin-bottom: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 .bio-img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .bio-text { font-size: 1.05rem; color: var(--text-main); line-height: 1.8; display: flex; flex-direction: column; gap: 15px; }
+
+/* ------------------------------------------------- */
+/* TRILHAS DOS SANTOS (estilo Duolingo)                */
+/* ------------------------------------------------- */
+.side-nav-destaque { color: var(--primary-color); font-weight: 700; }
+
+.trilhas-container { max-width: 640px; }
+.trilhas-titulo { text-align: left; margin: 10px 0 4px; }
+.trilhas-intro { color: var(--text-muted); line-height: 1.6; margin-bottom: 18px; }
+
+.trilhas-stats {
+  display: flex;
+  justify-content: space-around;
+  background: var(--bg-alt);
+  border: 1px solid var(--secondary-color);
+  border-radius: 14px;
+  padding: 10px 12px;
+  margin-bottom: 26px;
+}
+.stat { display: flex; flex-direction: column; align-items: center; font-weight: 700; font-size: 1.05rem; }
+.stat small { font-size: 0.66rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+.stat-fe { color: var(--primary-color); }
+.stat-ofensiva { color: #fb923c; }
+.stat-santidade { color: #e0f2fe; }
+
+.lista-trilhas { display: flex; flex-direction: column; gap: 38px; }
+
+.trilha-banner {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  background: linear-gradient(135deg, var(--bg-alt), #243149);
+  border: 1px solid var(--secondary-color);
+  border-radius: 16px;
+  padding: 16px;
+}
+.trilha-banner.concluida { border-color: var(--primary-color); box-shadow: 0 0 22px rgba(212, 175, 55, 0.2); }
+.trilha-foto {
+  width: 84px; height: 84px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid var(--primary-color);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.8rem;
+  background: var(--secondary-color);
+}
+.trilha-foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.trilha-info { min-width: 0; }
+.trilha-virtude { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--primary-color); font-weight: 700; }
+.trilha-info h3 { font-family: var(--font-title); font-size: 1.35rem; color: var(--text-main); line-height: 1.2; }
+.trilha-info p { font-size: 0.85rem; color: var(--text-muted); }
+.trilha-ler { background: none; border: none; color: var(--primary-color); font-size: 0.8rem; font-weight: 600; cursor: pointer; padding: 0; margin-top: 4px; font-family: var(--font-text); }
+
+.trilha-caminho { display: flex; flex-direction: column; align-items: center; gap: 22px; padding: 30px 0 6px; }
+.no-wrapper { display: flex; justify-content: center; }
+.desloc-0 { transform: translateX(0); }
+.desloc-d { transform: translateX(58px); }
+.desloc-e { transform: translateX(-58px); }
+
+.no-licao {
+  background: none; border: none; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 7px;
+  position: relative;
+  transition: transform 0.15s ease;
+  font-family: var(--font-text);
+}
+.no-licao:active { transform: scale(0.94); }
+.no-circulo {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem; font-weight: 800;
+}
+.no-licao.concluida .no-circulo { background: var(--primary-color); color: #0f172a; box-shadow: 0 6px 0 #8a6d1f; }
+.no-licao.atual .no-circulo {
+  background: linear-gradient(145deg, #f5d77a, var(--primary-color));
+  color: #0f172a;
+  box-shadow: 0 6px 0 #8a6d1f, 0 0 0 6px rgba(212, 175, 55, 0.22);
+  animation: noPulso 1.8s ease-in-out infinite;
+}
+.no-licao.bloqueada .no-circulo { background: var(--secondary-color); color: var(--text-muted); box-shadow: 0 6px 0 #1b2536; font-size: 1.3rem; }
+.no-rotulo { font-size: 0.78rem; color: var(--text-muted); max-width: 130px; text-align: center; line-height: 1.3; }
+.no-licao.atual .no-rotulo { color: var(--text-main); font-weight: 600; }
+.no-balao {
+  position: absolute;
+  top: -36px;
+  background: var(--text-main);
+  color: #0f172a;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  white-space: nowrap;
+  animation: balaoFlutua 1.6s ease-in-out infinite;
+}
+.no-balao::after {
+  content: '';
+  position: absolute;
+  bottom: -5px; left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--text-main);
+  border-bottom: 0;
+}
+@keyframes noPulso {
+  0%, 100% { box-shadow: 0 6px 0 #8a6d1f, 0 0 0 4px rgba(212, 175, 55, 0.22); }
+  50% { box-shadow: 0 6px 0 #8a6d1f, 0 0 0 13px rgba(212, 175, 55, 0.04); }
+}
+@keyframes balaoFlutua { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+
+.no-insignia { display: flex; flex-direction: column; align-items: center; gap: 7px; }
+.no-insignia .no-circulo {
+  width: 86px; height: 86px;
+  font-size: 2.3rem;
+  background: var(--secondary-color);
+  filter: grayscale(1);
+  opacity: 0.55;
+  box-shadow: 0 6px 0 #1b2536;
+}
+.no-insignia.conquistada .no-circulo {
+  filter: none;
+  opacity: 1;
+  background: radial-gradient(circle, #fff3c4, var(--primary-color));
+  box-shadow: 0 6px 0 #8a6d1f, 0 0 32px rgba(212, 175, 55, 0.55);
+  animation: fimBrilho 2.4s ease-in-out infinite;
+}
+.no-insignia.conquistada .no-rotulo { color: var(--primary-color); font-weight: 700; }
+
+.trilhas-nota { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 34px; }
+
+/* ---------- Tela da lição (cobre a tela toda) ---------- */
+#view-licao {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  padding-top: 0;
+  background: var(--bg-color);
+  overflow-y: auto;
+}
+.licao-tela {
+  max-width: 640px;
+  margin: 0 auto;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 18px calc(16px + env(safe-area-inset-bottom));
+}
+.licao-topo { display: flex; align-items: center; gap: 14px; }
+.licao-barra { flex: 1; height: 14px; background: var(--secondary-color); border-radius: 8px; overflow: hidden; }
+.licao-barra-preenchida {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--primary-color), #f5d77a);
+  border-radius: 8px;
+  transition: width 0.4s ease;
+}
+.licao-santidade { font-weight: 700; color: #e0f2fe; white-space: nowrap; }
+.licao-corpo { flex: 1; padding: 30px 0 16px; }
+.licao-tipo { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--primary-color); font-weight: 700; margin-bottom: 10px; }
+.licao-enunciado { font-family: var(--font-title); font-size: 1.65rem; line-height: 1.3; color: var(--text-main); margin-bottom: 26px; }
+
+.licao-opcoes { display: flex; flex-direction: column; gap: 12px; }
+.licao-opcao {
+  text-align: left;
+  background: var(--bg-alt);
+  border: 2px solid var(--secondary-color);
+  border-bottom-width: 4px;
+  border-radius: 14px;
+  padding: 14px 16px;
+  font-size: 1rem;
+  color: var(--text-main);
+  cursor: pointer;
+  font-family: var(--font-text);
+  transition: var(--transition);
+}
+.licao-opcao.selecionada { border-color: var(--primary-color); background: rgba(212, 175, 55, 0.12); }
+.licao-opcao.certa { border-color: #22c55e; background: rgba(34, 197, 94, 0.15); }
+.licao-opcao.errada { border-color: #ef4444; background: rgba(239, 68, 68, 0.15); }
+.licao-opcao:disabled { cursor: default; }
+.licao-vf { display: grid; grid-template-columns: 1fr 1fr; }
+.licao-vf .licao-opcao { text-align: center; padding: 24px 10px; font-size: 1.1rem; font-weight: 700; }
+
+.ordenar-resposta {
+  min-height: 66px;
+  border-bottom: 2px solid var(--secondary-color);
+  display: flex; flex-wrap: wrap; gap: 8px;
+  padding: 8px 0 12px;
+  margin-bottom: 22px;
+}
+.ordenar-resposta.certa { border-bottom-color: #22c55e; }
+.ordenar-resposta.errada { border-bottom-color: #ef4444; }
+.ordenar-banco { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.ordenar-bloco {
+  background: var(--bg-alt);
+  border: 2px solid var(--secondary-color);
+  border-bottom-width: 4px;
+  border-radius: 12px;
+  padding: 10px 14px;
+  color: var(--text-main);
+  font-size: 0.95rem;
+  cursor: pointer;
+  font-family: var(--font-text);
+}
+.ordenar-bloco.usado { opacity: 0.2; cursor: default; }
+
+.licao-rodape { position: sticky; bottom: 0; padding-top: 12px; background: var(--bg-color); }
+.licao-feedback { display: none; border-radius: 14px; padding: 14px 16px; margin-bottom: 12px; }
+.licao-feedback.mostrar { display: block; animation: feedbackSobe 0.25s ease; }
+.licao-feedback.certo { background: rgba(34, 197, 94, 0.14); border: 1px solid rgba(34, 197, 94, 0.5); }
+.licao-feedback.errado { background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.5); }
+.licao-feedback strong { display: block; font-size: 1.1rem; margin-bottom: 4px; }
+.licao-feedback.certo strong { color: #4ade80; }
+.licao-feedback.errado strong { color: #f87171; }
+.licao-feedback p { font-size: 0.92rem; color: var(--text-main); line-height: 1.5; }
+@keyframes feedbackSobe { from { transform: translateY(12px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+.licao-botao {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 14px;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  background: var(--primary-color);
+  color: #0f172a;
+  box-shadow: 0 5px 0 #8a6d1f;
+  font-family: var(--font-text);
+  transition: var(--transition);
+}
+.licao-botao:disabled { background: var(--secondary-color); color: var(--text-muted); box-shadow: 0 5px 0 #1b2536; cursor: default; }
+.licao-botao.certo { background: #22c55e; color: #0f172a; box-shadow: 0 5px 0 #15803d; }
+.licao-botao.errado { background: #ef4444; color: #fff; box-shadow: 0 5px 0 #991b1b; }
+
+.licao-fim { text-align: center; padding-top: 24px; }
+.licao-fim-icone { font-size: 4rem; margin-bottom: 10px; display: inline-block; animation: fimBrilho 1.8s ease-in-out infinite; }
+.licao-fim h2 { font-family: var(--font-title); color: var(--primary-color); font-size: 2rem; margin-bottom: 8px; }
+.licao-fim-sub { color: var(--text-muted); margin-bottom: 8px; line-height: 1.5; }
+.licao-fim-dados { display: flex; justify-content: center; gap: 14px; margin: 22px 0; flex-wrap: wrap; }
+.licao-fim-dado { border: 2px solid var(--primary-color); border-radius: 14px; padding: 10px 16px; min-width: 120px; }
+.licao-fim-dado strong { display: block; font-size: 1.45rem; color: var(--primary-color); }
+.licao-fim-dado span { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+.insignia-conquistada {
+  margin: 18px auto;
+  max-width: 360px;
+  background: radial-gradient(circle at top, rgba(212, 175, 55, 0.25), var(--bg-alt));
+  border: 1px solid var(--primary-color);
+  border-radius: 16px;
+  padding: 18px;
+}
+.insignia-icone { color: var(--primary-color); margin-bottom: 4px; }
+.insignia-icone .icone { width: 56px; height: 56px; }
+.insignia-conquistada h3 { font-family: var(--font-title); color: var(--primary-color); font-size: 1.3rem; }
+.insignia-conquistada p { color: var(--text-muted); font-size: 0.9rem; }
+@keyframes fimBrilho {
+  0%, 100% { filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.4)); transform: scale(1); }
+  50% { filter: drop-shadow(0 0 22px rgba(212, 175, 55, 0.9)); transform: scale(1.06); }
+}
+
+.btn-fazer-trilha { margin: 6px 8px 6px 0; }
+
+.lumina-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--bg-alt);
+  border: 1px solid var(--primary-color);
+  color: var(--text-main);
+  padding: 12px 18px;
+  border-radius: 12px;
+  z-index: 4000;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  max-width: 90vw;
+  text-align: center;
+  font-size: 0.92rem;
+  box-shadow: var(--shadow-md);
+}
+.lumina-toast.mostrar { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ------------------------------------------------- */
+/* ÍCONES DESENHADOS (o site não usa emojis)          */
+/* ------------------------------------------------- */
+.icone {
+  width: 1.15em;
+  height: 1.15em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vertical-align: -0.2em;
+  flex-shrink: 0;
+}
+.filter-btn .icone { margin-right: 6px; }
+.side-nav-link .icone { margin-right: 10px; color: var(--primary-color); }
+.stat span { display: inline-flex; align-items: center; gap: 6px; }
+.licao-santidade { display: inline-flex; align-items: center; gap: 6px; }
+
+.no-circulo .icone-no { width: 30px; height: 30px; }
+.no-licao.concluida .icone-no { stroke-width: 3; }
+.no-licao.bloqueada .icone-no { width: 24px; height: 24px; }
+.no-insignia .icone-no { width: 40px; height: 40px; }
+.licao-fim-icone .icone { width: 76px; height: 76px; color: var(--primary-color); }
+
+.bandeira {
+  width: 22px;
+  height: 15px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+
+.mini-carregando {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  vertical-align: middle;
+  animation: girarCarregando 0.8s linear infinite;
+}
+@keyframes girarCarregando { to { transform: rotate(360deg); } }
+
+/* ------------------------------------------------- */
+/* CABEÇALHO DO SANTO NA MISSÃO                        */
+/* ------------------------------------------------- */
+.licao-santo { display: flex; align-items: center; gap: 12px; margin-top: 18px; }
+.licao-santo-foto {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid var(--primary-color);
+  background: var(--secondary-color);
+  display: flex; align-items: center; justify-content: center;
+}
+.licao-santo-foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.licao-santo-foto .card-img-placeholder { width: 26px; height: 26px; color: var(--text-muted); }
+.licao-santo-textos { display: flex; flex-direction: column; min-width: 0; }
+.licao-santo-textos strong { font-family: var(--font-title); font-size: 1.15rem; color: var(--primary-color); line-height: 1.2; }
+.licao-santo-textos small { font-size: 0.8rem; color: var(--text-muted); }
+.licao-corpo { padding-top: 22px; }
+
+/* ------------------------------------------------- */
+/* AVATARES                                            */
+/* ------------------------------------------------- */
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.35);
+}
+.avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.avatar-pequeno { width: 34px; height: 34px; }
+.avatar-pequeno .icone { width: 18px; height: 18px; }
+.avatar-medio { width: 56px; height: 56px; }
+.avatar-medio .icone { width: 28px; height: 28px; }
+.avatar-grande { width: 104px; height: 104px; }
+.avatar-grande .icone { width: 50px; height: 50px; }
+.avatar-adicionar { background: transparent; border: 2px dashed var(--text-muted); box-shadow: none; color: var(--text-muted); }
+
+/* ------------------------------------------------- */
+/* "QUEM VAI APRENDER AGORA?" (estilo streaming)       */
+/* ------------------------------------------------- */
+.perfis-container { max-width: 760px; text-align: center; padding-top: 30px; }
+.perfis-titulo { font-family: var(--font-title); font-size: 2.1rem; color: var(--text-main); margin-bottom: 34px; }
+.perfis-grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 26px 16px;
+  justify-items: center;
+  margin-bottom: 36px;
+}
+.perfis-carregando { grid-column: 1 / -1; color: var(--text-muted); }
+.perfil-cartao {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-text);
+  transition: transform 0.2s ease;
+}
+.perfil-cartao:hover { transform: translateY(-4px); }
+.perfil-cartao:hover .avatar { box-shadow: 0 0 0 3px var(--primary-color), 0 0 24px rgba(212, 175, 55, 0.45); }
+.perfil-avatar-wrap { position: relative; display: inline-flex; }
+.perfil-nome { color: var(--text-muted); font-size: 1rem; max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.perfil-cartao:hover .perfil-nome { color: var(--text-main); }
+.perfil-tag {
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #0f172a;
+  background: linear-gradient(90deg, #facc15, #f472b6);
+  border-radius: 20px;
+  padding: 2px 10px;
+}
+.perfil-editar-selo {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.6);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-main);
+}
+.perfil-editar-selo .icone { width: 30px; height: 30px; }
+.perfis-gerenciar {
+  background: none;
+  border: 1px solid var(--text-muted);
+  color: var(--text-muted);
+  padding: 10px 26px;
+  font-family: var(--font-text);
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.perfis-gerenciar:hover { border-color: var(--text-main); color: var(--text-main); }
+
+/* ------------------------------------------------- */
+/* EDITOR DE PERFIL                                    */
+/* ------------------------------------------------- */
+.perfil-editor { max-width: 460px; max-height: 86vh; overflow-y: auto; }
+.perfil-editor-previa { display: flex; justify-content: center; margin: 4px 0 14px; }
+.perfil-editor-rotulo { display: block; font-size: 0.8rem; color: var(--text-muted); margin: 14px 0 6px; text-transform: uppercase; letter-spacing: 1px; }
+.perfil-editor-campo {
+  width: 100%;
+  padding: 11px 14px;
+  font-size: 1rem;
+  font-family: var(--font-text);
+  border: 1px solid var(--secondary-color);
+  border-radius: 8px;
+  background: var(--bg-color);
+  color: var(--text-main);
+  outline: none;
+}
+.perfil-editor-campo:focus { border-color: var(--primary-color); }
+.perfil-tipos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.perfil-tipo {
+  padding: 10px;
+  border-radius: 10px;
+  border: 2px solid var(--secondary-color);
+  background: var(--bg-color);
+  color: var(--text-muted);
+  font-family: var(--font-text);
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.perfil-tipo.active { border-color: var(--primary-color); color: var(--primary-color); background: rgba(212, 175, 55, 0.1); }
+.perfil-avatares { display: grid; grid-template-columns: repeat(auto-fill, minmax(62px, 1fr)); gap: 10px; justify-items: center; }
+.perfil-avatar-opcao { background: none; border: none; padding: 3px; border-radius: 50%; cursor: pointer; }
+.perfil-avatar-opcao.selecionado .avatar { box-shadow: 0 0 0 3px var(--primary-color); }
+.perfil-foto-acoes { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 16px 0; flex-wrap: wrap; }
+.perfil-foto-botao {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--primary-color);
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.perfil-link { background: none; border: none; color: var(--text-muted); font-family: var(--font-text); font-size: 0.85rem; text-decoration: underline; cursor: pointer; }
+.perfil-link-perigo { color: #f87171; display: block; margin: 14px auto 0; }
+
+/* ------------------------------------------------- */
+/* PAINEL DO PERFIL                                    */
+/* ------------------------------------------------- */
+.perfil-painel { max-width: 440px; max-height: 86vh; overflow-y: auto; }
+.painel-topo { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 18px; }
+.painel-nome { font-family: var(--font-title); font-size: 1.5rem; color: var(--text-main); }
+.painel-numeros { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+.painel-numeros div {
+  background: var(--bg-color);
+  border: 1px solid var(--secondary-color);
+  border-radius: 12px;
+  padding: 10px 6px;
+  text-align: center;
+}
+.painel-numeros strong { display: flex; align-items: center; justify-content: center; gap: 5px; font-size: 1.15rem; color: var(--primary-color); }
+.painel-numeros span { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+.painel-subtitulo { font-family: var(--font-title); font-size: 1.1rem; color: var(--text-main); margin-bottom: 10px; }
+.painel-insignias { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.painel-insignia { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--text-main); }
+.painel-insignia .icone { color: var(--primary-color); width: 22px; height: 22px; }
+.painel-vazio { color: var(--text-muted); font-size: 0.9rem; font-style: italic; }
+
+/* ------------------------------------------------- */
+/* FAIXA DA CONTA NAS TRILHAS                          */
+/* ------------------------------------------------- */
+.trilhas-conta { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+.trilhas-perfil {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-alt);
+  border: 1px solid var(--secondary-color);
+  border-radius: 30px;
+  padding: 5px 16px 5px 5px;
+  color: var(--text-main);
+  font-family: var(--font-text);
+  font-weight: 600;
+  cursor: pointer;
+}
+.trilhas-conta-acoes { display: flex; gap: 8px; }
+.trilhas-acao {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 1px solid var(--secondary-color);
+  border-radius: 20px;
+  padding: 7px 12px;
+  color: var(--text-muted);
+  font-family: var(--font-text);
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.trilhas-acao:hover { border-color: var(--primary-color); color: var(--primary-color); }
+.trilhas-convite {
+  width: 100%;
+  background: var(--bg-alt);
+  border: 1px solid var(--secondary-color);
+  border-radius: 14px;
+  padding: 14px 16px;
+  text-align: center;
+}
+.trilhas-convite p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px; }
+
+/* ------------------------------------------------- */
+/* RANKING                                             */
+/* ------------------------------------------------- */
+.ranking-container { max-width: 640px; }
+.ranking-abas { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0 20px; }
+.ranking-aba {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--secondary-color);
+  background: var(--bg-alt);
+  color: var(--text-muted);
+  font-family: var(--font-text);
+  font-weight: 700;
+  cursor: pointer;
+}
+.ranking-aba.active { border-color: var(--primary-color); color: var(--primary-color); }
+.ranking-lista { display: flex; flex-direction: column; gap: 8px; }
+.ranking-linha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  background: var(--bg-alt);
+  border: 1px solid var(--secondary-color);
+  border-radius: 12px;
+  padding: 10px 14px;
+  color: var(--text-main);
+  font-family: var(--font-text);
+}
+button.ranking-linha { cursor: pointer; }
+.ranking-linha.destaque { border-color: var(--primary-color); background: rgba(212, 175, 55, 0.08); }
+.ranking-posicao { width: 26px; text-align: center; font-weight: 800; color: var(--primary-color); }
+.ranking-nome { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ranking-nome small { color: var(--primary-color); font-weight: 700; margin-left: 4px; }
+.ranking-numero { display: inline-flex; align-items: center; gap: 4px; font-weight: 700; font-size: 0.9rem; }
+.ranking-fe { color: var(--primary-color); }
+.ranking-ofensiva { color: #fb923c; }
+
+/* ------------------------------------------------- */
+/* MODO KIDS: mais cor, mais movimento, letras maiores */
+/* ------------------------------------------------- */
+body.modo-kids #view-trilhas .trilha-banner { background: linear-gradient(135deg, #312e81, #1e3a8a); border-color: #818cf8; }
+body.modo-kids .trilha-foto { border-color: #f472b6; }
+body.modo-kids .trilha-virtude { color: #f9a8d4; }
+body.modo-kids .no-licao.atual .no-circulo {
+  background: linear-gradient(145deg, #fde047, #f472b6);
+  box-shadow: 0 6px 0 #be185d, 0 0 0 6px rgba(244, 114, 182, 0.3);
+  animation: kidsPulo 1.2s ease-in-out infinite;
+}
+body.modo-kids .no-licao.concluida .no-circulo { background: #4ade80; color: #064e3b; box-shadow: 0 6px 0 #15803d; }
+body.modo-kids .trilha-bloco:nth-child(3n+2) .no-licao.concluida .no-circulo { background: #38bdf8; color: #0c4a6e; box-shadow: 0 6px 0 #0369a1; }
+body.modo-kids .trilha-bloco:nth-child(3n) .no-licao.concluida .no-circulo { background: #c084fc; color: #3b0764; box-shadow: 0 6px 0 #7e22ce; }
+body.modo-kids .stat-fe { color: #facc15; }
+body.modo-kids .stat-santidade { color: #7dd3fc; }
+body.modo-kids .licao-enunciado { font-size: 1.9rem; }
+body.modo-kids .licao-opcao { border-radius: 20px; font-size: 1.1rem; }
+body.modo-kids .licao-barra-preenchida { background: linear-gradient(90deg, #4ade80, #38bdf8, #f472b6); }
+body.modo-kids .licao-botao:not(:disabled):not(.certo):not(.errado) {
+  background: linear-gradient(90deg, #f472b6, #facc15);
+  box-shadow: 0 5px 0 #be185d;
+}
+body.modo-kids .licao-santo-textos strong { color: #f9a8d4; }
+@keyframes kidsPulo { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+
+@media (max-width: 480px) {
+  .perfis-titulo { font-size: 1.6rem; }
+  .avatar-grande { width: 88px; height: 88px; }
+  .trilhas-acao span { display: none; }
+}
+
+/* Tudo que estiver marcado como escondido fica escondido de verdade,
+   mesmo que outro estilo dê "display" ao elemento. */
+[hidden] { display: none !important; }
+
+/* ------------------------------------------------- */
+/* ABERTURA: a estrela continua girando e brilhando    */
+/* ------------------------------------------------- */
+.intro-screen { overflow: hidden; }
+
+.intro-estrela-giro {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  animation: introGiroLento 14s linear 1.95s infinite;
+}
+@keyframes introGiroLento { to { transform: rotate(360deg); } }
+
+.intro-estrela-interna { animation: estrelaInternaPulso 2.2s ease-in-out 1.95s infinite; }
+@keyframes estrelaInternaPulso { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+
+/* Brilho dourado que "respira" atrás da estrela */
+.intro-aura {
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 223, 120, 0.55) 0%, rgba(255, 215, 0, 0.18) 38%, rgba(255, 215, 0, 0) 70%);
+  opacity: 0;
+  animation: auraAparece 0.9s ease-out 1.1s forwards, auraRespira 2.6s ease-in-out 2s infinite;
+}
+@keyframes auraAparece { to { opacity: 1; } }
+@keyframes auraRespira {
+  0%, 100% { transform: scale(0.9); opacity: 0.75; }
+  50% { transform: scale(1.14); opacity: 1; }
+}
+
+/* Coroa de raios dourados girando devagar */
+.intro-coroa {
+  position: absolute;
+  width: min(520px, 130vmin);
+  height: min(520px, 130vmin);
+  border-radius: 50%;
+  background: repeating-conic-gradient(from 0deg, rgba(255, 215, 0, 0.16) 0deg 2.5deg, rgba(255, 215, 0, 0) 2.5deg 15deg);
+  -webkit-mask-image: radial-gradient(circle, #000 18%, transparent 68%);
+  mask-image: radial-gradient(circle, #000 18%, transparent 68%);
+  opacity: 0;
+  animation: coroaAparece 1.2s ease-out 1.2s forwards, coroaGira 40s linear 1.2s infinite;
+}
+@keyframes coroaAparece { to { opacity: 1; } }
+@keyframes coroaGira { to { transform: rotate(360deg); } }
+
+/* Céu: estrelas douradas e algumas maiores que cintilam em cruz */
+.intro-star-dot.dourada { background: #ffe58a; box-shadow: 0 0 4px rgba(255, 215, 0, 0.8); }
+.intro-star-dot.cintilante { box-shadow: 0 0 6px 1px rgba(255, 255, 255, 0.85); }
+.intro-star-dot.cintilante::before,
+.intro-star-dot.cintilante::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 16px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.95), transparent);
+  transform: translate(-50%, -50%);
+}
+.intro-star-dot.cintilante::after { transform: translate(-50%, -50%) rotate(90deg); }
+
+/* Um brilho dourado passa pelas letras do nome */
+.intro-brand {
+  background: linear-gradient(90deg, #fdf6e3 0%, #fdf6e3 40%, #ffe58a 50%, #fdf6e3 60%, #fdf6e3 100%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
+  filter: drop-shadow(0 0 18px rgba(255, 215, 0, 0.55));
+  animation: introBrandReveal 1.1s ease 1.5s forwards, brilhoNoNome 2.4s ease-in-out 2.3s infinite;
+}
+@keyframes brilhoNoNome {
+  0% { background-position: 100% 0; }
+  100% { background-position: -150% 0; }
+}
+
+/* Clarão dourado que nasce da estrela (no lugar do flash branco) */
+.intro-flash {
+  background: radial-gradient(circle at center, rgba(255, 250, 225, 0.95) 0%, rgba(255, 215, 0, 0.42) 30%, rgba(255, 215, 0, 0) 65%);
+  animation: claraoDourado 1.1s ease-in-out 1.8s forwards;
+}
+@keyframes claraoDourado {
+  0% { opacity: 0; transform: scale(0.6); }
+  40% { opacity: 0.9; transform: scale(1.1); }
+  100% { opacity: 0; transform: scale(1.5); }
+}
+
+/* ------------------------------------------------- */
+/* PLANOS                                              */
+/* ------------------------------------------------- */
+.planos-container { max-width: 980px; }
+.planos-grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 18px;
+  margin: 18px 0 22px;
+}
+.plano-cartao {
+  position: relative;
+  background: var(--bg-alt);
+  border: 1px solid var(--secondary-color);
+  border-radius: 16px;
+  padding: 24px 18px 18px;
+  display: flex;
+  flex-direction: column;
+}
+.plano-cartao.destaque { border-color: var(--primary-color); box-shadow: 0 0 26px rgba(212, 175, 55, 0.18); }
+.plano-selo {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary-color);
+  color: #0f172a;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.plano-nome { font-family: var(--font-title); font-size: 1.55rem; color: var(--text-main); }
+.plano-perfis { font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+.plano-preco { font-size: 1.5rem; font-weight: 800; color: var(--primary-color); margin-bottom: 14px; }
+.plano-itens { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; flex: 1; }
+.plano-itens li { display: flex; gap: 8px; align-items: flex-start; font-size: 0.9rem; color: var(--text-main); line-height: 1.4; }
+.plano-itens .icone { color: var(--primary-color); margin-top: 2px; stroke-width: 3; }
+.plano-botao {
+  padding: 11px;
+  border-radius: 10px;
+  border: 1px solid var(--secondary-color);
+  background: var(--bg-color);
+  color: var(--text-muted);
+  font-family: var(--font-text);
+  font-weight: 700;
+}
+.plano-cartao.destaque .plano-botao { border-color: var(--primary-color); color: var(--primary-color); }
+.planos-nota { text-align: center; font-size: 0.85rem; color: var(--text-muted); }
+
+/* ------------------------------------------------- */
+/* INSTALAR O APP                                      */
+/* ------------------------------------------------- */
+.instalar-janela { max-width: 420px; }
+.instalar-passos { padding-left: 22px; display: flex; flex-direction: column; gap: 12px; color: var(--text-main); line-height: 1.5; margin-top: 6px; }
+.instalar-passos b { color: var(--primary-color); }
+.footer-instalar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-family: var(--font-text);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 14px;
+}
+
+/* ------------------------------------------------- */
+/* ENTRAR COM GOOGLE                                   */
+/* ------------------------------------------------- */
+.auth-google {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--secondary-color);
+  background: #ffffff;
+  color: #1f2937;
+  font-family: var(--font-text);
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.auth-google:hover { box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.3); }
+.auth-divisor {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-muted);
+  font-size: 0.74rem;
+  margin: 16px 0 4px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.auth-divisor::before,
+.auth-divisor::after { content: ''; flex: 1; height: 1px; background: var(--secondary-color); }
+#completar-outra-conta { display: block; margin: 14px auto 0; }
