@@ -2101,7 +2101,9 @@ function getIdiomaSalvo() {
 }
 
 function aplicarIdioma(codigo) {
-  const dicionario = TRADUCOES[codigo] || TRADUCOES.pt;
+  // Se vier um idioma que não existe, não mexe em nada
+  if (!codigo || !TRADUCOES[codigo]) return;
+  const dicionario = TRADUCOES[codigo];
   const idiomaAnterior = idiomaAtual;
   idiomaAtual = codigo;
 
@@ -2121,7 +2123,7 @@ function aplicarIdioma(codigo) {
 
   document.documentElement.lang = codigo === 'pt' ? 'pt-BR' : codigo;
 
-  document.querySelectorAll('.idioma-opcao').forEach(btn => {
+  document.querySelectorAll('#idioma-menu .idioma-opcao').forEach(btn => {
     btn.classList.toggle('idioma-ativa', btn.dataset.lang === codigo);
   });
 
@@ -2148,15 +2150,16 @@ function iniciarSeletorDeIdioma() {
     botao.setAttribute('aria-expanded', abrindo ? 'true' : 'false');
   });
 
-  document.querySelectorAll('.idioma-opcao').forEach(opcao => {
+  // Só os botões de dentro deste menu. (O menu da conta usa outra
+  // classe: antes ele herdava este comportamento e, ao clicar em
+  // "Entrar", o site trocava de idioma e reabria a última biografia.)
+  menu.querySelectorAll('.idioma-opcao').forEach(opcao => {
     opcao.addEventListener('click', () => {
       aplicarIdioma(opcao.dataset.lang);
       menu.classList.remove('aberto');
       botao.setAttribute('aria-expanded', 'false');
-      // Se a pessoa estiver vendo a biografia de um santo, atualiza
-      // o aviso de tradução na hora, sem precisar voltar e entrar de novo.
-      const idAtual = bioArticle && bioArticle.dataset.santoId;
-      if (idAtual) showDetail(idAtual);
+      // Se houver uma biografia ABERTA, quem a atualiza é
+      // reaplicarTextosDosSantos — nada é reaberto sozinho.
     });
   });
 
@@ -2180,11 +2183,15 @@ function iniciarSeletorDeIdioma() {
 // ███  para ficar no código do navegador — foram feitas     ███
 // ███  para isso.                                            ███
 // ██████████████████████████████████████████████████████████
-const SUPABASE_URL = 'https://SEU-PROJETO.supabase.co';
+const SUPABASE_URL = 'https://upvualhciytwypmwtpye.supabase.co'; // projeto Lumina Sancti (o mesmo do app)
 const SUPABASE_ANON_KEY = 'SUA-CHAVE-ANON-OU-PUBLISHABLE-AQUI';
 // ██████████████████████████████████████████████████████████
 
-const supabaseCliente = (SUPABASE_URL.includes('SEU-PROJETO') || !window.supabase)
+// Enquanto a chave pública não for colada acima, o site funciona
+// normalmente, só sem contas (nada quebra).
+const LOGIN_COM_GOOGLE_ATIVO = false; // mude para true depois de ligar o Google no painel do Supabase
+
+const supabaseCliente = (SUPABASE_URL.includes('SEU-PROJETO') || SUPABASE_ANON_KEY.includes('SUA-CHAVE') || !window.supabase)
   ? null
   : window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -2203,6 +2210,39 @@ async function iniciarAutenticacao() {
     atualizarInterfaceDeConta();
     verificarCadastroCompleto();
   });
+}
+
+// ============================================================
+//  CÓDIGO DO APARELHO
+// ============================================================
+// O banco do app permite criar só uma conta nova por aparelho (para
+// evitar contas repetidas). No site, o "aparelho" é este navegador:
+// um código aleatório é criado uma vez e guardado nele.
+const CHAVE_INSTALACAO = 'lumina-sancti-instalacao';
+
+function idDaInstalacao() {
+  try {
+    let id = localStorage.getItem(CHAVE_INSTALACAO);
+    if (!id || id.length < 16) {
+      const bytes = new Uint8Array(16);
+      crypto.getRandomValues(bytes);
+      id = 'web-' + Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+      localStorage.setItem(CHAVE_INSTALACAO, id);
+    }
+    return id;
+  } catch (e) {
+    return 'web-' + Date.now().toString(16) + Math.random().toString(16).slice(2, 14);
+  }
+}
+
+async function aparelhoJaTemConta(instalacao) {
+  try {
+    const { data, error } = await supabaseCliente.rpc('install_status', { _install_id: instalacao });
+    if (error) return false; // na dúvida, deixa o banco decidir no cadastro
+    return data === 'claimed';
+  } catch (e) {
+    return false;
+  }
 }
 
 // ============================================================
@@ -2225,6 +2265,19 @@ async function entrarComGoogle() {
     },
   });
   if (error && feedback) feedback.textContent = 'Não foi possível abrir o login do Google agora.';
+}
+
+// Se o Google devolver um erro (por exemplo, este aparelho já ter
+// outra conta), mostra uma mensagem clara na tela de entrar.
+function avisarErroDoGoogle() {
+  const endereco = `${window.location.search || ''}&${(window.location.hash || '').replace(/^#/, '')}`;
+  if (!/error_description=|error=/.test(endereco)) return;
+  if (typeof irParaLogin === 'function') irParaLogin();
+  const feedback = document.getElementById('auth-feedback');
+  if (feedback) {
+    feedback.textContent = 'Não foi possível entrar com o Google agora. Crie sua conta com e-mail e senha, ou tente de novo mais tarde.';
+  }
+  try { history.replaceState(null, '', window.location.pathname); } catch (e) { /* sem problema */ }
 }
 
 function cadastroCompleto(usuario) {
@@ -2410,15 +2463,23 @@ function iniciarPaginaDeAutenticacao() {
     const nome = document.getElementById('cadastrar-nome').value.trim();
     const email = document.getElementById('cadastrar-email').value.trim();
     const senha = document.getElementById('cadastrar-senha').value;
+    const instalacao = idDaInstalacao();
+    if (await aparelhoJaTemConta(instalacao)) {
+      feedback.textContent = 'Este aparelho já tem uma conta do Lumina Sancti. Entre com ela na aba Entrar.';
+      return;
+    }
     const { data, error } = await supabaseCliente.auth.signUp({
       email,
       password: senha,
-      options: { data: { nome, cadastro_completo: true } },
+      options: { data: { nome, cadastro_completo: true, install_id: instalacao, locale: 'pt-BR' } },
     });
     if (error) {
-      feedback.textContent = error.message.includes('already registered')
+      const mensagem = String(error.message || '');
+      feedback.textContent = mensagem.includes('already registered')
         ? 'Esse e-mail já tem uma conta.'
-        : 'Não foi possível criar a conta. Tente de novo.';
+        : mensagem.includes('Database error')
+          ? 'Não foi possível criar a conta neste aparelho. Se você já tem uma conta, entre com ela na aba Entrar.'
+          : 'Não foi possível criar a conta. Tente de novo.';
       return;
     }
     if (data.session) {
@@ -2472,12 +2533,8 @@ async function carregarPaginaDePerfil() {
   if (!supabaseCliente || !sessaoAtual) { mudarDeView('view-auth'); return; }
 
   document.getElementById('perfil-email').textContent = sessaoAtual.user.email;
-  const { data: perfil } = await supabaseCliente
-    .from('perfis')
-    .select('nome')
-    .eq('id', sessaoAtual.user.id)
-    .maybeSingle();
-  document.getElementById('perfil-nome').value = perfil?.nome || '';
+  const dadosDaConta = sessaoAtual.user.user_metadata || {};
+  document.getElementById('perfil-nome').value = dadosDaConta.nome || dadosDaConta.full_name || '';
   if (feedback) feedback.textContent = '';
 }
 
@@ -2489,10 +2546,7 @@ function iniciarPaginaDePerfil() {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const novoNome = document.getElementById('perfil-nome').value.trim();
-    const { error } = await supabaseCliente
-      .from('perfis')
-      .update({ nome: novoNome })
-      .eq('id', sessaoAtual.user.id);
+    const { error } = await supabaseCliente.auth.updateUser({ data: { nome: novoNome } });
     feedback.textContent = error ? 'Não foi possível salvar agora.' : 'Salvo!';
   });
 
@@ -3072,6 +3126,11 @@ function ligarBotaoFavorito(botao, id) {
     e.stopPropagation();
     toggleFavorito(id);
     atualizarAparencia();
+    if (botao.classList.contains('favorito-ativo')) {
+      botao.classList.remove('batendo');
+      void botao.offsetWidth; // reinicia a animação
+      botao.classList.add('batendo');
+    }
     // Se estivermos filtrando só os favoritos, o cartão precisa sumir
     // assim que deixar de ser favorito.
     if (filtroAtual === 'favoritos') {
@@ -3858,7 +3917,13 @@ function abrirPlanos() {
 
 function iniciarContaGooglePlanosEApp() {
   const google = document.getElementById('auth-google');
-  if (google) google.addEventListener('click', entrarComGoogle);
+  const divisor = document.getElementById('auth-divisor');
+  if (google) {
+    google.hidden = !LOGIN_COM_GOOGLE_ATIVO;
+    if (divisor) divisor.hidden = !LOGIN_COM_GOOGLE_ATIVO;
+    google.addEventListener('click', entrarComGoogle);
+  }
+  avisarErroDoGoogle();
   const completar = document.getElementById('completar-form');
   if (completar) completar.addEventListener('submit', concluirCadastro);
   const outraConta = document.getElementById('completar-outra-conta');

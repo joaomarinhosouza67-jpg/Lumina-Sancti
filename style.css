@@ -372,7 +372,7 @@ input:focus-visible,
   transform: translateY(0);
   pointer-events: auto;
 }
-.idioma-opcao {
+.idioma-opcao, .conta-opcao {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -388,9 +388,10 @@ input:focus-visible,
   cursor: pointer;
   transition: var(--transition);
 }
-.idioma-opcao span { font-size: 1.1rem; }
+.idioma-opcao span, .conta-opcao span { font-size: 1.1rem; }
 .idioma-opcao:hover,
 .idioma-opcao.idioma-ativa { background: var(--secondary-color); color: var(--primary-dark); }
+.conta-opcao:hover { background: var(--secondary-color); color: var(--primary-dark); }
 
 /* Aviso de que a biografia ainda não tem tradução completa */
 .bio-aviso-traducao {
@@ -1967,3 +1968,159 @@ body.modo-kids .licao-santo-textos strong { color: #f9a8d4; }
 .auth-divisor::before,
 .auth-divisor::after { content: ''; flex: 1; height: 1px; background: var(--secondary-color); }
 #completar-outra-conta { display: block; margin: 14px auto 0; }
+
+/* ------------------------------------------------- */
+/* TRILHAS COM CONTA (banco do app)                    */
+/* ------------------------------------------------- */
+.licao-historia {
+  background: var(--bg-alt);
+  border: 1px solid var(--secondary-color);
+  border-left: 3px solid var(--primary-color);
+  border-radius: 12px;
+  padding: 18px 20px;
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: var(--text-main);
+  white-space: pre-line;
+}
+.licao-estrelas { display: flex; justify-content: center; gap: 10px; margin: 6px 0 16px; }
+.licao-estrelas .icone { width: 38px; height: 38px; }
+.licao-estrelas .estrela-acesa { color: var(--primary-color); filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.55)); }
+.licao-estrelas .estrela-apagada { color: var(--secondary-color); opacity: 0.55; }
+
+.ranking-periodos { display: flex; justify-content: center; gap: 8px; margin: 4px 0 14px; }
+.ranking-periodo {
+  background: none;
+  border: 1px solid var(--secondary-color);
+  color: var(--text-muted);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-family: var(--font-text);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.ranking-periodo.active { border-color: var(--primary-color); color: var(--primary-color); }
+
+.perfil-tipo.travado:not(.active) { opacity: 0.35; cursor: not-allowed; }
+
+
+/* ------------------------------------------------- */
+/* FAVORITOS: coração de verdade                      */
+/* ------------------------------------------------- */
+.card { position: relative; }
+.btn-favorito {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(12, 12, 18, 0.55);
+  backdrop-filter: blur(4px);
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background 0.2s, transform 0.2s;
+}
+.btn-favorito:hover { color: #ff4d6d; border-color: #ff4d6d; transform: scale(1.08); }
+.btn-favorito:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; }
+.btn-favorito.favorito-ativo {
+  color: #ff2d55;
+  border-color: rgba(255, 45, 85, 0.75);
+  background: rgba(255, 45, 85, 0.16);
+}
+.btn-favorito.favorito-ativo svg { filter: drop-shadow(0 0 6px rgba(255, 45, 85, 0.6)); }
+@keyframes bater-coracao {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.35); }
+  60% { transform: scale(0.92); }
+  100% { transform: scale(1); }
+}
+.btn-favorito.batendo { animation: bater-coracao 0.45s ease; }
+
+/* ------------------------------------------------- */
+/* TRILHA TRANCADA E INSÍGNIAS                        */
+/* ------------------------------------------------- */
+.trilha-trancada .trilha-banner { opacity: 0.6; }
+.trilha-trancada .trilha-foto { filter: grayscale(1); }
+.trilha-aviso-trancada {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-top: 6px;
+}
+.trilha-aviso-trancada .icone { width: 18px; height: 18px; flex: none; }
+
+.trilhas-acoes { display: flex; justify-content: center; margin: 0 0 18px; }
+.trilhas-acao {
+  background: none;
+  border: 1px solid var(--secondary-color);
+  color: var(--primary-color);
+  border-radius: 22px;
+  padding: 9px 20px;
+  font-family: var(--font-text);
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.trilhas-acao:hover { border-color: var(--primary-color); background: rgba(212, 175, 55, 0.08); }
+
+.insignias-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(5, 5, 8, 0.75);
+  backdrop-filter: blur(3px);
+}
+.insignias-modal.aberto { display: flex; }
+.insignias-caixa {
+  position: relative;
+  width: min(560px, 100%);
+  max-height: 84vh;
+  overflow-y: auto;
+  background: var(--bg-alt);
+  border: 1px solid var(--secondary-color);
+  border-radius: 16px;
+  padding: 26px 22px;
+}
+.insignias-caixa h2 { font-family: var(--font-title); color: var(--primary-color); margin: 0 0 6px; text-align: center; }
+.insignias-resumo { color: var(--text-muted); font-size: 0.9rem; text-align: center; margin: 0 0 18px; }
+.insignias-fechar {
+  position: absolute; top: 10px; right: 14px;
+  background: none; border: none; color: var(--text-muted);
+  font-size: 1.6rem; line-height: 1; cursor: pointer;
+}
+.insignias-grade { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.insignia-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+  padding: 16px 10px;
+  border: 1px solid var(--secondary-color);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02);
+  opacity: 0.55;
+}
+.insignia-item.conquistada {
+  opacity: 1;
+  border-color: var(--primary-color);
+  background: rgba(212, 175, 55, 0.08);
+}
+.insignia-medalha .icone { width: 34px; height: 34px; color: var(--text-muted); }
+.insignia-item.conquistada .insignia-medalha .icone { color: var(--primary-color); filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.5)); }
+.insignia-item strong { font-size: 0.92rem; color: var(--text-main); }
+.insignia-santo { font-size: 0.82rem; color: var(--text-muted); }
+.insignia-progresso { font-size: 0.76rem; color: var(--text-muted); }

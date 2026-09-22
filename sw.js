@@ -2,16 +2,26 @@
 //  LUMINA SANCTI — Service Worker (deixa o site instalável e
 //  funcionando parcialmente offline)
 // ============================================================
-// Guarda só os arquivos do PRÓPRIO site em cache. Fotos da
-// Wikipédia e chamadas à Lumina/Supabase sempre seguem direto
-// pela rede — nunca ficam presas em cache antigo.
-const CACHE_NOME = 'lumina-sancti-v1';
+// Estratégia "rede primeiro": sempre busca a versão mais nova dos
+// arquivos do site na internet e só usa a cópia guardada quando a
+// pessoa está sem conexão. (A versão anterior fazia o contrário e
+// podia deixar quem instalou o app preso numa versão antiga.)
+//
+// Fotos da Wikipédia e chamadas à Lumina/Supabase seguem sempre
+// direto pela rede — nunca passam por aqui.
+//
+// Ao mudar o nome abaixo, os aparelhos apagam a cópia antiga.
+const CACHE_NOME = 'lumina-sancti-v6';
 const ARQUIVOS_ESSENCIAIS = [
   './',
   './index.html',
   './style.css',
   './script.js',
+  './trilhas.js',
+  './perfis.js',
   './favicon.svg',
+  './favicon-48.png',
+  './apple-touch-icon.png',
   './icon-192.png',
   './icon-512.png',
 ];
@@ -36,14 +46,20 @@ self.addEventListener('activate', (evento) => {
 
 self.addEventListener('fetch', (evento) => {
   const url = new URL(evento.request.url);
-  // Só GET, e só do próprio site — Wikipédia, Supabase e a
-  // Anthropic seguem sempre direto pela rede, sem passar por aqui.
   if (evento.request.method !== 'GET' || url.origin !== self.location.origin) {
     return;
   }
   evento.respondWith(
-    caches.match(evento.request).then((respostaCache) => {
-      return respostaCache || fetch(evento.request).catch(() => caches.match('./index.html'));
-    })
+    fetch(evento.request)
+      .then((resposta) => {
+        if (resposta && resposta.ok) {
+          const copia = resposta.clone();
+          caches.open(CACHE_NOME).then((cache) => cache.put(evento.request, copia)).catch(() => {});
+        }
+        return resposta;
+      })
+      .catch(() =>
+        caches.match(evento.request).then((guardado) => guardado || caches.match('./index.html'))
+      )
   );
 });

@@ -117,10 +117,10 @@
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           </button>
           <div id="conta-menu" class="idioma-menu">
-            <button id="conta-menu-entrar" class="idioma-opcao" data-i18n="conta_entrar">Entrar / Criar conta</button>
-            <button id="conta-menu-perfil" class="idioma-opcao" style="display:none;" data-i18n="conta_perfil">Meu perfil</button>
-            <button id="conta-menu-perfis" class="idioma-opcao" style="display:none;">Trocar perfil</button>
-            <button id="conta-menu-sair" class="idioma-opcao" style="display:none;" data-i18n="conta_sair">Sair</button>
+            <button id="conta-menu-entrar" class="conta-opcao" data-i18n="conta_entrar">Entrar / Criar conta</button>
+            <button id="conta-menu-perfil" class="conta-opcao" style="display:none;" data-i18n="conta_perfil">Meu perfil</button>
+            <button id="conta-menu-perfis" class="conta-opcao" style="display:none;">Trocar perfil</button>
+            <button id="conta-menu-sair" class="conta-opcao" style="display:none;" data-i18n="conta_sair">Sair</button>
           </div>
         </div>
       </div>
@@ -136,7 +136,7 @@
       </div>
       <div id="perfil-editor-previa" class="perfil-editor-previa"></div>
       <label class="perfil-editor-rotulo" for="perfil-editor-nome">Nome</label>
-      <input type="text" id="perfil-editor-nome" class="perfil-editor-campo" maxlength="30" autocomplete="off">
+      <input type="text" id="perfil-editor-nome" class="perfil-editor-campo" maxlength="24" autocomplete="off">
       <p class="perfil-editor-rotulo">Tipo de perfil</p>
       <div class="perfil-tipos">
         <button type="button" class="perfil-tipo" data-tipo="adulto">Adulto</button>
@@ -363,7 +363,7 @@
           </div>
 
           <button type="button" id="auth-google" class="auth-google">Continuar com Google</button>
-          <div class="auth-divisor"><span>ou com e-mail</span></div>
+          <div class="auth-divisor" id="auth-divisor"><span>ou com e-mail</span></div>
 
           <form id="auth-form-entrar" class="auth-form">
             <label data-i18n="conta_email">E-mail</label>
@@ -469,6 +469,9 @@
         <p class="trilhas-intro">Uma trilha para cada santo. Complete as missões para ganhar Fé, manter sua ofensiva e conquistar a insígnia e a medalha da virtude de cada um.</p>
         <div class="trilhas-conta" id="trilhas-conta"></div>
         <div class="trilhas-stats" id="trilhas-stats"></div>
+        <div class="trilhas-acoes">
+          <button id="trilhas-abrir-insignias" class="trilhas-acao">Minhas insígnias</button>
+        </div>
         <div id="lista-trilhas" class="lista-trilhas"><!-- Injetado via JS --></div>
         <p class="trilhas-nota" id="trilhas-nota">Por enquanto seu progresso fica salvo neste aparelho. Em breve ele vai ficar guardado na sua conta, com perfis e rankings.</p>
       </div>
@@ -513,6 +516,10 @@
         <div class="ranking-abas" id="ranking-abas">
           <button class="ranking-aba active" data-aba="familia">Família</button>
           <button class="ranking-aba" data-aba="global" id="ranking-aba-global">Global</button>
+        </div>
+        <div class="ranking-periodos">
+          <button class="ranking-periodo active" data-periodo="week">Esta semana</button>
+          <button class="ranking-periodo" data-periodo="all">Desde sempre</button>
         </div>
         <div id="ranking-lista" class="ranking-lista"></div>
       </div>
