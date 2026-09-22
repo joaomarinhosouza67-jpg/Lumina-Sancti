@@ -2744,34 +2744,82 @@ function iniciarChuvaDeMeteoros() {
   if (!camada) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  function criarMeteoro() {
-    const meteoro = document.createElement('div');
-    meteoro.className = 'meteor gold'; // todos dourados
+  // Numa chuva de meteoros de verdade, todos parecem vir do mesmo
+  // ponto do céu. Por isso a inclinação é quase a mesma para todos
+  // (uns poucos graus de diferença), e não um sorteio solto.
+  const INCLINACAO = 27;   // graus, descendo para a direita
+  const VARIACAO = 2.5;    // quanto cada meteoro pode fugir disso
+  const MAXIMO_NA_TELA = 22;
+  const COMECO = performance.now();
+  let vivos = 0;
 
-    const inicioX = (Math.random() * 90).toFixed(1);   // vw — nasce em qualquer ponto horizontal
-    const inicioY = (Math.random() * 45).toFixed(1);   // vh — principalmente no terço/metade de cima
-    const angulo = (20 + Math.random() * 25).toFixed(1); // graus — sempre descendo pra direita
-    const distancia = (60 + Math.random() * 40).toFixed(0); // vmax percorridos até sumir
-
-    meteoro.style.left = `${inicioX}vw`;
-    meteoro.style.top = `${inicioY}vh`;
-    meteoro.style.setProperty('--ang', `${angulo}deg`);
-    meteoro.style.setProperty('--dist', `${distancia}vmax`);
-
-    const duracao = (1.4 + Math.random() * 1.3).toFixed(2);
-    meteoro.style.animationDuration = `${duracao}s`;
-
-    camada.appendChild(meteoro);
-    setTimeout(() => meteoro.remove(), duracao * 1000 + 200);
+  // A chuva nunca para: o que muda é a intensidade, que sobe e desce
+  // devagar, em ondas (momentos mais fracos e momentos mais fortes).
+  function meteorosPorSegundo() {
+    const t = (performance.now() - COMECO) / 1000;
+    const onda = 0.5 + 0.5 * Math.sin(t / 7.5) * Math.sin(t / 19 + 1.1);
+    return 2 + onda * 3.5; // de 2 a 5,5 meteoros por segundo
   }
 
-  // Fluxo contínuo, sem pausas longas: um meteoro novo a cada
-  // fração de segundo, sempre havendo vários cruzando a tela ao
-  // mesmo tempo (já que cada um dura de 1,4 a 2,7s na tela).
+  function criarMeteoro() {
+    if (vivos >= MAXIMO_NA_TELA || document.hidden) return;
+
+    const largura = window.innerWidth;
+    const altura = window.innerHeight;
+    // profundidade: 0 = bem longe (fino, apagado, devagar),
+    //               1 = mais perto (grosso, brilhante, rápido)
+    const profundidade = Math.random();
+
+    const angulo = (INCLINACAO + (Math.random() * 2 - 1) * VARIACAO).toFixed(2);
+    const comprimento = Math.round(150 + profundidade * 260);
+    const espessura = (2 + profundidade * 1.9).toFixed(2);
+    const luz = (0.55 + profundidade * 0.45).toFixed(2);
+    const distancia = Math.round((largura + altura) * (0.55 + Math.random() * 0.3));
+    const duracao = (2.4 - profundidade * 1.1 + Math.random() * 0.4).toFixed(2);
+
+    // Nasce FORA da tela e entra riscando — nenhum meteoro aparece
+    // do nada no meio do céu. Uns entram pela borda de cima, outros
+    // pela da esquerda, para a chuva cobrir o céu inteiro.
+    let x;
+    let y;
+    if (Math.random() < 0.62) {
+      // entra pela borda de cima
+      x = Math.round((-0.4 + Math.random() * 1.4) * largura);
+      y = Math.round(-(0.05 + Math.random() * 0.22) * altura);
+    } else {
+      // entra pela borda da esquerda
+      x = Math.round(-(0.05 + Math.random() * 0.28) * largura);
+      y = Math.round(Math.random() * altura * 0.65);
+    }
+
+    const meteoro = document.createElement('div');
+    meteoro.className = 'meteor';
+    meteoro.style.setProperty('--x', `${x}px`);
+    meteoro.style.setProperty('--y', `${y}px`);
+    meteoro.style.setProperty('--ang', `${angulo}deg`);
+
+    const risco = document.createElement('i');
+    risco.style.setProperty('--comp', `${comprimento}px`);
+    risco.style.setProperty('--esp', `${espessura}px`);
+    risco.style.setProperty('--dist', `${distancia}px`);
+    risco.style.setProperty('--luz', luz);
+    risco.style.animationDuration = `${duracao}s`;
+    risco.addEventListener('animationend', () => {
+      meteoro.remove();
+      vivos -= 1;
+    });
+
+    meteoro.appendChild(risco);
+    camada.appendChild(meteoro);
+    vivos += 1;
+  }
+
   function agendarProximoMeteoro() {
-    const espera = 220 + Math.random() * 380; // entre 0.22s e 0.6s
+    const intervalo = 1000 / meteorosPorSegundo();
+    const espera = intervalo * (0.75 + Math.random() * 0.5);
     setTimeout(() => {
       criarMeteoro();
+      if (Math.random() < 0.12) setTimeout(criarMeteoro, 120 + Math.random() * 160);
       agendarProximoMeteoro();
     }, espera);
   }
