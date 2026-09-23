@@ -595,7 +595,7 @@ const santosData = [
   {
     id: 'joao-bosco',
     nome: 'São João Bosco',
-    wiki: 'João Bosco',
+    wiki: 'Dom Bosco',
     categoria: ['grandes-santos'],
     festa: '01-31',
     resumo: 'O "pai e mestre da juventude", que dedicou a vida à educação dos jovens pobres.',
@@ -871,7 +871,7 @@ const santosData = [
   {
     id: 'sao-bras',
     nome: 'São Brás',
-    wiki: 'Brás de Sebaste',
+    wiki: 'Brás de Sebaste' /* se falhar, a busca qualificada encontra */,
     categoria: ['grandes-santos'],
     festa: '02-03',
     resumo: 'Bispo e médico mártir, invocado como protetor da garganta.',
@@ -935,8 +935,8 @@ const santosData = [
   // ---------------- MARÇO ----------------
   {
     id: 'cassimiro',
-    nome: 'São Cassimiro',
-    wiki: 'Cassimiro da Polônia',
+    nome: 'São Casimiro',
+    wiki: 'Casimiro da Polônia',
     categoria: ['santos-jovens'],
     festa: '03-04',
     resumo: 'Príncipe polonês que recusou o trono e a guerra em nome da fé.',
@@ -1790,6 +1790,33 @@ function tocarSomDeBrilho() {
 // (grade, Santo do Dia, busca).
 const cacheImagens = {};
 
+// Antes, quando o título não batia, o site pegava o primeiro
+// resultado da Wikipédia — e vinha o cantor João Bosco, o jogador
+// Casemiro ou o mapa do município de São Brás. Agora cada página é
+// conferida: se não parecer de um santo, a foto é recusada.
+const PISTAS_DE_SANTO = [
+  'santo', 'santa', 'são ', 'beat', 'mártir', 'martir', 'papa', 'bispo', 'arcebispo',
+  'padre', 'sacerdote', 'freira', 'religios', 'monge', 'monja', 'abade', 'abadessa',
+  'apóstol', 'apostol', 'arcanjo', 'anjo', 'virgem', 'jesuíta', 'jesuita', 'franciscan',
+  'carmelit', 'beneditin', 'dominican', 'salesian', 'igreja', 'católic', 'catolic',
+  'cristã', 'cristão', 'missionár', 'missionar', 'canoniz', 'venerável', 'diácono',
+  'eremita', 'evangelista', 'profeta', 'teólog', 'convento', 'mosteiro', 'ordem religiosa',
+  'jesus', 'cristo', 'nazaré', 'evangelho', 'bíblia', 'biblia', 'basílica', 'santuário',
+  'devoção', 'devocao', 'milagre', 'relíquia', 'reliquia', 'oração', 'oracao', 'fiéis',
+];
+const PISTAS_ERRADAS = [
+  'município', 'municipio', 'futebolista', 'jogador de futebol', 'cantor', 'cantora',
+  'compositor', 'banda de', 'álbum', 'telenovela', 'freguesia', 'clube de futebol',
+  'atleta', 'atriz', 'ator brasileiro', 'ator português', 'youtuber', 'humorista',
+  'apresentador', 'político brasileiro', 'seleção brasileira', 'campeonato',
+];
+
+function pareceSanto(dados) {
+  const texto = `${dados.title || ''} ${dados.description || ''} ${dados.extract || ''}`.toLowerCase();
+  if (PISTAS_ERRADAS.some((p) => texto.includes(p))) return false;
+  return PISTAS_DE_SANTO.some((p) => texto.includes(p));
+}
+
 function nomeSemTitulo(santo) {
   return santo.nome.replace(/^(São|Santa|Santo|Beato|Beata|Papa)\s+/i, '').trim();
 }
@@ -1802,23 +1829,41 @@ async function resumoWiki(titulo) {
     if (!resp.ok) return null;
     const dados = await resp.json();
     if (dados.type === 'disambiguation') return null; // página de desambiguação não tem foto útil
-    return dados.thumbnail ? dados.thumbnail.source : null;
+    if (!dados.thumbnail) return null;
+    // Melhor nenhuma foto do que a foto de outra pessoa
+    if (!pareceSanto(dados)) return null;
+    // Pede a versão maior da imagem (a miniatura sai pequena demais)
+    return (dados.originalimage && dados.originalimage.source) || dados.thumbnail.source;
   } catch (e) {
     return null;
   }
 }
 
+// Busca na Wikipédia já dizendo que procuramos um santo — assim os
+// resultados vêm do campo religioso, e não de futebol ou música.
 async function titulosProximosWiki(termo) {
   if (!termo) return [];
   try {
-    const url = `https://pt.wikipedia.org/w/api.php?action=opensearch&search=${encodeURIComponent(termo)}&limit=3&namespace=0&format=json&origin=*`;
+    const consulta = `${termo} santo católico`;
+    const url = `https://pt.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(consulta)}&srlimit=5&format=json&origin=*`;
     const resp = await fetch(url);
     if (!resp.ok) return [];
     const dados = await resp.json();
-    return Array.isArray(dados[1]) ? dados[1] : [];
+    const achados = dados && dados.query && dados.query.search;
+    return Array.isArray(achados) ? achados.map((r) => r.title) : [];
   } catch (e) {
     return [];
   }
+}
+
+// Mostra a foto INTEIRA, sem cortar. As sobras das laterais são
+// preenchidas por uma cópia desfocada da própria foto, então nenhum
+// santo fica com a cabeça cortada.
+function htmlDaFoto(url, nome, classe) {
+  const endereco = String(url).replace(/"/g, '&quot;');
+  const alt = String(nome).replace(/"/g, '&quot;');
+  return `<img src="${endereco}" alt="" class="foto-fundo" aria-hidden="true" loading="lazy">` +
+         `<img src="${endereco}" alt="${alt}" class="${classe}" loading="lazy">`;
 }
 
 async function buscarImagemSanto(santo) {
@@ -3042,6 +3087,7 @@ function ligarCartaoSantoDoDia(idBase, santo) {
   buscarImagemSanto(santo).then(imgUrl => {
     const wrapper = document.getElementById(`${idBase}-img-wrapper`);
     if (imgUrl && wrapper) {
+      // aqui a moldura é um círculo pequeno: o corte redondo é o certo
       wrapper.innerHTML = `<img src="${imgUrl}" alt="${santo.nome}" class="card-img" loading="lazy">`;
     }
   });
@@ -3235,7 +3281,7 @@ function renderGrid(filter = 'todos') {
     buscarImagemSanto(santo).then(imgUrl => {
       const wrapper = document.getElementById(`img-wrapper-${santo.id}`);
       if (imgUrl && wrapper) {
-        wrapper.innerHTML = `<img src="${imgUrl}" alt="${santo.nome}" class="card-img" loading="lazy">`;
+        wrapper.innerHTML = htmlDaFoto(imgUrl, santo.nome, 'card-img');
       }
     });
   });
@@ -3378,7 +3424,7 @@ function showDetail(id) {
     buscarImagemSanto(santo).then(imgUrl => {
       const bioImgWrapper = document.getElementById('bio-img-wrapper');
       if (imgUrl) {
-        bioImgWrapper.innerHTML = `<img src="${imgUrl}" alt="${santo.nome}" class="bio-img">`;
+        bioImgWrapper.innerHTML = htmlDaFoto(imgUrl, santo.nome, 'bio-img');
       } else {
         bioImgWrapper.style.display = 'none';
       }
@@ -3800,7 +3846,7 @@ function iniciarPaginaDePadroeiro() {
       resultados.appendChild(card);
       buscarImagemSanto(santo).then(imgUrl => {
         const wrapper = document.getElementById(`img-wrapper-padroeiro-${santo.id}`);
-        if (imgUrl && wrapper) wrapper.innerHTML = `<img src="${imgUrl}" alt="${santo.nome}" class="card-img" loading="lazy">`;
+        if (imgUrl && wrapper) wrapper.innerHTML = htmlDaFoto(imgUrl, santo.nome, 'card-img');
       });
     });
   });

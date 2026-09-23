@@ -1100,6 +1100,7 @@ input:focus-visible,
 .sdd-body { display: flex; gap: 22px; align-items: center; }
 
 .sdd-img-wrapper {
+  position: relative;
   width: 96px;
   height: 96px;
   flex-shrink: 0;
@@ -1112,7 +1113,7 @@ input:focus-visible,
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
   border: 2px solid var(--primary-color);
 }
-.sdd-img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+.sdd-img-wrapper img { position: static; width: 100%; height: 100%; object-fit: cover; }
 .sdd-img-wrapper .card-img-placeholder { width: 36px; height: 36px; }
 
 .sdd-info { flex: 1; min-width: 0; }
@@ -1145,7 +1146,7 @@ input:focus-visible,
   transform: translateY(-2px);
 }
 
-.cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px; }
 
 @keyframes fadeScaleUp {
   0% { opacity: 0; transform: scale(0.95) translateY(15px); }
@@ -1167,8 +1168,30 @@ input:focus-visible,
 .animate-card { animation: fadeScaleUp 0.5s ease forwards; }
 .card:hover { transform: translateY(-6px); box-shadow: 0 10px 25px rgba(212, 175, 55, 0.2); border-color: var(--primary-color); }
 
-.card-img-wrapper { width: 100%; aspect-ratio: 4 / 3; background: var(--secondary-color); display: flex; align-items: center; justify-content: center; overflow: hidden; }
-.card-img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
+.card-img-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: var(--bg-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+/* a foto aparece INTEIRA; as sobras são preenchidas por uma cópia
+   desfocada dela mesma, em vez de cortar a imagem */
+.card-img { position: relative; z-index: 1; width: 100%; height: 100%; object-fit: contain; display: block; transition: transform 0.5s ease; }
+.foto-fundo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(22px) brightness(0.5) saturate(1.15);
+  transform: scale(1.2);
+  pointer-events: none;
+}
 .card:hover .card-img { transform: scale(1.05); }
 .card-img-placeholder { width: 45px; height: 45px; color: var(--primary-color); opacity: 0.5; }
 
@@ -1191,8 +1214,18 @@ input:focus-visible,
    um jeito no computador e de outro no celular. Com aspect-ratio,
    a moldura sempre mantém a mesma proporção (e o mesmo enquadramento
    da foto) em qualquer tamanho de tela. */
-.bio-img-wrapper { width: 100%; aspect-ratio: 3 / 2; border-radius: 10px; overflow: hidden; margin-bottom: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-.bio-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.bio-img-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  max-height: 65vh;
+  background: var(--bg-color);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+.bio-img { position: relative; z-index: 1; width: 100%; height: 100%; object-fit: contain; display: block; }
 .bio-text { font-size: 1.05rem; color: var(--text-main); line-height: 1.8; display: flex; flex-direction: column; gap: 15px; }
 
 /* ------------------------------------------------- */
