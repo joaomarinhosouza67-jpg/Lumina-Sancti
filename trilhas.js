@@ -563,11 +563,230 @@ function santoParaFotoDaTrilha(trilha) {
   return null;
 }
 
+// ============================================================
+//  TEXTOS DAS TRILHAS NOS TRÊS IDIOMAS
+// ============================================================
+// Tudo o que as trilhas escrevem na tela. {nome} é trocado pelo valor
+// certo na hora (o nome do santo, o número da missão...).
+const TEXTOS_TRILHAS = {
+  pt: {
+    virtude: 'Virtude: {v}',
+    conclua_trilha: 'Conclua a trilha de {santo} para abrir esta.',
+    missao_rotulo: 'Missão {n}: {titulo}',
+    missao_refazer: ' (concluída — refazer)',
+    missao_bloqueada: ' (bloqueada)',
+    comecar_balao: 'COMEÇAR',
+    medalha_de: 'Medalha da {m}',
+    insignia_da_trilha: 'Insígnia da trilha',
+    ler_historia: 'Ler a história →',
+    fe: 'Fé',
+    ofensiva: 'Ofensiva',
+    santidade: 'Santidade',
+    conclua_missao: 'Conclua a missão anterior para desbloquear esta.',
+    santidade_renovando: 'Sua Santidade está se renovando — a próxima chega em {min} min. Que tal ler a história de {santo} enquanto isso?',
+    missao_de: 'Missão {n} de {total} · {titulo}',
+    escolha_certa: 'Escolha a resposta certa',
+    vf_titulo: 'Verdadeiro ou falso?',
+    verdadeiro: 'Verdadeiro',
+    falso: 'Falso',
+    monte_frase: 'Monte a frase na ordem certa',
+    verificar: 'Verificar',
+    continuar: 'Continuar',
+    quase: 'Quase!',
+    resposta_certa: 'Resposta certa:',
+    elogios: ['Muito bem!', 'Isso mesmo!', 'Perfeito!', 'Que beleza!', 'Excelente!', 'Graças a Deus, acertou!'],
+    missao_concluida: 'Missão concluída!',
+    de_fe: 'de Fé',
+    de_primeira: 'de primeira',
+    acertos: 'acertos',
+    insignia_de: 'Insígnia de {santo}',
+    ganhou_medalha: 'Você concluiu a trilha inteira e ganhou a <b>{medalha}</b>.',
+    santidade_acabou: 'Sua Santidade acabou por agora',
+    santidade_renova: 'Ela se renova sozinha, 1 a cada {intervalo} minutos — a próxima chega em {min} min.',
+    ler_enquanto: 'Enquanto isso, ler a história de {santo}',
+    voltar_trilhas: 'Voltar às trilhas',
+    sair_confirmar: 'Sair agora? O progresso desta missão não será salvo.',
+    insignias_titulo: 'Minhas insígnias',
+    insignias_resumo: '{feitas} de {total} medalhas. Conclua todas as missões de um santo para ganhar a dele.',
+    conquistada: 'Conquistada',
+    missoes_feitas: '{feitas} de {total} missões',
+    fechar: 'Fechar',
+    erro_sem_santidade: 'Sua Santidade está se renovando. Volte daqui a pouco.',
+    erro_sem_perguntas: 'Esta missão ainda não tem perguntas para este perfil.',
+    erro_abrir: 'Não foi possível abrir esta missão agora. Verifique sua internet.',
+    leia_antes: 'Leia antes de começar',
+    comecar: 'Começar',
+    verificando: 'Verificando...',
+    salvando: 'Salvando...',
+    erro_conferir: 'Não foi possível conferir a resposta. Verifique sua internet e tente de novo.',
+    erro_salvar_titulo: 'Não foi possível salvar agora',
+    erro_salvar_texto: 'Verifique sua internet e faça a missão de novo.',
+    estrelas: '{n} de 3 estrelas',
+    revisao: 'Revisão da trilha',
+    vida_de: 'A vida de {santo}',
+    faixa_ver_perfil: 'Ver meu perfil',
+    faixa_ranking: 'Ranking',
+    faixa_trocar: 'Trocar perfil',
+    nota_conta: 'Seu progresso fica salvo na sua conta, neste perfil.',
+    convite_conta: 'Entre na sua conta para salvar seu progresso, criar perfis para a família e participar do ranking.',
+    entrar_ou_criar: 'Entrar ou criar conta',
+    nota_sem_conta: 'Sem conta, seu progresso fica salvo só neste aparelho.',
+    nota_aparelho: 'Seu progresso fica salvo neste aparelho.',
+  },
+  en: {
+    virtude: 'Virtue: {v}',
+    conclua_trilha: 'Finish the trail of {santo} to open this one.',
+    missao_rotulo: 'Mission {n}: {titulo}',
+    missao_refazer: ' (completed — play again)',
+    missao_bloqueada: ' (locked)',
+    comecar_balao: 'START',
+    medalha_de: 'Medal of {m}',
+    insignia_da_trilha: 'Trail badge',
+    ler_historia: 'Read the story →',
+    fe: 'Faith',
+    ofensiva: 'Streak',
+    santidade: 'Holiness',
+    conclua_missao: 'Finish the previous mission to unlock this one.',
+    santidade_renovando: 'Your Holiness is being renewed — the next point arrives in {min} min. How about reading the story of {santo} in the meantime?',
+    missao_de: 'Mission {n} of {total} · {titulo}',
+    escolha_certa: 'Choose the right answer',
+    vf_titulo: 'True or false?',
+    verdadeiro: 'True',
+    falso: 'False',
+    monte_frase: 'Put the sentence in the right order',
+    verificar: 'Check',
+    continuar: 'Continue',
+    quase: 'Almost!',
+    resposta_certa: 'Right answer:',
+    elogios: ['Well done!', "That's right!", 'Perfect!', 'Beautiful!', 'Excellent!', 'Thanks be to God, you got it!'],
+    missao_concluida: 'Mission complete!',
+    de_fe: 'Faith',
+    de_primeira: 'on the first try',
+    acertos: 'correct',
+    insignia_de: 'Badge of {santo}',
+    ganhou_medalha: 'You finished the whole trail and won the <b>{medalha}</b>.',
+    santidade_acabou: 'Your Holiness has run out for now',
+    santidade_renova: 'It renews by itself, 1 point every {intervalo} minutes — the next one arrives in {min} min.',
+    ler_enquanto: 'Meanwhile, read the story of {santo}',
+    voltar_trilhas: 'Back to the trails',
+    sair_confirmar: 'Leave now? Your progress in this mission will not be saved.',
+    insignias_titulo: 'My badges',
+    insignias_resumo: '{feitas} of {total} medals. Finish all the missions of a saint to earn that medal.',
+    conquistada: 'Earned',
+    missoes_feitas: '{feitas} of {total} missions',
+    fechar: 'Close',
+    erro_sem_santidade: 'Your Holiness is being renewed. Come back in a little while.',
+    erro_sem_perguntas: 'This mission does not have questions for this profile yet.',
+    erro_abrir: 'This mission could not be opened right now. Check your internet connection.',
+    leia_antes: 'Read before you start',
+    comecar: 'Start',
+    verificando: 'Checking...',
+    salvando: 'Saving...',
+    erro_conferir: 'The answer could not be checked. Check your internet connection and try again.',
+    erro_salvar_titulo: 'Could not save right now',
+    erro_salvar_texto: 'Check your internet connection and do the mission again.',
+    estrelas: '{n} of 3 stars',
+    revisao: 'Trail review',
+    vida_de: 'The life of {santo}',
+    faixa_ver_perfil: 'See my profile',
+    faixa_ranking: 'Ranking',
+    faixa_trocar: 'Switch profile',
+    nota_conta: 'Your progress is saved in your account, in this profile.',
+    convite_conta: 'Sign in to save your progress, create profiles for your family and join the ranking.',
+    entrar_ou_criar: 'Sign in or create an account',
+    nota_sem_conta: 'Without an account, your progress is saved only on this device.',
+    nota_aparelho: 'Your progress is saved on this device.',
+  },
+  es: {
+    virtude: 'Virtud: {v}',
+    conclua_trilha: 'Termina el sendero de {santo} para abrir este.',
+    missao_rotulo: 'Misión {n}: {titulo}',
+    missao_refazer: ' (completada — repetir)',
+    missao_bloqueada: ' (bloqueada)',
+    comecar_balao: 'EMPEZAR',
+    medalha_de: 'Medalla de {m}',
+    insignia_da_trilha: 'Insignia del sendero',
+    ler_historia: 'Leer la historia →',
+    fe: 'Fe',
+    ofensiva: 'Racha',
+    santidade: 'Santidad',
+    conclua_missao: 'Termina la misión anterior para desbloquear esta.',
+    santidade_renovando: 'Tu Santidad se está renovando — el próximo punto llega en {min} min. ¿Qué tal leer la historia de {santo} mientras tanto?',
+    missao_de: 'Misión {n} de {total} · {titulo}',
+    escolha_certa: 'Elige la respuesta correcta',
+    vf_titulo: '¿Verdadero o falso?',
+    verdadeiro: 'Verdadero',
+    falso: 'Falso',
+    monte_frase: 'Ordena la frase correctamente',
+    verificar: 'Comprobar',
+    continuar: 'Continuar',
+    quase: '¡Casi!',
+    resposta_certa: 'Respuesta correcta:',
+    elogios: ['¡Muy bien!', '¡Eso es!', '¡Perfecto!', '¡Qué belleza!', '¡Excelente!', '¡Gracias a Dios, acertaste!'],
+    missao_concluida: '¡Misión cumplida!',
+    de_fe: 'de Fe',
+    de_primeira: 'a la primera',
+    acertos: 'aciertos',
+    insignia_de: 'Insignia de {santo}',
+    ganhou_medalha: 'Terminaste todo el sendero y ganaste la <b>{medalha}</b>.',
+    santidade_acabou: 'Tu Santidad se acabó por ahora',
+    santidade_renova: 'Se renueva sola, 1 punto cada {intervalo} minutos — el próximo llega en {min} min.',
+    ler_enquanto: 'Mientras tanto, leer la historia de {santo}',
+    voltar_trilhas: 'Volver a los senderos',
+    sair_confirmar: '¿Salir ahora? El progreso de esta misión no se guardará.',
+    insignias_titulo: 'Mis insignias',
+    insignias_resumo: '{feitas} de {total} medallas. Termina todas las misiones de un santo para ganar su medalla.',
+    conquistada: 'Conseguida',
+    missoes_feitas: '{feitas} de {total} misiones',
+    fechar: 'Cerrar',
+    erro_sem_santidade: 'Tu Santidad se está renovando. Vuelve dentro de un rato.',
+    erro_sem_perguntas: 'Esta misión todavía no tiene preguntas para este perfil.',
+    erro_abrir: 'No se pudo abrir esta misión ahora. Revisa tu conexión a internet.',
+    leia_antes: 'Lee antes de empezar',
+    comecar: 'Empezar',
+    verificando: 'Comprobando...',
+    salvando: 'Guardando...',
+    erro_conferir: 'No se pudo comprobar la respuesta. Revisa tu conexión e inténtalo de nuevo.',
+    erro_salvar_titulo: 'No se pudo guardar ahora',
+    erro_salvar_texto: 'Revisa tu conexión y haz la misión de nuevo.',
+    estrelas: '{n} de 3 estrellas',
+    revisao: 'Repaso del sendero',
+    vida_de: 'La vida de {santo}',
+    faixa_ver_perfil: 'Ver mi perfil',
+    faixa_ranking: 'Ranking',
+    faixa_trocar: 'Cambiar perfil',
+    nota_conta: 'Tu progreso se guarda en tu cuenta, en este perfil.',
+    convite_conta: 'Entra en tu cuenta para guardar tu progreso, crear perfiles para la familia y participar en el ranking.',
+    entrar_ou_criar: 'Entrar o crear cuenta',
+    nota_sem_conta: 'Sin cuenta, tu progreso se guarda solo en este dispositivo.',
+    nota_aparelho: 'Tu progreso se guarda en este dispositivo.',
+  },
+};
+
+// Idioma escolhido no site (o script.js guarda em idiomaAtual)
+function idiomaDasTrilhas() {
+  return typeof idiomaAtual !== 'undefined' && TEXTOS_TRILHAS[idiomaAtual] ? idiomaAtual : 'pt';
+}
+
+// Busca um texto das trilhas no idioma atual (ou no idioma pedido) e
+// troca as marcas {assim} pelos valores.
+function tt(chave, valores, idioma) {
+  const dicionario = TEXTOS_TRILHAS[idioma || idiomaDasTrilhas()] || TEXTOS_TRILHAS.pt;
+  const texto = dicionario[chave] !== undefined ? dicionario[chave] : TEXTOS_TRILHAS.pt[chave];
+  if (typeof texto !== 'string' || !valores) return texto;
+  return texto.replace(/\{(\w+)\}/g, (marca, nome) => (valores[nome] !== undefined ? valores[nome] : marca));
+}
+
+// "Medalha da Pobreza", "Medal of Poverty", "Medalla de la Pobreza"
+function nomeDaMedalha(trilha) {
+  return trilha.medalhaCompleta || tt('medalha_de', { m: trilha.medalha });
+}
+
 // Cada santo tem 3 capítulos de 10 atividades. Em vez de 3 missões
 // longas, a trilha vira 10 missões curtas: três por capítulo (3
 // atividades cada) e uma missão final de revisão, com a atividade
 // que sobrou de cada capítulo.
-function expandirEmMissoes(trilha) {
+function expandirEmMissoes(trilha, idioma) {
   const missoes = [];
   const revisao = [];
   trilha.licoes.forEach((capitulo) => {
@@ -584,14 +803,173 @@ function expandirEmMissoes(trilha) {
     revisao.push(...atividades.slice(9));
   });
   if (revisao.length > 0) {
-    missoes.push({ slug: `${trilha.slug}-m${missoes.length + 1}`, titulo: 'Revisão da trilha', conteudo: revisao });
+    missoes.push({ slug: `${trilha.slug}-m${missoes.length + 1}`, titulo: tt('revisao', null, idioma || 'pt'), conteudo: revisao });
   }
   return Object.assign({}, trilha, { licoes: missoes });
 }
 
-const TRILHAS = TRILHAS_ORIGINAIS.map((trilha) => expandirEmMissoes(Object.assign({}, trilha, {
-  santoId: BIOGRAFIA_DA_TRILHA[trilha.slug] || null,
-})));
+// ============================================================
+//  TRADUÇÕES E PERGUNTAS DAS CRIANÇAS
+// ============================================================
+// As trilhas em inglês e espanhol ficam em trilhas-en.js e
+// trilhas-es.js; as perguntas fáceis das crianças ficam em
+// trilhas-kids.js (e trilhas-kids-en.js / trilhas-kids-es.js). Esses
+// arquivos só são baixados quando precisam.
+//
+// Com conta, quem entrega as perguntas é o banco do app: o perfil de
+// criança recebe as do público "kid" (o supabase/gerar-importacao.js
+// leva as perguntas fáceis para lá). Sem conta, o site monta tudo
+// daqui, e um perfil infantil no aparelho (se um dia existir) também
+// recebe as perguntas fáceis.
+//
+// As missões têm os mesmos nomes internos em qualquer idioma e para
+// adulto ou criança: o progresso é um só.
+
+function traducaoDaTrilha(slug, idioma) {
+  if (!idioma || idioma === 'pt' || typeof window === 'undefined') return null;
+  const todas = window.TRILHAS_TRADUZIDAS && window.TRILHAS_TRADUZIDAS[idioma];
+  return todas ? todas[slug] || null : null;
+}
+
+// Junta uma atividade em português com a sua tradução. A estrutura
+// (tipo, resposta certa, quantidade de opções e de blocos) vem sempre
+// do português; da tradução vêm só os textos. Se a tradução não
+// combinar, fica o português — nunca uma pergunta quebrada.
+function juntarAtividadeTraduzida(original, traduzida) {
+  if (!traduzida || traduzida.tipo !== original.tipo) return original;
+  const junta = Object.assign({}, original, {
+    enunciado: traduzida.enunciado || original.enunciado,
+    explicacao: traduzida.explicacao || original.explicacao,
+  });
+  if (original.tipo === 'multipla') {
+    if (!Array.isArray(traduzida.opcoes) || traduzida.opcoes.length !== original.opcoes.length) return original;
+    junta.opcoes = traduzida.opcoes;
+  }
+  if (original.tipo === 'ordenar') {
+    // Os blocos traduzidos já vêm na ordem certa da frase no outro idioma
+    if (!Array.isArray(traduzida.blocos) || traduzida.blocos.length !== original.blocos.length) return original;
+    junta.blocos = traduzida.blocos;
+  }
+  return junta;
+}
+
+function juntarListaTraduzida(originais, traduzidas) {
+  if (!Array.isArray(traduzidas) || traduzidas.length !== originais.length) return originais;
+  return originais.map((atividade, i) => juntarAtividadeTraduzida(atividade, traduzidas[i]));
+}
+
+function atividadesKidsDoCapitulo(capitulo, idioma, conteudoAdulto) {
+  const todas = typeof window !== 'undefined' ? window.ATIVIDADES_KIDS : null;
+  const kids = todas ? todas[capitulo.slug] : null;
+  // Capítulo ainda sem versão infantil: fica a de adulto
+  if (!Array.isArray(kids) || kids.length === 0) return conteudoAdulto;
+  const traducoes = idioma !== 'pt' && typeof window !== 'undefined' && window.ATIVIDADES_KIDS_TRADUZIDAS
+    ? (window.ATIVIDADES_KIDS_TRADUZIDAS[idioma] || {})[capitulo.slug]
+    : null;
+  return juntarListaTraduzida(kids, traducoes);
+}
+
+// Monta uma trilha pronta para a tela, no idioma pedido, para adulto
+// ou para criança, já dividida em missões.
+function montarTrilha(original, idioma, kids) {
+  const traducao = traducaoDaTrilha(original.slug, idioma);
+  const capitulos = original.licoes.map((capitulo) => {
+    const capituloTraduzido = traducao && traducao.licoes ? traducao.licoes[capitulo.slug] : null;
+    const adulto = juntarListaTraduzida(capitulo.conteudo, capituloTraduzido && capituloTraduzido.conteudo);
+    return {
+      slug: capitulo.slug,
+      titulo: (capituloTraduzido && capituloTraduzido.titulo) || capitulo.titulo,
+      conteudo: kids ? atividadesKidsDoCapitulo(capitulo, idioma, adulto) : adulto,
+    };
+  });
+  const montada = Object.assign({}, original, {
+    santo: (traducao && traducao.santo) || original.santo,
+    titulo: (traducao && traducao.titulo) || original.titulo,
+    descricao: (traducao && traducao.descricao) || original.descricao,
+    medalha: (traducao && traducao.medalha) || original.medalha,
+    virtude: (traducao && traducao.virtude) || original.virtude,
+    medalhaCompleta: (traducao && traducao.medalhaCompleta) || null,
+    santoId: BIOGRAFIA_DA_TRILHA[original.slug] || null,
+    licoes: capitulos,
+  });
+  return expandirEmMissoes(montada, idioma);
+}
+
+// A base de sempre: português, adulto (usada também pelo gerador do SQL)
+const TRILHAS = TRILHAS_ORIGINAIS.map((trilha) => montarTrilha(trilha, 'pt', false));
+
+// O mapa guarda uma cópia pronta por idioma (e para criança), para não
+// remontar tudo a cada toque.
+let cacheDeTrilhasLocais = {};
+
+function perfilDeCrianca() {
+  return typeof document !== 'undefined' && !!document.body && !!document.body.classList
+    && document.body.classList.contains('modo-kids');
+}
+
+function conteudoKidsPronto(idioma) {
+  if (typeof window === 'undefined' || !window.ATIVIDADES_KIDS) return false;
+  if (idioma === 'pt') return true;
+  return !!(window.ATIVIDADES_KIDS_TRADUZIDAS && window.ATIVIDADES_KIDS_TRADUZIDAS[idioma]);
+}
+
+function trilhasLocais() {
+  const idioma = idiomaDasTrilhas();
+  const kids = perfilDeCrianca() && typeof window !== 'undefined' && !!window.ATIVIDADES_KIDS;
+  const chave = `${idioma}${kids ? '-kids' : ''}`;
+  if (!cacheDeTrilhasLocais[chave]) {
+    cacheDeTrilhasLocais[chave] = idioma === 'pt' && !kids
+      ? TRILHAS
+      : TRILHAS_ORIGINAIS.map((trilha) => montarTrilha(trilha, idioma, kids));
+  }
+  return cacheDeTrilhasLocais[chave];
+}
+
+// Baixa um arquivo de conteúdo das trilhas uma vez só
+const arquivosDasTrilhas = {};
+
+function carregarArquivoDasTrilhas(nome) {
+  if (arquivosDasTrilhas[nome]) return arquivosDasTrilhas[nome];
+  arquivosDasTrilhas[nome] = new Promise((resolve) => {
+    const script = document.createElement('script');
+    script.src = nome;
+    script.onload = () => {
+      // Conteúdo novo: as trilhas prontas precisam ser remontadas
+      cacheDeTrilhasLocais = {};
+      idiomaDasTrilhasDoServidor = null;
+      resolve(true);
+    };
+    script.onerror = () => {
+      delete arquivosDasTrilhas[nome];
+      resolve(false); // sem o arquivo, fica o português
+    };
+    (document.head || document.body).appendChild(script);
+  });
+  return arquivosDasTrilhas[nome];
+}
+
+// Chamado pelo script.js quando a pessoa troca de idioma
+function carregarTraducoesDasTrilhas(codigo) {
+  const arquivos = [];
+  if (codigo === 'en' || codigo === 'es') {
+    arquivos.push(`trilhas-${codigo}.js`);
+    if (perfilDeCrianca() && !modoConta()) arquivos.push(`trilhas-kids-${codigo}.js`);
+  }
+  return Promise.all(arquivos.map(carregarArquivoDasTrilhas));
+}
+
+function carregarAtividadesKids() {
+  const idioma = idiomaDasTrilhas();
+  const arquivos = ['trilhas-kids.js'];
+  if (idioma !== 'pt') arquivos.push(`trilhas-kids-${idioma}.js`);
+  return Promise.all(arquivos.map(carregarArquivoDasTrilhas));
+}
+
+// Depois de trocar de idioma: redesenha o mapa se ele estiver aberto
+function aoMudarIdiomaDasTrilhas() {
+  const mapa = document.getElementById('view-trilhas');
+  if (mapa && mapa.style.display === 'block') renderizarTrilhas();
+}
 
 // ============================================================
 //  TRILHAS DO BANCO DO APP (quando há conta logada)
@@ -599,14 +977,30 @@ const TRILHAS = TRILHAS_ORIGINAIS.map((trilha) => expandirEmMissoes(Object.assig
 // Com conta, as trilhas vêm do mesmo banco do app — as mesmas no
 // site e no celular, e as respostas são conferidas pelo banco.
 // Sem conta, valem as trilhas deste arquivo (progresso no aparelho).
-let trilhasDoServidor = null;
+let dadosDasTrilhasDoServidor = null; // como vieram do banco
+let trilhasDoServidor = null;          // já prontas no idioma abaixo
+let idiomaDasTrilhasDoServidor = null;
 
 // Virtude e medalha das trilhas que só existem no banco do app
 const TRILHAS_EXTRAS_DO_APP = {
   'carlo-acutis': {
-    virtude: 'Amor à Eucaristia',
-    medalha: 'Eucaristia',
-    descricao: 'O jovem que chamava a Eucaristia de sua autoestrada para o Céu.',
+    pt: {
+      virtude: 'Amor à Eucaristia',
+      medalha: 'Eucaristia',
+      descricao: 'O jovem que chamava a Eucaristia de sua autoestrada para o Céu.',
+    },
+    en: {
+      virtude: 'Love for the Eucharist',
+      medalha: 'Eucharist',
+      medalhaCompleta: 'Medal of the Eucharist',
+      descricao: 'The young man who called the Eucharist his highway to Heaven.',
+    },
+    es: {
+      virtude: 'Amor a la Eucaristía',
+      medalha: 'Eucaristía',
+      medalhaCompleta: 'Medalla de la Eucaristía',
+      descricao: 'El joven que llamaba a la Eucaristía su autopista hacia el Cielo.',
+    },
   },
 };
 
@@ -616,17 +1010,32 @@ function escaparHtmlDaTrilha(texto) {
   }[c]));
 }
 
-// Os textos do banco vêm por idioma: { "pt-BR": "..." }
+// Os textos do banco vêm por idioma, com os mesmos códigos que o app
+// usa: { "pt-BR": "...", "en-US": "...", "es": "..." }. Usa o idioma
+// do site; se faltar, fica o português.
+const CODIGOS_DO_IDIOMA_NO_BANCO = { pt: ['pt-BR', 'pt'], en: ['en-US', 'en'], es: ['es', 'es-ES'] };
+
+function valorNoIdioma(campo) {
+  const codigos = CODIGOS_DO_IDIOMA_NO_BANCO[idiomaDasTrilhas()].concat(CODIGOS_DO_IDIOMA_NO_BANCO.pt);
+  const achado = codigos.find((codigo) => campo[codigo] != null && campo[codigo] !== '');
+  return achado ? campo[achado] : Object.values(campo)[0];
+}
+
 function textoNoIdioma(campo) {
   if (campo == null) return '';
   if (typeof campo === 'string') return campo;
-  return campo['pt-BR'] || campo.pt || Object.values(campo)[0] || '';
+  return valorNoIdioma(campo) || '';
 }
 
 function listaNoIdioma(campo) {
   if (!campo) return [];
   if (Array.isArray(campo)) return campo;
-  return campo['pt-BR'] || campo.pt || Object.values(campo)[0] || [];
+  return valorNoIdioma(campo) || [];
+}
+
+// Nome do santo no idioma do site, quando a biografia já foi traduzida
+function nomeDoSantoNoIdioma(santo) {
+  return typeof textoDoSanto === 'function' ? textoDoSanto(santo).nome : santo.nome;
 }
 
 function converterTrilhaDoServidor(trilhaDoBanco) {
@@ -639,19 +1048,21 @@ function converterTrilhaDoServidor(trilhaDoBanco) {
   });
   const slugDoSanto = trilhaDoBanco.saint_slug;
   const santo = typeof santosData !== 'undefined' ? santosData.find((s) => s.id === slugDoSanto) : null;
-  const doSite = TRILHAS.find((t) => t.santoId === slugDoSanto);
-  const extra = TRILHAS_EXTRAS_DO_APP[slugDoSanto] || {};
+  const doSite = trilhasLocais().find((t) => t.santoId === slugDoSanto);
+  const extras = TRILHAS_EXTRAS_DO_APP[slugDoSanto] || {};
+  const extra = extras[idiomaDasTrilhas()] || extras.pt || {};
   const tituloDaTarefa = tarefas[0] ? textoNoIdioma(tarefas[0].title) : '';
-  const nome = santo ? santo.nome
+  const nome = santo ? nomeDoSantoNoIdioma(santo)
     : doSite ? doSite.santo
-      : (tituloDaTarefa.replace(/^A vida de\s+/i, '') || slugDoSanto);
+      : (tituloDaTarefa.replace(/^(A vida de|The life of|La vida de)\s+/i, '') || slugDoSanto);
   return {
     slug: slugDoSanto,
     santo: escaparHtmlDaTrilha(nome),
     titulo: escaparHtmlDaTrilha(nome),
     descricao: doSite ? doSite.descricao : escaparHtmlDaTrilha(extra.descricao || tituloDaTarefa),
-    medalha: doSite ? doSite.medalha : (extra.medalha || 'Santidade'),
-    virtude: doSite ? doSite.virtude : (extra.virtude || 'Santidade'),
+    medalha: doSite ? doSite.medalha : (extra.medalha || tt('santidade')),
+    virtude: doSite ? doSite.virtude : (extra.virtude || tt('santidade')),
+    medalhaCompleta: doSite ? doSite.medalhaCompleta : (extra.medalhaCompleta || null),
     santoId: santo ? santo.id : null,
     cor: trilhaDoBanco.color,
     servidor: true,
@@ -659,21 +1070,45 @@ function converterTrilhaDoServidor(trilhaDoBanco) {
   };
 }
 
+// As trilhas do banco prontas no idioma atual
+function trilhasDoServidorNoIdioma() {
+  if (!dadosDasTrilhasDoServidor) return null;
+  const idioma = idiomaDasTrilhas();
+  if (!trilhasDoServidor || idiomaDasTrilhasDoServidor !== idioma) {
+    trilhasDoServidor = dadosDasTrilhasDoServidor.map(converterTrilhaDoServidor).filter((t) => t.licoes.length > 0);
+    idiomaDasTrilhasDoServidor = idioma;
+  }
+  return trilhasDoServidor;
+}
+
 // Busca as trilhas publicadas (uma vez por visita)
 async function carregarConteudoDoServidor(forcar) {
-  if (trilhasDoServidor && !forcar) return trilhasDoServidor;
+  if (dadosDasTrilhasDoServidor && !forcar) return trilhasDoServidorNoIdioma();
   const { data, error } = await supabaseCliente
     .from('trails')
     .select('id, saint_slug, sort, color, tasks(id, sort, title, lessons(id, slug, sort, title))')
     .eq('published', true)
     .order('sort', { ascending: true });
   if (error) throw error;
-  trilhasDoServidor = (data || []).map(converterTrilhaDoServidor).filter((t) => t.licoes.length > 0);
-  return trilhasDoServidor;
+  dadosDasTrilhasDoServidor = data || [];
+  trilhasDoServidor = null;
+  return trilhasDoServidorNoIdioma();
 }
 
 function trilhasEmUso() {
-  return modoConta() && trilhasDoServidor ? trilhasDoServidor : TRILHAS;
+  return modoConta() && dadosDasTrilhasDoServidor ? trilhasDoServidorNoIdioma() : trilhasLocais();
+}
+
+// Avisa a Lumi (a estrelinha do modo infantil, no mascote.js) do que
+// acontece na lição. No perfil adulto ela não faz nada.
+function avisarMascote(evento, dados) {
+  if (typeof mascoteReage !== 'function') return null;
+  try {
+    return mascoteReage(evento, dados);
+  } catch (erro) {
+    console.error('Lumina Sancti — falha no mascote:', erro);
+    return null;
+  }
 }
 
 // Desenha um dos ícones do site (definidos no index.html) — o site
@@ -905,9 +1340,9 @@ function renderizarTrilhas() {
         <div class="trilha-banner">
           <div class="trilha-foto" id="trilha-foto-${trilha.slug}"><svg class="card-img-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-aureola"></use></svg></div>
           <div class="trilha-info">
-            <span class="trilha-virtude">Virtude: ${trilha.virtude}</span>
+            <span class="trilha-virtude">${tt('virtude', { v: trilha.virtude })}</span>
             <h3>${trilha.titulo}</h3>
-            <p class="trilha-aviso-trancada">${icone('cadeado')} Conclua a trilha de ${anterior.santo} para abrir esta.</p>
+            <p class="trilha-aviso-trancada">${icone('cadeado')} ${tt('conclua_trilha', { santo: anterior.santo })}</p>
           </div>
         </div>
       </section>`;
@@ -918,11 +1353,12 @@ function renderizarTrilhas() {
       const liberada = licaoDesbloqueada(trilha, i, estado);
       const classe = feita ? 'concluida' : (liberada ? 'atual' : 'bloqueada');
       const simbolo = feita ? icone('check', 'icone-no') : (liberada ? icone('estrela', 'icone-no') : icone('cadeado', 'icone-no'));
-      const rotuloAcessivel = `Missão ${i + 1}: ${licao.titulo}${feita ? ' (concluída — refazer)' : (liberada ? '' : ' (bloqueada)')}`;
+      const rotuloAcessivel = tt('missao_rotulo', { n: i + 1, titulo: licao.titulo })
+        + (feita ? tt('missao_refazer') : (liberada ? '' : tt('missao_bloqueada')));
       return `
         <div class="no-wrapper ${deslocamentos[i % deslocamentos.length]}">
           <button class="no-licao ${classe}" data-trilha="${trilha.slug}" data-indice="${i}" aria-label="${rotuloAcessivel}">
-            ${classe === 'atual' ? '<span class="no-balao">COMEÇAR</span>' : ''}
+            ${classe === 'atual' ? `<span class="no-balao">${tt('comecar_balao')}</span>` : ''}
             <span class="no-circulo">${simbolo}</span>
             <span class="no-rotulo">${licao.titulo}</span>
           </button>
@@ -934,7 +1370,7 @@ function renderizarTrilhas() {
       <div class="no-wrapper ${posicaoInsignia}">
         <div class="no-insignia ${concluida ? 'conquistada' : ''}">
           <span class="no-circulo">${icone('medalha', 'icone-no')}</span>
-          <span class="no-rotulo">${concluida ? `Medalha da ${trilha.medalha}` : 'Insígnia da trilha'}</span>
+          <span class="no-rotulo">${concluida ? nomeDaMedalha(trilha) : tt('insignia_da_trilha')}</span>
         </div>
       </div>`;
 
@@ -943,10 +1379,10 @@ function renderizarTrilhas() {
         <div class="trilha-banner ${concluida ? 'concluida' : ''}">
           <div class="trilha-foto" id="trilha-foto-${trilha.slug}"><svg class="card-img-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-aureola"></use></svg></div>
           <div class="trilha-info">
-            <span class="trilha-virtude">Virtude: ${trilha.virtude}</span>
+            <span class="trilha-virtude">${tt('virtude', { v: trilha.virtude })}</span>
             <h3>${trilha.titulo}</h3>
             <p>${trilha.descricao}</p>
-            ${trilha.santoId ? `<button class="trilha-ler" data-santo="${trilha.santoId}">Ler a história →</button>` : ''}
+            ${trilha.santoId ? `<button class="trilha-ler" data-santo="${trilha.santoId}">${tt('ler_historia')}</button>` : ''}
           </div>
         </div>
         <div class="trilha-caminho">${nos}${noInsignia}</div>
@@ -972,6 +1408,9 @@ function renderizarTrilhas() {
 
   // Faixa do perfil (ou convite para entrar), desenhada pelo perfis.js
   if (typeof renderizarFaixaDaConta === 'function') renderizarFaixaDaConta();
+
+  // A Lumi aparece no mapa só para crianças (dorme se a Santidade acabou)
+  avisarMascote('mapa', { santidade: estado.santidade });
 }
 
 function renderizarPlacarDasTrilhas(estado) {
@@ -979,9 +1418,9 @@ function renderizarPlacarDasTrilhas(estado) {
   if (!painel) return;
   const santidadeTexto = perfilEhInfantil() ? '∞' : `${estado.santidade}/${SANTIDADE_MAXIMA}`;
   painel.innerHTML = `
-    <div class="stat stat-fe"><span>${icone('estrela')}${estado.fe}</span><small>Fé</small></div>
-    <div class="stat stat-ofensiva"><span>${icone('chama')}${estado.ofensiva}</span><small>Ofensiva</small></div>
-    <div class="stat stat-santidade"><span>${icone('pomba')}${santidadeTexto}</span><small>Santidade</small></div>
+    <div class="stat stat-fe"><span>${icone('estrela')}${estado.fe}</span><small>${tt('fe')}</small></div>
+    <div class="stat stat-ofensiva"><span>${icone('chama')}${estado.ofensiva}</span><small>${tt('ofensiva')}</small></div>
+    <div class="stat stat-santidade"><span>${icone('pomba')}${santidadeTexto}</span><small>${tt('santidade')}</small></div>
   `;
 }
 
@@ -992,7 +1431,7 @@ function abrirNoDaTrilha(slugTrilha, indice) {
   if (!trilha || !trilha.licoes[indice]) return;
   const anteriorDaLista = posicaoDaTrilha > 0 ? listaDeTrilhas[posicaoDaTrilha - 1] : null;
   if (anteriorDaLista && !trilhaConcluida(anteriorDaLista, carregarProgressoTrilhas())) {
-    mostrarAvisoTrilhas(`Conclua a trilha de ${anteriorDaLista.santo} para abrir esta.`);
+    mostrarAvisoTrilhas(tt('conclua_trilha', { santo: anteriorDaLista.santo }));
     return;
   }
 
@@ -1001,23 +1440,33 @@ function abrirNoDaTrilha(slugTrilha, indice) {
   salvarProgressoTrilhas(estado);
 
   if (!licaoDesbloqueada(trilha, indice, estado)) {
-    mostrarAvisoTrilhas('Conclua a missão anterior para desbloquear esta.');
+    mostrarAvisoTrilhas(tt('conclua_missao'));
     return;
   }
   if (!perfilEhInfantil() && estado.santidade <= 0) {
-    mostrarAvisoTrilhas(`Sua Santidade está se renovando — a próxima chega em ${minutosParaProximaSantidade(estado)} min. Que tal ler a história de ${trilha.santo} enquanto isso?`);
+    mostrarAvisoTrilhas(tt('santidade_renovando', { min: minutosParaProximaSantidade(estado), santo: trilha.santo }));
     return;
   }
-  if (modoConta() && trilha.servidor) iniciarLicaoDoServidor(trilha, indice);
-  else iniciarLicao(trilha, indice);
+  if (modoConta() && trilha.servidor) {
+    iniciarLicaoDoServidor(trilha, indice);
+    return;
+  }
+  // Criança sem conta: primeiro baixa as perguntas fáceis
+  const idioma = idiomaDasTrilhas();
+  if (perfilDeCrianca() && !conteudoKidsPronto(idioma)) {
+    carregarAtividadesKids().then(() => {
+      const pronta = trilhasLocais().find((t) => t.slug === trilha.slug) || trilha;
+      iniciarLicao(pronta, indice);
+    });
+    return;
+  }
+  iniciarLicao(trilha, indice);
 }
 
 // ============================================================
 //  LIÇÃO (tela cheia)
 // ============================================================
 let licaoAtual = null;
-
-const ELOGIOS = ['Muito bem!', 'Isso mesmo!', 'Perfeito!', 'Que beleza!', 'Excelente!', 'Graças a Deus, acertou!'];
 
 function embaralhar(lista) {
   const copia = lista.slice();
@@ -1051,6 +1500,7 @@ function iniciarLicao(trilha, indice) {
   };
   mudarDeView('view-licao');
   renderizarCabecalhoDaMissao(trilha, indice, licao);
+  avisarMascote('licao');
   renderizarPerguntaAtual();
 }
 
@@ -1061,7 +1511,7 @@ function renderizarCabecalhoDaMissao(trilha, indice, licao) {
     <span class="licao-santo-foto" id="licao-santo-foto"><svg class="card-img-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-aureola"></use></svg></span>
     <span class="licao-santo-textos">
       <strong>${trilha.santo}</strong>
-      <small>Missão ${indice + 1} de ${trilha.licoes.length} · ${licao.titulo}</small>
+      <small>${tt('missao_de', { n: indice + 1, total: trilha.licoes.length, titulo: licao.titulo })}</small>
     </span>`;
   const santo = santoParaFotoDaTrilha(trilha);
   if (santo && typeof buscarImagemSanto === 'function') {
@@ -1110,7 +1560,7 @@ function renderizarPerguntaAtual() {
   licaoAtual.selecao = null;
   licaoAtual.verificada = false;
   licaoAtual.acertouAtual = false;
-  prepararRodapeDaLicao('Verificar', false);
+  prepararRodapeDaLicao(tt('verificar'), false);
   atualizarTopoDaLicao();
 
   const p = perguntaAtual();
@@ -1121,20 +1571,23 @@ function renderizarPerguntaAtual() {
     const opcoes = embaralhar(p.opcoes.map((texto, i) => ({ texto, correta: i === p.correta, original: i })));
     licaoAtual.montagem = { opcoes };
     corpo.innerHTML = `
-      <p class="licao-tipo">Escolha a resposta certa</p>
+      <p class="licao-tipo">${tt('escolha_certa')}</p>
       <h2 class="licao-enunciado">${p.enunciado}</h2>
       <div class="licao-opcoes">
         ${opcoes.map((o, i) => `<button class="licao-opcao" data-opcao="${i}">${o.texto}</button>`).join('')}
       </div>`;
+    // A Lumi lê as opções na mesma ordem em que aparecem na tela
+    avisarMascote('pergunta', { tipo: p.tipo, enunciado: p.enunciado, opcoes: opcoes.map((o) => o.texto) });
   } else if (p.tipo === 'vf') {
     licaoAtual.montagem = {};
     corpo.innerHTML = `
-      <p class="licao-tipo">Verdadeiro ou falso?</p>
+      <p class="licao-tipo">${tt('vf_titulo')}</p>
       <h2 class="licao-enunciado">${p.enunciado}</h2>
       <div class="licao-opcoes licao-vf">
-        <button class="licao-opcao" data-vf="true">Verdadeiro</button>
-        <button class="licao-opcao" data-vf="false">Falso</button>
+        <button class="licao-opcao" data-vf="true">${tt('verdadeiro')}</button>
+        <button class="licao-opcao" data-vf="false">${tt('falso')}</button>
       </div>`;
+    avisarMascote('pergunta', { tipo: p.tipo, enunciado: p.enunciado });
   } else {
     let ordem = embaralhar(p.blocos.map((_, i) => i));
     // Nunca começa já na ordem certa
@@ -1142,11 +1595,12 @@ function renderizarPerguntaAtual() {
     licaoAtual.montagem = { ordem };
     licaoAtual.selecao = [];
     corpo.innerHTML = `
-      <p class="licao-tipo">Monte a frase na ordem certa</p>
+      <p class="licao-tipo">${tt('monte_frase')}</p>
       <h2 class="licao-enunciado">${p.enunciado}</h2>
       <div class="ordenar-resposta" id="ordenar-resposta"></div>
       <div class="ordenar-banco" id="ordenar-banco"></div>`;
     renderizarOrdenar();
+    avisarMascote('pergunta', { tipo: p.tipo, enunciado: p.enunciado, opcoes: ordem.map((i) => p.blocos[i]) });
     return;
   }
 
@@ -1217,7 +1671,7 @@ function respostaEstaCerta() {
 
 function textoDaRespostaCerta(p) {
   if (p.tipo === 'multipla') return p.opcoes[p.correta];
-  if (p.tipo === 'vf') return p.correta ? 'Verdadeiro' : 'Falso';
+  if (p.tipo === 'vf') return p.correta ? tt('verdadeiro') : tt('falso');
   if (p.ordemCerta) return p.ordemCerta.map((i) => p.blocos[i]).join(' ');
   return p.blocos.join(' ');
 }
@@ -1277,17 +1731,26 @@ function mostrarResultadoDaResposta(certo) {
   atualizarTopoDaLicao();
   marcarRespostasNaTela(certo);
 
+  // Com criança, a Lumi reage e a tela mostra a mesma frase que ela fala
+  const fraseDaLumi = avisarMascote('resposta', {
+    certo,
+    explicacao: p.explicacao,
+    respostaCerta: certo ? null : textoDaRespostaCerta(p),
+    semRepetir: !!licaoAtual.servidor, // com conta, a pergunta não volta no fim
+  });
+
   const feedback = document.getElementById('licao-feedback');
   const botao = document.getElementById('licao-botao');
   if (feedback) {
+    const elogios = tt('elogios');
     feedback.className = `licao-feedback mostrar ${certo ? 'certo' : 'errado'}`;
     feedback.innerHTML = certo
-      ? `<strong>${ELOGIOS[Math.floor(Math.random() * ELOGIOS.length)]}</strong><p>${p.explicacao}</p>`
-      : `<strong>Quase!</strong><p><b>Resposta certa:</b> ${textoDaRespostaCerta(p)}</p><p>${p.explicacao}</p>`;
+      ? `<strong>${fraseDaLumi || elogios[Math.floor(Math.random() * elogios.length)]}</strong><p>${p.explicacao}</p>`
+      : `<strong>${fraseDaLumi || tt('quase')}</strong><p><b>${tt('resposta_certa')}</b> ${textoDaRespostaCerta(p)}</p><p>${p.explicacao}</p>`;
   }
   if (botao) {
     botao.className = `licao-botao ${certo ? 'certo' : 'errado'}`;
-    botao.textContent = 'Continuar';
+    botao.textContent = tt('continuar');
     botao.disabled = false;
   }
   somDaLicao(certo ? 'certo' : 'errado');
@@ -1353,21 +1816,22 @@ function finalizarLicao() {
     corpo.innerHTML = `
       <div class="licao-fim">
         <div class="licao-fim-icone">${insigniaNova ? icone('medalha') : icone('estrela')}</div>
-        <h2>Missão concluída!</h2>
+        <h2>${tt('missao_concluida')}</h2>
         <p class="licao-fim-sub">${licao.titulo} · ${trilha.titulo}</p>
         <div class="licao-fim-dados">
-          <div class="licao-fim-dado"><strong id="licao-fe-ganha">+${feGanha}</strong><span>de Fé</span></div>
-          <div class="licao-fim-dado"><strong>${acertosDePrimeira}/${total}</strong><span>de primeira</span></div>
+          <div class="licao-fim-dado"><strong id="licao-fe-ganha">+${feGanha}</strong><span>${tt('de_fe')}</span></div>
+          <div class="licao-fim-dado"><strong>${acertosDePrimeira}/${total}</strong><span>${tt('de_primeira')}</span></div>
         </div>
         ${insigniaNova ? `
         <div class="insignia-conquistada">
           <div class="insignia-icone">${icone('medalha')}</div>
-          <h3>Insígnia de ${trilha.santo}</h3>
-          <p>Você concluiu a trilha inteira e ganhou a <b>Medalha da ${trilha.medalha}</b>.</p>
+          <h3>${tt('insignia_de', { santo: trilha.santo })}</h3>
+          <p>${tt('ganhou_medalha', { medalha: nomeDaMedalha(trilha) })}</p>
         </div>` : ''}
       </div>`;
   }
-  prepararRodapeDaLicao('Continuar', true);
+  avisarMascote('concluiu', { medalha: insigniaNova });
+  prepararRodapeDaLicao(tt('continuar'), true);
 }
 
 function mostrarFimSemSantidade() {
@@ -1381,26 +1845,31 @@ function mostrarFimSemSantidade() {
     corpo.innerHTML = `
       <div class="licao-fim">
         <div class="licao-fim-icone">${icone('pomba')}</div>
-        <h2>Sua Santidade acabou por agora</h2>
-        <p class="licao-fim-sub">Ela se renova sozinha, 1 a cada ${MINUTOS_PARA_RENOVAR_SANTIDADE} minutos — a próxima chega em ${minutosParaProximaSantidade(estado)} min.</p>
-        ${trilha.santoId ? `<button class="btn-ask-ai" id="licao-ler-historia">Enquanto isso, ler a história de ${trilha.santo}</button>` : ''}
+        <h2>${tt('santidade_acabou')}</h2>
+        <p class="licao-fim-sub">${tt('santidade_renova', { intervalo: MINUTOS_PARA_RENOVAR_SANTIDADE, min: minutosParaProximaSantidade(estado) })}</p>
+        ${trilha.santoId ? `<button class="btn-ask-ai" id="licao-ler-historia">${tt('ler_enquanto', { santo: trilha.santo })}</button>` : ''}
       </div>`;
     const lerHistoria = document.getElementById('licao-ler-historia');
     if (lerHistoria) {
       lerHistoria.addEventListener('click', () => {
         licaoAtual = null;
+        avisarMascote('saiu');
         showDetail(trilha.santoId);
       });
     }
   }
-  prepararRodapeDaLicao('Voltar às trilhas', true);
+  // A Lumi senta e cochila, esperando a Santidade voltar
+  avisarMascote('semSantidade');
+  prepararRodapeDaLicao(tt('voltar_trilhas'), true);
 }
 
 function sairDaLicao(perguntarAntes) {
   if (perguntarAntes && licaoAtual && !licaoAtual.finalizada) {
-    const confirmou = confirm('Sair agora? O progresso desta missão não será salvo.');
+    const confirmou = confirm(tt('sair_confirmar'));
     if (!confirmou) return;
   }
+  // Saiu da lição: a voz da Lumi para na hora
+  avisarMascote('saiu');
   const slug = licaoAtual ? licaoAtual.trilha.slug : null;
   licaoAtual = null;
   abrirTrilhas(slug);
@@ -1434,24 +1903,27 @@ function abrirInsignias() {
     modal = document.createElement('div');
     modal.id = 'insignias-modal';
     modal.className = 'insignias-modal';
-    modal.innerHTML = '<div class="insignias-caixa"><button class="insignias-fechar" aria-label="Fechar">&times;</button><h2>Minhas insígnias</h2><p class="insignias-resumo"></p><div class="insignias-grade"></div></div>';
+    modal.innerHTML = '<div class="insignias-caixa"><button class="insignias-fechar">&times;</button><h2></h2><p class="insignias-resumo"></p><div class="insignias-grade"></div></div>';
     document.body.appendChild(modal);
     modal.addEventListener('click', (e) => {
       if (e.target === modal || e.target.classList.contains('insignias-fechar')) modal.classList.remove('aberto');
     });
   }
 
+  // Os textos são escritos a cada abertura: seguem o idioma do momento
+  modal.querySelector('.insignias-fechar').setAttribute('aria-label', tt('fechar'));
+  modal.querySelector('h2').textContent = tt('insignias_titulo');
   modal.querySelector('.insignias-resumo').textContent =
-    `${conquistadas.length} de ${trilhas.length} medalhas. Conclua todas as missões de um santo para ganhar a dele.`;
+    tt('insignias_resumo', { feitas: conquistadas.length, total: trilhas.length });
   modal.querySelector('.insignias-grade').innerHTML = trilhas.map((trilha) => {
     const tem = trilhaConcluida(trilha, estado);
     const feitas = trilha.licoes.filter((l) => estado.licoes[l.slug]).length;
     return `
       <div class="insignia-item ${tem ? 'conquistada' : ''}">
         <span class="insignia-medalha">${icone(tem ? 'medalha' : 'cadeado')}</span>
-        <strong>${tem ? `Medalha da ${trilha.medalha}` : trilha.medalha}</strong>
+        <strong>${tem ? nomeDaMedalha(trilha) : trilha.medalha}</strong>
         <span class="insignia-santo">${trilha.santo}</span>
-        <span class="insignia-progresso">${tem ? 'Conquistada' : `${feitas} de ${trilha.licoes.length} missões`}</span>
+        <span class="insignia-progresso">${tem ? tt('conquistada') : tt('missoes_feitas', { feitas, total: trilha.licoes.length })}</span>
       </div>`;
   }).join('');
   modal.classList.add('aberto');
@@ -1471,10 +1943,10 @@ function converterPerguntaDoServidor(q) {
 
 function mensagemDeErroDaLicao(erro) {
   const texto = String((erro && erro.message) || '');
-  if (texto.includes('no_santidade')) return 'Sua Santidade está se renovando. Volte daqui a pouco.';
-  if (texto.includes('lesson_locked')) return 'Conclua a missão anterior para desbloquear esta.';
-  if (texto.includes('lesson_empty')) return 'Esta missão ainda não tem perguntas para este perfil.';
-  return 'Não foi possível abrir esta missão agora. Verifique sua internet.';
+  if (texto.includes('no_santidade')) return tt('erro_sem_santidade');
+  if (texto.includes('lesson_locked')) return tt('conclua_missao');
+  if (texto.includes('lesson_empty')) return tt('erro_sem_perguntas');
+  return tt('erro_abrir');
 }
 
 async function iniciarLicaoDoServidor(trilha, indice) {
@@ -1494,7 +1966,7 @@ async function iniciarLicaoDoServidor(trilha, indice) {
 
   const conteudo = (dados.questions || []).map(converterPerguntaDoServidor);
   if (conteudo.length === 0) {
-    mostrarAvisoTrilhas('Esta missão ainda não tem perguntas para este perfil.');
+    mostrarAvisoTrilhas(tt('erro_sem_perguntas'));
     return;
   }
   const licao = { slug: resumo.slug, id: resumo.id, titulo: resumo.titulo, conteudo };
@@ -1519,6 +1991,7 @@ async function iniciarLicaoDoServidor(trilha, indice) {
 
   mudarDeView('view-licao');
   renderizarCabecalhoDaMissao(trilha, indice, licao);
+  avisarMascote('licao');
   const historia = textoNoIdioma(dados.story);
   if (historia) mostrarHistoriaDaLicao(historia);
   else renderizarPerguntaAtual();
@@ -1531,9 +2004,11 @@ function mostrarHistoriaDaLicao(texto) {
   licaoAtual.lendoHistoria = true;
   atualizarTopoDaLicao();
   corpo.innerHTML = `
-    <p class="licao-tipo">Leia antes de começar</p>
+    <p class="licao-tipo">${tt('leia_antes')}</p>
     <div class="licao-historia">${escaparHtmlDaTrilha(texto)}</div>`;
-  prepararRodapeDaLicao('Começar', true);
+  prepararRodapeDaLicao(tt('comecar'), true);
+  // Para a criança que ainda não lê, a Lumi conta a historinha
+  avisarMascote('historia', { texto });
 }
 
 async function verificarRespostaNoServidor() {
@@ -1548,7 +2023,7 @@ async function verificarRespostaNoServidor() {
 
   servidor.enviando = true;
   const botao = document.getElementById('licao-botao');
-  if (botao) { botao.disabled = true; botao.textContent = 'Verificando...'; }
+  if (botao) { botao.disabled = true; botao.textContent = tt('verificando'); }
 
   let resultado;
   try {
@@ -1561,8 +2036,8 @@ async function verificarRespostaNoServidor() {
     resultado = data;
   } catch (erro) {
     servidor.enviando = false;
-    if (botao) { botao.disabled = false; botao.textContent = 'Verificar'; }
-    mostrarAvisoTrilhas('Não foi possível conferir a resposta. Verifique sua internet e tente de novo.');
+    if (botao) { botao.disabled = false; botao.textContent = tt('verificar'); }
+    mostrarAvisoTrilhas(tt('erro_conferir'));
     return;
   }
   servidor.enviando = false;
@@ -1598,7 +2073,7 @@ async function finalizarLicaoNoServidor() {
   licaoAtual.finalizada = true;
   licaoAtual.servidor.respondidas = total;
   atualizarTopoDaLicao();
-  prepararRodapeDaLicao('Salvando...', false);
+  prepararRodapeDaLicao(tt('salvando'), false);
   const corpo = document.getElementById('licao-corpo');
 
   let r;
@@ -1607,8 +2082,8 @@ async function finalizarLicaoNoServidor() {
     if (error) throw error;
     r = data;
   } catch (erro) {
-    if (corpo) corpo.innerHTML = '<div class="licao-fim"><h2>Não foi possível salvar agora</h2><p class="licao-fim-sub">Verifique sua internet e faça a missão de novo.</p></div>';
-    prepararRodapeDaLicao('Voltar às trilhas', true);
+    if (corpo) corpo.innerHTML = `<div class="licao-fim"><h2>${tt('erro_salvar_titulo')}</h2><p class="licao-fim-sub">${tt('erro_salvar_texto')}</p></div>`;
+    prepararRodapeDaLicao(tt('voltar_trilhas'), true);
     return;
   }
   if (r.status === 'failed') {
@@ -1635,22 +2110,23 @@ async function finalizarLicaoNoServidor() {
     corpo.innerHTML = `
       <div class="licao-fim">
         <div class="licao-fim-icone">${insigniaNova ? icone('medalha') : icone('estrela')}</div>
-        <h2>Missão concluída!</h2>
+        <h2>${tt('missao_concluida')}</h2>
         <p class="licao-fim-sub">${licao.titulo} · ${trilha.titulo}</p>
-        <div class="licao-estrelas" aria-label="${r.stars} de 3 estrelas">${estrelasDaMissao(r.stars)}</div>
+        <div class="licao-estrelas" aria-label="${tt('estrelas', { n: r.stars })}">${estrelasDaMissao(r.stars)}</div>
         <div class="licao-fim-dados">
-          <div class="licao-fim-dado"><strong id="licao-fe-ganha">+${r.faith_awarded}</strong><span>de Fé</span></div>
-          <div class="licao-fim-dado"><strong>${r.correct}/${r.total}</strong><span>acertos</span></div>
+          <div class="licao-fim-dado"><strong id="licao-fe-ganha">+${r.faith_awarded}</strong><span>${tt('de_fe')}</span></div>
+          <div class="licao-fim-dado"><strong>${r.correct}/${r.total}</strong><span>${tt('acertos')}</span></div>
         </div>
         ${insigniaNova ? `
         <div class="insignia-conquistada">
           <div class="insignia-icone">${icone('medalha')}</div>
-          <h3>Insígnia de ${trilha.santo}</h3>
-          <p>Você concluiu a trilha inteira e ganhou a <b>Medalha da ${trilha.medalha}</b>.</p>
+          <h3>${tt('insignia_de', { santo: trilha.santo })}</h3>
+          <p>${tt('ganhou_medalha', { medalha: nomeDaMedalha(trilha) })}</p>
         </div>` : ''}
       </div>`;
   }
-  prepararRodapeDaLicao('Continuar', true);
+  avisarMascote('concluiu', { medalha: insigniaNova });
+  prepararRodapeDaLicao(tt('continuar'), true);
 }
 
 // ============================================================

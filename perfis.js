@@ -71,7 +71,16 @@ function desenharAvatar(avatarId, fotoUrl, tamanho) {
 }
 
 function aplicarModoKids() {
-  document.body.classList.toggle('modo-kids', !!(membroAtivo && membroAtivo.tipo === 'crianca'));
+  const eraCrianca = document.body.classList.contains('modo-kids');
+  const ehCrianca = !!(membroAtivo && membroAtivo.tipo === 'crianca');
+  document.body.classList.toggle('modo-kids', ehCrianca);
+  // A Lumi (mascote.js) aparece só para crianças: ao trocar de perfil,
+  // ela para de falar e some se o perfil novo for de adulto.
+  if (eraCrianca !== ehCrianca || ehCrianca) avisarLumiDaTrocaDePerfil();
+}
+
+function avisarLumiDaTrocaDePerfil() {
+  if (typeof mascoteReage === 'function') mascoteReage('perfil');
 }
 
 function limparPerfilAtivo() {
@@ -79,6 +88,7 @@ function limparPerfilAtivo() {
   estadoEmMemoriaDaConta = null;
   try { localStorage.removeItem(CHAVE_MEMBRO_ATIVO); } catch (e) { /* sem problema */ }
   document.body.classList.remove('modo-kids');
+  avisarLumiDaTrocaDePerfil();
 }
 
 // ============================================================
@@ -294,29 +304,29 @@ function renderizarFaixaDaConta() {
 
   if (modoConta() && membroAtivo) {
     faixa.innerHTML = `
-      <button class="trilhas-perfil" id="trilhas-perfil-atual" aria-label="Ver meu perfil">
+      <button class="trilhas-perfil" id="trilhas-perfil-atual" aria-label="${tt('faixa_ver_perfil')}">
         ${desenharAvatar(membroAtivo.avatar, membroAtivo.fotoUrl, 'pequeno')}
         <span>${escaparTexto(membroAtivo.nome)}</span>
       </button>
       <div class="trilhas-conta-acoes">
-        <button class="trilhas-acao" id="trilhas-abrir-ranking">${icone('trofeu')}<span>Ranking</span></button>
-        <button class="trilhas-acao" id="trilhas-trocar-perfil">${icone('usuarios')}<span>Trocar perfil</span></button>
+        <button class="trilhas-acao" id="trilhas-abrir-ranking">${icone('trofeu')}<span>${tt('faixa_ranking')}</span></button>
+        <button class="trilhas-acao" id="trilhas-trocar-perfil">${icone('usuarios')}<span>${tt('faixa_trocar')}</span></button>
       </div>`;
     document.getElementById('trilhas-perfil-atual').addEventListener('click', () => abrirPainelDoPerfil(membroAtivo.id));
     document.getElementById('trilhas-abrir-ranking').addEventListener('click', () => abrirRanking());
     document.getElementById('trilhas-trocar-perfil').addEventListener('click', () => abrirSelecaoDePerfis('trilhas'));
-    if (nota) nota.textContent = 'Seu progresso fica salvo na sua conta, neste perfil.';
+    if (nota) nota.textContent = tt('nota_conta');
   } else if (typeof supabaseCliente !== 'undefined' && supabaseCliente) {
     faixa.innerHTML = `
       <div class="trilhas-convite">
-        <p>Entre na sua conta para salvar seu progresso, criar perfis para a família e participar do ranking.</p>
-        <button class="filter-btn active" id="trilhas-entrar">Entrar ou criar conta</button>
+        <p>${tt('convite_conta')}</p>
+        <button class="filter-btn active" id="trilhas-entrar">${tt('entrar_ou_criar')}</button>
       </div>`;
     document.getElementById('trilhas-entrar').addEventListener('click', () => irParaLogin());
-    if (nota) nota.textContent = 'Sem conta, seu progresso fica salvo só neste aparelho.';
+    if (nota) nota.textContent = tt('nota_sem_conta');
   } else {
     faixa.innerHTML = '';
-    if (nota) nota.textContent = 'Seu progresso fica salvo neste aparelho.';
+    if (nota) nota.textContent = tt('nota_aparelho');
   }
 }
 
@@ -550,7 +560,7 @@ async function abrirPainelDoPerfil(membroId) {
     const feitas = new Set((resProgresso.data || []).filter((l) => l.times_completed > 0).map((l) => l.lesson_id));
     const insignias = trilhas.filter((t) => t.licoes.length > 0 && t.licoes.every((l) => feitas.has(l.id)));
     const itens = insignias.map((trilha) => (
-      `<li class="painel-insignia">${icone('medalha')}<span><b>${trilha.santo}</b> · Medalha da ${escaparTexto(trilha.medalha)}</span></li>`
+      `<li class="painel-insignia">${icone('medalha')}<span><b>${trilha.santo}</b> · ${escaparTexto(nomeDaMedalha(trilha))}</span></li>`
     )).join('');
 
     conteudo.innerHTML = `

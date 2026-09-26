@@ -627,7 +627,7 @@ const santosData = [
     resumo: 'A jovem carmelita que ensinou o mundo a alcançar o céu através da sua "Pequena Via".',
     texto: `
       <p>Entrou para o Carmelo muito jovem e desenvolveu a "Pequena Via": fazer as coisas simples do dia a dia com extraordinário amor. Faleceu em 1897 aos 24 anos, deixando sua autobiografia "História de uma Alma" e sendo depois declarada Doutora da Igreja.</p>
-      <p>Caçula de nove irmãos, perdeu a mãe aos quatro anos e foi criada pelas irmãs mais velhas, que uma a uma também entraram para a vida religiosa. Obteve, com insistência extraordinária para sua idade, permissão especial do próprio Papa Leão XIII para entrar no Carmelo ainda aos quinze anos. Viveu uma vida oculta e simples dentro do convento, oferecendo cada pequeno gesto como oferta de amor a Deus, ensinando que não é preciso feitos grandiosos para alcançar a santidade. Morreu de tuberculose ainda jovem, prometendo "passar o céu fazendo o bem na terra".</p>
+      <p>Caçula de nove irmãos, perdeu a mãe aos quatro anos e foi criada pelas irmãs mais velhas, que uma a uma também entraram para a vida religiosa. Com insistência extraordinária para sua idade, chegou a pedir pessoalmente ao Papa Leão XIII e obteve permissão especial para entrar no Carmelo ainda aos quinze anos. Viveu uma vida oculta e simples dentro do convento, oferecendo cada pequeno gesto como oferta de amor a Deus, ensinando que não é preciso feitos grandiosos para alcançar a santidade. Morreu de tuberculose ainda jovem, prometendo "passar o céu fazendo o bem na terra".</p>
     `
   },
   {
@@ -639,7 +639,7 @@ const santosData = [
     resumo: 'A "plantinha de São Francisco" que fundou a ordem das Clarissas com radical amor à pobreza.',
     texto: `
       <p>Seguidora fiel de São Francisco, fugiu de casa para consagrar sua vida a Deus na absoluta pobreza, fundando a Ordem das Clarissas e protegendo seu convento com a imensa força espiritual do Santíssimo Sacramento.</p>
-      <p>Nascida em família nobre de Assis, ouviu Francisco pregar ainda adolescente e decidiu, aos dezoito anos, fugir de casa numa noite para se juntar a ele, cortando os próprios cabelos diante do altar como sinal de consagração. Resistiu à fúria da família, que tentou arrastá-la de volta à força, e fundou o ramo feminino do movimento franciscano. Há um episódio famoso em que, com o convento cercado por soldados sarracenos, ela se ergueu à porta segurando a hóstia consagrada — e o exército, tomado de temor, recuou. Foi a primeira mulher da história a escrever uma regra religiosa para outras mulheres.</p>
+      <p>Nascida em família nobre de Assis, ouviu Francisco pregar ainda adolescente e decidiu, aos dezoito anos, fugir de casa numa noite para se juntar a ele, tendo os cabelos cortados diante do altar como sinal de consagração. Resistiu à fúria da família, que tentou arrastá-la de volta à força, e fundou o ramo feminino do movimento franciscano. Há um episódio famoso em que, com o convento cercado por soldados sarracenos, ela se ergueu à porta segurando a hóstia consagrada — e o exército, tomado de temor, recuou. Foi a primeira mulher da história a escrever uma regra religiosa para outras mulheres.</p>
     `
   },
   {
@@ -664,7 +664,7 @@ const santosData = [
     resumo: 'Uma jovem radiante que transformou a dor de um câncer terminal em prova de amor a Deus.',
     texto: `
       <p>Chiara nasceu na Itália em 1971. Aos 16 anos, foi diagnosticada com um câncer ósseo agressivo. Em vez de se revoltar, acolheu a cruz com a frase: "Se é isso que Tu queres, Jesus, eu também quero". Faleceu aos 18 anos, deixando um testemunho de alegria inabalável.</p>
-      <p>Antes da doença, era uma adolescente comum, apaixonada por tênis e dança, envolvida desde criança no Movimento dos Focolares. Ao sentir uma dor nas costas que revelou o tumor, recusou doses de morfina que a deixassem sonolenta, dizendo que queria viver conscientemente cada instante que lhe restava. Recebia amigos e outros jovens doentes com um sorriso constante, tornando-se conhecida por sua serenidade diante da dor. Foi beatificada em 2010, um dos rostos mais próximos de santidade para a juventude contemporânea.</p>
+      <p>Antes da doença, era uma adolescente comum, apaixonada por tênis e dança, envolvida desde criança no Movimento dos Focolares. Uma dor no ombro, sentida numa partida de tênis, revelou o tumor. Durante o tratamento, recusou doses de morfina que a deixassem sonolenta, dizendo que queria viver conscientemente cada instante que lhe restava. Recebia amigos e outros jovens doentes com um sorriso constante, tornando-se conhecida por sua serenidade diante da dor. Foi beatificada em 2010, um dos rostos mais próximos de santidade para a juventude contemporânea.</p>
     `
   },
   {
@@ -928,8 +928,8 @@ const santosData = [
     wiki: 'Policarpo de Esmirna',
     categoria: ['grandes-santos'],
     festa: '02-23',
-    resumo: 'Discípulo do apóstolo João, bispo mártir queimado por recusar negar a Cristo aos 86 anos.',
-    texto: `<p>Ainda jovem, foi discípulo direto do apóstolo João, tornando-se elo vivo entre a geração apostólica e a Igreja seguinte como bispo de Esmirna. Já idoso, foi preso durante uma perseguição e, ao ser pressionado a amaldiçoar Cristo para salvar a vida, respondeu: "Há oitenta e seis anos o sirvo, e ele nunca me fez mal algum — como posso blasfemar contra meu Rei e Salvador?" Foi queimado vivo.</p>`
+    resumo: 'Discípulo do apóstolo João, bispo mártir condenado à fogueira por recusar negar a Cristo aos 86 anos.',
+    texto: `<p>Ainda jovem, foi discípulo direto do apóstolo João, tornando-se elo vivo entre a geração apostólica e a Igreja seguinte como bispo de Esmirna. Já idoso, foi preso durante uma perseguição e, ao ser pressionado a amaldiçoar Cristo para salvar a vida, respondeu: "Há oitenta e seis anos o sirvo, e ele nunca me fez mal algum — como posso blasfemar contra meu Rei e Salvador?" Foi condenado à fogueira.</p>`
   },
 
   // ---------------- MARÇO ----------------
@@ -994,7 +994,7 @@ const santosData = [
     categoria: ['grandes-santos'],
     festa: '03-23',
     resumo: 'Bispo espanhol que percorreu a pé o Peru colonial evangelizando e defendendo os indígenas.',
-    texto: `<p>Jurista leigo enviado inesperadamente como arcebispo de Lima, Turíbio percorreu a cavalo e a pé, por décadas, um território imenso do Peru colonial, aprendendo línguas indígenas e denunciando os abusos dos colonizadores contra a população nativa. Batizou, segundo a tradição, futuros santos como Rosa de Lima e Martín de Porres.</p>`
+    texto: `<p>Jurista leigo enviado inesperadamente como arcebispo de Lima, Turíbio percorreu a cavalo e a pé, por décadas, um território imenso do Peru colonial, aprendendo línguas indígenas e denunciando os abusos dos colonizadores contra a população nativa. Crismou, segundo a tradição, futuros santos como Rosa de Lima e Martín de Porres.</p>`
   },
 
   // ---------------- ABRIL ----------------
@@ -1236,7 +1236,7 @@ const santosData = [
     categoria: ['grandes-santos'],
     festa: '07-01',
     resumo: 'Frade franciscano espanhol, fundador das missões que deram origem a cidades da Califórnia.',
-    texto: `<p>Professor de filosofia na Espanha, Junípero Serra deixou a vida acadêmica para se tornar missionário nas Américas, já com quase quarenta anos. Apesar de uma perna ferida que o acompanhou o resto da vida, caminhou milhares de quilômetros fundando missões na Califórnia que deram origem a cidades como San Francisco e Los Angeles.</p>`
+    texto: `<p>Professor de filosofia na Espanha, Junípero Serra deixou a vida acadêmica para se tornar missionário nas Américas, já com quase quarenta anos. Apesar de uma perna ferida que o acompanhou o resto da vida, caminhou milhares de quilômetros fundando missões na Califórnia que deram origem a cidades como San Diego e San Francisco.</p>`
   },
   {
     id: 'tome-apostolo',
@@ -1411,7 +1411,7 @@ const santosData = [
     categoria: ['grandes-santos'],
     festa: '09-20',
     resumo: 'Primeiro padre coreano, martirizado com mais de cem companheiros leigos.',
-    texto: `<p>Filho de uma família convertida ao cristianismo em segredo em uma Coreia hostil à fé cristã, André Kim tornou-se o primeiro padre nascido coreano, ordenado após estudar clandestinamente no exterior. Foi decapitado aos 25 anos junto com o pai e é celebrado ao lado de mais de cem mártires coreanos, leigos em sua maioria, que deram a vida entre os séculos XVIII e XIX.</p>`
+    texto: `<p>Filho de uma família convertida ao cristianismo em segredo em uma Coreia hostil à fé cristã, André Kim tornou-se o primeiro padre nascido coreano, ordenado após estudar clandestinamente no exterior. Foi decapitado aos 25 anos, alguns anos depois do martírio do próprio pai, e é celebrado ao lado de mais de cem mártires coreanos, leigos em sua maioria, que deram a vida entre os séculos XVIII e XIX.</p>`
   },
   {
     id: 'mateus-apostolo',
@@ -1420,7 +1420,7 @@ const santosData = [
     categoria: ['grandes-santos'],
     festa: '09-21',
     resumo: 'Cobrador de impostos que largou tudo ao ouvir Jesus chamá-lo, tornando-se apóstolo e evangelista.',
-    texto: `<p>Cobrador de impostos romano — profissão desprezada pelos judeus de sua época por servir ao invasor —, Mateus estava sentado à sua mesa de cobrança quando Jesus simplesmente disse "Segue-me", e ele largou tudo imediatamente. Tornou-se apóstolo e autor do primeiro Evangelho, escrito especialmente para mostrar aos judeus que Jesus era o Messias prometido nas Escrituras.</p>`
+    texto: `<p>Cobrador de impostos a serviço de Roma — profissão desprezada pelos judeus de sua época por servir ao invasor —, Mateus estava sentado à sua mesa de cobrança quando Jesus simplesmente disse "Segue-me", e ele largou tudo imediatamente. Tornou-se apóstolo e autor do primeiro Evangelho, escrito especialmente para mostrar aos judeus que Jesus era o Messias prometido nas Escrituras.</p>`
   },
 
   // ---------------- OUTUBRO ----------------
@@ -1505,7 +1505,7 @@ const santosData = [
     categoria: ['doutores'],
     festa: '11-10',
     resumo: 'Papa que convenceu Átila, o Huno, a não invadir Roma, e defendeu a doutrina sobre Cristo.',
-    texto: `<p>Um dos papas mais influentes da Antiguidade, Leão é lembrado por ter saído pessoalmente ao encontro de Átila, o Huno, convencendo-o a não avançar sobre Roma. Sua carta doutrinal sobre as duas naturezas de Cristo, humana e divina, foi decisiva no Concílio de Calcedônia. É Doutor da Igreja e recebeu, ainda em vida, o título de "Magno" — o Grande.</p>`
+    texto: `<p>Um dos papas mais influentes da Antiguidade, Leão é lembrado por ter saído pessoalmente ao encontro de Átila, o Huno, convencendo-o a não avançar sobre Roma. Sua carta doutrinal sobre as duas naturezas de Cristo, humana e divina, foi decisiva no Concílio de Calcedônia. É Doutor da Igreja e é chamado "Magno" — o Grande.</p>`
   },
   {
     id: 'martinho-tours',
@@ -1634,10 +1634,334 @@ const santosData = [
     festa: '12-29',
     resumo: 'Arcebispo de Cantuária, assassinado dentro da própria catedral por defender a Igreja diante do rei.',
     texto: `<p>Amigo próximo e chanceler do rei Henrique II da Inglaterra, Tomás Becket surpreendeu a todos ao se tornar, como arcebispo de Cantuária, um firme defensor da independência da Igreja diante do poder real — o que rompeu sua amizade com o rei. Foi assassinado por cavaleiros dentro da própria catedral, tornando-se um dos símbolos mais fortes da liberdade da Igreja diante do Estado.</p>`
+  },
+  // ---- Santos que o aplicativo já tinha e o site ainda não (os mesmos do
+  // lumina-app/content/novos-santos.json, com duas correções de fatos) ----
+  {
+    id: 'charbel-makhlouf',
+    nome: 'São Charbel Makhlouf',
+    wiki: 'Charbel Makhlouf',
+    categoria: ['grandes-santos'],
+    festa: '07-24',
+    resumo: 'O monge eremita do Líbano, conhecido pelo silêncio, pela oração e pelas curas junto ao seu túmulo.',
+    texto: `
+      <p>Youssef Antoun Makhlouf nasceu no Líbano em 1828. Ainda jovem, entrou para o mosteiro maronita de São Marão, em Annaya, e recebeu o nome de Charbel. Depois de muitos anos de vida comunitária, foi autorizado a viver como eremita, em 1875, numa pequena ermida ao lado do mosteiro.</p>
+      <p>Passou o resto da vida em oração, silêncio, trabalho e penitência, com grande amor à Eucaristia. Morreu em 1898, e desde então muitos fiéis relatam graças e curas junto ao seu túmulo. Foi canonizado por Paulo VI em 1977 e é venerado por cristãos de todo o Oriente e do mundo inteiro.</p>
+    `
+  },
+  {
+    id: 'gianna-molla',
+    nome: 'Santa Gianna Beretta Molla',
+    wiki: 'Gianna Beretta Molla',
+    categoria: ['grandes-santos'],
+    festa: '04-28',
+    resumo: 'A médica e mãe italiana que deu a vida para que sua filha pudesse nascer.',
+    texto: `
+      <p>Gianna Beretta nasceu na Itália em 1922 e se formou em Medicina e Cirurgia, com especialização em pediatria. Casou-se com Pietro Molla, teve filhos e continuou a exercer a profissão com muito carinho pelos pacientes, especialmente mães e crianças.</p>
+      <p>Na quarta gravidez, descobriu um tumor no útero e, com plena consciência dos riscos, pediu que a vida do bebê fosse protegida. Em abril de 1962, nasceu sua filha Gianna Emanuela, e a mãe morreu uma semana depois. Foi canonizada por João Paulo II em 2004.</p>
+    `
+  },
+  {
+    id: 'damiao-molokai',
+    nome: 'São Damião de Molokai',
+    wiki: 'Damião de Molokai',
+    categoria: ['grandes-santos'],
+    festa: '05-10',
+    resumo: 'O padre belga que serviu aos doentes de hanseníase na ilha havaiana de Molokai.',
+    texto: `
+      <p>Jozef De Veuster nasceu na Bélgica em 1840 e entrou na Congregação dos Sagrados Corações, tomando o nome de Damião. Foi enviado como missionário ao Havaí e, em 1873, ofereceu-se para servir aos doentes de hanseníase que viviam isolados na península de Kalaupapa, na ilha de Molokai.</p>
+      <p>Ali ele cuidou dos doentes, construiu casas e uma igreja, organizou a comunidade e celebrou os sacramentos. Anos depois, contraiu a própria doença e morreu em 1889. Foi canonizado por Bento XVI em 2009 e é lembrado como exemplo de caridade sem medo.</p>
+    `
+  },
+  {
+    id: 'paulo-vi',
+    nome: 'São Paulo VI',
+    wiki: 'Papa Paulo VI',
+    categoria: ['grandes-santos'],
+    festa: '05-29',
+    resumo: 'O papa que conduziu a Igreja durante e depois do Concílio Vaticano II.',
+    texto: `
+      <p>Giovanni Battista Montini nasceu na Itália em 1897 e foi ordenado sacerdote em 1920. Trabalhou na Secretaria de Estado do Vaticano, foi arcebispo de Milão e, em 1963, foi eleito papa com o nome de Paulo VI.</p>
+      <p>Deu continuidade ao Concílio Vaticano II, encerrado em 1965, e fez viagens históricas, como as que realizou à Terra Santa e à sede da ONU. Governou a Igreja até sua morte, em 1978. Foi canonizado pelo Papa Francisco em 2018.</p>
+    `
+  },
+  {
+    id: 'joao-xxiii',
+    nome: 'São João XXIII',
+    wiki: 'Papa João XXIII',
+    categoria: ['grandes-santos'],
+    festa: '10-11',
+    resumo: 'O "Papa Bom", que convocou o Concílio Vaticano II.',
+    texto: `
+      <p>Angelo Giuseppe Roncalli nasceu em 1881, numa família camponesa do norte da Itália. Foi sacerdote, diplomata a serviço da Santa Sé e patriarca de Veneza, até ser eleito papa em 1958, com o nome de João XXIII.</p>
+      <p>Conhecido pela simplicidade e pela bondade, convocou o Concílio Vaticano II, que abriu em 1962. Morreu em 1963, antes do fim do Concílio. Foi canonizado em 2014, juntamente com João Paulo II, pelo Papa Francisco.</p>
+    `
+  },
+  {
+    id: 'oscar-romero',
+    nome: 'São Óscar Romero',
+    wiki: 'Óscar Romero',
+    categoria: ['grandes-santos'],
+    festa: '03-24',
+    resumo: 'O arcebispo de San Salvador que defendeu os pobres e foi morto enquanto celebrava a Missa.',
+    texto: `
+      <p>Óscar Arnulfo Romero nasceu em El Salvador, em 1917. Foi sacerdote, bispo e, em 1977, tornou-se arcebispo de San Salvador. Diante da violência que atingia o povo de seu país, passou a denunciar as injustiças e a defender a dignidade dos mais pobres.</p>
+      <p>Em 24 de março de 1980, foi assassinado enquanto celebrava a Missa numa capela de hospital. Foi beatificado em 2015 e canonizado pelo Papa Francisco em 2018.</p>
+    `
+  },
+  {
+    id: 'josemaria-escriva',
+    nome: 'São Josemaria Escrivá',
+    wiki: 'Josemaria Escrivá',
+    categoria: ['grandes-santos'],
+    festa: '06-26',
+    resumo: 'O sacerdote espanhol que ensinou que o trabalho de cada dia pode ser caminho de santidade.',
+    texto: `
+      <p>Josemaria Escrivá nasceu na Espanha em 1902 e foi ordenado sacerdote em 1925. Em 2 de outubro de 1928, fundou o Opus Dei, obra que promove a busca da santidade no trabalho e nas tarefas comuns da vida.</p>
+      <p>Ensinou que a vida diária, feita com amor e competência, pode ser oferecida a Deus. Morreu em Roma, em 1975, e foi canonizado por João Paulo II em 2002.</p>
+    `
+  },
+  {
+    id: 'camilo-lelis',
+    nome: 'São Camilo de Lellis',
+    wiki: 'Camilo de Lellis',
+    categoria: ['grandes-santos'],
+    festa: '07-14',
+    resumo: 'O soldado que se converteu e dedicou a vida ao cuidado dos doentes.',
+    texto: `
+      <p>Camilo de Lellis nasceu na Itália em 1550 e, na juventude, foi soldado e jogador. Depois de uma conversão profunda, passou a trabalhar num hospital em Roma, onde percebeu como os doentes eram muitas vezes maltratados.</p>
+      <p>Ordenado sacerdote, fundou a Ordem dos Ministros dos Enfermos, os camilianos, dedicados ao cuidado dos doentes, inclusive em tempos de peste. Morreu em 1614 e é padroeiro dos doentes, dos hospitais e dos profissionais de saúde.</p>
+    `
+  },
+  {
+    id: 'roberto-belarmino',
+    nome: 'São Roberto Belarmino',
+    wiki: 'Roberto Belarmino',
+    categoria: ['doutores'],
+    festa: '09-17',
+    resumo: 'O jesuíta e cardeal, Doutor da Igreja, autor de um famoso catecismo.',
+    texto: `
+      <p>Roberto Belarmino nasceu na Itália em 1542 e entrou na Companhia de Jesus. Foi professor, escritor e teólogo, e tornou-se cardeal. Seus estudos sobre a fé católica foram muito importantes numa época de grandes debates religiosos.</p>
+      <p>Escreveu catecismos simples, usados para ensinar a doutrina a crianças e adultos. Morreu em 1621 e foi declarado Doutor da Igreja em 1931.</p>
+    `
+  },
+  {
+    id: 'gemma-galgani',
+    nome: 'Santa Gemma Galgani',
+    wiki: 'Gemma Galgani',
+    categoria: ['grandes-santos', 'santos-jovens'],
+    festa: '04-11',
+    resumo: 'A jovem mística de Lucca, conhecida pela oração e pelo amor à Paixão de Cristo.',
+    texto: `
+      <p>Gemma Galgani nasceu em Lucca, na Itália, em 1878. Ficou órfã ainda jovem e passou por muitas dificuldades de saúde e de dinheiro, vividas com fé e paciência.</p>
+      <p>Era conhecida pela oração intensa e pela devoção à Paixão de Cristo. Morreu em 1903, aos 25 anos, e foi canonizada em 1940.</p>
+    `
+  },
+  {
+    id: 'gerardo-majela',
+    nome: 'São Gerardo Majela',
+    wiki: 'Gerardo Majela',
+    categoria: ['grandes-santos', 'santos-jovens'],
+    festa: '10-16',
+    resumo: 'O irmão redentorista, padroeiro das mães que esperam bebê.',
+    texto: `
+      <p>Gerardo Majela nasceu na Itália em 1726, numa família humilde, e trabalhou desde jovem como aprendiz de alfaiate. Entrou para os Redentoristas como irmão leigo, fazendo serviços simples e cuidando dos necessitados.</p>
+      <p>Morreu em 1755, com 29 anos. Foi canonizado em 1904 e é invocado como padroeiro das gestantes e das mães.</p>
+    `
+  },
+  {
+    id: 'leopoldo-mandic',
+    nome: 'São Leopoldo Mandić',
+    wiki: 'Leopoldo Mandić',
+    categoria: ['grandes-santos'],
+    festa: '05-12',
+    resumo: 'O pequeno frade capuchinho que passava horas no confessionário.',
+    texto: `
+      <p>Bogdan Ivan Mandić nasceu em 1866, numa família croata de Herceg Novi, na costa da Dalmácia (hoje Montenegro), e entrou na Ordem dos Frades Menores Capuchinhos, tomando o nome de Leopoldo. Tinha baixa estatura e saúde frágil, mas grande bondade no trato com as pessoas.</p>
+      <p>Viveu muitos anos em Pádua, na Itália, onde atendia confissões durante longas horas por dia. Morreu em 1942 e foi canonizado em 1983 por João Paulo II.</p>
+    `
+  },
+  {
+    id: 'maria-mazzarello',
+    nome: 'Santa Maria Domingas Mazzarello',
+    wiki: 'Maria Domenica Mazzarello',
+    categoria: ['grandes-santos'],
+    festa: '05-13',
+    resumo: 'A cofundadora das Irmãs Salesianas, dedicada à educação de meninas.',
+    texto: `
+      <p>Maria Domingas Mazzarello nasceu na Itália em 1837, numa família de camponeses. Ainda jovem, dedicou-se a ensinar meninas do seu povoado, com trabalhos práticos e catequese.</p>
+      <p>Com o apoio de São João Bosco, fundou o Instituto das Filhas de Maria Auxiliadora, as Irmãs Salesianas, voltado à educação de jovens. Morreu em 1881 e foi canonizada em 1951.</p>
+    `
+  },
+  {
+    id: 'luis-orione',
+    nome: 'São Luís Orione',
+    wiki: 'Luís Orione',
+    categoria: ['grandes-santos'],
+    festa: '03-12',
+    resumo: 'O padre italiano dos pobres, fundador da Pequena Obra da Divina Providência.',
+    texto: `
+      <p>Luís Orione nasceu na Itália em 1872 e conheceu São João Bosco ainda menino. Depois de ordenado sacerdote, fundou a Pequena Obra da Divina Providência, que cuida de pobres, órfãos, doentes e idosos.</p>
+      <p>Enviou missionários a vários países, inclusive ao Brasil. Morreu em 1940 e foi canonizado em 2004.</p>
+    `
+  },
+  {
+    id: 'edwiges',
+    nome: 'Santa Edwiges',
+    wiki: 'Edviges da Silésia',
+    categoria: ['grandes-santos'],
+    festa: '10-16',
+    resumo: 'A duquesa da Silésia que ajudou os pobres e é invocada pelos endividados.',
+    texto: `
+      <p>Edwiges nasceu no século XII e casou-se com o duque Henrique I da Silésia. Mesmo sendo duquesa, vivia com simplicidade, fundou um mosteiro e ajudou muitos pobres e doentes.</p>
+      <p>Depois da morte do marido, retirou-se para o mosteiro, onde viveu até morrer, em 1243. Foi canonizada em 1267 e, no Brasil, é muito invocada por pessoas com dificuldades financeiras.</p>
+    `
+  },
+  {
+    id: 'zita',
+    nome: 'Santa Zita',
+    wiki: 'Zita de Lucca',
+    categoria: ['grandes-santos'],
+    festa: '04-27',
+    resumo: 'A empregada doméstica de Lucca, padroeira de quem trabalha nos serviços da casa.',
+    texto: `
+      <p>Zita nasceu na Itália, no século XIII, numa família pobre, e começou a trabalhar como empregada doméstica ainda menina. Serviu por décadas numa mesma casa, fazendo o trabalho de cada dia com cuidado e oração.</p>
+      <p>Era generosa com os pobres e paciente com quem a tratava mal. Morreu em 1272 e é padroeira dos empregados domésticos.</p>
+    `
+  },
+  {
+    id: 'teresa-dos-andes',
+    nome: 'Santa Teresa dos Andes',
+    wiki: 'Teresa dos Andes',
+    categoria: ['grandes-santos', 'santos-jovens'],
+    festa: '04-12',
+    resumo: 'A jovem carmelita chilena, primeira santa do Chile.',
+    texto: `
+      <p>Juanita Fernández Solar nasceu em Santiago do Chile, em 1900. Desde criança era alegre, gostava de esportes e de montar a cavalo, e tinha grande vida de oração.</p>
+      <p>Aos 19 anos, entrou no Carmelo de Los Andes, recebendo o nome de Teresa de Jesus. Morreu em 1920, menos de um ano depois, e foi canonizada por João Paulo II em 1993, a primeira santa chilena.</p>
+    `
+  },
+  {
+    id: 'pedro-eymard',
+    nome: 'São Pedro Julião Eymard',
+    wiki: 'Pedro Julião Eymard',
+    categoria: ['grandes-santos'],
+    festa: '08-02',
+    resumo: 'O sacerdote francês conhecido como apóstolo da Eucaristia.',
+    texto: `
+      <p>Pedro Julião Eymard nasceu na França em 1811 e foi ordenado sacerdote em 1834. Depois de alguns anos na Sociedade de Maria, sentiu-se chamado a difundir a adoração ao Santíssimo Sacramento.</p>
+      <p>Fundou a Congregação do Santíssimo Sacramento e promoveu a adoração eucarística. Morreu em 1868 e foi canonizado em 1962.</p>
+    `
+  },
+  {
+    id: 'nha-chica',
+    nome: 'Beata Nhá Chica',
+    wiki: 'Nhá Chica',
+    categoria: ['beatos'],
+    festa: '06-14',
+    resumo: 'A mulher simples de Baependi (MG), conselheira dos pobres e primeira beata leiga negra do Brasil.',
+    texto: `
+      <p>Francisca de Paula de Jesus, conhecida como Nhá Chica, nasceu por volta de 1808 em Minas Gerais. Não estudou, mas era muito procurada por sua sabedoria, seus conselhos e sua oração.</p>
+      <p>Usou os poucos recursos que tinha para ajudar os pobres e construiu uma capela em Baependi. Morreu em 1895 e foi beatificada em 2013.</p>
+    `
+  },
+  {
+    id: 'albertina-berkenbrock',
+    nome: 'Beata Albertina Berkenbrock',
+    wiki: 'Albertina Berkenbrock',
+    categoria: ['beatos', 'santos-jovens'],
+    festa: '06-15',
+    resumo: 'A menina catarinense de 12 anos, beatificada como mártir da pureza.',
+    texto: `
+      <p>Albertina Berkenbrock nasceu em Santa Catarina, em 1919, numa família de agricultores de origem alemã. Era uma menina piedosa, que ajudava a família e ia à igreja com frequência.</p>
+      <p>Foi assassinada em 1931, aos 12 anos, ao defender sua dignidade. Foi beatificada em 2007, a primeira beata catarinense.</p>
+    `
+  },
+  {
+    id: 'catarina-laboure',
+    nome: 'Santa Catarina Labouré',
+    wiki: 'Catarina Labouré',
+    categoria: ['grandes-santos'],
+    festa: '11-28',
+    resumo: 'A irmã vicentina a quem foi confiada a Medalha Milagrosa.',
+    texto: `
+      <p>Catarina Labouré nasceu na França em 1806, numa família de camponeses. Entrou na Companhia das Filhas da Caridade, em Paris, onde viveu com simplicidade cuidando de idosos.</p>
+      <p>Em 1830, relatou aparições de Nossa Senhora, que lhe pediu para cunhar a Medalha Milagrosa. Morreu em 1876 e foi canonizada em 1947.</p>
+    `
+  },
+  {
+    id: 'isabel-portugal',
+    nome: 'Santa Isabel de Portugal',
+    wiki: 'Isabel de Aragão, Rainha de Portugal',
+    categoria: ['grandes-santos'],
+    festa: '07-04',
+    resumo: 'A rainha portuguesa conhecida como pacificadora.',
+    texto: `
+      <p>Isabel de Aragão nasceu em 1271 e casou-se com o rei Dinis de Portugal. Como rainha, ajudou os pobres, fundou hospitais e obras de caridade e trabalhou pela paz entre familiares em conflito.</p>
+      <p>Depois de ficar viúva, viveu junto ao convento de Santa Clara, em Coimbra. Morreu em 1336 e foi canonizada em 1625.</p>
+    `
+  },
+  {
+    id: 'nuno-alvares',
+    nome: 'São Nuno de Santa Maria',
+    wiki: 'Nuno Álvares Pereira',
+    categoria: ['grandes-santos'],
+    festa: '11-06',
+    resumo: 'O condestável de Portugal que terminou a vida como frade carmelita.',
+    texto: `
+      <p>Nuno Álvares Pereira nasceu em 1360 e destacou-se como militar, defendendo a independência de Portugal, com vitórias como a de Aljubarrota, em 1385.</p>
+      <p>Depois de cumprir seus deveres, distribuiu seus bens e entrou no Convento do Carmo, em Lisboa, como irmão Nuno de Santa Maria. Morreu em 1431 e foi canonizado em 2009.</p>
+    `
+  },
+  {
+    id: 'joao-de-britto',
+    nome: 'São João de Britto',
+    wiki: 'João de Brito',
+    categoria: ['grandes-santos'],
+    festa: '02-04',
+    resumo: 'O jesuíta português mártir na Índia.',
+    texto: `
+      <p>João de Britto nasceu em Lisboa, em 1647, e foi criado na corte. Entrou para a Companhia de Jesus e partiu como missionário para a Índia.</p>
+      <p>Adaptou-se à cultura local, vivendo com simplicidade. Foi morto em 1693 e canonizado em 1947.</p>
+    `
+  },
+  {
+    id: 'charles-foucauld',
+    nome: 'São Carlos de Foucauld',
+    wiki: 'Charles de Foucauld',
+    categoria: ['grandes-santos'],
+    festa: '12-01',
+    resumo: 'O eremita do Saara que quis viver o Evangelho no silêncio e na amizade.',
+    texto: `
+      <p>Charles de Foucauld nasceu na França em 1858. Após uma juventude marcada pela vida militar, teve uma profunda conversão e viveu como monge, depois como sacerdote, no Saara argelino.</p>
+      <p>Ali viveu entre os tuaregues, com humildade, amizade e oração. Foi morto em 1916 e canonizado pelo Papa Francisco em 2022.</p>
+    `
+  },
+  {
+    id: 'grignion-montfort',
+    nome: 'São Luís Maria Grignion de Montfort',
+    wiki: 'Luís Maria Grignion de Montfort',
+    categoria: ['grandes-santos'],
+    festa: '04-28',
+    resumo: 'O missionário francês que ensinou a verdadeira devoção a Maria.',
+    texto: `
+      <p>Luís Maria Grignion de Montfort nasceu na França em 1673 e foi ordenado sacerdote em 1700. Pregou missões populares por muitas regiões do país, sempre com grande amor a Nossa Senhora.</p>
+      <p>Escreveu o "Tratado da Verdadeira Devoção à Santíssima Virgem". Morreu em 1716 e foi canonizado em 1947.</p>
+    `
+  },
+  {
+    id: 'tarcisio',
+    nome: 'São Tarcísio',
+    wiki: 'Tarcísio',
+    categoria: ['santos-jovens'],
+    festa: '08-15',
+    resumo: 'O menino romano que protegeu a Eucaristia, padroeiro dos coroinhas.',
+    texto: `
+      <p>Segundo a tradição, Tarcísio era um jovem cristão que vivia em Roma nos primeiros séculos da Igreja, no tempo das perseguições. Certa vez, foi encarregado de levar a Eucaristia a cristãos presos.</p>
+      <p>No caminho, foi atacado e morreu protegendo o Santíssimo Sacramento. É venerado como padroeiro dos coroinhas e dos ministros extraordinários da Comunhão.</p>
+    `
   }
 ];
-
-
 // ============================================================
 //  INTRODUÇÃO — "Estrela da Luz"
 // ============================================================
@@ -1909,7 +2233,9 @@ async function buscarImagemSanto(santo) {
 //  REFERÊNCIAS DO DOM
 // ============================================================
 const cardsGrid = document.getElementById('cards-grid');
-const filterBtns = document.querySelectorAll('.filter-btn');
+// Só os filtros do catálogo (outros botões usam o mesmo visual .filter-btn,
+// como o Próxima do terço e o Entrar da conta, e não podem abrir o catálogo)
+const filterBtns = document.querySelectorAll('.filter-btn[data-filter]');
 const viewHome = document.getElementById('view-home');
 const viewDetail = document.getElementById('view-detail');
 const bioArticle = document.getElementById('bio-article');
@@ -1989,6 +2315,15 @@ const TRADUCOES = {
     nav_compartilhar: 'Compartilhar o site',
     footer_compartilhe_texto: 'Ajude o Lumina Sancti a chegar a mais pessoas e iluminar a vida delas.',
     footer_compartilhe_botao: 'Compartilhar o site',
+    trilhas_titulo: 'Trilhas dos Santos',
+    trilhas_intro: 'Uma trilha para cada santo. Complete as missões para ganhar Fé, manter sua ofensiva e conquistar a insígnia e a medalha da virtude de cada um.',
+    trilhas_insignias: 'Minhas insígnias',
+    ouvir_biografia: 'Ouvir biografia',
+    parar_leitura: 'Parar leitura',
+    fazer_trilha: 'Fazer a trilha de {santo}',
+    perguntar_lumina: 'Perguntar à Lumina sobre {santo}',
+    voltar: 'Voltar',
+    catalogo_interno_titulo: 'Catálogo dos Santos',
   },
   en: {
     hero_subtitulo: 'Light of the Saints',
@@ -2040,6 +2375,15 @@ const TRADUCOES = {
     nav_compartilhar: 'Share the site',
     footer_compartilhe_texto: 'Help Lumina Sancti reach more people and light up their lives.',
     footer_compartilhe_botao: 'Share the site',
+    trilhas_titulo: 'Trails of the Saints',
+    trilhas_intro: 'One trail for each saint. Complete the missions to earn Faith, keep your streak and win each saint\'s badge and virtue medal.',
+    trilhas_insignias: 'My badges',
+    ouvir_biografia: 'Listen to the biography',
+    parar_leitura: 'Stop reading',
+    fazer_trilha: 'Do the trail of {santo}',
+    perguntar_lumina: 'Ask Lumina about {santo}',
+    voltar: 'Back',
+    catalogo_interno_titulo: 'Catalog of Saints',
   },
   es: {
     hero_subtitulo: 'Luz de los Santos',
@@ -2091,6 +2435,15 @@ const TRADUCOES = {
     nav_compartilhar: 'Compartir el sitio',
     footer_compartilhe_texto: 'Ayuda a Lumina Sancti a llegar a más personas e iluminar sus vidas.',
     footer_compartilhe_botao: 'Compartir el sitio',
+    trilhas_titulo: 'Senderos de los Santos',
+    trilhas_intro: 'Un sendero para cada santo. Completa las misiones para ganar Fe, mantener tu racha y conquistar la insignia y la medalla de la virtud de cada uno.',
+    trilhas_insignias: 'Mis insignias',
+    ouvir_biografia: 'Escuchar la biografía',
+    parar_leitura: 'Detener la lectura',
+    fazer_trilha: 'Hacer el sendero de {santo}',
+    perguntar_lumina: 'Preguntar a Lumina sobre {santo}',
+    voltar: 'Volver',
+    catalogo_interno_titulo: 'Catálogo de los Santos',
   },
 };
 
@@ -2179,8 +2532,24 @@ function aplicarIdioma(codigo) {
   }
 
   if (codigo !== idiomaAnterior) {
-    carregarBiografiasDoIdioma(codigo).then(reaplicarTextosDosSantos);
+    // Biografias e trilhas do idioma novo chegam juntas; depois disso
+    // a tela aberta é redesenhada já traduzida.
+    const trilhasTraduzidas = typeof carregarTraducoesDasTrilhas === 'function' ? carregarTraducoesDasTrilhas(codigo) : null;
+    Promise.all([carregarBiografiasDoIdioma(codigo), trilhasTraduzidas]).then(() => {
+      reaplicarTextosDosSantos();
+      if (typeof aoMudarIdiomaDasTrilhas === 'function') aoMudarIdiomaDasTrilhas();
+    });
   }
+  if (typeof atualizarSelosLiturgicos === 'function') atualizarSelosLiturgicos();
+  atualizarBotaoVoltarDaBiografia();
+}
+
+// Texto da interface no idioma atual, trocando {marcas} pelos valores
+function textoDaInterface(chave, valores) {
+  const dicionario = TRADUCOES[idiomaAtual] || TRADUCOES.pt;
+  const texto = dicionario[chave] !== undefined ? dicionario[chave] : TRADUCOES.pt[chave];
+  if (!valores || typeof texto !== 'string') return texto;
+  return texto.replace(/\{(\w+)\}/g, (marca, nome) => (valores[nome] !== undefined ? valores[nome] : marca));
 }
 
 function iniciarSeletorDeIdioma() {
@@ -2388,15 +2757,23 @@ function atualizarInterfaceDeConta() {
 // ============================================================
 //  NAVEGAÇÃO ENTRE PÁGINAS (home, biografia, Lumina, conta, perfil)
 // ============================================================
-function mudarDeView(idNovaView) {
+// opcoes.catalogoInterno: abre o início só com o catálogo (sem a tela de
+// entrada), herdando a cor da página de onde a pessoa veio.
+function mudarDeView(idNovaView, opcoes) {
   const todasAsViews = ['view-home', 'view-detail', 'view-ia', 'view-auth', 'view-perfil', 'view-oracoes', 'view-terco', 'view-padroeiro', 'view-trilhas', 'view-licao', 'view-perfis', 'view-ranking', 'view-planos', 'view-completar'];
   const viewAtual = todasAsViews.map(id => document.getElementById(id)).find(v => v && v.classList.contains('active'));
+  // Saindo da lição, a voz da Lumi (modo infantil) não segue falando
+  if (idNovaView !== 'view-licao' && typeof pararVozInfantil === 'function') pararVozInfantil(false);
+  const catalogoInterno = idNovaView === 'view-home' && Boolean(opcoes && opcoes.catalogoInterno);
 
   const trocar = () => {
     todasAsViews.forEach(id => {
       const v = document.getElementById(id);
       if (v) v.style.display = 'none';
     });
+    // A cor muda junto com a página, depois que a anterior saiu de cena
+    document.body.classList.toggle('catalogo-interno', catalogoInterno);
+    if (typeof aplicarTemaDaPagina === 'function') aplicarTemaDaPagina(idNovaView);
     const proxima = document.getElementById(idNovaView);
     if (proxima) {
       proxima.style.display = 'block';
@@ -3316,7 +3693,7 @@ function ligarBotaoOuvir(santo) {
   botao.addEventListener('click', () => {
     if (window.speechSynthesis.speaking) {
       pararLeituraDeBiografia();
-      rotulo.textContent = 'Ouvir biografia';
+      rotulo.textContent = textoDaInterface('ouvir_biografia');
       botao.classList.remove('ouvindo');
       return;
     }
@@ -3328,23 +3705,60 @@ function ligarBotaoOuvir(santo) {
     fala.rate = 0.95;
 
     fala.onend = () => {
-      rotulo.textContent = 'Ouvir biografia';
+      rotulo.textContent = textoDaInterface('ouvir_biografia');
       botao.classList.remove('ouvindo');
     };
     fala.onerror = () => {
-      rotulo.textContent = 'Ouvir biografia';
+      rotulo.textContent = textoDaInterface('ouvir_biografia');
       botao.classList.remove('ouvindo');
     };
 
     window.speechSynthesis.speak(fala);
-    rotulo.textContent = 'Parar leitura';
+    rotulo.textContent = textoDaInterface('parar_leitura');
     botao.classList.add('ouvindo');
   });
+}
+
+// Páginas para onde o "Voltar" da biografia (e do catálogo aberto pelo
+// menu) consegue voltar. A lição volta para a trilha.
+const PAGINAS_PARA_VOLTAR = {
+  'view-trilhas': 'view-trilhas',
+  'view-licao': 'view-trilhas',
+  'view-ranking': 'view-ranking',
+  'view-terco': 'view-terco',
+  'view-ia': 'view-ia',
+  'view-padroeiro': 'view-padroeiro',
+  'view-oracoes': 'view-oracoes',
+};
+let origemDaBiografia = null;
+
+function idDaPaginaVisivel() {
+  const ativa = document.querySelector('.view.active');
+  if (ativa) return ativa.id;
+  const aberta = Array.from(document.querySelectorAll('.view')).find(v => v.style.display === 'block');
+  return aberta ? aberta.id : null;
+}
+
+// "Voltar" ou "Voltar para o início", conforme o destino
+function atualizarBotaoVoltarDaBiografia() {
+  const rotulo = btnBack ? btnBack.querySelector('span') : null;
+  if (!rotulo) return;
+  const voltaParaOutraPagina = Boolean(PAGINAS_PARA_VOLTAR[origemDaBiografia]) || origemDaBiografia === 'catalogo-interno';
+  const chave = voltaParaOutraPagina ? 'voltar' : 'voltar_inicio';
+  rotulo.dataset.i18n = chave;
+  rotulo.textContent = textoDaInterface(chave);
 }
 
 function showDetail(id) {
   const santo = santosData.find(s => s.id === id);
   if (!santo) return;
+
+  // De onde a pessoa veio (a biografia herda a cor dessa página)
+  const deOnde = idDaPaginaVisivel();
+  if (deOnde && deOnde !== 'view-detail') {
+    origemDaBiografia = deOnde === 'view-home' && document.body.classList.contains('catalogo-interno') ? 'catalogo-interno' : deOnde;
+  }
+  atualizarBotaoVoltarDaBiografia();
 
   pararLeituraDeBiografia();
   closeSidebar();
@@ -3368,7 +3782,8 @@ function showDetail(id) {
       ? `<p class="bio-aviso-traducao" data-i18n="aviso_traducao">${(TRADUCOES[idiomaAtual] || {}).aviso_traducao || ''}</p>`
       : '';
 
-    const trilhaDoSanto = (typeof TRILHAS !== 'undefined') ? TRILHAS.find(t => t.santoId === santo.id) : null;
+    const trilhaDoSanto = (typeof trilhasLocais === 'function') ? trilhasLocais().find(t => t.santoId === santo.id)
+      : ((typeof TRILHAS !== 'undefined') ? TRILHAS.find(t => t.santoId === santo.id) : null);
 
     bioArticle.innerHTML = `
       <div class="bio-header">
@@ -3381,7 +3796,7 @@ function showDetail(id) {
       ${avisoTraducao}
       <button class="btn-ouvir" id="btn-ouvir-bio">
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-        <span id="btn-ouvir-texto">Ouvir biografia</span>
+        <span id="btn-ouvir-texto">${textoDaInterface('ouvir_biografia')}</span>
       </button>
       <div class="bio-text">
         ${textos.texto}
@@ -3389,11 +3804,11 @@ function showDetail(id) {
       ${trilhaDoSanto ? `
       <button class="btn-ask-ai btn-fazer-trilha" id="btn-fazer-trilha">
         <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-trilha"></use></svg>
-        Fazer a trilha de ${trilhaDoSanto.santo}
+        ${textoDaInterface('fazer_trilha', { santo: trilhaDoSanto.santo })}
       </button>` : ''}
       <button class="btn-ask-ai" id="btn-ask-ai-santo">
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.34 6.34l2.83 2.83M14.83 14.83l2.83 2.83M17.66 6.34l-2.83 2.83M9.17 14.83l-2.83 2.83"/><circle cx="12" cy="12" r="2.2" fill="currentColor" stroke="none"/></svg>
-        Perguntar à Lumina sobre ${santo.nome}
+        ${textoDaInterface('perguntar_lumina', { santo: textos.nome })}
       </button>
     `;
 
@@ -3453,12 +3868,24 @@ function showDetail(id) {
   }, 400);
 }
 
+// O "Voltar" da biografia leva de volta para a página de onde a pessoa
+// veio (Trilhas, Terço, Lumina, Padroeiro...). Vindo do início, volta
+// para o catálogo do início, como sempre foi.
 btnBack.addEventListener('click', () => {
   pararLeituraDeBiografia();
+  const destino = PAGINAS_PARA_VOLTAR[origemDaBiografia];
+  if (destino) {
+    bioContainer.classList.remove('animate-in');
+    mudarDeView(destino);
+    return;
+  }
+  const catalogoInterno = origemDaBiografia === 'catalogo-interno';
   viewDetail.classList.remove('active');
   bioContainer.classList.remove('animate-in');
   setTimeout(() => {
     viewDetail.style.display = 'none';
+    document.body.classList.toggle('catalogo-interno', catalogoInterno);
+    if (typeof aplicarTemaDaPagina === 'function') aplicarTemaDaPagina('view-home');
     viewHome.style.display = 'block';
 
     setTimeout(() => {
@@ -3467,6 +3894,29 @@ btnBack.addEventListener('click', () => {
     }, 50);
   }, 400);
 });
+
+// Os filtros do menu lateral ("Catálogo") abrem o catálogo de qualquer
+// página. Vindo de uma página na cor litúrgica (Trilhas, Terço,
+// Lumina), abre o catálogo sozinho, sem a tela de entrada, e ele herda
+// essa cor. Vindo das demais, abre o início dourado, no catálogo.
+let origemDoCatalogo = null;
+
+function abrirCatalogo() {
+  const atual = idDaPaginaVisivel();
+  if (atual === 'view-home') return false;
+  const interno = typeof temaDoSite !== 'undefined' && temaDoSite === 'liturgico';
+  if (interno) {
+    if (atual === 'view-detail') {
+      if (origemDaBiografia !== 'catalogo-interno') origemDoCatalogo = PAGINAS_PARA_VOLTAR[origemDaBiografia] || null;
+    } else {
+      origemDoCatalogo = PAGINAS_PARA_VOLTAR[atual] || null;
+    }
+  }
+  closeSidebar();
+  mudarDeView('view-home', { catalogoInterno: interno });
+  if (!interno) setTimeout(() => document.getElementById('materias').scrollIntoView({ behavior: 'smooth' }), 400);
+  return true;
+}
 
 filterBtns.forEach(btn => {
   btn.addEventListener('click', (e) => {
@@ -3482,13 +3932,20 @@ filterBtns.forEach(btn => {
       closeSidebar();
     }
 
-    document.getElementById('materias').scrollIntoView({ behavior: 'smooth' });
+    // Em outra página, primeiro abre o catálogo (antes o clique não
+    // mostrava nada, porque o catálogo estava escondido)
+    if (!abrirCatalogo()) document.getElementById('materias').scrollIntoView({ behavior: 'smooth' });
 
     setTimeout(() => {
       renderGrid(filter);
     }, 100);
   });
 });
+
+const btnVoltarDoCatalogo = document.getElementById('btn-voltar-catalogo');
+if (btnVoltarDoCatalogo) {
+  btnVoltarDoCatalogo.addEventListener('click', () => mudarDeView(origemDoCatalogo || 'view-home'));
+}
 
 function openSidebar() {
   sidebar.classList.add('open');
@@ -3592,38 +4049,186 @@ document.addEventListener('DOMContentLoaded', () => {
 // ============================================================
 //  ORAÇÕES DO DIA A DIA
 // ============================================================
+// As dez primeiras ficam nesta ordem porque o terço usa as posições
+// (ORACOES[0] = Sinal da Cruz, [1] = Pai Nosso, [2] = Ave Maria,
+// [3] = Glória, [4] = Credo, [5] = Salve Rainha). As novas entram
+// depois.
+//
+// "nomes" são outros jeitos de chamar a mesma oração (inclusive em
+// latim, inglês e espanhol), para a busca achar pelo nome. As
+// situações de cada oração ficam em SITUACOES_DE_ORACAO, logo abaixo.
 const ORACOES = [
-  { titulo: 'Sinal da Cruz', texto: 'Em nome do Pai, e do Filho, e do Espírito Santo. Amém.' },
-  { titulo: 'Pai Nosso', texto: 'Pai Nosso que estais nos Céus,\nsantificado seja o Vosso nome,\nvenha a nós o Vosso reino,\nseja feita a Vossa vontade,\nassim na terra como no Céu.\nO pão nosso de cada dia nos dai hoje,\nperdoai-nos as nossas ofensas,\nassim como nós perdoamos a quem nos tem ofendido,\ne não nos deixeis cair em tentação,\nmas livrai-nos do mal.\nAmém.' },
-  { titulo: 'Ave Maria', texto: 'Ave Maria, cheia de graça, o Senhor é convosco,\nbendita sois vós entre as mulheres,\ne bendito é o fruto do vosso ventre, Jesus.\nSanta Maria, Mãe de Deus,\nrogai por nós, pecadores,\nagora e na hora da nossa morte.\nAmém.' },
-  { titulo: 'Glória ao Pai', texto: 'Glória ao Pai, e ao Filho, e ao Espírito Santo,\ncomo era no princípio, agora e sempre.\nAmém.' },
-  { titulo: 'Credo dos Apóstolos', texto: 'Creio em Deus Pai todo-poderoso, Criador do Céu e da Terra;\ne em Jesus Cristo, Seu único Filho, nosso Senhor,\nque foi concebido pelo poder do Espírito Santo,\nnasceu da Virgem Maria,\npadeceu sob Pôncio Pilatos, foi crucificado, morto e sepultado,\ndesceu à mansão dos mortos,\nressuscitou ao terceiro dia,\nsubiu aos Céus,\nestá sentado à direita de Deus Pai todo-poderoso,\ndonde há de vir a julgar os vivos e os mortos.\nCreio no Espírito Santo,\nna Santa Igreja Católica,\nna comunhão dos Santos,\nna remissão dos pecados,\nna ressurreição da carne,\nna vida eterna.\nAmém.' },
-  { titulo: 'Salve Rainha', texto: 'Salve, Rainha, Mãe de misericórdia,\nvida, doçura e esperança nossa, salve!\nA vós bradamos, os degredados filhos de Eva.\nA vós suspiramos, gemendo e chorando\nneste vale de lágrimas.\nEia, pois, advogada nossa,\nesses vossos olhos misericordiosos a nós volvei.\nE depois deste desterro, mostrai-nos Jesus,\nbendito fruto do vosso ventre, ó clemente, ó piedosa,\nó doce sempre Virgem Maria.\nRogai por nós, Santa Mãe de Deus,\npara que sejamos dignos das promessas de Cristo.\nAmém.' },
-  { titulo: 'Anjo da Guarda', texto: 'Anjo do Senhor, meu zeloso guarda,\npois a bondade divina me confiou a vós,\neu vos agradeço e vos peço que me assistais e defendais\nem todos os perigos, e me alcanceis o perdão de Deus.\nAmém.' },
-  { titulo: 'Ato de Contrição', texto: 'Meu Deus, eu me arrependo de todo o coração de todos os meus pecados,\ne os detesto porque, pecando, mereci Vossos castigos,\ne, sobretudo, porque Vos ofendi a Vós, que sois infinitamente bom e digno de ser amado sobre todas as coisas.\nProponho firmemente, com o auxílio da Vossa graça,\nnão mais pecar e evitar as ocasiões de pecado.\nAmém.' },
-  { titulo: 'Angelus (O Anjo do Senhor)', texto: 'O Anjo do Senhor anunciou a Maria, e ela concebeu do Espírito Santo. Ave Maria...\nEis aqui a serva do Senhor. Faça-se em mim segundo a Vossa palavra. Ave Maria...\nE o Verbo se fez carne. E habitou entre nós. Ave Maria...\nRogai por nós, Santa Mãe de Deus, para que sejamos dignos das promessas de Cristo.\nOremos: Infundi, Senhor, a Vossa graça em nossas almas, para que nós, que pela anunciação do Anjo conhecemos a encarnação de Vosso Filho, pela Sua paixão e cruz sejamos conduzidos à glória da ressurreição. Por Cristo, Senhor Nosso. Amém.' },
-  { titulo: 'Oração a São Miguel Arcanjo', texto: 'São Miguel Arcanjo, defendei-nos no combate,\nsede o nosso refúgio contra as maldades e ciladas do demônio.\nOs vós ordene Deus, instantemente o pedimos,\ne vós, príncipe da milícia celeste,\ncom o poder que Deus vos conferiu,\nprecipitai no inferno a Satanás\ne a todos os espíritos malignos,\nque andam pelo mundo para perder as almas.\nAmém.' },
+  { id: 'sinal-da-cruz', titulo: 'Sinal da Cruz', nomes: ['persignar', 'benzer-se', 'persignação'], texto: 'Em nome do Pai, e do Filho, e do Espírito Santo. Amém.' },
+  { id: 'pai-nosso', titulo: 'Pai Nosso', nomes: ['Oração do Senhor', 'Our Father', 'Padre Nuestro'], texto: 'Pai Nosso que estais nos Céus,\nsantificado seja o Vosso nome,\nvenha a nós o Vosso reino,\nseja feita a Vossa vontade,\nassim na terra como no Céu.\nO pão nosso de cada dia nos dai hoje,\nperdoai-nos as nossas ofensas,\nassim como nós perdoamos a quem nos tem ofendido,\ne não nos deixeis cair em tentação,\nmas livrai-nos do mal.\nAmém.' },
+  { id: 'ave-maria', titulo: 'Ave Maria', nomes: ['Saudação angélica', 'Hail Mary', 'Dios te salve, María'], texto: 'Ave Maria, cheia de graça, o Senhor é convosco,\nbendita sois vós entre as mulheres,\ne bendito é o fruto do vosso ventre, Jesus.\nSanta Maria, Mãe de Deus,\nrogai por nós, pecadores,\nagora e na hora da nossa morte.\nAmém.' },
+  { id: 'gloria', titulo: 'Glória ao Pai', nomes: ['Glória', 'Doxologia', 'Glory Be', 'Gloria al Padre'], texto: 'Glória ao Pai, e ao Filho, e ao Espírito Santo,\ncomo era no princípio, agora e sempre.\nAmém.' },
+  { id: 'credo', titulo: 'Credo dos Apóstolos', nomes: ['Creio', 'Símbolo dos Apóstolos', 'Profissão de fé', 'Creed', 'Credo'], texto: 'Creio em Deus Pai todo-poderoso, Criador do Céu e da Terra;\ne em Jesus Cristo, Seu único Filho, nosso Senhor,\nque foi concebido pelo poder do Espírito Santo,\nnasceu da Virgem Maria,\npadeceu sob Pôncio Pilatos, foi crucificado, morto e sepultado,\ndesceu à mansão dos mortos,\nressuscitou ao terceiro dia,\nsubiu aos Céus,\nestá sentado à direita de Deus Pai todo-poderoso,\ndonde há de vir a julgar os vivos e os mortos.\nCreio no Espírito Santo,\nna Santa Igreja Católica,\nna comunhão dos Santos,\nna remissão dos pecados,\nna ressurreição da carne,\nna vida eterna.\nAmém.' },
+  { id: 'salve-rainha', titulo: 'Salve Rainha', nomes: ['Salve Regina', 'Hail Holy Queen', 'Dios te salve, Reina y Madre'], texto: 'Salve, Rainha, Mãe de misericórdia,\nvida, doçura e esperança nossa, salve!\nA vós bradamos, os degredados filhos de Eva.\nA vós suspiramos, gemendo e chorando\nneste vale de lágrimas.\nEia, pois, advogada nossa,\nesses vossos olhos misericordiosos a nós volvei.\nE depois deste desterro, mostrai-nos Jesus,\nbendito fruto do vosso ventre, ó clemente, ó piedosa,\nó doce sempre Virgem Maria.\nRogai por nós, Santa Mãe de Deus,\npara que sejamos dignos das promessas de Cristo.\nAmém.' },
+  { id: 'anjo-da-guarda', titulo: 'Anjo da Guarda', nomes: ['Angele Dei', 'Anjo guardião', 'Guardian Angel', 'Ángel de la Guarda'], texto: 'Anjo do Senhor, meu zeloso guarda,\npois a bondade divina me confiou a vós,\neu vos agradeço e vos peço que me assistais e defendais\nem todos os perigos, e me alcanceis o perdão de Deus.\nAmém.' },
+  { id: 'ato-de-contricao', titulo: 'Ato de Contrição', nomes: ['Contrição', 'Act of Contrition', 'Acto de contrición'], texto: 'Meu Deus, eu me arrependo de todo o coração de todos os meus pecados,\ne os detesto porque, pecando, mereci Vossos castigos,\ne, sobretudo, porque Vos ofendi a Vós, que sois infinitamente bom e digno de ser amado sobre todas as coisas.\nProponho firmemente, com o auxílio da Vossa graça,\nnão mais pecar e evitar as ocasiões de pecado.\nAmém.' },
+  { id: 'angelus', titulo: 'Angelus (O Anjo do Senhor)', nomes: ['Angelus', 'O Anjo do Senhor', 'Ângelus'], texto: 'O Anjo do Senhor anunciou a Maria, e ela concebeu do Espírito Santo. Ave Maria...\nEis aqui a serva do Senhor. Faça-se em mim segundo a Vossa palavra. Ave Maria...\nE o Verbo se fez carne. E habitou entre nós. Ave Maria...\nRogai por nós, Santa Mãe de Deus, para que sejamos dignos das promessas de Cristo.\nOremos: Infundi, Senhor, a Vossa graça em nossas almas, para que nós, que pela anunciação do Anjo conhecemos a encarnação de Vosso Filho, pela Sua paixão e cruz sejamos conduzidos à glória da ressurreição. Por Cristo, Senhor Nosso. Amém.' },
+  { id: 'sao-miguel', titulo: 'Oração a São Miguel Arcanjo', nomes: ['São Miguel', 'Miguel Arcanjo', 'Saint Michael', 'San Miguel'], texto: 'São Miguel Arcanjo, defendei-nos no combate,\nsede o nosso refúgio contra as maldades e ciladas do demônio.\nOrdene-lhe Deus, instantemente o pedimos,\ne vós, príncipe da milícia celeste,\ncom o poder que Deus vos conferiu,\nprecipitai no inferno a Satanás\ne a todos os espíritos malignos,\nque andam pelo mundo para perder as almas.\nAmém.' },
+  { id: 'santo-anjo', titulo: 'Santo Anjo do Senhor', nomes: ['Santo Anjo', 'Anjo da guarda (versão curta)'], texto: 'Santo Anjo do Senhor,\nmeu zeloso guardador,\nse a ti me confiou a piedade divina,\nsempre me rege, me guarda,\nme governa e me ilumina.\nAmém.' },
+  { id: 'vinde-espirito-santo', titulo: 'Vinde, Espírito Santo', nomes: ['Veni Sancte Spiritus', 'Oração ao Espírito Santo', 'Ven, Espíritu Santo'], texto: 'Vinde, Espírito Santo, enchei os corações dos vossos fiéis\ne acendei neles o fogo do vosso amor.\nEnviai o vosso Espírito e tudo será criado,\ne renovareis a face da terra.\n\nOremos: Ó Deus, que instruístes os corações dos vossos fiéis com a luz do Espírito Santo, fazei que apreciemos retamente todas as coisas segundo o mesmo Espírito e gozemos sempre da sua consolação. Por Cristo, Senhor nosso.\nAmém.' },
+  { id: 'lembrai-vos', titulo: 'Lembrai-vos (Memorare)', nomes: ['Memorare', 'Lembrai-vos', 'Acordaos'], texto: 'Lembrai-vos, ó piíssima Virgem Maria,\nque nunca se ouviu dizer que algum daqueles que têm recorrido à vossa proteção,\nimplorado a vossa assistência e reclamado o vosso socorro,\nfosse por vós desamparado.\nAnimado eu, pois, com igual confiança,\na vós, ó Virgem entre todas singular, como a Mãe recorro,\nde vós me valho e, gemendo sob o peso dos meus pecados,\nme prostro a vossos pés.\nNão desprezeis as minhas súplicas, ó Mãe do Verbo de Deus humanado,\nmas dignai-vos de as ouvir propícia e de me alcançar o que vos rogo.\nAmém.' },
+  { id: 'oracao-pela-paz', titulo: 'Oração pela paz (de São Francisco)', nomes: ['Oração de São Francisco', 'Instrumento de vossa paz'], nota: 'É tradicionalmente atribuída a São Francisco de Assis e combina com o espírito dele, mas o texto que conhecemos foi publicado só no começo do século XX.', texto: 'Senhor, fazei de mim um instrumento de vossa paz.\nOnde houver ódio, que eu leve o amor;\nonde houver ofensa, que eu leve o perdão;\nonde houver discórdia, que eu leve a união;\nonde houver dúvida, que eu leve a fé;\nonde houver erro, que eu leve a verdade;\nonde houver desespero, que eu leve a esperança;\nonde houver tristeza, que eu leve a alegria;\nonde houver trevas, que eu leve a luz.\nÓ Mestre, fazei que eu procure mais\nconsolar que ser consolado;\ncompreender que ser compreendido;\namar que ser amado.\nPois é dando que se recebe,\né perdoando que se é perdoado,\ne é morrendo que se vive para a vida eterna.' },
+  { id: 'alma-de-cristo', titulo: 'Alma de Cristo', nomes: ['Anima Christi', 'Oração depois da Comunhão'], texto: 'Alma de Cristo, santificai-me.\nCorpo de Cristo, salvai-me.\nSangue de Cristo, inebriai-me.\nÁgua do lado de Cristo, lavai-me.\nPaixão de Cristo, confortai-me.\nÓ bom Jesus, ouvi-me.\nDentro de vossas chagas, escondei-me.\nNão permitais que eu me separe de vós.\nDo espírito maligno, defendei-me.\nNa hora da minha morte, chamai-me,\ne mandai-me ir para vós,\npara que com os vossos santos vos louve\npor todos os séculos dos séculos.\nAmém.' },
+  { id: 'antes-das-refeicoes', titulo: 'Bênção antes das refeições', nomes: ['Bênção da mesa', 'Oração antes de comer', 'Benedic Domine'], texto: 'Abençoai-nos, Senhor,\na nós e a estes dons\nque da vossa bondade vamos receber.\nPor Cristo, Senhor nosso.\nAmém.' },
+  { id: 'descanso-eterno', titulo: 'Pelos falecidos (Descanso eterno)', nomes: ['Requiem aeternam', 'Oração pelos mortos', 'Descanso eterno'], nota: 'Para uma só pessoa: "Dai-lhe, Senhor, o eterno descanso, e a luz perpétua o (a) ilumine. Descanse em paz. Amém."', texto: 'Dai-lhes, Senhor, o eterno descanso,\ne a luz perpétua os ilumine.\nDescansem em paz.\nAmém.' },
+  { id: 'consagracao-nossa-senhora', titulo: 'Consagração a Nossa Senhora', nomes: ['Consagração a Maria'], texto: 'Ó minha Senhora e também minha Mãe,\neu me ofereço inteiramente todo a vós,\ne em prova da minha devoção\neu vos dou neste dia meus olhos, meus ouvidos, minha boca, meu coração\ne inteiramente todo o meu ser.\nE porque assim sou vosso, ó incomparável Mãe,\nguardai-me e defendei-me como coisa e propriedade vossa.\nAmém.' },
+  { id: 'terco-da-misericordia', titulo: 'Terço da Misericórdia', nomes: ['Terço da Divina Misericórdia', 'Coroinha da Misericórdia', 'Chaplet of Divine Mercy', 'Coronilla de la Misericordia', 'Eterno Pai'], acao: 'misericordia', texto: 'Jesus o ensinou a Santa Faustina Kowalska. Reza-se com as contas do terço comum, de preferência às três da tarde, a Hora da Misericórdia.\n\nNas contas grandes: Eterno Pai, eu Vos ofereço o Corpo e o Sangue, a Alma e a Divindade de Vosso diletíssimo Filho, Nosso Senhor Jesus Cristo, em expiação dos nossos pecados e dos do mundo inteiro.\n\nNas contas pequenas: Pela Sua dolorosa Paixão, tende misericórdia de nós e do mundo inteiro.\n\nNo fim, três vezes: Deus Santo, Deus Forte, Deus Imortal, tende piedade de nós e do mundo inteiro.' },
+  { id: 'terco-mariano', titulo: 'Terço (Rosário)', nomes: ['Terço', 'Rosário', 'Santo Terço', 'Rezar o terço', 'Rosary', 'Rosario'], acao: 'terco', texto: 'Cinco dezenas, uma para cada mistério da vida de Jesus e de Maria: em cada uma, um Pai Nosso, dez Ave-Marias e um Glória. O site sugere os mistérios do dia e reza com você, passo a passo.' },
 ];
+
+// Situações da vida e as orações que mais combinam com cada uma, da
+// mais indicada para a menos. As palavras são as que as pessoas
+// costumam digitar; acentos e maiúsculas não importam.
+const SITUACOES_DE_ORACAO = [
+  { rotulo: 'Medo e proteção', termos: ['medo', 'assustado', 'assustada', 'susto', 'pavor', 'pânico', 'perigo', 'proteção', 'proteger', 'protege', 'defesa', 'defender', 'livrar', 'livramento', 'maldade', 'mal', 'inimigo', 'demônio', 'diabo', 'satanás', 'tentação', 'batalha espiritual', 'combate', 'inveja', 'olho gordo', 'mau-olhado', 'assalto', 'violência', 'ameaça'], itens: ['sao-miguel', 'santo-anjo', 'anjo-da-guarda'] },
+  { rotulo: 'Antes de dormir', termos: ['dormir', 'noite', 'sono', 'insônia', 'deitar', 'cama', 'pesadelo', 'boa noite', 'antes de dormir'], itens: ['santo-anjo', 'anjo-da-guarda', 'ato-de-contricao'] },
+  { rotulo: 'Começar o dia', termos: ['manhã', 'acordar', 'acordei', 'levantar', 'bom dia', 'começar o dia', 'início do dia', 'oferecer o dia'], itens: ['sinal-da-cruz', 'consagracao-nossa-senhora', 'pai-nosso'] },
+  { rotulo: 'Pedir perdão', termos: ['perdão', 'pecado', 'pecados', 'pequei', 'arrependimento', 'arrependido', 'arrependida', 'culpa', 'culpado', 'culpada', 'errei', 'confissão', 'confessar', 'remorso', 'contrição'], itens: ['ato-de-contricao', 'pai-nosso', 'terco-da-misericordia'] },
+  { rotulo: 'Paz e perdoar alguém', termos: ['paz', 'briga', 'brigas', 'brigamos', 'discussão', 'raiva', 'ódio', 'rancor', 'mágoa', 'magoado', 'magoada', 'ofensa', 'perdoar', 'reconciliação', 'conflito', 'guerra', 'discórdia', 'vingança', 'inimizade'], itens: ['oracao-pela-paz', 'pai-nosso'] },
+  { rotulo: 'Agradecer', termos: ['obrigado', 'obrigada', 'agradecer', 'agradecimento', 'gratidão', 'grato', 'grata', 'louvor', 'louvar', 'graça alcançada', 'graça recebida'], itens: ['gloria', 'consagracao-nossa-senhora', 'pai-nosso'] },
+  { rotulo: 'Fé e dúvidas', termos: ['fé', 'dúvida', 'dúvidas', 'crer', 'acreditar', 'creio', 'descrença', 'incrédulo'], itens: ['credo', 'vinde-espirito-santo'] },
+  { rotulo: 'Nossa Senhora', termos: ['nossa senhora', 'maria', 'virgem', 'mãe de deus', 'mãe do céu', 'mariana', 'mãezinha do céu'], itens: ['ave-maria', 'salve-rainha', 'lembrai-vos', 'consagracao-nossa-senhora', 'terco-mariano', 'angelus'] },
+  { rotulo: 'Causas difíceis e urgentes', termos: ['difícil', 'impossível', 'causa impossível', 'causa difícil', 'urgente', 'urgência', 'desespero', 'desesperado', 'desesperada', 'socorro', 'ajuda', 'milagre', 'graça', 'súplica', 'pedido'], itens: ['lembrai-vos', 'terco-da-misericordia', 'pai-nosso'] },
+  { rotulo: 'Tristeza e consolo', termos: ['triste', 'tristeza', 'chorar', 'choro', 'chorando', 'lágrimas', 'sofrimento', 'sofrendo', 'dor', 'consolo', 'consolação', 'depressão', 'deprimido', 'deprimida', 'solidão', 'sozinho', 'sozinha', 'abandono', 'desânimo', 'desanimado', 'desanimada'], itens: ['salve-rainha', 'lembrai-vos', 'terco-da-misericordia'] },
+  { rotulo: 'Ansiedade e confiança', termos: ['ansiedade', 'ansioso', 'ansiosa', 'preocupação', 'preocupado', 'preocupada', 'nervoso', 'nervosa', 'estresse', 'angústia', 'angustiado', 'aflição', 'aflito', 'aflita', 'insegurança', 'confiança', 'confiar', 'entregar'], itens: ['terco-da-misericordia', 'lembrai-vos', 'pai-nosso'] },
+  { rotulo: 'Pelos doentes', termos: ['doente', 'doença', 'enfermo', 'enferma', 'enfermidade', 'hospital', 'internado', 'internada', 'cirurgia', 'operação', 'cura', 'curar', 'saúde', 'câncer', 'tratamento', 'exame médico'], itens: ['terco-da-misericordia', 'lembrai-vos', 'ave-maria'] },
+  { rotulo: 'Falecidos e luto', termos: ['morte', 'morrer', 'morreu', 'morreram', 'faleceu', 'falecimento', 'falecido', 'falecida', 'defunto', 'finado', 'finados', 'luto', 'velório', 'enterro', 'sepultamento', 'alma', 'almas', 'purgatório', 'missa de sétimo dia', 'agonia', 'hora da morte', 'moribundo'], itens: ['descanso-eterno', 'terco-da-misericordia', 'ave-maria'] },
+  { rotulo: 'Antes das refeições', termos: ['comida', 'comer', 'refeição', 'refeições', 'almoço', 'almoçar', 'jantar', 'janta', 'café da manhã', 'alimento', 'alimentos', 'mesa', 'antes de comer'], itens: ['antes-das-refeicoes', 'pai-nosso'] },
+  { rotulo: 'Estudos e decisões', termos: ['estudo', 'estudar', 'estudos', 'prova', 'provas', 'exame', 'vestibular', 'enem', 'concurso', 'faculdade', 'escola', 'entrevista', 'decisão', 'decidir', 'escolha', 'discernimento', 'sabedoria', 'inteligência', 'iluminar', 'luz'], itens: ['vinde-espirito-santo'] },
+  { rotulo: 'Missa e Comunhão', termos: ['comunhão', 'comungar', 'eucaristia', 'missa', 'hóstia', 'depois da comunhão', 'adoração', 'santíssimo'], itens: ['alma-de-cristo', 'angelus'] },
+  { rotulo: 'Espírito Santo', termos: ['espírito santo', 'pentecostes', 'dons', 'vinde espírito'], itens: ['vinde-espirito-santo'] },
+  { rotulo: 'Hora da Misericórdia (15h)', termos: ['misericórdia', 'divina misericórdia', 'três da tarde', '3 da tarde', '15h', '15 horas', '15 00', 'hora da misericórdia', 'jesus eu confio', 'confio em vós', 'faustina'], itens: ['terco-da-misericordia'] },
+  { rotulo: 'Ângelus (6h, 12h e 18h)', termos: ['meio dia', 'meio-dia', '12h', '18h', '6h', 'seis da tarde', 'seis da manhã', 'anunciação', 'encarnação'], itens: ['angelus'] },
+  { rotulo: 'Viagem', termos: ['viagem', 'viajar', 'viajando', 'estrada', 'carro', 'ônibus', 'avião', 'dirigir', 'motorista', 'trânsito'], itens: ['santo-anjo', 'anjo-da-guarda', 'sao-miguel'] },
+  { rotulo: 'Crianças e família', termos: ['criança', 'crianças', 'filho', 'filhos', 'filha', 'filhas', 'bebê', 'neto', 'neta', 'netos', 'família'], itens: ['anjo-da-guarda', 'santo-anjo', 'consagracao-nossa-senhora'] },
+  { rotulo: 'Trabalho e sustento', termos: ['trabalho', 'emprego', 'desempregado', 'desempregada', 'desemprego', 'dinheiro', 'dívida', 'dívidas', 'contas', 'sustento', 'necessidade', 'fome', 'pão'], itens: ['pai-nosso', 'lembrai-vos'] },
+  { rotulo: 'Santíssima Trindade', termos: ['trindade', 'santíssima trindade', 'deus pai', 'pai filho e espírito santo'], itens: ['gloria', 'sinal-da-cruz', 'credo'] },
+];
+
+// Atalhos que aparecem embaixo da caixa de busca
+const SUGESTOES_DE_BUSCA_DE_ORACAO = ['Estou com medo', 'Para dormir', 'Pedir perdão', 'Agradecer', 'Alguém doente', 'Ansiedade', 'Pelos falecidos', 'Antes de comer', 'Prova ou decisão', 'Nossa Senhora'];
+
+let itensDeOracaoParaBusca = null;
+let situacoesDeOracaoParaBusca = null;
+
+// Lista das orações da mais indicada para a menos (no máximo "limite")
+function buscarOracoes(consulta, limite) {
+  if (typeof BuscaInteligente === 'undefined') return [];
+  if (!itensDeOracaoParaBusca) {
+    itensDeOracaoParaBusca = BuscaInteligente.prepararItens(ORACOES.map((o) => ({
+      id: o.id, nomes: [o.titulo].concat(o.nomes || []), texto: o.texto, oracao: o,
+    })));
+    situacoesDeOracaoParaBusca = BuscaInteligente.prepararSituacoes(SITUACOES_DE_ORACAO);
+  }
+  return BuscaInteligente.buscar(consulta, itensDeOracaoParaBusca, situacoesDeOracaoParaBusca)
+    .slice(0, limite || 4)
+    .map((r) => ({ oracao: r.item.oracao, motivo: r.motivo, pontos: r.pontos }));
+}
+
+function escaparTextoDeOracao(texto) {
+  return String(texto).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function botaoDaAcaoDaOracao(oracao) {
+  if (oracao.acao === 'misericordia') return '<button type="button" class="filter-btn active oracao-acao" data-acao="misericordia">Rezar passo a passo</button>';
+  if (oracao.acao === 'terco') return '<button type="button" class="filter-btn active oracao-acao" data-acao="terco">Rezar o terço passo a passo</button>';
+  return '';
+}
+
+function htmlDaOracao(oracao, indice, extra) {
+  const motivo = extra && extra.motivo ? `<span class="oracao-motivo">Para: ${escaparTextoDeOracao(extra.motivo)}</span>` : '';
+  const selo = extra && extra.melhor ? '<span class="oracao-selo">Mais indicada</span>' : '';
+  return `
+    <div class="oracao-item${extra && extra.aberta ? ' aberta' : ''}${extra && extra.melhor ? ' oracao-destaque' : ''}" data-oracao="${oracao.id}" ${indice !== null ? `id="oracao-${indice}"` : ''}>
+      <button class="oracao-pergunta" aria-expanded="${extra && extra.aberta ? 'true' : 'false'}">
+        <span class="oracao-titulo-linha">${selo}<span>${escaparTextoDeOracao(oracao.titulo)}</span>${motivo}</span>
+        <svg class="oracao-seta" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="oracao-corpo">
+        <p class="oracao-texto">${escaparTextoDeOracao(oracao.texto)}</p>
+        ${oracao.nota ? `<p class="oracao-nota">${escaparTextoDeOracao(oracao.nota)}</p>` : ''}
+        ${botaoDaAcaoDaOracao(oracao)}
+      </div>
+    </div>`;
+}
+
+function ligarItensDeOracao(container) {
+  container.querySelectorAll('.oracao-item').forEach(item => {
+    const botao = item.querySelector('.oracao-pergunta');
+    botao.addEventListener('click', () => {
+      const aberta = item.classList.toggle('aberta');
+      botao.setAttribute('aria-expanded', aberta ? 'true' : 'false');
+    });
+  });
+  container.querySelectorAll('.oracao-acao').forEach(botao => {
+    botao.addEventListener('click', () => {
+      if (botao.dataset.acao === 'misericordia') abrirTerco('misericordia');
+      else abrirTerco(null);
+    });
+  });
+}
+
+function mostrarResultadoDaBuscaDeOracao(consulta) {
+  const area = document.getElementById('oracao-resultado');
+  if (!area) return;
+  const texto = consulta.trim();
+  if (!texto) { area.innerHTML = ''; return; }
+  const achadas = buscarOracoes(texto, 4);
+  if (!achadas.length) {
+    area.innerHTML = `
+      <div class="oracao-sem-resultado">
+        <p>Não encontrei uma oração para "${escaparTextoDeOracao(texto)}". Tente contar com outras palavras (por exemplo: "medo", "doença", "agradecer") ou pergunte à Lumina.</p>
+        <button type="button" class="btn-ask-ai" id="oracao-perguntar-lumina">Perguntar à Lumina</button>
+      </div>`;
+    const botao = document.getElementById('oracao-perguntar-lumina');
+    if (botao) botao.addEventListener('click', () => {
+      mudarDeView('view-ia');
+      setTimeout(() => {
+        const campo = document.getElementById('lumina-input');
+        if (campo) { campo.value = `Que oração posso rezar para: ${texto}?`; campo.focus(); }
+      }, 300);
+    });
+    return;
+  }
+  const [melhor, ...outras] = achadas;
+  area.innerHTML = `
+    ${htmlDaOracao(melhor.oracao, null, { melhor: true, aberta: true, motivo: melhor.motivo })}
+    ${outras.length ? `<p class="oracao-outras-titulo">Também podem ajudar</p>${outras.map(r => htmlDaOracao(r.oracao, null, { motivo: r.motivo })).join('')}` : ''}`;
+  ligarItensDeOracao(area);
+}
 
 function iniciarPaginaDeOracoes() {
   const container = document.getElementById('lista-oracoes');
   if (!container) return;
 
-  container.innerHTML = ORACOES.map((o, i) => `
-    <div class="oracao-item" id="oracao-${i}">
-      <button class="oracao-pergunta">
-        <span>${o.titulo}</span>
-        <svg class="oracao-seta" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-      </button>
-      <div class="oracao-corpo"><p class="oracao-texto">${o.texto}</p></div>
-    </div>
-  `).join('');
+  container.innerHTML = ORACOES.map((o, i) => htmlDaOracao(o, i, null)).join('');
+  ligarItensDeOracao(container);
 
-  container.querySelectorAll('.oracao-item').forEach(item => {
-    item.querySelector('.oracao-pergunta').addEventListener('click', () => {
-      item.classList.toggle('aberta');
+  const campo = document.getElementById('oracao-busca');
+  const sugestoes = document.getElementById('oracao-sugestoes');
+  if (campo) {
+    let espera = null;
+    campo.addEventListener('input', () => {
+      clearTimeout(espera);
+      espera = setTimeout(() => mostrarResultadoDaBuscaDeOracao(campo.value), 150);
     });
-  });
+    campo.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { clearTimeout(espera); mostrarResultadoDaBuscaDeOracao(campo.value); }
+    });
+  }
+  if (sugestoes && campo) {
+    sugestoes.innerHTML = SUGESTOES_DE_BUSCA_DE_ORACAO.map(s => `<button type="button" class="busca-atalho">${s}</button>`).join('');
+    sugestoes.querySelectorAll('.busca-atalho').forEach(botao => {
+      botao.addEventListener('click', () => {
+        campo.value = botao.textContent;
+        mostrarResultadoDaBuscaDeOracao(campo.value);
+      });
+    });
+  }
 
   const btnVoltar = document.getElementById('btn-back-oracoes');
   if (btnVoltar) btnVoltar.addEventListener('click', () => mudarDeView('view-home'));
@@ -3679,6 +4284,27 @@ const MISTERIOS_DO_TERCO = {
   },
 };
 
+// Terço da Misericórdia, como Jesus o ensinou a Santa Faustina
+// (Diário, 476): reza-se com as contas do terço comum. Um Pai Nosso,
+// uma Ave Maria e o Credo; nas contas grandes, "Eterno Pai..."; nas
+// pequenas, "Pela Sua dolorosa Paixão..."; no fim, três vezes "Deus
+// Santo...". As orações de abertura (Diário, 1319 e 187) e a final
+// (Diário, 950) são costume de muitos grupos e vêm marcadas como
+// opcionais.
+const TERCO_DA_MISERICORDIA = {
+  nome: 'Terço da Misericórdia',
+  dias: 'Hora da Misericórdia · 15h',
+  descricao: 'Ensinado por Jesus a Santa Faustina. Reza-se com as contas do terço comum.',
+  oracoes: {
+    expirastes: 'Expirastes, Jesus, mas a fonte de vida jorrou para as almas, e o oceano de misericórdia se abriu para o mundo inteiro. Ó fonte de vida, insondável misericórdia divina, envolvei o mundo inteiro e derramai-Vos sobre nós.',
+    sangueEAgua: 'Ó Sangue e Água, que jorrastes do Coração de Jesus como fonte de misericórdia para nós, eu confio em Vós!',
+    eternoPai: 'Eterno Pai, eu Vos ofereço o Corpo e o Sangue, a Alma e a Divindade de Vosso diletíssimo Filho, Nosso Senhor Jesus Cristo, em expiação dos nossos pecados e dos do mundo inteiro.',
+    dolorosaPaixao: 'Pela Sua dolorosa Paixão, tende misericórdia de nós e do mundo inteiro.',
+    deusSanto: 'Deus Santo, Deus Forte, Deus Imortal, tende piedade de nós e do mundo inteiro.',
+    oracaoFinal: 'Ó Deus Eterno, em quem a misericórdia é infinita e o tesouro da compaixão inesgotável, olhai-nos com bondade e aumentai em nós a Vossa misericórdia, para que nos momentos difíceis não desesperemos nem desanimemos, mas, com grande confiança, nos submetamos à Vossa santa vontade, que é o próprio Amor e Misericórdia.',
+  },
+};
+
 function misterioSugeridoHoje() {
   const diaSemana = new Date().getDay(); // 0=domingo ... 6=sábado
   if (diaSemana === 1 || diaSemana === 6) return 'gozosos';
@@ -3687,20 +4313,23 @@ function misterioSugeridoHoje() {
   return 'gloriosos'; // quarta e domingo
 }
 
+// "contas": quantas vezes a oração do passo se repete (o site mostra
+// as bolinhas para a pessoa ir marcando)
 function montarPassosDoTerco(chaveMisterio) {
+  if (chaveMisterio === 'misericordia') return montarPassosDoTercoDaMisericordia();
   const conjunto = MISTERIOS_DO_TERCO[chaveMisterio];
   const passos = [
     { titulo: 'Sinal da Cruz', texto: ORACOES[0].texto },
     { titulo: 'Credo dos Apóstolos', texto: ORACOES[4].texto },
     { titulo: 'Pai Nosso', texto: ORACOES[1].texto },
-    { titulo: '3 Ave-Marias (fé, esperança e caridade)', texto: ORACOES[2].texto },
+    { titulo: '3 Ave-Marias (fé, esperança e caridade)', texto: ORACOES[2].texto, contas: 3 },
     { titulo: 'Glória ao Pai', texto: ORACOES[3].texto },
   ];
 
   conjunto.lista.forEach((misterio) => {
     passos.push({ titulo: misterio.titulo, texto: misterio.texto });
     passos.push({ titulo: 'Pai Nosso', texto: ORACOES[1].texto });
-    passos.push({ titulo: '10 Ave-Marias', texto: ORACOES[2].texto });
+    passos.push({ titulo: '10 Ave-Marias', texto: ORACOES[2].texto, contas: 10 });
     passos.push({ titulo: 'Glória ao Pai + Jaculatória', texto: `${ORACOES[3].texto}\n\nÓ meu Jesus, perdoai-nos, livrai-nos do fogo do inferno, levai as almas todas para o Céu, principalmente as que mais precisarem.` });
   });
 
@@ -3710,8 +4339,57 @@ function montarPassosDoTerco(chaveMisterio) {
   return passos;
 }
 
+function montarPassosDoTercoDaMisericordia() {
+  const o = TERCO_DA_MISERICORDIA.oracoes;
+  const passos = [
+    { titulo: 'Sinal da Cruz', texto: ORACOES[0].texto },
+    { titulo: 'Oração inicial (opcional)', texto: o.expirastes },
+    { titulo: 'Ó Sangue e Água (três vezes, opcional)', texto: o.sangueEAgua, contas: 3 },
+    { titulo: 'Pai Nosso', texto: ORACOES[1].texto },
+    { titulo: 'Ave Maria', texto: ORACOES[2].texto },
+    { titulo: 'Credo dos Apóstolos', texto: ORACOES[4].texto },
+  ];
+  for (let dezena = 1; dezena <= 5; dezena++) {
+    passos.push({ titulo: `${dezena}ª dezena — conta grande`, texto: o.eternoPai });
+    passos.push({ titulo: `${dezena}ª dezena — dez contas pequenas`, texto: o.dolorosaPaixao, contas: 10 });
+  }
+  passos.push({ titulo: 'Para concluir (três vezes)', texto: o.deusSanto, contas: 3 });
+  passos.push({ titulo: 'Oração final (opcional)', texto: o.oracaoFinal });
+  passos.push({ titulo: 'Jesus, eu confio em Vós!', texto: 'Jesus, eu confio em Vós!\n\nEm nome do Pai, e do Filho, e do Espírito Santo. Amém.' });
+  return passos;
+}
+
 let passosTercoAtual = [];
 let indicePassoTerco = 0;
+let contasMarcadas = 0;
+
+function renderizarContasDoPasso(passo) {
+  const area = document.getElementById('terco-contas');
+  if (!area) return;
+  contasMarcadas = 0;
+  if (!passo.contas) {
+    area.hidden = true;
+    area.innerHTML = '';
+    return;
+  }
+  area.hidden = false;
+  area.innerHTML = `
+    <div class="terco-contas-fila">${Array.from({ length: passo.contas }, (_, i) => `<button type="button" class="terco-conta" data-conta="${i}" aria-label="Conta ${i + 1} de ${passo.contas}"></button>`).join('')}</div>
+    <p class="terco-contas-dica" aria-live="polite">Toque numa conta a cada oração (0 de ${passo.contas})</p>`;
+  const atualizar = () => {
+    area.querySelectorAll('.terco-conta').forEach((conta, i) => conta.classList.toggle('marcada', i < contasMarcadas));
+    area.querySelector('.terco-contas-dica').textContent = contasMarcadas >= passo.contas
+      ? `Pronto: ${passo.contas} de ${passo.contas}`
+      : `Toque numa conta a cada oração (${contasMarcadas} de ${passo.contas})`;
+  };
+  area.querySelectorAll('.terco-conta').forEach((conta) => {
+    conta.addEventListener('click', () => {
+      const numero = Number(conta.dataset.conta) + 1;
+      contasMarcadas = contasMarcadas === numero ? numero - 1 : numero;
+      atualizar();
+    });
+  });
+}
 
 function renderizarPassoDoTerco() {
   const passo = passosTercoAtual[indicePassoTerco];
@@ -3719,6 +4397,7 @@ function renderizarPassoDoTerco() {
   document.getElementById('terco-passo-total').textContent = passosTercoAtual.length;
   document.getElementById('terco-titulo-passo').textContent = passo.titulo;
   document.getElementById('terco-texto-passo').textContent = passo.texto;
+  renderizarContasDoPasso(passo);
 
   const btnAnterior = document.getElementById('terco-anterior');
   const btnProximo = document.getElementById('terco-proximo');
@@ -3729,9 +4408,25 @@ function renderizarPassoDoTerco() {
 function iniciarTerco(chaveMisterio) {
   passosTercoAtual = montarPassosDoTerco(chaveMisterio);
   indicePassoTerco = 0;
+  const nome = chaveMisterio === 'misericordia' ? TERCO_DA_MISERICORDIA.nome : MISTERIOS_DO_TERCO[chaveMisterio].nome;
+  const titulo = document.getElementById('terco-nome-rezando');
+  if (titulo) titulo.textContent = nome;
   document.getElementById('terco-escolha').style.display = 'none';
   document.getElementById('terco-rezando').style.display = 'block';
   renderizarPassoDoTerco();
+}
+
+function voltarParaEscolhaDoTerco() {
+  document.getElementById('terco-rezando').style.display = 'none';
+  document.getElementById('terco-escolha').style.display = 'block';
+}
+
+// Abre a página do terço (vinda das Orações, por exemplo); com
+// "misericordia", já começa o Terço da Misericórdia
+function abrirTerco(chave) {
+  voltarParaEscolhaDoTerco();
+  mudarDeView('view-terco');
+  if (chave) setTimeout(() => iniciarTerco(chave), 300);
 }
 
 function iniciarPaginaDoTerco() {
@@ -3746,7 +4441,18 @@ function iniciarPaginaDoTerco() {
     </button>
   `).join('');
 
-  containerBotoes.querySelectorAll('.terco-btn-misterio').forEach(btn => {
+  const outros = document.getElementById('terco-outros');
+  if (outros) {
+    const agoraEhHoraDaMisericordia = new Date().getHours() === 15;
+    outros.innerHTML = `
+      <button class="terco-btn-misterio terco-btn-misericordia ${agoraEhHoraDaMisericordia ? 'sugerido' : ''}" data-misterio="misericordia">
+        <div class="nome">${TERCO_DA_MISERICORDIA.nome}</div>
+        <div class="descricao">${TERCO_DA_MISERICORDIA.descricao}</div>
+        <div class="tag">${agoraEhHoraDaMisericordia ? 'Agora é a Hora da Misericórdia' : TERCO_DA_MISERICORDIA.dias}</div>
+      </button>`;
+  }
+
+  document.querySelectorAll('#terco-escolha .terco-btn-misterio').forEach(btn => {
     btn.addEventListener('click', () => iniciarTerco(btn.dataset.misterio));
   });
 
@@ -3758,19 +4464,14 @@ function iniciarPaginaDoTerco() {
       indicePassoTerco++;
       renderizarPassoDoTerco();
     } else {
-      document.getElementById('terco-rezando').style.display = 'none';
-      document.getElementById('terco-escolha').style.display = 'block';
+      voltarParaEscolhaDoTerco();
     }
   });
-  document.getElementById('terco-sair').addEventListener('click', () => {
-    document.getElementById('terco-rezando').style.display = 'none';
-    document.getElementById('terco-escolha').style.display = 'block';
-  });
+  document.getElementById('terco-sair').addEventListener('click', voltarParaEscolhaDoTerco);
 
   const btnVoltar = document.getElementById('btn-back-terco');
   if (btnVoltar) btnVoltar.addEventListener('click', () => {
-    document.getElementById('terco-rezando').style.display = 'none';
-    document.getElementById('terco-escolha').style.display = 'block';
+    voltarParaEscolhaDoTerco();
     mudarDeView('view-home');
   });
 }
@@ -3778,86 +4479,203 @@ function iniciarPaginaDoTerco() {
 // ============================================================
 //  PADROEIRO DE... (buscar santo por necessidade/causa)
 // ============================================================
-// Mapeia palavras-chave de necessidades a IDs de santos já
-// presentes no catálogo (baseado nos padroados mencionados nas
-// próprias biografias).
-const PADROEIROS = {
-  'viagem|viajante|estrada|motorista|trânsito': ['cristovao', 'rafael'],
-  'saude|saúde|doenca|doença|cura|hospital|enfermeira|enfermeiro|medico|médico': ['rafael', 'joao-de-deus', 'bernadete'],
-  'trabalho|emprego|operario|operário|trabalhador': ['jose', 'jose-operario'],
-  'estudante|estudo|prova|escola|universidade': ['tomas-aquino', 'catarina-alexandria', 'alberto-magno'],
-  'causa impossivel|causa impossível|desespero|urgente|urgencia|urgência': ['judas-tadeu', 'expedito', 'rita-cassia'],
-  'familia|família|mae|mãe|pai|filhos': ['sagrada-familia', 'jose', 'monica'],
-  'gravidez|gestante|parto': ['joaquim-ana'],
-  'internet|tecnologia|programador|computador': ['carlo-acutis', 'isidoro-sevilha'],
-  'musico|músico|musica|música|cantor': ['cecilia'],
-  'jornalista|escritor|comunicacao|comunicação': ['francisco-sales', 'gabriel'],
-  'medo|protecao|proteção|perigo': ['miguel', 'jorge', 'sao-bras'],
-  'perda de objeto|objeto perdido|achar algo': ['antonio-padua'],
-  'juventude|jovem|adolescente': ['luis-gonzaga', 'domingos-savio', 'maria-goretti'],
-  'artista|pintor|escultor': ['lucas-evangelista'],
-  'advogado|justica|justiça|juiz': ['tomas-more', 'raimundo-penafort'],
-  'professor|educador|ensino': ['joao-batista-lasalle', 'joao-bosco'],
-  'pobres|caridade|esmola': ['vicente-paulo', 'dulce-pobres', 'martin-porres'],
-  'animais|bichos|pets': ['antao-grande', 'francisco-assis'],
+// Cada tema junta as palavras que as pessoas usam para aquela
+// necessidade e os santos do catálogo tradicionalmente invocados
+// para ela (do mais conhecido para o menos). A busca entende erros de
+// digitação e frases inteiras ("vou viajar amanhã"), e também acha um
+// santo pelo nome.
+const PADROEIROS = [
+  { rotulo: 'Viagens e estradas', termos: ['viagem', 'viajar', 'viajante', 'estrada', 'motorista', 'trânsito', 'carro', 'caminhoneiro', 'ônibus', 'avião', 'turista', 'dirigir'], santos: ['cristovao', 'rafael'] },
+  { rotulo: 'Saúde e doentes', termos: ['saúde', 'doença', 'doente', 'cura', 'curar', 'hospital', 'enfermeira', 'enfermeiro', 'enfermagem', 'médico', 'médica', 'cirurgia', 'internado', 'tratamento', 'câncer'], santos: ['rafael', 'camilo-lelis', 'joao-de-deus', 'cosme-damiao', 'charbel-makhlouf', 'bernadete'] },
+  { rotulo: 'Gravidez e parto', termos: ['gravidez', 'grávida', 'gestante', 'gestação', 'parto', 'engravidar', 'bebê', 'nascimento', 'filho a caminho'], santos: ['gerardo-majela', 'gianna-molla', 'joaquim-ana'] },
+  { rotulo: 'Trabalho e emprego', termos: ['trabalho', 'emprego', 'desemprego', 'desempregado', 'operário', 'trabalhador', 'serviço', 'entrevista de emprego', 'profissão'], santos: ['jose', 'jose-operario', 'josemaria-escriva'] },
+  { rotulo: 'Dívidas e dificuldades financeiras', termos: ['dívida', 'dívidas', 'endividado', 'endividada', 'dinheiro', 'contas', 'pobreza', 'aluguel', 'falência'], santos: ['edwiges'] },
+  { rotulo: 'Estudos e provas', termos: ['estudante', 'estudo', 'estudar', 'prova', 'provas', 'escola', 'universidade', 'faculdade', 'vestibular', 'enem', 'concurso'], santos: ['tomas-aquino', 'catarina-alexandria', 'alberto-magno'] },
+  { rotulo: 'Causas impossíveis e urgentes', termos: ['causa impossível', 'impossível', 'causa difícil', 'desespero', 'urgente', 'urgência', 'desesperado', 'desesperada'], santos: ['judas-tadeu', 'rita-cassia', 'expedito'] },
+  { rotulo: 'Família, mães e filhos', termos: ['família', 'mãe', 'mães', 'pai', 'filhos', 'filho', 'filha', 'casamento', 'lar', 'marido', 'esposa'], santos: ['sagrada-familia', 'jose', 'monica', 'gianna-molla'] },
+  { rotulo: 'Internet e tecnologia', termos: ['internet', 'tecnologia', 'programador', 'computador', 'celular', 'informática'], santos: ['carlo-acutis', 'isidoro-sevilha'] },
+  { rotulo: 'Música e canto', termos: ['músico', 'música', 'cantor', 'cantora', 'coral', 'canto', 'instrumento'], santos: ['cecilia'] },
+  { rotulo: 'Jornalismo e comunicação', termos: ['jornalista', 'escritor', 'escritora', 'comunicação', 'imprensa', 'rádio'], santos: ['francisco-sales', 'gabriel', 'maximiliano-kolbe'] },
+  { rotulo: 'Medo e proteção', termos: ['medo', 'proteção', 'perigo', 'proteger', 'defesa', 'violência', 'assalto', 'inimigo'], santos: ['miguel', 'jorge'] },
+  { rotulo: 'Coisas perdidas', termos: ['perda de objeto', 'objeto perdido', 'perdi', 'perdido', 'achar', 'encontrar', 'sumiu'], santos: ['antonio-padua'] },
+  { rotulo: 'Jovens', termos: ['juventude', 'jovem', 'jovens', 'adolescente', 'adolescentes'], santos: ['luis-gonzaga', 'domingos-savio', 'maria-goretti', 'teresa-dos-andes'] },
+  { rotulo: 'Artistas', termos: ['artista', 'pintor', 'pintora', 'escultor', 'arte', 'desenho'], santos: ['lucas-evangelista'] },
+  { rotulo: 'Justiça e advogados', termos: ['advogado', 'advogada', 'justiça', 'juiz', 'juíza', 'processo', 'tribunal', 'injustiça'], santos: ['tomas-more', 'raimundo-penafort'] },
+  { rotulo: 'Professores e educação', termos: ['professor', 'professora', 'educador', 'educadora', 'ensino', 'educação', 'catequista', 'catequese'], santos: ['joao-batista-lasalle', 'joao-bosco', 'maria-mazzarello', 'roberto-belarmino'] },
+  { rotulo: 'Pobres e caridade', termos: ['pobres', 'caridade', 'esmola', 'mendigo', 'morador de rua', 'fome', 'voluntário'], santos: ['vicente-paulo', 'dulce-pobres', 'martin-porres', 'teresa-calcuta', 'nha-chica', 'luis-orione'] },
+  { rotulo: 'Animais', termos: ['animais', 'animal', 'bichos', 'pets', 'cachorro', 'gato'], santos: ['antao-grande', 'francisco-assis'] },
+  { rotulo: 'Empregadas domésticas', termos: ['empregada doméstica', 'doméstica', 'diarista', 'faxineira', 'serviço doméstico'], santos: ['zita'] },
+  { rotulo: 'Eucaristia e coroinhas', termos: ['eucaristia', 'comunhão', 'primeira comunhão', 'coroinha', 'coroinhas', 'adoração', 'missa', 'ministro da eucaristia'], santos: ['tarcisio', 'pedro-eymard', 'carlo-acutis'] },
+  { rotulo: 'Paz e reconciliação', termos: ['paz', 'briga', 'conflito', 'guerra', 'reconciliação', 'discórdia', 'inimizade'], santos: ['isabel-portugal', 'francisco-assis'] },
+  { rotulo: 'Hanseníase', termos: ['hanseníase', 'lepra', 'leproso'], santos: ['damiao-molokai'] },
+  { rotulo: 'Pureza', termos: ['pureza', 'castidade'], santos: ['maria-goretti', 'albertina-berkenbrock'] },
+  { rotulo: 'Olhos e visão', termos: ['olhos', 'olho', 'visão', 'vista', 'cegueira', 'cego', 'oculista'], santos: ['santa-luzia'] },
+  { rotulo: 'Garganta', termos: ['garganta', 'dor de garganta', 'engasgo'], santos: ['sao-bras'] },
+  { rotulo: 'Tempestades e raios', termos: ['tempestade', 'raio', 'raios', 'trovão', 'chuva forte'], santos: ['barbara'] },
+  { rotulo: 'Soldados e atletas', termos: ['soldado', 'militar', 'policial', 'atleta', 'esporte', 'esportista'], santos: ['sebastiao', 'jorge'] },
+  { rotulo: 'Padres e confissão', termos: ['padre', 'padres', 'sacerdote', 'pároco', 'confessor', 'confissão'], santos: ['joao-maria-vianney', 'leopoldo-mandic'] },
+];
+
+// Temas que aparecem como atalhos quando a busca está vazia
+const TEMAS_EM_DESTAQUE_DO_PADROEIRO = ['Saúde e doentes', 'Viagens e estradas', 'Trabalho e emprego', 'Família, mães e filhos', 'Estudos e provas', 'Causas impossíveis e urgentes', 'Gravidez e parto', 'Dívidas e dificuldades financeiras', 'Coisas perdidas', 'Medo e proteção', 'Olhos e visão', 'Animais'];
+
+const NOMES_DOS_MESES = {
+  pt: ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'],
+  en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+  es: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
 };
 
+function festaPorExtenso(festa) {
+  if (!festa || !/^\d{2}-\d{2}$/.test(festa)) return '';
+  const [mes, dia] = festa.split('-').map(Number);
+  const meses = NOMES_DOS_MESES[idiomaAtual] || NOMES_DOS_MESES.pt;
+  if (idiomaAtual === 'en') return `${meses[mes - 1]} ${dia}`;
+  return `${dia} de ${meses[mes - 1]}`;
+}
+
+let temasDoPadroeiroParaBusca = null;
+
+// Temas (com seus santos) do mais parecido com a busca para o menos
 function buscarPadroeiro(termo) {
-  const termoNormalizado = termo.toLowerCase().trim();
-  if (!termoNormalizado) return [];
+  const texto = String(termo || '').trim();
+  if (!texto || typeof BuscaInteligente === 'undefined') return [];
+  if (!temasDoPadroeiroParaBusca) {
+    temasDoPadroeiroParaBusca = BuscaInteligente.prepararSituacoes(PADROEIROS.map((t) => ({ rotulo: t.rotulo, termos: t.termos.concat([t.rotulo]), itens: [t.rotulo], tema: t })));
+  }
+  const temas = temasDoPadroeiroParaBusca
+    .map((t) => ({ tema: t.tema, nota: BuscaInteligente.combinarSituacao(texto, t.preparados) }))
+    .filter((t) => t.nota >= 0.5)
+    .sort((a, b) => b.nota - a.nota)
+    .slice(0, 3)
+    .map((t) => ({ rotulo: t.tema.rotulo, santos: t.tema.santos.map((id) => santosData.find((s) => s.id === id)).filter(Boolean) }));
 
-  const idsEncontrados = new Set();
-  Object.entries(PADROEIROS).forEach(([chaves, ids]) => {
-    const partes = chaves.split('|');
-    if (partes.some(p => termoNormalizado.includes(p) || p.includes(termoNormalizado))) {
-      ids.forEach(id => idsEncontrados.add(id));
+  // Também pelo nome do santo ("Antônio", "Santa Rita", "Luzia"...): todas
+  // as palavras digitadas precisam estar no nome, e pelo menos uma que
+  // não seja só "São", "Santa"...
+  const TITULOS = ['sao', 'santo', 'santa', 'santos', 'beato', 'beata', 'saint', 'blessed', 'san'];
+  const doPedido = BuscaInteligente.palavras(texto);
+  const temNomeDeVerdade = doPedido.some((p) => !TITULOS.includes(p));
+  // Nome igual vem antes de parecido ("José" antes de "Josefina"), e o
+  // nome que começa com a palavra antes do que a tem no meio
+  const porNome = !temNomeDeVerdade || doPedido.length > 4 ? [] : santosData.map((s) => {
+    const doNome = BuscaInteligente.palavras(`${s.nome} ${textoDoSanto(s).nome}`).filter((w) => !TITULOS.includes(w));
+    let nota = 0;
+    let posicao = 0;
+    for (const p of doPedido) {
+      if (TITULOS.includes(p)) continue;
+      const notas = doNome.map((w) => BuscaInteligente.semelhanca(p, w));
+      const melhor = Math.max(0, ...notas);
+      if (melhor < 0.85) return null;
+      nota += melhor;
+      posicao += notas.indexOf(melhor);
     }
-  });
+    return { santo: s, nota, posicao };
+  }).filter(Boolean).sort((a, b) => (b.nota - a.nota) || (a.posicao - b.posicao)).map((r) => r.santo);
+  if (porNome.length) temas.unshift({ rotulo: 'Pelo nome', santos: porNome.slice(0, 6) });
+  return temas;
+}
 
-  return santosData.filter(s => idsEncontrados.has(s.id));
+function cartaoDePadroeiro(santo, prefixo) {
+  const textos = textoDoSanto(santo);
+  const festa = festaPorExtenso(santo.festa);
+  return `
+    <button type="button" class="padroeiro-cartao" data-santo="${santo.id}">
+      <span class="padroeiro-foto" id="${prefixo}-${santo.id}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-aureola"></use></svg>
+      </span>
+      <span class="padroeiro-textos">
+        <span class="padroeiro-nome">${textos.nome}</span>
+        <span class="padroeiro-resumo">${textos.resumo}</span>
+        ${festa ? `<span class="padroeiro-festa">Festa: ${festa}</span>` : ''}
+      </span>
+    </button>`;
+}
+
+function mostrarTemasDoPadroeiro(input) {
+  const area = document.getElementById('padroeiro-temas');
+  if (!area) return;
+  area.innerHTML = TEMAS_EM_DESTAQUE_DO_PADROEIRO.map((rotulo) => {
+    const tema = PADROEIROS.find((t) => t.rotulo === rotulo);
+    if (!tema) return '';
+    const nomes = tema.santos.map((id) => santosData.find((s) => s.id === id)).filter(Boolean).slice(0, 2).map((s) => textoDoSanto(s).nome);
+    return `<button type="button" class="padroeiro-tema" data-tema="${rotulo}">
+      <span class="padroeiro-tema-nome">${rotulo}</span>
+      <span class="padroeiro-tema-santos">${nomes.join(', ')}</span>
+    </button>`;
+  }).join('');
+  area.querySelectorAll('.padroeiro-tema').forEach((botao) => {
+    botao.addEventListener('click', () => {
+      input.value = botao.dataset.tema;
+      mostrarResultadosDoPadroeiro(input.value);
+      const resultados = document.getElementById('padroeiro-resultados');
+      if (resultados) resultados.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+}
+
+function mostrarResultadosDoPadroeiro(valor) {
+  const resultados = document.getElementById('padroeiro-resultados');
+  const temas = document.getElementById('padroeiro-temas');
+  if (!resultados) return;
+  const texto = String(valor || '').trim();
+  if (temas) temas.hidden = Boolean(texto);
+  if (!texto) { resultados.innerHTML = ''; return; }
+
+  const grupos = buscarPadroeiro(texto);
+  if (!grupos.length) {
+    resultados.innerHTML = `
+      <div class="padroeiro-vazio">
+        <p>Não encontrei um santo do nosso catálogo ligado a "${escaparTextoDeOracao(texto)}". Tente outra palavra (por exemplo: saúde, viagem, trabalho, família) ou pergunte à Lumina.</p>
+        <button type="button" class="btn-ask-ai" id="padroeiro-perguntar-lumina">Perguntar à Lumina</button>
+        <button type="button" class="padroeiro-limpar" id="padroeiro-ver-temas">Ver todos os temas</button>
+      </div>`;
+    document.getElementById('padroeiro-perguntar-lumina').addEventListener('click', () => {
+      mudarDeView('view-ia');
+      setTimeout(() => {
+        const campo = document.getElementById('lumina-input');
+        if (campo) { campo.value = `Qual santo é padroeiro de: ${texto}?`; campo.focus(); }
+      }, 300);
+    });
+    document.getElementById('padroeiro-ver-temas').addEventListener('click', () => {
+      const input = document.getElementById('padroeiro-input');
+      if (input) input.value = '';
+      mostrarResultadosDoPadroeiro('');
+    });
+    return;
+  }
+
+  resultados.innerHTML = grupos.map((grupo, g) => `
+    <section class="padroeiro-grupo">
+      <h3 class="padroeiro-grupo-titulo">${grupo.rotulo}</h3>
+      <div class="padroeiro-lista">${grupo.santos.map((santo) => cartaoDePadroeiro(santo, `padroeiro-foto-${g}`)).join('')}</div>
+    </section>`).join('');
+
+  resultados.querySelectorAll('.padroeiro-cartao').forEach((cartao) => {
+    cartao.addEventListener('click', () => showDetail(cartao.dataset.santo));
+  });
+  grupos.forEach((grupo, g) => grupo.santos.forEach((santo) => {
+    buscarImagemSanto(santo).then((imgUrl) => {
+      const foto = document.getElementById(`padroeiro-foto-${g}-${santo.id}`);
+      if (imgUrl && foto) foto.innerHTML = htmlDaFoto(imgUrl, santo.nome, 'padroeiro-img');
+    });
+  }));
 }
 
 function iniciarPaginaDePadroeiro() {
   const input = document.getElementById('padroeiro-input');
-  const resultados = document.getElementById('padroeiro-resultados');
   if (!input) return;
 
+  mostrarTemasDoPadroeiro(input);
+  let espera = null;
   input.addEventListener('input', () => {
-    const encontrados = buscarPadroeiro(input.value);
-    if (input.value.trim() && encontrados.length === 0) {
-      resultados.innerHTML = `<p class="not-found-msg" style="grid-column: 1 / -1;">Nenhum santo do nosso catálogo encontrado para "${input.value}". Tente outra palavra, ou pergunte à Lumina!</p>`;
-      return;
-    }
-    resultados.innerHTML = '';
-    encontrados.forEach((santo, index) => {
-      const card = document.createElement('div');
-      card.className = 'card animate-card';
-      card.style.animationDelay = `${index * 0.05}s`;
-      card.onclick = () => showDetail(santo.id);
-      card.innerHTML = `
-        <div class="card-img-wrapper" id="img-wrapper-padroeiro-${santo.id}">
-          <svg class="card-img-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-aureola"></use></svg>
-        </div>
-        <div class="card-content">
-          <h3 class="card-title"><svg class="card-icon" viewBox="0 0 24 24"><use href="#icon-aureola"></use></svg>${textoDoSanto(santo).nome}</h3>
-          <p class="card-desc">${textoDoSanto(santo).resumo}</p>
-        </div>
-      `;
-      resultados.appendChild(card);
-      buscarImagemSanto(santo).then(imgUrl => {
-        const wrapper = document.getElementById(`img-wrapper-padroeiro-${santo.id}`);
-        if (imgUrl && wrapper) wrapper.innerHTML = htmlDaFoto(imgUrl, santo.nome, 'card-img');
-      });
-    });
+    clearTimeout(espera);
+    espera = setTimeout(() => mostrarResultadosDoPadroeiro(input.value), 150);
   });
 
   const btnVoltar = document.getElementById('btn-back-padroeiro');
   if (btnVoltar) btnVoltar.addEventListener('click', () => mudarDeView('view-home'));
 }
 
-// ============================================================
-//  LIGAÇÕES DO MENU LATERAL COM AS NOVAS PÁGINAS
-// ============================================================
 // ============================================================
 //  COMPARTILHAR O SITE
 // ============================================================

@@ -11,14 +11,17 @@
 // direto pela rede — nunca passam por aqui.
 //
 // Ao mudar o nome abaixo, os aparelhos apagam a cópia antiga.
-const CACHE_NOME = 'lumina-sancti-v6';
+const CACHE_NOME = 'lumina-sancti-v8';
 const ARQUIVOS_ESSENCIAIS = [
   './',
   './index.html',
   './style.css',
+  './busca.js',
+  './liturgia.js',
   './script.js',
   './trilhas.js',
   './perfis.js',
+  './mascote.js',
   './favicon.svg',
   './favicon-48.png',
   './apple-touch-icon.png',
