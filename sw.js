@@ -11,7 +11,7 @@
 // direto pela rede — nunca passam por aqui.
 //
 // Ao mudar o nome abaixo, os aparelhos apagam a cópia antiga.
-const CACHE_NOME = 'lumina-sancti-v10';
+const CACHE_NOME = 'lumina-sancti-v11';
 const ARQUIVOS_ESSENCIAIS = [
   './',
   './index.html',

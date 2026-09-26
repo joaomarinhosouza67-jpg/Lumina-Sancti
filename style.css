@@ -2379,33 +2379,29 @@ body.modo-kids #lumi-mapa { margin: 4px 0 18px; }
 /* O liturgia.js coloca data-tema="liturgico" e data-cor-liturgica no
    <body> em todas as páginas menos o início (e no catálogo/biografia
    abertos a partir delas). Só muda o
-   que era dourado (títulos, botões, bordas de destaque, meteoros...);
-   o fundo azul-noite, os cartões e os textos continuam iguais.
+   que era dourado (títulos, botões, bordas de destaque, ícones...);
+   o fundo azul-noite, os cartões, os textos e os meteoros do fundo
+   (sempre dourados, a pedido do João) continuam iguais.
    A tela de entrada nunca recebe esses atributos: continua dourada. */
 body[data-tema="liturgico"][data-cor-liturgica="roxo"] {
   --primary-color: #b794f4; --primary-dark: #d6bcfa; --primary-rgb: 183, 148, 244;
   --primary-claro: #e9d8fd; --primary-sombra: #553c9a; --texto-sobre-primaria: #0f172a;
-  --meteoro-rgb: 196, 160, 255; --meteoro-claro-rgb: 233, 216, 253;
 }
 body[data-tema="liturgico"][data-cor-liturgica="rosa"] {
   --primary-color: #f4a3c8; --primary-dark: #fbc7de; --primary-rgb: 244, 163, 200;
   --primary-claro: #fde2ee; --primary-sombra: #97266d; --texto-sobre-primaria: #0f172a;
-  --meteoro-rgb: 250, 180, 210; --meteoro-claro-rgb: 253, 226, 238;
 }
 body[data-tema="liturgico"][data-cor-liturgica="branco"] {
   --primary-color: #ece6d6; --primary-dark: #ffffff; --primary-rgb: 236, 230, 214;
   --primary-claro: #fffdf6; --primary-sombra: #8e8676; --texto-sobre-primaria: #0f172a;
-  --meteoro-rgb: 255, 255, 255; --meteoro-claro-rgb: 255, 250, 235;
 }
 body[data-tema="liturgico"][data-cor-liturgica="verde"] {
   --primary-color: #6fcf97; --primary-dark: #9ee6b8; --primary-rgb: 111, 207, 151;
   --primary-claro: #c6f6d5; --primary-sombra: #276749; --texto-sobre-primaria: #0f172a;
-  --meteoro-rgb: 140, 230, 170; --meteoro-claro-rgb: 200, 245, 215;
 }
 body[data-tema="liturgico"][data-cor-liturgica="vermelho"] {
   --primary-color: #f28b82; --primary-dark: #f8b4ae; --primary-rgb: 242, 139, 130;
   --primary-claro: #fed7d7; --primary-sombra: #9b2c2c; --texto-sobre-primaria: #0f172a;
-  --meteoro-rgb: 255, 150, 140; --meteoro-claro-rgb: 255, 215, 210;
 }
 
 /* Selinho "Advento · roxo" no alto das páginas litúrgicas */
