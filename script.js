@@ -2324,6 +2324,9 @@ const TRADUCOES = {
     perguntar_lumina: 'Perguntar à Lumina sobre {santo}',
     voltar: 'Voltar',
     catalogo_interno_titulo: 'Catálogo dos Santos',
+    nav_leitura: 'Leitura do dia',
+    leitura_titulo: 'Leitura do dia',
+    leitura_em_breve: 'Em breve estará disponível.',
   },
   en: {
     hero_subtitulo: 'Light of the Saints',
@@ -2384,6 +2387,9 @@ const TRADUCOES = {
     perguntar_lumina: 'Ask Lumina about {santo}',
     voltar: 'Back',
     catalogo_interno_titulo: 'Catalog of Saints',
+    nav_leitura: 'Daily readings',
+    leitura_titulo: 'Daily readings',
+    leitura_em_breve: 'Coming soon.',
   },
   es: {
     hero_subtitulo: 'Luz de los Santos',
@@ -2444,6 +2450,9 @@ const TRADUCOES = {
     perguntar_lumina: 'Preguntar a Lumina sobre {santo}',
     voltar: 'Volver',
     catalogo_interno_titulo: 'Catálogo de los Santos',
+    nav_leitura: 'Lecturas del día',
+    leitura_titulo: 'Lecturas del día',
+    leitura_em_breve: 'Próximamente disponible.',
   },
 };
 
@@ -2760,7 +2769,7 @@ function atualizarInterfaceDeConta() {
 // opcoes.catalogoInterno: abre o início só com o catálogo (sem a tela de
 // entrada), herdando a cor da página de onde a pessoa veio.
 function mudarDeView(idNovaView, opcoes) {
-  const todasAsViews = ['view-home', 'view-detail', 'view-ia', 'view-auth', 'view-perfil', 'view-oracoes', 'view-terco', 'view-padroeiro', 'view-trilhas', 'view-licao', 'view-perfis', 'view-ranking', 'view-planos', 'view-completar'];
+  const todasAsViews = ['view-home', 'view-detail', 'view-ia', 'view-auth', 'view-perfil', 'view-oracoes', 'view-leitura', 'view-terco', 'view-padroeiro', 'view-trilhas', 'view-licao', 'view-perfis', 'view-ranking', 'view-planos', 'view-completar'];
   const viewAtual = todasAsViews.map(id => document.getElementById(id)).find(v => v && v.classList.contains('active'));
   // Saindo da lição, a voz da Lumi (modo infantil) não segue falando
   if (idNovaView !== 'view-licao' && typeof pararVozInfantil === 'function') pararVozInfantil(false);
@@ -3729,6 +3738,8 @@ const PAGINAS_PARA_VOLTAR = {
   'view-ia': 'view-ia',
   'view-padroeiro': 'view-padroeiro',
   'view-oracoes': 'view-oracoes',
+  'view-leitura': 'view-leitura',
+  'view-planos': 'view-planos',
 };
 let origemDaBiografia = null;
 
@@ -3896,9 +3907,9 @@ btnBack.addEventListener('click', () => {
 });
 
 // Os filtros do menu lateral ("Catálogo") abrem o catálogo de qualquer
-// página. Vindo de uma página na cor litúrgica (Trilhas, Terço,
-// Lumina), abre o catálogo sozinho, sem a tela de entrada, e ele herda
-// essa cor. Vindo das demais, abre o início dourado, no catálogo.
+// página. Vindo de uma página na cor litúrgica (qualquer uma menos o
+// início), abre o catálogo sozinho, sem a tela de entrada, e ele herda
+// essa cor. Vindo de uma biografia dourada, abre o início, no catálogo.
 let origemDoCatalogo = null;
 
 function abrirCatalogo() {
@@ -4711,10 +4722,14 @@ function iniciarNavegacaoDoMenuLateral() {
   const navOracoes = document.getElementById('nav-oracoes');
   const navTerco = document.getElementById('nav-terco');
   const navPadroeiro = document.getElementById('nav-padroeiro');
+  const navLeitura = document.getElementById('nav-leitura');
+  const voltarDaLeitura = document.getElementById('btn-back-leitura');
 
   if (navOracoes) navOracoes.addEventListener('click', () => { closeSidebar(); mudarDeView('view-oracoes'); });
   if (navTerco) navTerco.addEventListener('click', () => { closeSidebar(); mudarDeView('view-terco'); });
   if (navPadroeiro) navPadroeiro.addEventListener('click', () => { closeSidebar(); mudarDeView('view-padroeiro'); });
+  if (navLeitura) navLeitura.addEventListener('click', () => { closeSidebar(); mudarDeView('view-leitura'); });
+  if (voltarDaLeitura) voltarDaLeitura.addEventListener('click', () => mudarDeView('view-home'));
 }
 
 // ============================================================

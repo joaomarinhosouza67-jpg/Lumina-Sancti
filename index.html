@@ -217,6 +217,7 @@
 
       <div class="sidebar-divisor"></div>
       <button class="side-nav-link side-nav-destaque" id="nav-trilhas"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-trilha"></use></svg><span data-i18n="trilhas_titulo">Trilhas dos Santos</span></button>
+      <button class="side-nav-link" id="nav-leitura"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-biblia"></use></svg><span data-i18n="nav_leitura">Leitura do dia</span></button>
       <button class="side-nav-link" id="nav-oracoes"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-livro"></use></svg><span data-i18n="nav_oracoes">Orações do dia a dia</span></button>
       <button class="side-nav-link" id="nav-terco"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-terco"></use></svg><span data-i18n="nav_terco">Terço guiado</span></button>
       <button class="side-nav-link" id="nav-padroeiro"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lupa"></use></svg><span data-i18n="nav_padroeiro">Padroeiro de...</span></button>
@@ -430,6 +431,23 @@
 
         <h3 class="oracoes-subtitulo">Todas as orações</h3>
         <div id="lista-oracoes" class="lista-oracoes"><!-- Injetado via JS --></div>
+      </div>
+    </section>
+
+    <!-- LEITURA DO DIA (primeira leitura, salmo, segunda leitura e
+         Evangelho). Por enquanto só o aviso de que chega em breve. -->
+    <section id="view-leitura" class="view">
+      <div class="container leitura-container">
+        <button class="btn-back" id="btn-back-leitura">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span data-i18n="voltar_inicio">Voltar para o início</span>
+        </button>
+        <h2 class="section-title" style="text-align:left; margin: 10px 0 4px;" data-i18n="leitura_titulo">Leitura do dia</h2>
+        <div class="title-divider" style="margin: 0 0 24px;"></div>
+        <div class="leitura-em-breve">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-biblia"></use></svg>
+          <p data-i18n="leitura_em_breve">Em breve estará disponível.</p>
+        </div>
       </div>
     </section>
 
@@ -649,6 +667,7 @@
       <g id="icone-check"><path d="M20 6 9 17l-5-5"/></g>
       <g id="icone-medalha"><circle cx="12" cy="8" r="6"/><path d="M15.48 12.89 17 22l-5-3-5 3 1.52-9.11"/></g>
       <g id="icone-trilha"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></g>
+      <g id="icone-biblia"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/><path d="M12 6.5v7M9.5 9h5"/></g>
       <g id="icone-livro"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></g>
       <g id="icone-terco"><circle cx="12" cy="8.5" r="6" stroke-dasharray="1.6 2.2"/><path d="M12 14.5v7.5M9.3 18h5.4"/></g>
       <g id="icone-lupa"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></g>

@@ -3,20 +3,19 @@
 // ============================================================
 // O site tem duas "roupas":
 //
-//   - DOURADA (a de sempre): a tela de entrada, o catálogo aberto a
-//     partir dela e as demais páginas (orações, padroeiro, conta...).
-//   - LITÚRGICA: a cor do tempo litúrgico de hoje (roxo no Advento e
+//   - DOURADA (a de sempre): só a tela principal (o início) e o
+//     catálogo aberto a partir dela.
+//   - LITÚRGICA: todas as outras páginas (Trilhas, Terço, Lumina,
+//     Orações, Padroeiro, Leitura do dia, Planos, conta...). O que era
+//     dourado ganha a cor do tempo litúrgico de hoje: roxo no Advento e
 //     na Quaresma, branco no Natal e na Páscoa, verde no Tempo Comum,
 //     vermelho em Ramos, na Sexta-feira da Paixão e em Pentecostes,
-//     rosa nos domingos Gaudete e Laetare). Só as Trilhas (com a
-//     lição e o ranking delas), o Terço e a conversa com a Lumina
-//     vestem essa cor.
+//     rosa nos domingos Gaudete e Laetare. O fundo azul-noite não muda.
 //
-// Algumas páginas não têm cor própria e HERDAM a cor de onde a pessoa
-// veio: a biografia de um santo e o catálogo aberto pelo menu quando a
-// pessoa está numa página litúrgica. Assim, quem sai das Trilhas para
-// ler a história de um santo continua no roxo do Advento, e quem abre
-// o catálogo pela tela de entrada continua no dourado.
+// A biografia de um santo e o catálogo aberto pelo menu HERDAM a cor de
+// onde a pessoa veio: abertos pelo início, ficam dourados; abertos de
+// qualquer outra página, ficam na cor litúrgica. Voltando ao início,
+// tudo fica dourado de novo.
 //
 // O calendário segue o Brasil: a Epifania é celebrada no domingo entre
 // 2 e 8 de janeiro, e o Batismo do Senhor (fim do Tempo do Natal) no
@@ -52,11 +51,6 @@ const NOMES_DAS_CORES = {
   branco:   { pt: 'branco', en: 'white', es: 'blanco' },
   verde:    { pt: 'verde', en: 'green', es: 'verde' },
   vermelho: { pt: 'vermelho', en: 'red', es: 'rojo' },
-};
-
-// Cor da barra do navegador no celular, para cada roupa do site
-const COR_DA_BARRA = {
-  dourado: '#0f172a', roxo: '#150f26', rosa: '#1c1020', branco: '#0f172a', verde: '#0b1a15', vermelho: '#1f0f12',
 };
 
 // ---------- Contas de calendário ----------
@@ -149,18 +143,20 @@ function tempoLiturgicoAtual() {
 
 // ---------- Qual roupa cada página veste ----------
 
-const PAGINAS_LITURGICAS = ['view-trilhas', 'view-licao', 'view-terco', 'view-ia'];
-// Sem cor própria: ficam com a cor da página de onde a pessoa veio
-const PAGINAS_QUE_HERDAM = ['view-detail', 'view-ranking', 'view-perfis'];
+// Sem cor própria: fica com a cor da página de onde a pessoa veio
+const PAGINAS_QUE_HERDAM = ['view-detail'];
+// Páginas que mostram o selinho com o nome do tempo litúrgico
+const PAGINAS_COM_SELO = ['view-trilhas', 'view-terco', 'view-ia', 'view-oracoes', 'view-padroeiro', 'view-leitura'];
 
 let temaDoSite = 'dourado'; // 'dourado' ou 'liturgico'
 
 function temaParaPagina(idDaPagina) {
-  if (PAGINAS_LITURGICAS.includes(idDaPagina)) return 'liturgico';
   if (PAGINAS_QUE_HERDAM.includes(idDaPagina)) return temaDoSite;
-  // O catálogo aberto pelo menu a partir de uma página litúrgica
-  if (idDaPagina === 'view-home' && document.body.classList.contains('catalogo-interno')) return temaDoSite;
-  return 'dourado';
+  if (idDaPagina === 'view-home') {
+    // O início é dourado; o catálogo aberto pelo menu de outra página herda
+    return document.body.classList.contains('catalogo-interno') ? temaDoSite : 'dourado';
+  }
+  return 'liturgico';
 }
 
 function idiomaDoTempoLiturgico() {
@@ -182,7 +178,7 @@ function atualizarSelosLiturgicos() {
 }
 
 function colocarSelosLiturgicos() {
-  ['view-trilhas', 'view-terco', 'view-ia'].forEach((id) => {
+  PAGINAS_COM_SELO.forEach((id) => {
     const pagina = document.getElementById(id);
     if (!pagina || pagina.querySelector('.selo-liturgico')) return;
     const selo = document.createElement('p');
@@ -197,18 +193,14 @@ function colocarSelosLiturgicos() {
 function aplicarTema(tema) {
   temaDoSite = tema === 'liturgico' ? 'liturgico' : 'dourado';
   const corpo = document.body;
-  let corDaBarra = COR_DA_BARRA.dourado;
   if (temaDoSite === 'liturgico') {
     const tempo = tempoLiturgicoAtual();
     corpo.dataset.tema = 'liturgico';
     corpo.dataset.corLiturgica = tempo.cor;
-    corDaBarra = COR_DA_BARRA[tempo.cor] || corDaBarra;
   } else {
     delete corpo.dataset.tema;
     delete corpo.dataset.corLiturgica;
   }
-  const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.setAttribute('content', corDaBarra);
 }
 
 // Chamado sempre que uma página aparece na tela
