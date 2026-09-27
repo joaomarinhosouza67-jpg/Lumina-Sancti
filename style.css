@@ -1765,7 +1765,6 @@ body:has(#view-perfis.active) .site-footer { display: none; }
 }
 button.ranking-linha { cursor: pointer; }
 .ranking-linha.destaque { border-color: var(--primary-color); background: rgba(var(--primary-rgb), 0.08); }
-.ranking-posicao { width: 26px; text-align: center; font-weight: 800; color: var(--primary-color); }
 .ranking-nome { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ranking-nome small { color: var(--primary-color); font-weight: 700; margin-left: 4px; }
 .ranking-numero { display: inline-flex; align-items: center; gap: 4px; font-weight: 700; font-size: 0.9rem; }
@@ -2089,7 +2088,6 @@ body.modo-kids #lumi-mapa { margin: 4px 0 18px; }
   font-weight: 700;
 }
 .plano-cartao.destaque .plano-botao { border-color: var(--primary-color); color: var(--primary-color); }
-.planos-nota { text-align: center; font-size: 0.85rem; color: var(--text-muted); }
 
 .instalar-janela { max-width: 420px; }
 .instalar-passos { padding-left: 22px; display: flex; flex-direction: column; gap: 12px; color: var(--text-main); line-height: 1.5; margin-top: 6px; }

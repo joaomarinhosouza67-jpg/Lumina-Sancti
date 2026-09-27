@@ -846,7 +846,6 @@ function linhaDoRanking(item) {
   const tag = clicavel ? 'button' : 'div';
   return `
     <${tag} class="ranking-linha${item.destaque ? ' destaque' : ''}"${clicavel ? ` data-membro="${item.membroId}"` : ''}>
-      <span class="ranking-posicao">${item.posicao}</span>
       ${desenharAvatar(item.avatar, item.fotoUrl, 'pequeno')}
       <span class="ranking-nome">${escaparTexto(item.nome)}${item.destaque ? ' <small>você</small>' : ''}</span>
       <span class="ranking-numero ranking-fe">${icone('estrela')}${item.fe}</span>
