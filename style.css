@@ -1513,6 +1513,24 @@ input:focus-visible,
 .avatar-adicionar { background: transparent; border: 2px dashed var(--text-muted); box-shadow: none; color: var(--text-muted); }
 
 body:has(#view-perfis.active) .site-footer { display: none; }
+@media (min-width: 768px) {
+  body:has(#view-perfis.active) .nav-container {
+    position: relative;
+    max-width: none;
+    padding: 18px clamp(24px, 3.5vw, 56px);
+  }
+  body:has(#view-perfis.active) .nav-brand {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: clamp(1.6rem, 2.2vw, 2.1rem);
+    letter-spacing: 3px;
+  }
+  body:has(#view-perfis.active) .nav-container .icon-btn svg { width: 28px; height: 28px; }
+  body:has(#view-perfis.active) #menu-btn svg { width: 32px; height: 32px; }
+  body:has(#view-perfis.active) .nav-right-actions .icon-btn { margin-left: 20px !important; }
+}
 .perfis-container {
   max-width: 1400px;
   width: 100%;

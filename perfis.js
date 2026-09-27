@@ -21,7 +21,7 @@ const AVATARES = [
 let membroAtivo = null;
 let membrosDaConta = [];
 let perfisEmModoEdicao = false;
-let destinoAposEscolherPerfil = 'trilhas';
+let destinoAposEscolherPerfil = 'inicio';
 let slugPendenteDasTrilhas = null;
 let abaDoRanking = 'familia';
 let periodoDoRanking = 'week';
@@ -364,7 +364,7 @@ function abrirSelecaoDePerfis(destino, liberado) {
     sairDoModoInfantil(destino);
     return;
   }
-  destinoAposEscolherPerfil = destino || 'trilhas';
+  destinoAposEscolherPerfil = destino || 'inicio';
   perfisEmModoEdicao = false;
   if (typeof closeSidebar === 'function') closeSidebar();
   mudarDeView('view-perfis');
@@ -549,7 +549,7 @@ function renderizarFaixaDaConta() {
       </div>`;
     document.getElementById('trilhas-perfil-atual').addEventListener('click', () => abrirPainelDoPerfil(membroAtivo.id));
     document.getElementById('trilhas-abrir-ranking').addEventListener('click', () => abrirRanking());
-    document.getElementById('trilhas-trocar-perfil').addEventListener('click', () => abrirSelecaoDePerfis('trilhas'));
+    document.getElementById('trilhas-trocar-perfil').addEventListener('click', () => abrirSelecaoDePerfis('inicio'));
     if (nota) nota.textContent = tt('nota_conta');
   } else if (typeof supabaseCliente !== 'undefined' && supabaseCliente) {
     faixa.innerHTML = `
@@ -959,7 +959,7 @@ function iniciarPerfis() {
   });
 
   const trocarPerfil = document.getElementById('conta-menu-perfis');
-  if (trocarPerfil) trocarPerfil.addEventListener('click', () => abrirSelecaoDePerfis('trilhas'));
+  if (trocarPerfil) trocarPerfil.addEventListener('click', () => abrirSelecaoDePerfis('inicio'));
   const sairKids = document.getElementById('conta-menu-sair-kids');
   if (sairKids) sairKids.addEventListener('click', () => sairDoModoInfantil('inicio'));
 
