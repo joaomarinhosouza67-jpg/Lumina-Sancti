@@ -1,9 +1,3 @@
-// ============================================================
-//  LUMINA SANCTI — Biografias em inglês
-// ============================================================
-// Carregado só quando a pessoa escolhe English no site.
-// Santo que ainda não está aqui aparece em português, com aviso.
-
 window.BIOGRAFIAS_TRADUZIDAS = window.BIOGRAFIAS_TRADUZIDAS || {};
 window.BIOGRAFIAS_TRADUZIDAS.en = Object.assign(window.BIOGRAFIAS_TRADUZIDAS.en || {}, {
   'sagrada-familia': {
@@ -158,7 +152,6 @@ window.BIOGRAFIAS_TRADUZIDAS.en = Object.assign(window.BIOGRAFIAS_TRADUZIDAS.en 
   },
 });
 
-// Lote 2 (mais 25 santos)
 Object.assign(window.BIOGRAFIAS_TRADUZIDAS.en, {
   'dulce-pobres': {
     nome: `Saint Dulce of the Poor`,
@@ -312,7 +305,6 @@ Object.assign(window.BIOGRAFIAS_TRADUZIDAS.en, {
   },
 });
 
-// Lote 3 (setembro de 2026): mais 21 santos, na ordem do catálogo
 Object.assign(window.BIOGRAFIAS_TRADUZIDAS.en, {
   'teresinha': {
     nome: `Saint Thérèse of the Child Jesus`,
@@ -435,7 +427,6 @@ Object.assign(window.BIOGRAFIAS_TRADUZIDAS.en, {
   },
 });
 
-// Lote 4 (setembro de 2026): mais 21 santos, na ordem do catálogo
 Object.assign(window.BIOGRAFIAS_TRADUZIDAS.en, {
   'angela-merici': {
     nome: `Saint Angela Merici`,
@@ -544,7 +535,6 @@ Object.assign(window.BIOGRAFIAS_TRADUZIDAS.en, {
   },
 });
 
-// Lote 5 (setembro de 2026): mais 21 santos, na ordem do catálogo
 Object.assign(window.BIOGRAFIAS_TRADUZIDAS.en, {
   'fidelis-sigmaringen': {
     nome: `Saint Fidelis of Sigmaringen`,
@@ -653,7 +643,6 @@ Object.assign(window.BIOGRAFIAS_TRADUZIDAS.en, {
   },
 });
 
-// Lote 6 (setembro de 2026): mais 21 santos, na ordem do catálogo
 Object.assign(window.BIOGRAFIAS_TRADUZIDAS.en, {
   'henrique-imperador': {
     nome: `Saint Henry`,
@@ -762,7 +751,6 @@ Object.assign(window.BIOGRAFIAS_TRADUZIDAS.en, {
   },
 });
 
-// Lote 7 (setembro de 2026): os últimos 21 santos do catálogo
 Object.assign(window.BIOGRAFIAS_TRADUZIDAS.en, {
   'margarida-maria-alacoque': {
     nome: `Saint Margaret Mary Alacoque`,
@@ -871,7 +859,6 @@ Object.assign(window.BIOGRAFIAS_TRADUZIDAS.en, {
   },
 });
 
-// Lote 8 (setembro de 2026): os 27 santos que vieram do aplicativo
 Object.assign(window.BIOGRAFIAS_TRADUZIDAS.en, {
   'charbel-makhlouf': {
     nome: `Saint Charbel Makhlouf`,

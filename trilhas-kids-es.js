@@ -1,9 +1,3 @@
-// ============================================================
-//  LUMINA SANCTI — Perguntas das crianças em espanhol
-// ============================================================
-// Tradução do trilhas-kids.js, com as mesmas chaves (um capítulo por
-// chave), a mesma ordem e a mesma quantidade de atividades.
-
 window.ATIVIDADES_KIDS_TRADUZIDAS = window.ATIVIDADES_KIDS_TRADUZIDAS || {};
 window.ATIVIDADES_KIDS_TRADUZIDAS.es = Object.assign(window.ATIVIDADES_KIDS_TRADUZIDAS.es || {}, {
   'francisco-1': [

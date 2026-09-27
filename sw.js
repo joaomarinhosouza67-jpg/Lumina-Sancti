@@ -1,17 +1,4 @@
-// ============================================================
-//  LUMINA SANCTI — Service Worker (deixa o site instalável e
-//  funcionando parcialmente offline)
-// ============================================================
-// Estratégia "rede primeiro": sempre busca a versão mais nova dos
-// arquivos do site na internet e só usa a cópia guardada quando a
-// pessoa está sem conexão. (A versão anterior fazia o contrário e
-// podia deixar quem instalou o app preso numa versão antiga.)
-//
-// Fotos da Wikipédia e chamadas à Lumina/Supabase seguem sempre
-// direto pela rede — nunca passam por aqui.
-//
-// Ao mudar o nome abaixo, os aparelhos apagam a cópia antiga.
-const CACHE_NOME = 'lumina-sancti-v11';
+const CACHE_NOME = 'lumina-sancti-v12';
 const ARQUIVOS_ESSENCIAIS = [
   './',
   './index.html',
@@ -33,7 +20,7 @@ self.addEventListener('install', (evento) => {
   evento.waitUntil(
     caches.open(CACHE_NOME)
       .then((cache) => cache.addAll(ARQUIVOS_ESSENCIAIS))
-      .catch(() => {}) // se algum arquivo faltar, não trava a instalação
+      .catch(() => {})
   );
   self.skipWaiting();
 });

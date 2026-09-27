@@ -1,28 +1,8 @@
-// ============================================================
-//  LUMINA SANCTI — PERFIS (estilo streaming), PROGRESSO SALVO
-//  NA CONTA E RANKINGS
-// ============================================================
-// Tudo aqui usa o MESMO banco do app (Supabase), pelas funções que o
-// próprio app usa: uma conta só vale no site e no celular.
-// Uma conta pode ter até 6 perfis, de adultos e de crianças. Cada
-// perfil tem nome, avatar (ou foto da galeria), Fé, Santidade e
-// ofensiva — quem calcula e guarda esses números é o banco.
-//
-// Regras (definidas no banco do app):
-//   - A Santidade vale para todos os perfis, inclusive os de criança.
-//   - O tipo do perfil (adulto ou criança) não muda depois de criado.
-//   - Ranking da Família: todos os perfis da conta.
-//   - Ranking Global: só adultos, só com o primeiro nome e sem fotos.
-//
-// Este arquivo precisa ser carregado DEPOIS do script.js e do
-// trilhas.js — ele usa funções e variáveis de lá.
-
 const CHAVE_MEMBRO_ATIVO = 'lumina-sancti-membro-ativo';
-const MAXIMO_DE_PERFIS = 6;       // limite do banco do app
-const TAMANHO_MAXIMO_DO_NOME = 24; // limite do banco do app
-const PASTA_DE_FOTOS = 'avatars';  // pasta de fotos do app (cada conta só vê a sua)
+const MAXIMO_DE_PERFIS = 6;
+const TAMANHO_MAXIMO_DO_NOME = 24;
+const PASTA_DE_FOTOS = 'avatars';
 
-// Avatares desenhados: elegantes para adultos e coloridos para crianças.
 const AVATARES = [
   { id: 'adulto-estrela', grupo: 'adulto', icone: 'estrela', fundo: 'linear-gradient(145deg, #243149, #0f172a)', cor: '#d4af37' },
   { id: 'adulto-pomba', grupo: 'adulto', icone: 'pomba', fundo: 'linear-gradient(145deg, #243149, #0f172a)', cor: '#e0f2fe' },
@@ -56,7 +36,6 @@ function contaLogada() {
     && typeof sessaoAtual !== 'undefined' && !!sessaoAtual;
 }
 
-// Nomes vêm do que a pessoa digitou: sempre "limpos" antes de ir para a tela.
 function escaparTexto(texto) {
   return String(texto == null ? '' : texto).replace(/[&<>"']/g, (c) => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
@@ -74,8 +53,6 @@ function aplicarModoKids() {
   const eraCrianca = document.body.classList.contains('modo-kids');
   const ehCrianca = !!(membroAtivo && membroAtivo.tipo === 'crianca');
   document.body.classList.toggle('modo-kids', ehCrianca);
-  // A Lumi (mascote.js) aparece só para crianças: ao trocar de perfil,
-  // ela para de falar e some se o perfil novo for de adulto.
   if (eraCrianca !== ehCrianca || ehCrianca) avisarLumiDaTrocaDePerfil();
 }
 
@@ -86,15 +63,11 @@ function avisarLumiDaTrocaDePerfil() {
 function limparPerfilAtivo() {
   membroAtivo = null;
   estadoEmMemoriaDaConta = null;
-  try { localStorage.removeItem(CHAVE_MEMBRO_ATIVO); } catch (e) { /* sem problema */ }
+  try { localStorage.removeItem(CHAVE_MEMBRO_ATIVO); } catch (e) {  }
   document.body.classList.remove('modo-kids');
   avisarLumiDaTrocaDePerfil();
 }
 
-// ============================================================
-//  PERFIS DA CONTA
-// ============================================================
-// O banco do app usa nomes em inglês; aqui eles viram os nomes do site
 function membroDoPerfil(perfil) {
   return {
     id: perfil.id,
@@ -118,7 +91,6 @@ async function carregarMembrosDaConta() {
   return membrosDaConta;
 }
 
-// As fotos ficam numa pasta privada: o banco gera um link temporário.
 async function anexarFotos(lista) {
   const comFoto = lista.filter((m) => m.foto_path);
   if (comFoto.length === 0) return;
@@ -131,13 +103,9 @@ async function anexarFotos(lista) {
       if (membro && item.signedUrl) membro.fotoUrl = item.signedUrl;
     });
   } catch (e) {
-    // sem foto, fica o avatar
   }
 }
 
-// ============================================================
-//  "QUEM VAI APRENDER AGORA?"
-// ============================================================
 function abrirSelecaoDePerfis(destino) {
   if (!contaLogada()) {
     if (typeof irParaLogin === 'function') irParaLogin();
@@ -198,35 +166,28 @@ async function renderizarSelecaoDePerfis() {
     gerenciar.style.display = membrosDaConta.length ? '' : 'none';
   }
 
-  // Conta nova: já abre o editor para criar o primeiro perfil
   if (membrosDaConta.length === 0) abrirEditorDePerfil(null);
 }
 
 function escolherPerfil(membro) {
   membroAtivo = membro;
-  estadoEmMemoriaDaConta = null; // carrega o progresso deste perfil
-  try { localStorage.setItem(CHAVE_MEMBRO_ATIVO, membro.id); } catch (e) { /* sem problema */ }
+  estadoEmMemoriaDaConta = null;
+  try { localStorage.setItem(CHAVE_MEMBRO_ATIVO, membro.id); } catch (e) {  }
   aplicarModoKids();
   if (destinoAposEscolherPerfil === 'inicio') mudarDeView('view-home');
   else if (destinoAposEscolherPerfil === 'ranking') abrirRanking();
   else abrirTrilhas(slugPendenteDasTrilhas);
 }
 
-// Chamado pelo script.js logo depois de entrar na conta
 function aposEntrarNaConta() {
   membroAtivo = null;
   estadoEmMemoriaDaConta = null;
   abrirSelecaoDePerfis('inicio');
 }
 
-// ============================================================
-//  TRILHAS COM A CONTA
-// ============================================================
-// Chamado pelo trilhas.js. Devolve true quando a conta assume
-// (carregamento assíncrono) e false no modo visitante.
 function prepararTrilhasDaConta(slug) {
   if (!contaLogada()) {
-    estadoEmMemoriaDaConta = null; // visitante: progresso no aparelho
+    estadoEmMemoriaDaConta = null;
     return false;
   }
   slugPendenteDasTrilhas = slug || null;
@@ -234,7 +195,6 @@ function prepararTrilhasDaConta(slug) {
   return true;
 }
 
-// Monta o estado das trilhas com os números oficiais do banco
 function estadoDoServidor(membro, progresso, trilhas) {
   const passo = MINUTOS_PARA_RENOVAR_SANTIDADE * 60 * 1000;
   const proxima = Date.parse(membro.proximaSantidadeEm);
@@ -245,7 +205,6 @@ function estadoDoServidor(membro, progresso, trilhas) {
   const estado = {
     fe: membro.fe,
     santidade: membro.santidade,
-    // o banco devolve quando chega a próxima; daqui a tela conta sozinha
     santidadeMarcadaEm: Number.isFinite(proxima) ? proxima - passo : Date.now(),
     ofensiva: membro.ofensiva,
     ultimoAcesso: dataLocalISO(),
@@ -260,10 +219,9 @@ function estadoDoServidor(membro, progresso, trilhas) {
 }
 
 async function carregarTrilhasDaConta() {
-  // 1) Garante um perfil escolhido
   if (!membroAtivo) {
     let idSalvo = null;
-    try { idSalvo = localStorage.getItem(CHAVE_MEMBRO_ATIVO); } catch (e) { /* sem problema */ }
+    try { idSalvo = localStorage.getItem(CHAVE_MEMBRO_ATIVO); } catch (e) {  }
     try { await carregarMembrosDaConta(); } catch (e) { membrosDaConta = []; }
     membroAtivo = membrosDaConta.find((m) => m.id === idSalvo) || null;
     if (!membroAtivo) {
@@ -272,7 +230,6 @@ async function carregarTrilhasDaConta() {
     }
   }
 
-  // 2) Carrega as trilhas publicadas e o progresso desse perfil
   try {
     const trilhas = await carregarConteudoDoServidor();
     const [resPerfil, resProgresso] = await Promise.all([
@@ -296,7 +253,6 @@ async function carregarTrilhasDaConta() {
   exibirTrilhas(slug);
 }
 
-// Faixa no topo das trilhas: o perfil escolhido (ou o convite pra entrar)
 function renderizarFaixaDaConta() {
   const faixa = document.getElementById('trilhas-conta');
   const nota = document.getElementById('trilhas-nota');
@@ -330,9 +286,6 @@ function renderizarFaixaDaConta() {
   }
 }
 
-// ============================================================
-//  EDITOR DE PERFIL (criar / editar / excluir)
-// ============================================================
 async function abrirEditorDePerfil(membro) {
   const modal = document.getElementById('perfil-editor-modal');
   if (!modal) return;
@@ -356,7 +309,6 @@ async function abrirEditorDePerfil(membro) {
   renderizarEditor();
   modal.classList.add('active');
 
-  // No primeiro perfil, sugere o nome usado no cadastro
   if (!membro && membrosDaConta.length === 0 && contaLogada()) {
     const dados = (sessaoAtual.user && sessaoAtual.user.user_metadata) || {};
     const sugestao = dados.nome || dados.full_name || '';
@@ -369,7 +321,7 @@ function renderizarEditor() {
   if (!e) return;
   document.querySelectorAll('.perfil-tipo').forEach((b) => {
     b.classList.toggle('active', b.dataset.tipo === e.tipo);
-    b.classList.toggle('travado', !!e.membro); // regra do app: o tipo não muda depois de criado
+    b.classList.toggle('travado', !!e.membro);
   });
 
   const grupo = e.tipo === 'crianca' ? 'kids' : 'adulto';
@@ -405,8 +357,6 @@ function fecharEditorDePerfil() {
   editorEstado = null;
 }
 
-// A foto é cortada em quadrado e reduzida antes de enviar
-// (fica leve e carrega rápido).
 function reduzirFoto(arquivo, lado) {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -484,7 +434,6 @@ async function salvarPerfilDoEditor() {
 
     const fotoAntiga = e.membro ? e.membro.foto_path : null;
     if (e.fotoBlob) {
-      // Nome novo a cada troca, para a foto nova aparecer na hora
       const caminho = `${sessaoAtual.user.id}/${id}-${Date.now()}.jpg`;
       const { error } = await supabaseCliente.storage
         .from(PASTA_DE_FOTOS)
@@ -536,9 +485,6 @@ async function excluirPerfilDoEditor() {
   }
 }
 
-// ============================================================
-//  PAINEL DE UM PERFIL (Fé, ofensiva e insígnias)
-// ============================================================
 async function abrirPainelDoPerfil(membroId) {
   const modal = document.getElementById('perfil-painel-modal');
   const conteudo = document.getElementById('perfil-painel-conteudo');
@@ -583,9 +529,6 @@ async function abrirPainelDoPerfil(membroId) {
   }
 }
 
-// ============================================================
-//  RANKING (Família e Global)
-// ============================================================
 function abrirRanking() {
   if (!contaLogada() || !membroAtivo) {
     abrirSelecaoDePerfis('ranking');
@@ -654,9 +597,6 @@ async function renderizarRanking() {
   }
 }
 
-// ============================================================
-//  INICIALIZAÇÃO
-// ============================================================
 function ligarFechamentoDeJanela(idJanela, idBotao, aoFechar) {
   const janela = document.getElementById(idJanela);
   const botao = document.getElementById(idBotao);
@@ -728,7 +668,6 @@ function iniciarPerfis() {
   const trocarPerfil = document.getElementById('conta-menu-perfis');
   if (trocarPerfil) trocarPerfil.addEventListener('click', () => abrirSelecaoDePerfis('trilhas'));
 
-  // Saiu da conta: esquece o perfil escolhido
   if (typeof supabaseCliente !== 'undefined' && supabaseCliente) {
     supabaseCliente.auth.onAuthStateChange((_evento, sessao) => {
       if (!sessao) limparPerfilAtivo();

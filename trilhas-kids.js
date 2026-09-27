@@ -1,31 +1,4 @@
-// ============================================================
-//  LUMINA SANCTI — PERGUNTAS DAS CRIANÇAS
-// ============================================================
-// Uma versão simples de cada capítulo das trilhas, para os perfis de
-// criança. As chaves são as mesmas de ATIVIDADES_EXTRAS (o "slug" de
-// cada capítulo) e cada capítulo tem 10 atividades, como o de adulto:
-// assim as missões e o progresso são exatamente os mesmos.
-//
-// Como as perguntas das crianças são escritas:
-//   - frases curtas, palavras do dia a dia, no máximo duas linhas;
-//   - três opções na múltipla escolha, nunca quatro;
-//   - mais verdadeiro ou falso e só um "ordenar" por trilha;
-//   - nada de datas, números de documentos ou palavras difíceis;
-//   - o foco é o gesto bonito e simples: quem ajudou, quem perdoou,
-//     quem cuidou;
-//   - a explicação é carinhosa e ensina uma frase só;
-//   - nada inventado: quando é uma história antiga da tradição, a
-//     pergunta diz isso.
-//
-// "correta" é a POSIÇÃO da resposta certa (começa em 0). O site
-// embaralha as opções na tela.
-//
-// Este arquivo só é baixado quando precisa (perfil de criança sem
-// conta). Com conta, estas mesmas perguntas chegam pelo banco do app:
-// o supabase/gerar-importacao.js leva todas para o público "kid".
-
 window.ATIVIDADES_KIDS = {
-  // ---------------- SÃO FRANCISCO DE ASSIS ----------------
   "francisco-1": [
     {"tipo":"multipla","enunciado":"Em que cidade nasceu São Francisco?","opcoes":["Assis","Roma","Lisboa"],"correta":0,"explicacao":"Francisco nasceu em Assis, uma cidadezinha linda da Itália."},
     {"tipo":"vf","enunciado":"Quando era jovem, Francisco sonhava em ser cavaleiro.","correta":true,"explicacao":"Ele queria ser um cavaleiro famoso, mas Deus tinha um sonho ainda maior para ele."},
@@ -63,7 +36,6 @@ window.ATIVIDADES_KIDS = {
     {"tipo":"vf","enunciado":"Francisco achava que só as pessoas eram criaturas de Deus.","correta":false,"explicacao":"Francisco amava todas as criaturas: pessoas, bichos, plantas e estrelas."}
   ],
 
-  // ---------------- SÃO JOSÉ ----------------
   "jose-1": [
     {"tipo":"multipla","enunciado":"Qual era o trabalho de São José?","opcoes":["Carpinteiro","Pescador","Pastor"],"correta":0,"explicacao":"José era carpinteiro e fazia coisas de madeira com as mãos."},
     {"tipo":"vf","enunciado":"A Bíblia não conta nenhuma palavra dita por José.","correta":true,"explicacao":"José falava pouco e fazia muito: ele obedecia a Deus em silêncio."},
@@ -101,7 +73,6 @@ window.ATIVIDADES_KIDS = {
     {"tipo":"vf","enunciado":"José trabalhava para sustentar a família.","correta":true,"explicacao":"Com o seu trabalho, José garantia o pão de cada dia em casa."}
   ],
 
-  // ---------------- SANTA TERESINHA ----------------
   "teresinha-1": [
     {"tipo":"multipla","enunciado":"Em que país Teresinha nasceu?","opcoes":["França","Brasil","Japão"],"correta":0,"explicacao":"Teresinha nasceu na França e morou numa cidade chamada Lisieux."},
     {"tipo":"vf","enunciado":"Teresinha dizia que era uma florzinha de Jesus.","correta":true,"explicacao":"Ela se via como uma florzinha simples no jardim de Deus."},
@@ -139,7 +110,6 @@ window.ATIVIDADES_KIDS = {
     {"tipo":"vf","enunciado":"Teresinha nunca rezava pelos outros.","correta":false,"explicacao":"Teresinha rezava por todos, principalmente pelos que estavam longe de Deus."}
   ],
 
-  // ---------------- SANTO ANTÔNIO ----------------
   "antonio-1": [
     {"tipo":"multipla","enunciado":"Em que cidade nasceu Santo Antônio?","opcoes":["Lisboa","Madri","Londres"],"correta":0,"explicacao":"Ele nasceu em Lisboa, em Portugal, e ficou famoso em Pádua, na Itália."},
     {"tipo":"vf","enunciado":"Santo Antônio virou frade franciscano, como os amigos de São Francisco.","correta":true,"explicacao":"Ele quis viver pobre e alegre, do jeito de São Francisco."},
@@ -177,7 +147,6 @@ window.ATIVIDADES_KIDS = {
     {"tipo":"vf","enunciado":"Muitas igrejas do Brasil têm o nome de Santo Antônio.","correta":true,"explicacao":"Ele é um dos santos mais queridos do povo brasileiro."}
   ],
 
-  // ---------------- SÃO PADRE PIO ----------------
   "pio-1": [
     {"tipo":"multipla","enunciado":"Que roupa Padre Pio usava?","opcoes":["Um hábito marrom de frade","Uma armadura","Uma coroa"],"correta":0,"explicacao":"Ele era frade capuchinho e usava o hábito marrom com capuz."},
     {"tipo":"vf","enunciado":"Padre Pio tinha nas mãos feridas parecidas com as de Jesus.","correta":true,"explicacao":"Ele sofreu com essas feridas por muitos anos, com paciência e amor."},
@@ -215,7 +184,6 @@ window.ATIVIDADES_KIDS = {
     {"tipo":"vf","enunciado":"Padre Pio só se importava com as pessoas saudáveis.","correta":false,"explicacao":"Ele tinha um carinho enorme pelos doentes e por quem sofria."}
   ],
 
-  // ---------------- NOSSA SENHORA ----------------
   "maria-1": [
     {"tipo":"multipla","enunciado":"Qual anjo levou a mensagem de Deus para Maria?","opcoes":["Gabriel","Miguel","Rafael"],"correta":0,"explicacao":"O anjo Gabriel contou a Maria que ela seria a mãe de Jesus."},
     {"tipo":"vf","enunciado":"Maria disse sim a Deus.","correta":true,"explicacao":"Ela respondeu: eis a serva do Senhor, faça-se em mim segundo a vossa palavra."},
@@ -253,7 +221,6 @@ window.ATIVIDADES_KIDS = {
     {"tipo":"vf","enunciado":"Maria é chamada Mãe da Igreja.","correta":true,"explicacao":"Ela cuida de todos os filhos de Deus como uma mãe cuida da família."}
   ],
 
-  // ---------------- SÃO BENTO ----------------
   "bento-1": [
     {"tipo":"multipla","enunciado":"Qual era o lema de São Bento?","opcoes":["Reza e trabalha","Descansa e brinca","Estuda e viaja"],"correta":0,"explicacao":"Em latim se diz Ora et labora: rezar e trabalhar."},
     {"tipo":"vf","enunciado":"São Bento é o padroeiro da Europa.","correta":true,"explicacao":"Os monges dele ajudaram a levar a fé por toda a Europa."},
@@ -291,7 +258,6 @@ window.ATIVIDADES_KIDS = {
     {"tipo":"vf","enunciado":"Quando fazemos o sinal da cruz, lembramos que Jesus nos protege.","correta":true,"explicacao":"Bento fazia o sinal da cruz com muita fé."}
   ],
 
-  // ---------------- SANTA CLARA ----------------
   "clara-1": [
     {"tipo":"multipla","enunciado":"Quem ajudou Clara a seguir Jesus?","opcoes":["São Francisco","São Bento","Santo Antônio"],"correta":0,"explicacao":"Francisco era da mesma cidade e ensinou Clara a viver pobre, como Jesus."},
     {"tipo":"vf","enunciado":"Clara começou uma família de irmãs que rezam, as Clarissas.","correta":true,"explicacao":"As irmãs Clarissas existem até hoje no mundo inteiro."},
@@ -329,7 +295,6 @@ window.ATIVIDADES_KIDS = {
     {"tipo":"vf","enunciado":"Clara servia as irmãs e cuidava das que estavam doentes.","correta":true,"explicacao":"Mesmo sendo a madre, ela lavava os pés das irmãs e servia a todas."}
   ],
 
-  // ---------------- SÃO JOÃO PAULO II ----------------
   "jpii-1": [
     {"tipo":"multipla","enunciado":"De que país veio o Papa João Paulo II?","opcoes":["Polônia","Itália","Brasil"],"correta":0,"explicacao":"Ele nasceu na Polônia, um país da Europa."},
     {"tipo":"vf","enunciado":"O nome de João Paulo II era Karol.","correta":true,"explicacao":"Karol é o jeito polonês de dizer Carlos."},
@@ -367,7 +332,6 @@ window.ATIVIDADES_KIDS = {
     {"tipo":"vf","enunciado":"Perdoar é guardar raiva no coração.","correta":false,"explicacao":"Perdoar é soltar a raiva e deixar Deus curar o coração."}
   ],
 
-  // ---------------- SANTA RITA DE CÁSSIA ----------------
   "rita-1": [
     {"tipo":"multipla","enunciado":"Santa Rita é chamada a santa de quê?","opcoes":["Das causas impossíveis","Das viagens","Dos esportes"],"correta":0,"explicacao":"Quando algo parece impossível, pedimos que Rita reze por nós."},
     {"tipo":"vf","enunciado":"Rita foi casada e teve filhos antes de ser freira.","correta":true,"explicacao":"Ela foi santa como esposa, como mãe e como freira."},
@@ -405,7 +369,6 @@ window.ATIVIDADES_KIDS = {
     {"tipo":"vf","enunciado":"Santa Rita viveu há muito tempo, mas ainda hoje é muito amada.","correta":true,"explicacao":"Em muitas igrejas há uma imagem de Santa Rita com rosas."}
   ],
 
-  // ---------------- SÃO JUDAS TADEU ----------------
   "judas-1": [
     {"tipo":"multipla","enunciado":"Quantos apóstolos Jesus escolheu?","opcoes":["Doze","Três","Cem"],"correta":0,"explicacao":"Judas Tadeu era um dos doze amigos mais próximos de Jesus."},
     {"tipo":"vf","enunciado":"São Judas Tadeu é o mesmo Judas que traiu Jesus.","correta":false,"explicacao":"São duas pessoas diferentes: Judas Tadeu foi fiel a Jesus até o fim."},
@@ -443,7 +406,6 @@ window.ATIVIDADES_KIDS = {
     {"tipo":"vf","enunciado":"Ter esperança é confiar que Deus cuida da gente.","correta":true,"explicacao":"São Judas é o apóstolo da esperança."}
   ],
 
-  // ---------------- SANTA TERESA DE ÁVILA ----------------
   "avila-1": [
     {"tipo":"multipla","enunciado":"Em que país Santa Teresa de Ávila nasceu?","opcoes":["Espanha","Itália","Brasil"],"correta":0,"explicacao":"Ela nasceu na cidade de Ávila, na Espanha."},
     {"tipo":"vf","enunciado":"Quando criança, Teresa fugiu com o irmão sonhando em dar a vida por Jesus.","correta":true,"explicacao":"Um tio encontrou os dois no caminho e os levou de volta para casa."},

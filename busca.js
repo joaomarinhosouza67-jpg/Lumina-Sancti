@@ -1,21 +1,4 @@
-// ============================================================
-//  LUMINA SANCTI — BUSCA QUE ENTENDE O QUE A PESSOA QUIS DIZER
-// ============================================================
-// Usada nas Orações e no "Padroeiro de...". A pessoa não precisa
-// digitar o nome exato: a busca
-//   1. tira acentos, pontuação e maiúsculas ("Oração" = "oracao");
-//   2. ignora palavras que não dizem nada ("estou com muito medo" vira
-//      "medo");
-//   3. aceita erros de digitação ("ave maira", "credu", "contrisao") e
-//      variações da mesma palavra ("doente", "doentes", "doença");
-//   4. entende a INTENÇÃO: cada item tem uma lista de situações (medo,
-//      dormir, perdão, falecidos...) com as palavras que as pessoas
-//      costumam usar para cada uma.
-// Tudo roda no próprio aparelho, sem internet e sem inteligência
-// artificial: é rápido e sempre dá a mesma resposta para a mesma busca.
-
 const BuscaInteligente = (() => {
-  // Palavras que sozinhas não ajudam a achar nada
   const PALAVRAS_VAZIAS = new Set((
     'a o as os um uma uns umas de da do das dos d em no na nos nas num numa por pelo pela pelos pelas ' +
     'para pra pro pras pros com sem que quem qual quais e ou mas se me te lhe lhes vos eu tu ele ela eles elas ' +
@@ -41,7 +24,6 @@ const BuscaInteligente = (() => {
     return normalizar(texto).split(' ').filter((p) => p.length > 1 && !PALAVRAS_VAZIAS.has(p));
   }
 
-  // Raiz simples: tira plural e a última vogal (doente/doentes -> doent)
   function raiz(palavra) {
     let p = palavra;
     if (p.length > 5 && p.endsWith('mente')) p = p.slice(0, -5);
@@ -52,8 +34,6 @@ const BuscaInteligente = (() => {
     return p;
   }
 
-  // Distância entre duas palavras contando troca de letras vizinhas
-  // como um erro só ("maira" -> "maria"). Para cedo se passar do limite.
   function distancia(a, b, limite) {
     if (Math.abs(a.length - b.length) > limite) return limite + 1;
     const linhas = [];
@@ -77,7 +57,6 @@ const BuscaInteligente = (() => {
     return linhas[a.length][b.length];
   }
 
-  // Quanto duas palavras se parecem: 1 = iguais, 0 = nada a ver
   function semelhanca(a, b) {
     if (a === b) return 1;
     if (raiz(a) === raiz(b)) return 0.95;
@@ -85,10 +64,7 @@ const BuscaInteligente = (() => {
     if (menor >= 4 && (a.startsWith(b) || b.startsWith(a))) return 0.85;
     let comum = 0;
     while (comum < menor && a[comum] === b[comum]) comum += 1;
-    // Começo igual e comprido ("arrependi" / "arrependido"), mas não
-    // "confissão" / "confiar"
     if (comum >= 5 && comum / menor >= 0.8) return 0.75;
-    // Palavras curtas não aceitam erro ("medo" não pode virar "meio")
     const tolerancia = menor >= 8 ? 2 : (menor >= 5 ? 1 : 0);
     if (tolerancia && distancia(a, b, tolerancia) <= tolerancia) return 0.7;
     return 0;
@@ -104,9 +80,6 @@ const BuscaInteligente = (() => {
     return melhor;
   }
 
-  // Deixa uma lista de termos pronta para comparar (faz isso uma vez só)
-  // As palavras que só aparecem dentro de frases ("mãe" em "mãe de
-  // Deus") valem a metade: sozinhas, dizem pouco sobre a situação
   function prepararTermos(termos) {
     const frases = [];
     const soltas = [];
@@ -125,8 +98,6 @@ const BuscaInteligente = (() => {
     return { frases, palavras: unicas, palavrasDeFrases: Array.from(new Set(deFrases)).filter((p) => !unicas.includes(p)) };
   }
 
-  // O quanto uma busca combina com um NOME (0 a 1): o nome inteiro
-  // digitado vale mais do que uma palavra solta dele
   function combinarNome(consulta, nomes) {
     const normalizada = normalizar(consulta);
     const doPedido = palavras(consulta);
@@ -148,8 +119,6 @@ const BuscaInteligente = (() => {
     return melhor;
   }
 
-  // O quanto uma busca combina com uma SITUAÇÃO (0 a 1): proporção das
-  // palavras importantes da busca que aparecem entre as da situação
   function combinarSituacao(consulta, termosPreparados) {
     const normalizada = ` ${normalizar(consulta)} `;
     const doPedido = palavras(consulta);
@@ -168,16 +137,10 @@ const BuscaInteligente = (() => {
       const s = Math.max(inteira >= 0.7 ? inteira : 0, deFrase >= 0.25 ? deFrase : 0);
       achadas += s;
     });
-    // Basta uma ou duas palavras certeiras: numa frase longa ("minha mãe
-    // está internada no hospital"), as outras palavras não atrapalham
     const base = Math.max(1, Math.min(doPedido.length, 2));
     return Math.min(1, achadas / base);
   }
 
-  // Busca genérica.
-  //   itens: [{ id, nomes: [...], texto: '...' }]
-  //   situacoes: [{ rotulo, termos: [...], itens: [ids, do mais indicado ao menos] }]
-  // Devolve os itens do mais indicado ao menos, cada um com o motivo.
   function buscar(consulta, itens, situacoes, opcoes) {
     const limiteMinimo = (opcoes && opcoes.minimo) || 0.2;
     const normalizada = normalizar(consulta);
@@ -187,10 +150,7 @@ const BuscaInteligente = (() => {
     itens.forEach((item) => {
       const nome = combinarNome(consulta, item.nomes || []);
       const doTexto = item.textoPreparado ? combinarSituacao(consulta, item.textoPreparado) : 0;
-      // Um pedaço do próprio texto ("livrai-nos do mal") leva direto a ele
       const trecho = trechoLongo && item.textoNormalizado && item.textoNormalizado.includes(normalizada) ? 8 : 0;
-      // O nome quase inteiro vale muito; uma palavra solta dele ("pai" em
-      // "Glória ao Pai"), pouco — senão ela passaria na frente da intenção
       const pesoDoNome = nome >= 0.7 ? 10 : 3;
       pontos.set(item.id, { item, total: nome * pesoDoNome + doTexto + trecho, nome, motivo: null, forcaDoMotivo: 0, extras: 0 });
     });
@@ -201,8 +161,6 @@ const BuscaInteligente = (() => {
         const registro = pontos.get(id);
         if (!registro) return;
         const ganho = nota * 6 * Math.max(0.3, 1 - posicao * 0.15);
-        // Vale a situação mais forte; as outras somam só um pouco (senão
-        // uma oração que serve para tudo passaria na frente das certeiras)
         if (ganho > registro.forcaDoMotivo) {
           registro.extras += registro.forcaDoMotivo;
           registro.forcaDoMotivo = ganho;
@@ -219,13 +177,11 @@ const BuscaInteligente = (() => {
       .map((r) => ({ item: r.item, pontos: Math.round(r.total * 10) / 10, motivo: r.nome >= 0.9 ? null : r.motivo }));
   }
 
-  // Prepara uma lista de situações (termos já normalizados)
   function prepararSituacoes(situacoes) {
     return situacoes.map((s) => Object.assign({}, s, { preparados: prepararTermos(s.termos) }));
   }
 
   function prepararItens(itens) {
-    // No texto só contam as palavras soltas (frases ficam para as situações)
     return itens.map((i) => Object.assign({}, i, {
       textoPreparado: i.texto ? { frases: [], palavras: Array.from(new Set(palavras(i.texto))) } : null,
       textoNormalizado: i.texto ? normalizar(i.texto) : '',

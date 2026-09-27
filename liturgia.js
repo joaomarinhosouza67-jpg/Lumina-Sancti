@@ -1,32 +1,3 @@
-// ============================================================
-//  LUMINA SANCTI — TEMPO LITÚRGICO E COR DAS PÁGINAS
-// ============================================================
-// O site tem duas "roupas":
-//
-//   - DOURADA (a de sempre): só a tela principal (o início) e o
-//     catálogo aberto a partir dela.
-//   - LITÚRGICA: todas as outras páginas (Trilhas, Terço, Lumina,
-//     Orações, Padroeiro, Leitura do dia, Planos, conta...). O que era
-//     dourado ganha a cor do tempo litúrgico de hoje: roxo no Advento e
-//     na Quaresma, branco no Natal e na Páscoa, verde no Tempo Comum,
-//     vermelho em Ramos, na Sexta-feira da Paixão e em Pentecostes,
-//     rosa nos domingos Gaudete e Laetare. O fundo azul-noite não muda.
-//
-// A biografia de um santo e o catálogo aberto pelo menu HERDAM a cor de
-// onde a pessoa veio: abertos pelo início, ficam dourados; abertos de
-// qualquer outra página, ficam na cor litúrgica. Voltando ao início,
-// tudo fica dourado de novo.
-//
-// O calendário segue o Brasil: a Epifania é celebrada no domingo entre
-// 2 e 8 de janeiro, e o Batismo do Senhor (fim do Tempo do Natal) no
-// domingo seguinte — ou na segunda-feira, quando a Epifania cai em 7
-// ou 8 de janeiro.
-//
-// Para ver como fica em outra época, abra o site com, por exemplo:
-//   ?tempo=advento   (ou natal, comum, quaresma, pascoa, pentecostes,
-//                     ramos, gaudete, laetare, sexta-santa...)
-//   ?data=2026-12-01 (simula um dia qualquer)
-
 const TEMPOS_LITURGICOS = {
   advento:        { cor: 'roxo',     nome: { pt: 'Advento', en: 'Advent', es: 'Adviento' } },
   gaudete:        { cor: 'rosa',     nome: { pt: 'Domingo Gaudete (3º do Advento)', en: 'Gaudete Sunday (3rd of Advent)', es: 'Domingo Gaudete (3º de Adviento)' } },
@@ -38,8 +9,6 @@ const TEMPOS_LITURGICOS = {
   'semana-santa': { cor: 'roxo',     nome: { pt: 'Semana Santa', en: 'Holy Week', es: 'Semana Santa' } },
   'quinta-santa': { cor: 'branco',   nome: { pt: 'Quinta-feira Santa', en: 'Holy Thursday', es: 'Jueves Santo' } },
   'sexta-santa':  { cor: 'vermelho', nome: { pt: 'Sexta-feira da Paixão', en: 'Good Friday', es: 'Viernes Santo' } },
-  // No Sábado Santo não há Missa durante o dia; o site mantém o roxo
-  // da penitência até a Vigília Pascal, que já é Páscoa.
   'sabado-santo': { cor: 'roxo',     nome: { pt: 'Sábado Santo', en: 'Holy Saturday', es: 'Sábado Santo' } },
   pascoa:         { cor: 'branco',   nome: { pt: 'Tempo Pascal', en: 'Easter Season', es: 'Tiempo Pascual' } },
   pentecostes:    { cor: 'vermelho', nome: { pt: 'Pentecostes', en: 'Pentecost', es: 'Pentecostés' } },
@@ -53,18 +22,14 @@ const NOMES_DAS_CORES = {
   vermelho: { pt: 'vermelho', en: 'red', es: 'rojo' },
 };
 
-// ---------- Contas de calendário ----------
-
-// Número do dia (sem hora), para comparar datas sem erro de fuso
 function numeroDoDia(ano, mes, dia) {
   return Math.round(Date.UTC(ano, mes, dia) / 86400000);
 }
 
 function diaDaSemana(numero) {
-  return new Date(numero * 86400000).getUTCDay(); // 0 = domingo
+  return new Date(numero * 86400000).getUTCDay();
 }
 
-// Domingo de Páscoa (calendário gregoriano, método de Meeus/Jones/Butcher)
 function domingoDePascoa(ano) {
   const a = ano % 19;
   const b = Math.floor(ano / 100);
@@ -78,29 +43,25 @@ function domingoDePascoa(ano) {
   const k = c % 4;
   const l = (32 + 2 * e + 2 * i - h - k) % 7;
   const m = Math.floor((a + 11 * h + 22 * l) / 451);
-  const mes = Math.floor((h + l - 7 * m + 114) / 31); // 3 = março, 4 = abril
+  const mes = Math.floor((h + l - 7 * m + 114) / 31);
   const dia = ((h + l - 7 * m + 114) % 31) + 1;
   return numeroDoDia(ano, mes - 1, dia);
 }
 
-// Primeiro domingo que cai no próprio dia ou depois dele
 function domingoAPartirDe(numero) {
   return numero + ((7 - diaDaSemana(numero)) % 7);
 }
 
-// 1º Domingo do Advento: o domingo entre 27 de novembro e 3 de dezembro
 function inicioDoAdvento(ano) {
   return domingoAPartirDe(numeroDoDia(ano, 10, 27));
 }
 
-// Batismo do Senhor, último dia do Tempo do Natal (calendário do Brasil)
 function batismoDoSenhor(ano) {
   const epifania = domingoAPartirDe(numeroDoDia(ano, 0, 2));
   const diaDaEpifania = epifania - numeroDoDia(ano, 0, 0);
   return diaDaEpifania >= 7 ? epifania + 1 : epifania + 7;
 }
 
-// Qual é o tempo litúrgico de uma data (padrão: hoje)
 function tempoLiturgicoDoDia(data) {
   const quando = data || new Date();
   const ano = quando.getFullYear();
@@ -128,10 +89,9 @@ function tempoLiturgicoDoDia(data) {
   return Object.assign({ chave }, TEMPOS_LITURGICOS[chave]);
 }
 
-// Hoje, ou a época pedida no endereço (?tempo=advento ou ?data=AAAA-MM-DD)
 function tempoLiturgicoAtual() {
   let parametros = null;
-  try { parametros = new URLSearchParams(window.location.search); } catch (e) { /* sem endereço */ }
+  try { parametros = new URLSearchParams(window.location.search); } catch (e) {  }
   if (parametros) {
     const pedido = (parametros.get('tempo') || '').toLowerCase();
     if (TEMPOS_LITURGICOS[pedido]) return Object.assign({ chave: pedido }, TEMPOS_LITURGICOS[pedido]);
@@ -141,19 +101,14 @@ function tempoLiturgicoAtual() {
   return tempoLiturgicoDoDia(new Date());
 }
 
-// ---------- Qual roupa cada página veste ----------
-
-// Sem cor própria: fica com a cor da página de onde a pessoa veio
 const PAGINAS_QUE_HERDAM = ['view-detail'];
-// Páginas que mostram o selinho com o nome do tempo litúrgico
 const PAGINAS_COM_SELO = ['view-trilhas', 'view-terco', 'view-ia', 'view-oracoes', 'view-padroeiro', 'view-leitura'];
 
-let temaDoSite = 'dourado'; // 'dourado' ou 'liturgico'
+let temaDoSite = 'dourado';
 
 function temaParaPagina(idDaPagina) {
   if (PAGINAS_QUE_HERDAM.includes(idDaPagina)) return temaDoSite;
   if (idDaPagina === 'view-home') {
-    // O início é dourado; o catálogo aberto pelo menu de outra página herda
     return document.body.classList.contains('catalogo-interno') ? temaDoSite : 'dourado';
   }
   return 'liturgico';
@@ -163,7 +118,6 @@ function idiomaDoTempoLiturgico() {
   return (typeof idiomaAtual !== 'undefined' && ['pt', 'en', 'es'].includes(idiomaAtual)) ? idiomaAtual : 'pt';
 }
 
-// O selinho "Advento · roxo" no alto das páginas litúrgicas
 function atualizarSelosLiturgicos() {
   const tempo = tempoLiturgicoAtual();
   const idioma = idiomaDoTempoLiturgico();
@@ -203,7 +157,6 @@ function aplicarTema(tema) {
   }
 }
 
-// Chamado sempre que uma página aparece na tela
 function aplicarTemaDaPagina(idDaPagina) {
   aplicarTema(temaParaPagina(idDaPagina));
 }
@@ -216,7 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// Para os testes em Node (no navegador, "module" não existe)
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { tempoLiturgicoDoDia, domingoDePascoa, inicioDoAdvento, batismoDoSenhor, numeroDoDia, TEMPOS_LITURGICOS };
 }

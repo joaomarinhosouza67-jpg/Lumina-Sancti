@@ -1,16 +1,5 @@
-// ============================================================
-//  LUMINA SANCTI — Base de dados dos Santos, Beatos e Doutores
-// ============================================================
-// Cada entrada pode ter um campo "festa" no formato "MM-DD",
-// referente à data de sua memória/festa litúrgica no calendário
-// da Igreja Católica. Esse campo alimenta o recurso "Santo do
-// Dia" (ver mais abaixo). Quando a celebração é móvel ou não
-// tem uma data fixa única (como a Sagrada Família), o campo é
-// simplesmente omitido — o santo continua normalmente no catálogo.
-
 const santosData = [
 
-  // ---------------- SAGRADA FAMÍLIA ----------------
   {
     id: 'sagrada-familia',
     nome: 'A Sagrada Família',
@@ -23,7 +12,6 @@ const santosData = [
     `
   },
 
-  // ---------------- ARCANJOS ----------------
   {
     id: 'miguel',
     nome: 'São Miguel Arcanjo',
@@ -61,7 +49,6 @@ const santosData = [
     `
   },
 
-  // ---------------- DOUTORES DA IGREJA ----------------
   {
     id: 'agostinho',
     nome: 'Santo Agostinho de Hipona',
@@ -255,7 +242,6 @@ const santosData = [
     `
   },
 
-  // ---------------- GRANDES SANTOS ----------------
   {
     id: 'joao-paulo-ii',
     nome: 'São João Paulo II',
@@ -617,7 +603,6 @@ const santosData = [
     `
   },
 
-  // ---------------- SANTOS JOVENS ----------------
   {
     id: 'teresinha',
     nome: 'Santa Teresinha do Menino Jesus',
@@ -752,7 +737,6 @@ const santosData = [
     `
   },
 
-  // ---------------- BEATOS ----------------
   {
     id: 'solanus-casey',
     nome: 'Beato Solanus Casey',
@@ -778,13 +762,6 @@ const santosData = [
     `
   },
 
-  // ================================================================
-  //  GRANDE EXPANSÃO DO CALENDÁRIO — para o Santo do Dia ter uma
-  //  data real coberta na maior parte do ano, não só uma vez a cada
-  //  tantos dias. Organizado por mês.
-  // ================================================================
-
-  // ---------------- JANEIRO ----------------
   {
     id: 'basilio-magno',
     nome: 'São Basílio Magno',
@@ -867,11 +844,10 @@ const santosData = [
     texto: `<p>Órfã ainda jovem, Ângela dedicou-se a leigos consagrados dedicados à oração e ao ensino, fundando a Companhia de Santa Úrsula, primeira instituição voltada especificamente para a educação de meninas na Europa. Sua visão pioneira de que mulheres poderiam viver consagradas fora da clausura tradicional influenciou gerações de congregações educadoras.</p>`
   },
 
-  // ---------------- FEVEREIRO ----------------
   {
     id: 'sao-bras',
     nome: 'São Brás',
-    wiki: 'Brás de Sebaste' /* se falhar, a busca qualificada encontra */,
+    wiki: 'Brás de Sebaste' ,
     categoria: ['grandes-santos'],
     festa: '02-03',
     resumo: 'Bispo e médico mártir, invocado como protetor da garganta.',
@@ -932,7 +908,6 @@ const santosData = [
     texto: `<p>Ainda jovem, foi discípulo direto do apóstolo João, tornando-se elo vivo entre a geração apostólica e a Igreja seguinte como bispo de Esmirna. Já idoso, foi preso durante uma perseguição e, ao ser pressionado a amaldiçoar Cristo para salvar a vida, respondeu: "Há oitenta e seis anos o sirvo, e ele nunca me fez mal algum — como posso blasfemar contra meu Rei e Salvador?" Foi condenado à fogueira.</p>`
   },
 
-  // ---------------- MARÇO ----------------
   {
     id: 'cassimiro',
     nome: 'São Casimiro',
@@ -997,7 +972,6 @@ const santosData = [
     texto: `<p>Jurista leigo enviado inesperadamente como arcebispo de Lima, Turíbio percorreu a cavalo e a pé, por décadas, um território imenso do Peru colonial, aprendendo línguas indígenas e denunciando os abusos dos colonizadores contra a população nativa. Crismou, segundo a tradição, futuros santos como Rosa de Lima e Martín de Porres.</p>`
   },
 
-  // ---------------- ABRIL ----------------
   {
     id: 'francisco-paula',
     nome: 'São Francisco de Paula',
@@ -1071,7 +1045,6 @@ const santosData = [
     texto: `<p>Companheiro de Paulo, Barnabé e, sobretudo, intérprete de Pedro em Roma, Marcos registrou por escrito as pregações do apóstolo, dando origem ao Evangelho mais antigo do Novo Testamento. Tradição forte o identifica como fundador da Igreja de Alexandria, no Egito, onde teria sido martirizado. É representado por um leão alado e é padroeiro de Veneza.</p>`
   },
 
-  // ---------------- MAIO ----------------
   {
     id: 'jose-operario',
     nome: 'São José Operário',
@@ -1145,7 +1118,6 @@ const santosData = [
     texto: `<p>Conhecido por seu jeito bem-humorado e brincalhão, Filipe Néri evangelizava os jovens de Roma reunindo-os para orações, música e passeios, convencido de que a alegria era caminho para a santidade, não obstáculo. Fundou o Oratório, congregação de padres seculares dedicados à formação espiritual através de encontros informais. É padroeiro de Roma e do humor.</p>`
   },
 
-  // ---------------- JUNHO ----------------
   {
     id: 'justino-martir',
     nome: 'São Justino Mártir',
@@ -1228,7 +1200,6 @@ const santosData = [
     texto: `<p>Pedro, o pescador que Jesus chamou de "rocha" sobre a qual construiria sua Igreja, e Paulo, o perseguidor convertido em maior missionário, são celebrados na mesma data por serem, juntos, os dois maiores pilares da Igreja primitiva — ambos martirizados em Roma sob o imperador Nero, Pedro crucificado de cabeça para baixo por se considerar indigno de morrer como Cristo.</p>`
   },
 
-  // ---------------- JULHO ----------------
   {
     id: 'junipero-serra',
     nome: 'São Junípero Serra',
@@ -1302,7 +1273,6 @@ const santosData = [
     texto: `<p>Marta, Maria e Lázaro, de Betânia, formavam uma das famílias mais próximas de Jesus, que hospedava-se em sua casa. Marta é lembrada por seu zelo prático no serviço, Maria por sentar-se aos pés de Jesus para ouvi-lo, e Lázaro pelo maior dos milagres: foi ressuscitado por Jesus quatro dias depois de morto, diante de uma multidão.</p>`
   },
 
-  // ---------------- AGOSTO ----------------
   {
     id: 'joao-maria-vianney',
     nome: 'São João Maria Vianney',
@@ -1376,7 +1346,6 @@ const santosData = [
     texto: `<p>Coroado rei ainda menino, Luís IX governou a França por décadas unindo firmeza política a uma fé profunda, ouvindo pessoalmente as queixas dos súditos mais simples debaixo de um carvalho e reformando as leis do reino em nome da justiça. Participou de cruzadas e é lembrado como modelo raro de governante que exerceu o poder a serviço do bem comum.</p>`
   },
 
-  // ---------------- SETEMBRO ----------------
   {
     id: 'pedro-claver',
     nome: 'São Pedro Cláver',
@@ -1423,7 +1392,6 @@ const santosData = [
     texto: `<p>Cobrador de impostos a serviço de Roma — profissão desprezada pelos judeus de sua época por servir ao invasor —, Mateus estava sentado à sua mesa de cobrança quando Jesus simplesmente disse "Segue-me", e ele largou tudo imediatamente. Tornou-se apóstolo e autor do primeiro Evangelho, escrito especialmente para mostrar aos judeus que Jesus era o Messias prometido nas Escrituras.</p>`
   },
 
-  // ---------------- OUTUBRO ----------------
   {
     id: 'anjos-guarda',
     nome: 'Santos Anjos da Guarda',
@@ -1479,7 +1447,6 @@ const santosData = [
     texto: `<p>Juiz de sucesso antes de se tornar frade franciscano, João de Capistrano se tornou pregador itinerante famoso por atrair multidões enormes. Já com 70 anos, ajudou a organizar e liderar espiritualmente a resistência cristã que defendeu a cidade de Belgrado de uma grande invasão otomana em 1456, morrendo poucos meses depois da vitória.</p>`
   },
 
-  // ---------------- NOVEMBRO ----------------
   {
     id: 'martin-porres',
     nome: 'São Martín de Porres',
@@ -1571,7 +1538,6 @@ const santosData = [
     texto: `<p>Pescador como o irmão Simão Pedro, André foi discípulo de João Batista antes de ser um dos primeiros a seguir Jesus, sendo por isso chamado de "Protóclito" (o primeiro chamado). A tradição situa sua pregação e martírio na Grécia, crucificado numa cruz em forma de X que hoje leva seu nome. É padroeiro da Escócia, Grécia e Rússia.</p>`
   },
 
-  // ---------------- DEZEMBRO ----------------
   {
     id: 'sao-nicolau',
     nome: 'São Nicolau',
@@ -1635,8 +1601,6 @@ const santosData = [
     resumo: 'Arcebispo de Cantuária, assassinado dentro da própria catedral por defender a Igreja diante do rei.',
     texto: `<p>Amigo próximo e chanceler do rei Henrique II da Inglaterra, Tomás Becket surpreendeu a todos ao se tornar, como arcebispo de Cantuária, um firme defensor da independência da Igreja diante do poder real — o que rompeu sua amizade com o rei. Foi assassinado por cavaleiros dentro da própria catedral, tornando-se um dos símbolos mais fortes da liberdade da Igreja diante do Estado.</p>`
   },
-  // ---- Santos que o aplicativo já tinha e o site ainda não (os mesmos do
-  // lumina-app/content/novos-santos.json, com duas correções de fatos) ----
   {
     id: 'charbel-makhlouf',
     nome: 'São Charbel Makhlouf',
@@ -1962,21 +1926,6 @@ const santosData = [
     `
   }
 ];
-// ============================================================
-//  INTRODUÇÃO — "Estrela da Luz"
-// ============================================================
-// Sequência curta e orquestrada (brilho → estrela → raios →
-// nome → clarão), que respeita quem prefere menos animação
-// (prefers-reduced-motion) e pode ser pulada a qualquer
-// momento com um toque na tela.
-// ============================================================
-//  SOM DE BRILHO (sintetizado, sem precisar de arquivo de áudio)
-// ============================================================
-// Um acorde curto e cintilante, tocado no exato momento em que a
-// estrela brilha na introdução. Navegadores bloqueiam áudio
-// automático até haver alguma interação da pessoa com a página —
-// por isso, se a primeira tentativa for bloqueada, uma segunda
-// tentativa acontece no primeiro toque/clique na tela.
 let somDeBrilhoJaTocou = false;
 
 function tocarSomDeBrilho() {
@@ -1988,7 +1937,6 @@ function tocarSomDeBrilho() {
 
     const tocar = () => {
       const agora = ctx.currentTime;
-      // Acorde brilhante (Dó maior com nona), como um sino suave
       const frequencias = [1046.5, 1318.5, 1568.0, 2093.0];
       frequencias.forEach((freq, i) => {
         const osc = ctx.createOscillator();
@@ -2013,7 +1961,6 @@ function tocarSomDeBrilho() {
       tocar();
     }
   } catch (e) {
-    // Sem áudio, o site continua normalmente — é só um detalhe a mais.
   }
 }
 
@@ -2029,8 +1976,6 @@ function tocarSomDeBrilho() {
     return;
   }
 
-  // Céu estrelado: pontinhos de luz cintilando ao fundo, que dão
-  // profundidade à cena antes da estrela nascer no centro.
   const ceu = document.getElementById('intro-sky');
   if (ceu) {
     const fragmento = document.createDocumentFragment();
@@ -2053,16 +1998,13 @@ function tocarSomDeBrilho() {
     ceu.appendChild(fragmento);
   }
 
-  // Luzes convergentes: nascem espalhadas pela tela e "viajam" até
-  // o centro, como se a luz dos santos se reunisse para formar a
-  // estrela que guia — a ideia por trás do próprio nome do site.
   const convergencia = document.getElementById('intro-converge');
   if (convergencia) {
     const fragmento2 = document.createDocumentFragment();
     const quantidadeLuzes = 6;
     for (let i = 0; i < quantidadeLuzes; i++) {
       const angulo = (360 / quantidadeLuzes) * i + (Math.random() * 25 - 12);
-      const distancia = 38 + Math.random() * 14; // % da tela a partir do centro
+      const distancia = 38 + Math.random() * 14;
       const dx = (Math.cos(angulo * Math.PI / 180) * distancia).toFixed(1);
       const dy = (Math.sin(angulo * Math.PI / 180) * distancia).toFixed(1);
       const luz = document.createElement('div');
@@ -2075,10 +2017,7 @@ function tocarSomDeBrilho() {
     convergencia.appendChild(fragmento2);
   }
 
-  // Toca o som bem no instante em que o clarão da estrela acontece
   setTimeout(tocarSomDeBrilho, 900);
-  // Reserva: se o navegador bloqueou o som automático, toca no
-  // primeiro toque/clique em qualquer lugar da página.
   document.addEventListener('click', tocarSomDeBrilho, { once: true });
 
   function encerrarIntro() {
@@ -2096,28 +2035,8 @@ function tocarSomDeBrilho() {
   });
 })();
 
-// ============================================================
-//  BUSCA DE IMAGENS (Wikipédia em português)
-// ============================================================
-// Meta: nenhum santo sem foto. Em vez de confiar cegamente no
-// título salvo em "wiki" (que pode estar levemente errado, ou
-// cair numa página de desambiguação, como acontecia com nomes
-// comuns como "São Sebastião" ou "São Cristóvão"), a busca
-// tenta em até três camadas, sempre nessa ordem:
-//   1) o título indicado em "wiki" (ou o nome limpo do santo);
-//   2) se falhar, pergunta à própria Wikipédia qual é o título
-//      mais parecido (corrige erros de digitação e redirects);
-//   3) se ainda falhar, tenta de novo a partir do nome completo
-//      exibido no site.
-// O resultado de cada santo é guardado em cache, então cada um
-// só é consultado uma vez, mesmo aparecendo em vários lugares
-// (grade, Santo do Dia, busca).
 const cacheImagens = {};
 
-// Antes, quando o título não batia, o site pegava o primeiro
-// resultado da Wikipédia — e vinha o cantor João Bosco, o jogador
-// Casemiro ou o mapa do município de São Brás. Agora cada página é
-// conferida: se não parecer de um santo, a foto é recusada.
 const PISTAS_DE_SANTO = [
   'santo', 'santa', 'são ', 'beat', 'mártir', 'martir', 'papa', 'bispo', 'arcebispo',
   'padre', 'sacerdote', 'freira', 'religios', 'monge', 'monja', 'abade', 'abadessa',
@@ -2152,19 +2071,15 @@ async function resumoWiki(titulo) {
     const resp = await fetch(url);
     if (!resp.ok) return null;
     const dados = await resp.json();
-    if (dados.type === 'disambiguation') return null; // página de desambiguação não tem foto útil
+    if (dados.type === 'disambiguation') return null;
     if (!dados.thumbnail) return null;
-    // Melhor nenhuma foto do que a foto de outra pessoa
     if (!pareceSanto(dados)) return null;
-    // Pede a versão maior da imagem (a miniatura sai pequena demais)
     return (dados.originalimage && dados.originalimage.source) || dados.thumbnail.source;
   } catch (e) {
     return null;
   }
 }
 
-// Busca na Wikipédia já dizendo que procuramos um santo — assim os
-// resultados vêm do campo religioso, e não de futebol ou música.
 async function titulosProximosWiki(termo) {
   if (!termo) return [];
   try {
@@ -2180,9 +2095,6 @@ async function titulosProximosWiki(termo) {
   }
 }
 
-// Mostra a foto INTEIRA, sem cortar. As sobras das laterais são
-// preenchidas por uma cópia desfocada da própria foto, então nenhum
-// santo fica com a cabeça cortada.
 function htmlDaFoto(url, nome, classe) {
   const endereco = String(url).replace(/"/g, '&quot;');
   const alt = String(nome).replace(/"/g, '&quot;');
@@ -2198,12 +2110,8 @@ async function buscarImagemSanto(santo) {
   const nomeLimpo = nomeSemTitulo(santo);
   let imagem = null;
 
-  // 1) tentativa direta com o título indicado
   imagem = await resumoWiki(termoPrincipal);
 
-  // 2) pergunta à Wikipédia quais são os títulos mais parecidos
-  //    e tenta cada um deles (corrige redirects, desambiguação
-  //    e pequenos erros de digitação sozinho)
   if (!imagem) {
     const candidatos = await titulosProximosWiki(termoPrincipal);
     for (const candidato of candidatos) {
@@ -2214,7 +2122,6 @@ async function buscarImagemSanto(santo) {
     }
   }
 
-  // 3) última tentativa, a partir do nome completo exibido no site
   if (!imagem && nomeLimpo && nomeLimpo !== termoPrincipal) {
     const candidatos2 = await titulosProximosWiki(nomeLimpo);
     for (const candidato of candidatos2) {
@@ -2229,12 +2136,7 @@ async function buscarImagemSanto(santo) {
   return imagem;
 }
 
-// ============================================================
-//  REFERÊNCIAS DO DOM
-// ============================================================
 const cardsGrid = document.getElementById('cards-grid');
-// Só os filtros do catálogo (outros botões usam o mesmo visual .filter-btn,
-// como o Próxima do terço e o Entrar da conta, e não podem abrir o catálogo)
 const filterBtns = document.querySelectorAll('.filter-btn[data-filter]');
 const viewHome = document.getElementById('view-home');
 const viewDetail = document.getElementById('view-detail');
@@ -2256,14 +2158,6 @@ const bioContainer = document.getElementById('bio-container');
 
 const btnShare = document.getElementById('btn-share');
 
-// ============================================================
-//  IDIOMAS (pt / en / es)
-// ============================================================
-// Traduz a interface do site (menus, botões, textos fixos). As
-// biografias dos santos, por enquanto, continuam só em português —
-// são muito extensas para traduzir todas de uma vez; um aviso
-// aparece na biografia quando o idioma escolhido não é o português,
-// explicando isso com transparência.
 const TRADUCOES = {
   pt: {
     hero_subtitulo: 'Luz dos Santos',
@@ -2459,9 +2353,6 @@ const TRADUCOES = {
 const CHAVE_IDIOMA = 'lumina-sancti-idioma';
 let idiomaAtual = 'pt';
 
-// Biografias em inglês e espanhol: ficam em biografias-en.js e
-// biografias-es.js e só são baixadas quando a pessoa escolhe o
-// idioma. Santo ainda sem tradução continua em português.
 const biografiasCarregadas = {};
 
 function carregarBiografiasDoIdioma(codigo) {
@@ -2477,7 +2368,6 @@ function carregarBiografiasDoIdioma(codigo) {
   return biografiasCarregadas[codigo];
 }
 
-// Nome, resumo e biografia do santo no idioma escolhido.
 function textoDoSanto(santo) {
   const todas = typeof window !== 'undefined' ? window.BIOGRAFIAS_TRADUZIDAS : null;
   const traducao = idiomaAtual !== 'pt' && todas && todas[idiomaAtual] ? todas[idiomaAtual][santo.id] : null;
@@ -2508,7 +2398,6 @@ function getIdiomaSalvo() {
 }
 
 function aplicarIdioma(codigo) {
-  // Se vier um idioma que não existe, não mexe em nada
   if (!codigo || !TRADUCOES[codigo]) return;
   const dicionario = TRADUCOES[codigo];
   const idiomaAnterior = idiomaAtual;
@@ -2537,12 +2426,9 @@ function aplicarIdioma(codigo) {
   try {
     localStorage.setItem(CHAVE_IDIOMA, codigo);
   } catch (e) {
-    // segue sem salvar a preferência, sem quebrar o site
   }
 
   if (codigo !== idiomaAnterior) {
-    // Biografias e trilhas do idioma novo chegam juntas; depois disso
-    // a tela aberta é redesenhada já traduzida.
     const trilhasTraduzidas = typeof carregarTraducoesDasTrilhas === 'function' ? carregarTraducoesDasTrilhas(codigo) : null;
     Promise.all([carregarBiografiasDoIdioma(codigo), trilhasTraduzidas]).then(() => {
       reaplicarTextosDosSantos();
@@ -2553,7 +2439,6 @@ function aplicarIdioma(codigo) {
   atualizarBotaoVoltarDaBiografia();
 }
 
-// Texto da interface no idioma atual, trocando {marcas} pelos valores
 function textoDaInterface(chave, valores) {
   const dicionario = TRADUCOES[idiomaAtual] || TRADUCOES.pt;
   const texto = dicionario[chave] !== undefined ? dicionario[chave] : TRADUCOES.pt[chave];
@@ -2573,16 +2458,11 @@ function iniciarSeletorDeIdioma() {
     botao.setAttribute('aria-expanded', abrindo ? 'true' : 'false');
   });
 
-  // Só os botões de dentro deste menu. (O menu da conta usa outra
-  // classe: antes ele herdava este comportamento e, ao clicar em
-  // "Entrar", o site trocava de idioma e reabria a última biografia.)
   menu.querySelectorAll('.idioma-opcao').forEach(opcao => {
     opcao.addEventListener('click', () => {
       aplicarIdioma(opcao.dataset.lang);
       menu.classList.remove('aberto');
       botao.setAttribute('aria-expanded', 'false');
-      // Se houver uma biografia ABERTA, quem a atualiza é
-      // reaplicarTextosDosSantos — nada é reaberto sozinho.
     });
   });
 
@@ -2594,25 +2474,10 @@ function iniciarSeletorDeIdioma() {
   aplicarIdioma(getIdiomaSalvo());
 }
 
-// ============================================================
-//  SUPABASE — CONTAS E BANCO DE DADOS
-// ============================================================
-// ██████████████████████████████████████████████████████████
-// ███  COLOQUE SUAS CREDENCIAIS AQUI                        ███
-// ███  Vá no painel do Supabase → Project Settings → API.   ███
-// ███  "Project URL" vai em SUPABASE_URL. A chave "anon" /  ███
-// ███  "publishable" (a pública, NUNCA a "service_role")    ███
-// ███  vai em SUPABASE_ANON_KEY. Essas duas são seguras     ███
-// ███  para ficar no código do navegador — foram feitas     ███
-// ███  para isso.                                            ███
-// ██████████████████████████████████████████████████████████
-const SUPABASE_URL = 'https://upvualhciytwypmwtpye.supabase.co'; // projeto Lumina Sancti (o mesmo do app)
+const SUPABASE_URL = 'https://upvualhciytwypmwtpye.supabase.co';
 const SUPABASE_ANON_KEY = 'SUA-CHAVE-ANON-OU-PUBLISHABLE-AQUI';
-// ██████████████████████████████████████████████████████████
 
-// Enquanto a chave pública não for colada acima, o site funciona
-// normalmente, só sem contas (nada quebra).
-const LOGIN_COM_GOOGLE_ATIVO = false; // mude para true depois de ligar o Google no painel do Supabase
+const LOGIN_COM_GOOGLE_ATIVO = false;
 
 const supabaseCliente = (SUPABASE_URL.includes('SEU-PROJETO') || SUPABASE_ANON_KEY.includes('SUA-CHAVE') || !window.supabase)
   ? null
@@ -2621,7 +2486,7 @@ const supabaseCliente = (SUPABASE_URL.includes('SEU-PROJETO') || SUPABASE_ANON_K
 let sessaoAtual = null;
 
 async function iniciarAutenticacao() {
-  if (!supabaseCliente) return; // Supabase ainda não configurado — o site funciona normal, só sem login
+  if (!supabaseCliente) return;
 
   const { data } = await supabaseCliente.auth.getSession();
   sessaoAtual = data.session;
@@ -2635,12 +2500,6 @@ async function iniciarAutenticacao() {
   });
 }
 
-// ============================================================
-//  CÓDIGO DO APARELHO
-// ============================================================
-// O banco do app permite criar só uma conta nova por aparelho (para
-// evitar contas repetidas). No site, o "aparelho" é este navegador:
-// um código aleatório é criado uma vez e guardado nele.
 const CHAVE_INSTALACAO = 'lumina-sancti-instalacao';
 
 function idDaInstalacao() {
@@ -2661,19 +2520,13 @@ function idDaInstalacao() {
 async function aparelhoJaTemConta(instalacao) {
   try {
     const { data, error } = await supabaseCliente.rpc('install_status', { _install_id: instalacao });
-    if (error) return false; // na dúvida, deixa o banco decidir no cadastro
+    if (error) return false;
     return data === 'claimed';
   } catch (e) {
     return false;
   }
 }
 
-// ============================================================
-//  ENTRAR COM GOOGLE — a pessoa só ESCOLHE a conta; o cadastro
-//  só fica completo depois que ela digita o próprio nome.
-// ============================================================
-// Tudo fica salvo no Supabase (não no Lovable): a conta do Google
-// vira uma conta normal do site, e o nome vai junto com ela.
 async function entrarComGoogle() {
   const feedback = document.getElementById('auth-feedback');
   if (!supabaseCliente) {
@@ -2684,14 +2537,12 @@ async function entrarComGoogle() {
     provider: 'google',
     options: {
       redirectTo: window.location.origin + window.location.pathname,
-      queryParams: { prompt: 'select_account' }, // sempre mostra a lista de contas para escolher
+      queryParams: { prompt: 'select_account' },
     },
   });
   if (error && feedback) feedback.textContent = 'Não foi possível abrir o login do Google agora.';
 }
 
-// Se o Google devolver um erro (por exemplo, este aparelho já ter
-// outra conta), mostra uma mensagem clara na tela de entrar.
 function avisarErroDoGoogle() {
   const endereco = `${window.location.search || ''}&${(window.location.hash || '').replace(/^#/, '')}`;
   if (!/error_description=|error=/.test(endereco)) return;
@@ -2700,14 +2551,13 @@ function avisarErroDoGoogle() {
   if (feedback) {
     feedback.textContent = 'Não foi possível entrar com o Google agora. Crie sua conta com e-mail e senha, ou tente de novo mais tarde.';
   }
-  try { history.replaceState(null, '', window.location.pathname); } catch (e) { /* sem problema */ }
+  try { history.replaceState(null, '', window.location.pathname); } catch (e) {  }
 }
 
 function cadastroCompleto(usuario) {
   if (!usuario) return true;
   const dados = usuario.user_metadata || {};
   if (dados.cadastro_completo === true) return true;
-  // Contas criadas por e-mail antes desta versão já têm o nome
   const provedor = usuario.app_metadata && usuario.app_metadata.provider;
   return provedor === 'email' && !!dados.nome;
 }
@@ -2763,15 +2613,9 @@ function atualizarInterfaceDeConta() {
   }
 }
 
-// ============================================================
-//  NAVEGAÇÃO ENTRE PÁGINAS (home, biografia, Lumina, conta, perfil)
-// ============================================================
-// opcoes.catalogoInterno: abre o início só com o catálogo (sem a tela de
-// entrada), herdando a cor da página de onde a pessoa veio.
 function mudarDeView(idNovaView, opcoes) {
   const todasAsViews = ['view-home', 'view-detail', 'view-ia', 'view-auth', 'view-perfil', 'view-oracoes', 'view-leitura', 'view-terco', 'view-padroeiro', 'view-trilhas', 'view-licao', 'view-perfis', 'view-ranking', 'view-planos', 'view-completar'];
   const viewAtual = todasAsViews.map(id => document.getElementById(id)).find(v => v && v.classList.contains('active'));
-  // Saindo da lição, a voz da Lumi (modo infantil) não segue falando
   if (idNovaView !== 'view-licao' && typeof pararVozInfantil === 'function') pararVozInfantil(false);
   const catalogoInterno = idNovaView === 'view-home' && Boolean(opcoes && opcoes.catalogoInterno);
 
@@ -2780,7 +2624,6 @@ function mudarDeView(idNovaView, opcoes) {
       const v = document.getElementById(id);
       if (v) v.style.display = 'none';
     });
-    // A cor muda junto com a página, depois que a anterior saiu de cena
     document.body.classList.toggle('catalogo-interno', catalogoInterno);
     if (typeof aplicarTemaDaPagina === 'function') aplicarTemaDaPagina(idNovaView);
     const proxima = document.getElementById(idNovaView);
@@ -2799,16 +2642,10 @@ function mudarDeView(idNovaView, opcoes) {
   }
 }
 
-// ============================================================
-//  ENTRAR / CRIAR CONTA
-// ============================================================
 function irParaLogin() {
   mudarDeView('view-auth');
 }
 
-// Confirma o código de 6 dígitos que chegou por e-mail. O Supabase
-// aceita esse código como tipo 'email' (forma atual); se o projeto
-// só aceitar o tipo antigo 'signup', tenta de novo desse jeito.
 async function confirmarCodigoDeCadastro(email, codigo) {
   let { error } = await supabaseCliente.auth.verifyOtp({ email, token: codigo, type: 'email' });
   if (error) {
@@ -2817,9 +2654,6 @@ async function confirmarCodigoDeCadastro(email, codigo) {
   return error;
 }
 
-// Pede ao servidor o e-mail fraterno de boas-vindas. Ele só sai uma
-// vez por conta (o servidor garante isso), e qualquer falha aqui é
-// silenciosa — a pessoa entra no site normalmente de qualquer jeito.
 async function enviarEmailDeBoasVindas() {
   try {
     if (!supabaseCliente) return;
@@ -2831,12 +2665,9 @@ async function enviarEmailDeBoasVindas() {
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
     });
   } catch (e) {
-    // sem boas-vindas por e-mail agora; nada quebra no site
   }
 }
 
-// Depois de entrar na conta, mostra a escolha de perfis (estilo
-// streaming). Se o perfis.js não estiver carregado, vai pro início.
 function irDepoisDeEntrar() {
   if (typeof aposEntrarNaConta === 'function') aposEntrarNaConta();
   else mudarDeView('view-home');
@@ -2914,13 +2745,10 @@ function iniciarPaginaDeAutenticacao() {
       return;
     }
     if (data.session) {
-      // Confirmação de e-mail desligada no projeto: já entra direto
       feedback.textContent = '';
       enviarEmailDeBoasVindas();
       irDepoisDeEntrar();
     } else {
-      // Fluxo normal: mostra a tela pra digitar o código de 6 dígitos
-      // que chegou por e-mail.
       emailAguardandoConfirmacao = email;
       formCadastrar.style.display = 'none';
       formCodigo.style.display = 'flex';
@@ -2941,7 +2769,7 @@ function iniciarPaginaDeAutenticacao() {
     }
     feedback.textContent = '';
     emailAguardandoConfirmacao = '';
-    enviarEmailDeBoasVindas(); // sai em segundo plano, sem travar a tela
+    enviarEmailDeBoasVindas();
     irDepoisDeEntrar();
   });
 
@@ -2956,9 +2784,6 @@ function iniciarPaginaDeAutenticacao() {
   }
 }
 
-// ============================================================
-//  PERFIL E EXCLUSÃO DE CONTA
-// ============================================================
 async function carregarPaginaDePerfil() {
   const feedback = document.getElementById('perfil-feedback');
   if (!supabaseCliente || !sessaoAtual) { mudarDeView('view-auth'); return; }
@@ -2981,8 +2806,6 @@ function iniciarPaginaDePerfil() {
     feedback.textContent = error ? 'Não foi possível salvar agora.' : 'Salvo!';
   });
 
-  // Excluir conta: exige duas confirmações separadas, de propósito,
-  // pra ninguém apagar a conta sem querer.
   document.getElementById('perfil-excluir-btn').addEventListener('click', async () => {
     const primeira = confirm('Tem certeza que quer excluir sua conta do Lumina Sancti? Essa ação não pode ser desfeita.');
     if (!primeira) return;
@@ -3007,15 +2830,6 @@ function iniciarPaginaDePerfil() {
   });
 }
 
-// ============================================================
-//  PÁGINA DA LUMINA — a IA exclusiva do Lumina Sancti
-// ============================================================
-// Ela roda "por fora" do código do site: quem responde é uma
-// Edge Function do Supabase, que guarda a chave da IA em segredo
-// no servidor (nunca no navegador da pessoa), exige login e só
-// aceita perguntas sobre santos, beatos, doutores da Igreja e
-// anjos — qualquer outro assunto é recusado pela própria Lumina,
-// por instrução no "system prompt" dela.
 const AI_FUNCTION_URL = () => `${SUPABASE_URL}/functions/v1/perguntar-sobre-santo`;
 
 function criarIndicadorPensando() {
@@ -3027,8 +2841,6 @@ function esconderIndicadorPensando() {
   if (div) div.style.display = 'none';
 }
 
-// Efeito "máquina de escrever": o texto aparece caractere por
-// caractere, de forma fluida, até fixar na tela por completo.
 function efeitoMaquinaDeEscrever(elemento, textoCompleto, velocidadeMs = 18) {
   return new Promise((resolve) => {
     elemento.textContent = '';
@@ -3125,9 +2937,6 @@ function iniciarPaginaDaLumina() {
   irLogin.addEventListener('click', irParaLogin);
 }
 
-// ============================================================
-//  BOTÕES DA BARRA DE NAVEGAÇÃO (Lumina, Conta, voltar)
-// ============================================================
 function iniciarNavegacaoDeContas() {
   const luminaBtn = document.getElementById('lumina-btn');
   if (luminaBtn) luminaBtn.addEventListener('click', () => mudarDeView('view-ia'));
@@ -3164,32 +2973,21 @@ function iniciarNavegacaoDeContas() {
   iniciarPaginaDaLumina();
 }
 
-// ============================================================
-//  CHUVA DE METEOROS (efeito ambiente de fundo)
-// ============================================================
-// Estrelas cadentes brancas ou douradas cruzando o fundo do site
-// inteiro, de tempos em tempos, atrás de todo o conteúdo. Some
-// sozinho para quem prefere menos movimento na tela.
 function iniciarChuvaDeMeteoros() {
   const camada = document.getElementById('meteor-layer');
   if (!camada) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  // Numa chuva de meteoros de verdade, todos parecem vir do mesmo
-  // ponto do céu. Por isso a inclinação é quase a mesma para todos
-  // (uns poucos graus de diferença), e não um sorteio solto.
-  const INCLINACAO = 27;   // graus, descendo para a direita
-  const VARIACAO = 2.5;    // quanto cada meteoro pode fugir disso
+  const INCLINACAO = 27;
+  const VARIACAO = 2.5;
   const MAXIMO_NA_TELA = 22;
   const COMECO = performance.now();
   let vivos = 0;
 
-  // A chuva nunca para: o que muda é a intensidade, que sobe e desce
-  // devagar, em ondas (momentos mais fracos e momentos mais fortes).
   function meteorosPorSegundo() {
     const t = (performance.now() - COMECO) / 1000;
     const onda = 0.5 + 0.5 * Math.sin(t / 7.5) * Math.sin(t / 19 + 1.1);
-    return 2 + onda * 3.5; // de 2 a 5,5 meteoros por segundo
+    return 2 + onda * 3.5;
   }
 
   function criarMeteoro() {
@@ -3197,8 +2995,6 @@ function iniciarChuvaDeMeteoros() {
 
     const largura = window.innerWidth;
     const altura = window.innerHeight;
-    // profundidade: 0 = bem longe (fino, apagado, devagar),
-    //               1 = mais perto (grosso, brilhante, rápido)
     const profundidade = Math.random();
 
     const angulo = (INCLINACAO + (Math.random() * 2 - 1) * VARIACAO).toFixed(2);
@@ -3208,17 +3004,12 @@ function iniciarChuvaDeMeteoros() {
     const distancia = Math.round((largura + altura) * (0.55 + Math.random() * 0.3));
     const duracao = (2.4 - profundidade * 1.1 + Math.random() * 0.4).toFixed(2);
 
-    // Nasce FORA da tela e entra riscando — nenhum meteoro aparece
-    // do nada no meio do céu. Uns entram pela borda de cima, outros
-    // pela da esquerda, para a chuva cobrir o céu inteiro.
     let x;
     let y;
     if (Math.random() < 0.62) {
-      // entra pela borda de cima
       x = Math.round((-0.4 + Math.random() * 1.4) * largura);
       y = Math.round(-(0.05 + Math.random() * 0.22) * altura);
     } else {
-      // entra pela borda da esquerda
       x = Math.round(-(0.05 + Math.random() * 0.28) * largura);
       y = Math.round(Math.random() * altura * 0.65);
     }
@@ -3258,22 +3049,6 @@ function iniciarChuvaDeMeteoros() {
   agendarProximoMeteoro();
 }
 
-// ============================================================
-//  SANTO DO DIA
-// ============================================================
-// Duas coisas DIFERENTES, mostradas separadamente pra não gerar
-// confusão (por exemplo: Carlo Acutis aparecendo destacado num
-// dia que não é o dia de festa dele de verdade):
-//
-//   • "Santo de Hoje" — só aparece nos dias em que algum santo
-//     do catálogo tem a festa litúrgica batendo com a data real
-//     de hoje. Some nos outros dias, pra nunca afirmar algo que
-//     não é verdade.
-//
-//   • "Santo em Destaque" — aparece TODO santo dia, girando pelo
-//     catálogo (baseado no dia do ano), só pra convidar a
-//     descobrir uma nova história. Nunca repete o mesmo santo que
-//     já está no "Santo de Hoje", quando os dois aparecem juntos.
 function getSantoDeHoje() {
   const hoje = new Date();
   const mm = String(hoje.getMonth() + 1).padStart(2, '0');
@@ -3319,16 +3094,13 @@ function montarCartaoSantoDoDia(santo, rotulo, idBase) {
   `;
 }
 
-// ============================================================
-//  CARTÃO DE COMPARTILHAMENTO (gerado na hora, com Canvas)
-// ============================================================
 function carregarImagemComCors(url) {
   return new Promise((resolve) => {
     if (!url) { resolve(null); return; }
     const img = new Image();
-    img.crossOrigin = 'anonymous'; // necessário pra depois poder exportar o canvas
+    img.crossOrigin = 'anonymous';
     img.onload = () => resolve(img);
-    img.onerror = () => resolve(null); // sem foto: o cartão sai só com a estrela
+    img.onerror = () => resolve(null);
     img.src = url;
   });
 }
@@ -3357,14 +3129,12 @@ async function gerarCartaoDeCompartilhamento(santo) {
   canvas.height = T;
   const ctx = canvas.getContext('2d');
 
-  // Fundo escuro com um leve gradiente radial, igual ao site
   const gradiente = ctx.createRadialGradient(T / 2, T * 0.38, T * 0.05, T / 2, T * 0.38, T * 0.75);
   gradiente.addColorStop(0, '#1a2338');
   gradiente.addColorStop(1, '#0f172a');
   ctx.fillStyle = gradiente;
   ctx.fillRect(0, 0, T, T);
 
-  // Foto do santo (se carregar), em círculo
   const imgUrl = await buscarImagemSanto(santo);
   const img = await carregarImagemComCors(imgUrl);
   const raioFoto = T * 0.20;
@@ -3394,7 +3164,6 @@ async function gerarCartaoDeCompartilhamento(santo) {
   ctx.arc(centroX, centroY, raioFoto, 0, Math.PI * 2);
   ctx.stroke();
 
-  // Nome do santo
   ctx.fillStyle = '#d4af37';
   ctx.textAlign = 'center';
   ctx.font = 'bold 54px Georgia, serif';
@@ -3402,14 +3171,12 @@ async function gerarCartaoDeCompartilhamento(santo) {
   let y = centroY + raioFoto + 80;
   linhasNome.forEach((linha) => { ctx.fillText(linha, centroX, y); y += 62; });
 
-  // Resumo
   ctx.fillStyle = '#cbd5e1';
   ctx.font = '30px Georgia, serif';
   y += 20;
   const linhasResumo = quebrarTexto(ctx, textoDoSanto(santo).resumo, T * 0.78);
   linhasResumo.forEach((linha) => { ctx.fillText(linha, centroX, y); y += 42; });
 
-  // Marca do site, no rodapé do cartão
   ctx.fillStyle = '#d4af37';
   ctx.font = 'bold 32px Georgia, serif';
   ctx.fillText('LUMINA SANCTI', centroX, T - 90);
@@ -3433,9 +3200,8 @@ async function compartilharSantoDoDia(santo, botao) {
       if (navigator.share && navigator.canShare && navigator.canShare({ files: [arquivo] })) {
         try {
           await navigator.share({ files: [arquivo], title: santo.nome, text: `Conheça ${santo.nome} — Lumina Sancti` });
-        } catch (e) { /* pessoa cancelou o compartilhamento — tudo bem */ }
+        } catch (e) {  }
       } else {
-        // Sem suporte a compartilhar arquivos: baixa a imagem direto
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
         link.download = `lumina-sancti-${santo.id}.png`;
@@ -3473,7 +3239,6 @@ function ligarCartaoSantoDoDia(idBase, santo) {
   buscarImagemSanto(santo).then(imgUrl => {
     const wrapper = document.getElementById(`${idBase}-img-wrapper`);
     if (imgUrl && wrapper) {
-      // aqui a moldura é um círculo pequeno: o corte redondo é o certo
       wrapper.innerHTML = `<img src="${imgUrl}" alt="${santo.nome}" class="card-img" loading="lazy">`;
     }
   });
@@ -3499,21 +3264,6 @@ function renderSantoDoDia() {
   ligarCartaoSantoDoDia('sdd-destaque', santoDestaque);
 }
 
-// Calendário inteligente: o Santo do Dia se atualiza sozinho
-// quando a data muda, sem precisar recarregar a página — sempre
-// respeitando o relógio de 24 horas de quem está vendo o site
-// (o horário LOCAL do aparelho da pessoa, não um horário fixo de
-// servidor). Isso garante que a virada aconteça exatamente à
-// meia-noite local, seja em qual fuso horário for.
-//
-// Duas camadas trabalham juntas:
-//   1) um alarme exato, agendado para o instante preciso da
-//      próxima meia-noite local, que troca o santo na hora certa
-//      e já se reagenda para a meia-noite seguinte;
-//   2) uma checagem simples a cada minuto, mais o retorno à aba
-//      depois de um tempo em segundo plano — uma rede de segurança
-//      caso o navegador atrase o alarme (o que pode acontecer com
-//      abas em segundo plano por muito tempo).
 let ultimoDiaExibido = new Date().toDateString();
 
 function verificarViradaDoDia() {
@@ -3528,13 +3278,13 @@ function agendarProximaMeiaNoite() {
   const agora = new Date();
   const proximaMeiaNoite = new Date(
     agora.getFullYear(), agora.getMonth(), agora.getDate() + 1,
-    0, 0, 1, 0 // 00:00:01 — um segundo de folga para já estar no dia novo
+    0, 0, 1, 0
   );
   const esperaMs = proximaMeiaNoite - agora;
 
   setTimeout(() => {
     verificarViradaDoDia();
-    agendarProximaMeiaNoite(); // reagenda para a meia-noite seguinte
+    agendarProximaMeiaNoite();
   }, esperaMs);
 }
 
@@ -3547,14 +3297,6 @@ document.addEventListener('visibilitychange', () => {
   }
 });
 
-// ============================================================
-//  CATÁLOGO (GRADE DE CARTÕES)
-// ============================================================
-// ============================================================
-//  FAVORITOS
-// ============================================================
-// Guardados só no navegador da própria pessoa (localStorage) —
-// cada visitante tem sua própria listinha, sem precisar de login.
 const CHAVE_FAVORITOS = 'lumina-sancti-favoritos';
 
 function getFavoritos() {
@@ -3581,8 +3323,6 @@ function toggleFavorito(id) {
   try {
     localStorage.setItem(CHAVE_FAVORITOS, JSON.stringify(favoritos));
   } catch (e) {
-    // Se o navegador bloquear localStorage (modo privado, por exemplo),
-    // o favorito simplesmente não persiste — sem quebrar o site.
   }
   return favoritos.includes(id);
 }
@@ -3608,11 +3348,9 @@ function ligarBotaoFavorito(botao, id) {
     atualizarAparencia();
     if (botao.classList.contains('favorito-ativo')) {
       botao.classList.remove('batendo');
-      void botao.offsetWidth; // reinicia a animação
+      void botao.offsetWidth;
       botao.classList.add('batendo');
     }
-    // Se estivermos filtrando só os favoritos, o cartão precisa sumir
-    // assim que deixar de ser favorito.
     if (filtroAtual === 'favoritos') {
       renderGrid('favoritos');
     }
@@ -3621,9 +3359,6 @@ function ligarBotaoFavorito(botao, id) {
 
 let filtroAtual = 'todos';
 
-// ============================================================
-//  CATÁLOGO (GRADE DE CARTÕES)
-// ============================================================
 function renderGrid(filter = 'todos') {
   filtroAtual = filter;
   cardsGrid.innerHTML = '';
@@ -3673,9 +3408,6 @@ function renderGrid(filter = 'todos') {
   });
 }
 
-// ============================================================
-//  OUVIR BIOGRAFIA (voz nativa do navegador, sem arquivo de áudio)
-// ============================================================
 function pararLeituraDeBiografia() {
   if ('speechSynthesis' in window) {
     window.speechSynthesis.cancel();
@@ -3684,7 +3416,7 @@ function pararLeituraDeBiografia() {
 
 function textoLimpo(html) {
   return html
-    .replace(/<[^>]+>/g, ' ') // remove as tags HTML
+    .replace(/<[^>]+>/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 }
@@ -3695,7 +3427,7 @@ function ligarBotaoOuvir(santo) {
   if (!botao) return;
 
   if (!('speechSynthesis' in window)) {
-    botao.style.display = 'none'; // navegador sem suporte: some, sem quebrar nada
+    botao.style.display = 'none';
     return;
   }
 
@@ -3728,8 +3460,6 @@ function ligarBotaoOuvir(santo) {
   });
 }
 
-// Páginas para onde o "Voltar" da biografia (e do catálogo aberto pelo
-// menu) consegue voltar. A lição volta para a trilha.
 const PAGINAS_PARA_VOLTAR = {
   'view-trilhas': 'view-trilhas',
   'view-licao': 'view-trilhas',
@@ -3750,7 +3480,6 @@ function idDaPaginaVisivel() {
   return aberta ? aberta.id : null;
 }
 
-// "Voltar" ou "Voltar para o início", conforme o destino
 function atualizarBotaoVoltarDaBiografia() {
   const rotulo = btnBack ? btnBack.querySelector('span') : null;
   if (!rotulo) return;
@@ -3764,7 +3493,6 @@ function showDetail(id) {
   const santo = santosData.find(s => s.id === id);
   if (!santo) return;
 
-  // De onde a pessoa veio (a biografia herda a cor dessa página)
   const deOnde = idDaPaginaVisivel();
   if (deOnde && deOnde !== 'view-detail') {
     origemDaBiografia = deOnde === 'view-home' && document.body.classList.contains('catalogo-interno') ? 'catalogo-interno' : deOnde;
@@ -3777,8 +3505,6 @@ function showDetail(id) {
   bioContainer.classList.remove('animate-in');
   bioArticle.dataset.santoId = santo.id;
 
-  // Esconde qualquer outra página aberta (início, trilhas, padroeiro,
-  // lição...), não só o início — senão duas páginas ficavam na tela.
   document.querySelectorAll('.view').forEach(v => {
     if (v !== viewDetail) v.classList.remove('active');
   });
@@ -3879,9 +3605,6 @@ function showDetail(id) {
   }, 400);
 }
 
-// O "Voltar" da biografia leva de volta para a página de onde a pessoa
-// veio (Trilhas, Terço, Lumina, Padroeiro...). Vindo do início, volta
-// para o catálogo do início, como sempre foi.
 btnBack.addEventListener('click', () => {
   pararLeituraDeBiografia();
   const destino = PAGINAS_PARA_VOLTAR[origemDaBiografia];
@@ -3906,10 +3629,6 @@ btnBack.addEventListener('click', () => {
   }, 400);
 });
 
-// Os filtros do menu lateral ("Catálogo") abrem o catálogo de qualquer
-// página. Vindo de uma página na cor litúrgica (qualquer uma menos o
-// início), abre o catálogo sozinho, sem a tela de entrada, e ele herda
-// essa cor. Vindo de uma biografia dourada, abre o início, no catálogo.
 let origemDoCatalogo = null;
 
 function abrirCatalogo() {
@@ -3943,8 +3662,6 @@ filterBtns.forEach(btn => {
       closeSidebar();
     }
 
-    // Em outra página, primeiro abre o catálogo (antes o clique não
-    // mostrava nada, porque o catálogo estava escondido)
     if (!abrirCatalogo()) document.getElementById('materias').scrollIntoView({ behavior: 'smooth' });
 
     setTimeout(() => {
@@ -4031,9 +3748,6 @@ window.addEventListener('scroll', () => {
   lastScroll = currentScroll;
 });
 
-// Cada parte roda isolada das outras: se uma falhar por algum
-// motivo inesperado, isso é registrado no console, mas não impede
-// as demais de funcionar normalmente.
 function rodarComSeguranca(nome, funcao) {
   try {
     funcao();
@@ -4057,17 +3771,6 @@ document.addEventListener('DOMContentLoaded', () => {
   rodarComSeguranca('google, planos e instalar o app', iniciarContaGooglePlanosEApp);
 });
 
-// ============================================================
-//  ORAÇÕES DO DIA A DIA
-// ============================================================
-// As dez primeiras ficam nesta ordem porque o terço usa as posições
-// (ORACOES[0] = Sinal da Cruz, [1] = Pai Nosso, [2] = Ave Maria,
-// [3] = Glória, [4] = Credo, [5] = Salve Rainha). As novas entram
-// depois.
-//
-// "nomes" são outros jeitos de chamar a mesma oração (inclusive em
-// latim, inglês e espanhol), para a busca achar pelo nome. As
-// situações de cada oração ficam em SITUACOES_DE_ORACAO, logo abaixo.
 const ORACOES = [
   { id: 'sinal-da-cruz', titulo: 'Sinal da Cruz', nomes: ['persignar', 'benzer-se', 'persignação'], texto: 'Em nome do Pai, e do Filho, e do Espírito Santo. Amém.' },
   { id: 'pai-nosso', titulo: 'Pai Nosso', nomes: ['Oração do Senhor', 'Our Father', 'Padre Nuestro'], texto: 'Pai Nosso que estais nos Céus,\nsantificado seja o Vosso nome,\nvenha a nós o Vosso reino,\nseja feita a Vossa vontade,\nassim na terra como no Céu.\nO pão nosso de cada dia nos dai hoje,\nperdoai-nos as nossas ofensas,\nassim como nós perdoamos a quem nos tem ofendido,\ne não nos deixeis cair em tentação,\nmas livrai-nos do mal.\nAmém.' },
@@ -4091,9 +3794,6 @@ const ORACOES = [
   { id: 'terco-mariano', titulo: 'Terço (Rosário)', nomes: ['Terço', 'Rosário', 'Santo Terço', 'Rezar o terço', 'Rosary', 'Rosario'], acao: 'terco', texto: 'Cinco dezenas, uma para cada mistério da vida de Jesus e de Maria: em cada uma, um Pai Nosso, dez Ave-Marias e um Glória. O site sugere os mistérios do dia e reza com você, passo a passo.' },
 ];
 
-// Situações da vida e as orações que mais combinam com cada uma, da
-// mais indicada para a menos. As palavras são as que as pessoas
-// costumam digitar; acentos e maiúsculas não importam.
 const SITUACOES_DE_ORACAO = [
   { rotulo: 'Medo e proteção', termos: ['medo', 'assustado', 'assustada', 'susto', 'pavor', 'pânico', 'perigo', 'proteção', 'proteger', 'protege', 'defesa', 'defender', 'livrar', 'livramento', 'maldade', 'mal', 'inimigo', 'demônio', 'diabo', 'satanás', 'tentação', 'batalha espiritual', 'combate', 'inveja', 'olho gordo', 'mau-olhado', 'assalto', 'violência', 'ameaça'], itens: ['sao-miguel', 'santo-anjo', 'anjo-da-guarda'] },
   { rotulo: 'Antes de dormir', termos: ['dormir', 'noite', 'sono', 'insônia', 'deitar', 'cama', 'pesadelo', 'boa noite', 'antes de dormir'], itens: ['santo-anjo', 'anjo-da-guarda', 'ato-de-contricao'] },
@@ -4120,13 +3820,11 @@ const SITUACOES_DE_ORACAO = [
   { rotulo: 'Santíssima Trindade', termos: ['trindade', 'santíssima trindade', 'deus pai', 'pai filho e espírito santo'], itens: ['gloria', 'sinal-da-cruz', 'credo'] },
 ];
 
-// Atalhos que aparecem embaixo da caixa de busca
 const SUGESTOES_DE_BUSCA_DE_ORACAO = ['Estou com medo', 'Para dormir', 'Pedir perdão', 'Agradecer', 'Alguém doente', 'Ansiedade', 'Pelos falecidos', 'Antes de comer', 'Prova ou decisão', 'Nossa Senhora'];
 
 let itensDeOracaoParaBusca = null;
 let situacoesDeOracaoParaBusca = null;
 
-// Lista das orações da mais indicada para a menos (no máximo "limite")
 function buscarOracoes(consulta, limite) {
   if (typeof BuscaInteligente === 'undefined') return [];
   if (!itensDeOracaoParaBusca) {
@@ -4245,9 +3943,6 @@ function iniciarPaginaDeOracoes() {
   if (btnVoltar) btnVoltar.addEventListener('click', () => mudarDeView('view-home'));
 }
 
-// ============================================================
-//  TERÇO GUIADO
-// ============================================================
 const MISTERIOS_DO_TERCO = {
   gozosos: {
     nome: 'Mistérios Gozosos',
@@ -4295,13 +3990,6 @@ const MISTERIOS_DO_TERCO = {
   },
 };
 
-// Terço da Misericórdia, como Jesus o ensinou a Santa Faustina
-// (Diário, 476): reza-se com as contas do terço comum. Um Pai Nosso,
-// uma Ave Maria e o Credo; nas contas grandes, "Eterno Pai..."; nas
-// pequenas, "Pela Sua dolorosa Paixão..."; no fim, três vezes "Deus
-// Santo...". As orações de abertura (Diário, 1319 e 187) e a final
-// (Diário, 950) são costume de muitos grupos e vêm marcadas como
-// opcionais.
 const TERCO_DA_MISERICORDIA = {
   nome: 'Terço da Misericórdia',
   dias: 'Hora da Misericórdia · 15h',
@@ -4317,15 +4005,13 @@ const TERCO_DA_MISERICORDIA = {
 };
 
 function misterioSugeridoHoje() {
-  const diaSemana = new Date().getDay(); // 0=domingo ... 6=sábado
+  const diaSemana = new Date().getDay();
   if (diaSemana === 1 || diaSemana === 6) return 'gozosos';
   if (diaSemana === 2 || diaSemana === 5) return 'dolorosos';
   if (diaSemana === 4) return 'luminosos';
-  return 'gloriosos'; // quarta e domingo
+  return 'gloriosos';
 }
 
-// "contas": quantas vezes a oração do passo se repete (o site mostra
-// as bolinhas para a pessoa ir marcando)
 function montarPassosDoTerco(chaveMisterio) {
   if (chaveMisterio === 'misericordia') return montarPassosDoTercoDaMisericordia();
   const conjunto = MISTERIOS_DO_TERCO[chaveMisterio];
@@ -4432,8 +4118,6 @@ function voltarParaEscolhaDoTerco() {
   document.getElementById('terco-escolha').style.display = 'block';
 }
 
-// Abre a página do terço (vinda das Orações, por exemplo); com
-// "misericordia", já começa o Terço da Misericórdia
 function abrirTerco(chave) {
   voltarParaEscolhaDoTerco();
   mudarDeView('view-terco');
@@ -4487,14 +4171,6 @@ function iniciarPaginaDoTerco() {
   });
 }
 
-// ============================================================
-//  PADROEIRO DE... (buscar santo por necessidade/causa)
-// ============================================================
-// Cada tema junta as palavras que as pessoas usam para aquela
-// necessidade e os santos do catálogo tradicionalmente invocados
-// para ela (do mais conhecido para o menos). A busca entende erros de
-// digitação e frases inteiras ("vou viajar amanhã"), e também acha um
-// santo pelo nome.
 const PADROEIROS = [
   { rotulo: 'Viagens e estradas', termos: ['viagem', 'viajar', 'viajante', 'estrada', 'motorista', 'trânsito', 'carro', 'caminhoneiro', 'ônibus', 'avião', 'turista', 'dirigir'], santos: ['cristovao', 'rafael'] },
   { rotulo: 'Saúde e doentes', termos: ['saúde', 'doença', 'doente', 'cura', 'curar', 'hospital', 'enfermeira', 'enfermeiro', 'enfermagem', 'médico', 'médica', 'cirurgia', 'internado', 'tratamento', 'câncer'], santos: ['rafael', 'camilo-lelis', 'joao-de-deus', 'cosme-damiao', 'charbel-makhlouf', 'bernadete'] },
@@ -4527,7 +4203,6 @@ const PADROEIROS = [
   { rotulo: 'Padres e confissão', termos: ['padre', 'padres', 'sacerdote', 'pároco', 'confessor', 'confissão'], santos: ['joao-maria-vianney', 'leopoldo-mandic'] },
 ];
 
-// Temas que aparecem como atalhos quando a busca está vazia
 const TEMAS_EM_DESTAQUE_DO_PADROEIRO = ['Saúde e doentes', 'Viagens e estradas', 'Trabalho e emprego', 'Família, mães e filhos', 'Estudos e provas', 'Causas impossíveis e urgentes', 'Gravidez e parto', 'Dívidas e dificuldades financeiras', 'Coisas perdidas', 'Medo e proteção', 'Olhos e visão', 'Animais'];
 
 const NOMES_DOS_MESES = {
@@ -4546,7 +4221,6 @@ function festaPorExtenso(festa) {
 
 let temasDoPadroeiroParaBusca = null;
 
-// Temas (com seus santos) do mais parecido com a busca para o menos
 function buscarPadroeiro(termo) {
   const texto = String(termo || '').trim();
   if (!texto || typeof BuscaInteligente === 'undefined') return [];
@@ -4560,14 +4234,9 @@ function buscarPadroeiro(termo) {
     .slice(0, 3)
     .map((t) => ({ rotulo: t.tema.rotulo, santos: t.tema.santos.map((id) => santosData.find((s) => s.id === id)).filter(Boolean) }));
 
-  // Também pelo nome do santo ("Antônio", "Santa Rita", "Luzia"...): todas
-  // as palavras digitadas precisam estar no nome, e pelo menos uma que
-  // não seja só "São", "Santa"...
   const TITULOS = ['sao', 'santo', 'santa', 'santos', 'beato', 'beata', 'saint', 'blessed', 'san'];
   const doPedido = BuscaInteligente.palavras(texto);
   const temNomeDeVerdade = doPedido.some((p) => !TITULOS.includes(p));
-  // Nome igual vem antes de parecido ("José" antes de "Josefina"), e o
-  // nome que começa com a palavra antes do que a tem no meio
   const porNome = !temNomeDeVerdade || doPedido.length > 4 ? [] : santosData.map((s) => {
     const doNome = BuscaInteligente.palavras(`${s.nome} ${textoDoSanto(s).nome}`).filter((w) => !TITULOS.includes(w));
     let nota = 0;
@@ -4687,9 +4356,6 @@ function iniciarPaginaDePadroeiro() {
   if (btnVoltar) btnVoltar.addEventListener('click', () => mudarDeView('view-home'));
 }
 
-// ============================================================
-//  COMPARTILHAR O SITE
-// ============================================================
 async function compartilharSite() {
   const dados = {
     title: 'Lumina Sancti — Luz dos Santos',
@@ -4697,7 +4363,7 @@ async function compartilharSite() {
     url: window.location.origin + window.location.pathname,
   };
   if (navigator.share) {
-    try { await navigator.share(dados); } catch (e) { /* pessoa cancelou — tudo bem */ }
+    try { await navigator.share(dados); } catch (e) {  }
     return;
   }
   try {
@@ -4715,9 +4381,6 @@ function iniciarCompartilharSite() {
   if (btnMenu) btnMenu.addEventListener('click', () => { closeSidebar(); compartilharSite(); });
 }
 
-// ============================================================
-//  LIGAÇÕES DO MENU LATERAL COM AS NOVAS PÁGINAS
-// ============================================================
 function iniciarNavegacaoDoMenuLateral() {
   const navOracoes = document.getElementById('nav-oracoes');
   const navTerco = document.getElementById('nav-terco');
@@ -4732,9 +4395,6 @@ function iniciarNavegacaoDoMenuLateral() {
   if (voltarDaLeitura) voltarDaLeitura.addEventListener('click', () => mudarDeView('view-home'));
 }
 
-// ============================================================
-//  INSTALAR O APP (no celular ou no computador)
-// ============================================================
 let pedidoDeInstalacao = null;
 
 function appJaInstalado() {
@@ -4757,15 +4417,13 @@ function atualizarBotoesDeInstalar() {
 
 async function instalarApp() {
   if (typeof closeSidebar === 'function') closeSidebar();
-  // Android e computador: o próprio navegador abre a janela de instalar
   if (pedidoDeInstalacao) {
     pedidoDeInstalacao.prompt();
-    try { await pedidoDeInstalacao.userChoice; } catch (e) { /* pessoa fechou */ }
+    try { await pedidoDeInstalacao.userChoice; } catch (e) {  }
     pedidoDeInstalacao = null;
     atualizarBotoesDeInstalar();
     return;
   }
-  // iPhone (ou navegador sem instalação automática): passo a passo
   const janela = document.getElementById('instalar-modal');
   const instrucoes = document.getElementById('instalar-instrucoes');
   if (!janela || !instrucoes) return;
@@ -4804,19 +4462,14 @@ function iniciarInstalacaoDoApp() {
   atualizarBotoesDeInstalar();
 }
 
-// ============================================================
-//  PLANOS (vitrine — ainda sem cobrança)
-// ============================================================
-// Quando os preços forem definidos, é só preencher "preco" (por
-// exemplo 'R$ 9,90/mês'). Enquanto estiver null, aparece "Em breve".
 const PLANOS = [
   { id: 'gratuito', nome: 'Gratuito', preco: 'Grátis', perfis: '1 perfil', destaque: false,
     itens: ['Todas as biografias dos santos', 'Santo do Dia, orações e terço guiado', 'Trilhas dos Santos', 'Lumina: 5 perguntas por dia'] },
-  { id: 'individual', nome: 'Individual', preco: null, perfis: '1 perfil', destaque: false,
+  { id: 'individual', nome: 'Individual', preco: 'R$ 19,90/mês', perfis: '1 perfil', destaque: false,
     itens: ['Tudo do plano Gratuito', 'Quiz dos Santos criado por IA', 'Narração com voz natural', 'Mais perguntas à Lumina'] },
-  { id: 'duo', nome: 'Duo', preco: null, perfis: '2 perfis', destaque: false,
+  { id: 'duo', nome: 'Duo', preco: 'R$ 31,90/mês', perfis: '2 perfis', destaque: false,
     itens: ['Tudo do plano Individual', 'Para duas pessoas', 'Ranking entre vocês dois'] },
-  { id: 'familia', nome: 'Família', preco: null, perfis: 'Até 6 perfis', destaque: true,
+  { id: 'familia', nome: 'Família', preco: 'R$ 36,90/mês', perfis: 'Até 6 perfis', destaque: true,
     itens: ['Tudo do plano Individual', 'Perfis de adultos e crianças', 'Modo Kids', 'Ranking da família'] },
 ];
 
@@ -4864,10 +4517,6 @@ function iniciarContaGooglePlanosEApp() {
   iniciarInstalacaoDoApp();
 }
 
-// PWA: registra o service worker, que deixa o site instalável e
-// funcionando parcialmente offline. Se o navegador não suportar,
-// ou o arquivo não existir ainda no servidor, o site continua
-// funcionando normalmente do mesmo jeito.
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js').catch(() => {});

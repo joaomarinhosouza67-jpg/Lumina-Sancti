@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- SEO e Compartilhamento (Open Graph para Redes Sociais e WhatsApp) -->
   <title>Lumina Sancti | Luz dos Santos</title>
   <meta name="description" content="Um refúgio digital dedicado a preservar e compartilhar a vida, a fé e o legado dos Santos da Igreja, com o Santo do Dia, doutores, beatos e santos jovens.">
 
@@ -14,44 +13,31 @@
   <meta property="og:image" content="og-image.png">
   <meta property="og:url" content="https://seusite.com">
 
-  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Lumina Sancti | Luz dos Santos">
   <meta name="twitter:description" content="Descubra a bela trilha da santidade e o legado dos Santos da Igreja.">
   <meta name="twitter:image" content="og-image.png">
 
-  <!-- Fontes Elegantes -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 
-  <!-- Favicon: a mesma estrela do site. A versão animada (girando e
-       brilhando) é usada por navegadores que suportam SVG animado
-       (Firefox mostra a animação na aba; outros mostram o primeiro
-       quadro, ainda assim a estrela dourada). -->
   <link rel="icon" type="image/svg+xml" href="favicon-animado.svg">
   <link rel="alternate icon" type="image/svg+xml" href="favicon.svg">
   <link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
-  <!-- PWA: deixa o site instalável como um app -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0f172a">
-  <!-- Diz pro navegador que o site JÁ é escuro de propósito, pra ele
-       não tentar aplicar um "modo escuro automático" por cima (isso
-       é o que causava aquele azul estranho e feio no celular). -->
   <meta name="color-scheme" content="dark">
 
-  <!-- Biblioteca do Supabase (contas de usuário + banco de dados) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-  <!-- Chuva de meteoros no fundo do site inteiro (fica atrás de tudo) -->
   <div id="meteor-layer" class="meteor-layer" aria-hidden="true"></div>
 
-  <!-- TELA DE INTRODUÇÃO ("Estrela da Luz": brilho > estrela > raios > nome > clarão) -->
   <div id="intro-screen" class="intro-screen" aria-hidden="true">
     <div id="intro-sky" class="intro-sky"></div>
 
@@ -62,7 +48,6 @@
       <div class="intro-glow"></div>
       <div class="intro-halo"></div>
 
-      <!-- Raios dourados que nascem do centro da estrela -->
       <div class="sun-ray r1"></div>
       <div class="sun-ray r2"></div>
       <div class="sun-ray r3"></div>
@@ -88,7 +73,6 @@
     <div class="intro-flash"></div>
   </div>
 
-  <!-- Barra de Navegação Limpa -->
   <header id="navbar" class="navbar">
     <div class="nav-container">
       <button id="menu-btn" class="icon-btn" aria-label="Abrir Menu">
@@ -127,7 +111,6 @@
     </div>
   </header>
 
-  <!-- Editor de perfil (criar / editar) -->
   <div id="perfil-editor-modal" class="search-modal">
     <div class="search-modal-content perfil-editor">
       <div class="search-header">
@@ -158,7 +141,6 @@
     </div>
   </div>
 
-  <!-- Painel de um perfil -->
   <div id="perfil-painel-modal" class="search-modal">
     <div class="search-modal-content perfil-painel">
       <div class="search-header">
@@ -169,7 +151,6 @@
     </div>
   </div>
 
-  <!-- Como instalar o app -->
   <div id="instalar-modal" class="search-modal">
     <div class="search-modal-content instalar-janela">
       <div class="search-header">
@@ -180,7 +161,6 @@
     </div>
   </div>
 
-  <!-- Modal de Pesquisa -->
   <div id="search-modal" class="search-modal">
     <div class="search-modal-content">
       <div class="search-header">
@@ -196,7 +176,6 @@
     </div>
   </div>
 
-  <!-- Menu Lateral (Sidebar) -->
   <aside id="sidebar" class="sidebar">
     <div class="sidebar-header">
       <h2 data-i18n="catalogo_titulo">Catálogo</h2>
@@ -234,7 +213,6 @@
 
   <main id="main-content">
 
-    <!-- TELA INICIAL -->
     <section id="view-home" class="view active">
       <section class="hero">
         <div class="hero-content">
@@ -250,12 +228,9 @@
         </div>
       </section>
 
-      <!-- Santo do Dia -->
       <section class="santo-do-dia container" id="santo-do-dia">
-        <!-- Conteúdo injetado via JS -->
       </section>
 
-      <!-- Sobre o Lumina Sancti -->
       <section class="about container">
         <h2 class="section-title" data-i18n="sobre_titulo">Sobre o Lumina Sancti</h2>
         <div class="title-divider"></div>
@@ -264,8 +239,6 @@
         </p>
       </section>
 
-      <!-- Topo do catálogo aberto pelo menu a partir das Trilhas, do Terço
-           ou da Lumina: sem a tela de entrada, na cor do tempo litúrgico -->
       <div class="catalogo-interno-topo container" id="catalogo-interno-topo">
         <button class="btn-back" id="btn-voltar-catalogo">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
@@ -288,12 +261,10 @@
         </div>
 
         <div id="cards-grid" class="cards-grid">
-          <!-- Cartões injetados via JS -->
         </div>
       </section>
     </section>
 
-    <!-- TELA DE BIOGRAFIA -->
     <section id="view-detail" class="view">
       <div class="container bio-container" id="bio-container">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -301,18 +272,15 @@
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             <span data-i18n="voltar_inicio">Voltar para o início</span>
           </button>
-          <!-- Botão Compartilhar -->
           <button id="btn-share" class="icon-btn" aria-label="Compartilhar" style="color: var(--primary-color);">
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
           </button>
         </div>
         <article id="bio-article" class="bio-article">
-          <!-- Biografia injetada via JS -->
         </article>
       </div>
     </section>
 
-    <!-- PÁGINA DA LUMINA (IA exclusiva do site) -->
     <section id="view-ia" class="view">
       <div class="container lumina-container">
         <button class="btn-back" id="btn-back-lumina">
@@ -333,13 +301,11 @@
           </div>
         </div>
 
-        <!-- Visível só sem login -->
         <div id="lumina-precisa-login" class="lumina-aviso" style="display:none;">
           <p data-i18n="lumina_precisa_login">Para conversar com a Lumina, entre na sua conta (é rápido e gratuito).</p>
           <button id="lumina-ir-login" class="filter-btn active" data-i18n="conta_entrar">Entrar / Criar conta</button>
         </div>
 
-        <!-- Visível só com login -->
         <div id="lumina-chat-area" style="display:none;">
           <p class="lumina-restantes" id="lumina-restantes"></p>
 
@@ -360,7 +326,6 @@
       </div>
     </section>
 
-    <!-- PÁGINA DE ENTRAR / CRIAR CONTA -->
     <section id="view-auth" class="view">
       <div class="container auth-container">
         <button class="btn-back" id="btn-back-auth">
@@ -408,7 +373,6 @@
       </div>
     </section>
 
-    <!-- PÁGINA DE ORAÇÕES -->
     <section id="view-oracoes" class="view">
       <div class="container oracoes-container">
         <button class="btn-back" id="btn-back-oracoes">
@@ -418,7 +382,6 @@
         <h2 class="section-title" style="text-align:left; margin: 10px 0 4px;">Orações do dia a dia</h2>
         <div class="title-divider" style="margin: 0 0 24px;"></div>
 
-        <!-- Busca que entende a intenção: "estou com medo", "para dormir"... -->
         <div class="busca-oracao">
           <label for="oracao-busca" class="busca-oracao-rotulo">Para que você quer rezar?</label>
           <div class="busca-oracao-campo">
@@ -430,12 +393,10 @@
         </div>
 
         <h3 class="oracoes-subtitulo">Todas as orações</h3>
-        <div id="lista-oracoes" class="lista-oracoes"><!-- Injetado via JS --></div>
+        <div id="lista-oracoes" class="lista-oracoes"></div>
       </div>
     </section>
 
-    <!-- LEITURA DO DIA (primeira leitura, salmo, segunda leitura e
-         Evangelho). Por enquanto só o aviso de que chega em breve. -->
     <section id="view-leitura" class="view">
       <div class="container leitura-container">
         <button class="btn-back" id="btn-back-leitura">
@@ -451,7 +412,6 @@
       </div>
     </section>
 
-    <!-- PÁGINA DO TERÇO GUIADO -->
     <section id="view-terco" class="view">
       <div class="container terco-container">
         <button class="btn-back" id="btn-back-terco">
@@ -486,7 +446,6 @@
       </div>
     </section>
 
-    <!-- PÁGINA "PADROEIRO DE..." -->
     <section id="view-padroeiro" class="view">
       <div class="container padroeiro-container">
         <button class="btn-back" id="btn-back-padroeiro">
@@ -505,7 +464,6 @@
       </div>
     </section>
 
-    <!-- TRILHAS DOS SANTOS (estilo Duolingo) -->
     <section id="view-trilhas" class="view">
       <div class="container trilhas-container">
         <button class="btn-back" id="btn-back-trilhas">
@@ -519,12 +477,11 @@
         <div class="trilhas-acoes">
           <button id="trilhas-abrir-insignias" class="trilhas-acao" data-i18n="trilhas_insignias">Minhas insígnias</button>
         </div>
-        <div id="lista-trilhas" class="lista-trilhas"><!-- Injetado via JS --></div>
+        <div id="lista-trilhas" class="lista-trilhas"></div>
         <p class="trilhas-nota" id="trilhas-nota">Por enquanto seu progresso fica salvo neste aparelho. Em breve ele vai ficar guardado na sua conta, com perfis e rankings.</p>
       </div>
     </section>
 
-    <!-- LIÇÃO (tela cheia) -->
     <section id="view-licao" class="view">
       <div class="licao-tela">
         <div class="licao-topo">
@@ -543,7 +500,6 @@
       </div>
     </section>
 
-    <!-- QUEM VAI APRENDER? (perfis estilo streaming) -->
     <section id="view-perfis" class="view">
       <div class="container perfis-container">
         <h2 class="perfis-titulo">Quem vai aprender agora?</h2>
@@ -552,7 +508,6 @@
       </div>
     </section>
 
-    <!-- RANKING (Família e Global) -->
     <section id="view-ranking" class="view">
       <div class="container ranking-container">
         <button class="btn-back" id="btn-back-ranking">
@@ -572,7 +527,6 @@
       </div>
     </section>
 
-    <!-- PLANOS -->
     <section id="view-planos" class="view">
       <div class="container planos-container">
         <button class="btn-back" id="btn-back-planos">
@@ -586,7 +540,6 @@
       </div>
     </section>
 
-    <!-- COMPLETAR O CADASTRO (depois de escolher a conta do Google) -->
     <section id="view-completar" class="view">
       <div class="container auth-container">
         <div class="auth-card">
@@ -603,7 +556,6 @@
       </div>
     </section>
 
-    <!-- PÁGINA DE PERFIL -->
     <section id="view-perfil" class="view">
       <div class="container auth-container">
         <button class="btn-back" id="btn-back-perfil">
@@ -659,7 +611,6 @@
 
   <svg style="display: none;">
     <defs>
-      <!-- Ícones do site (traço fino, sem emojis) -->
       <g id="icone-estrela"><path transform="scale(0.24)" d="M50 0 C52 35 65 48 100 50 C65 52 52 65 50 100 C48 65 35 52 0 50 C35 48 48 35 50 0 Z" fill="currentColor" stroke="none"/></g>
       <g id="icone-chama"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></g>
       <g id="icone-pomba"><path d="M16 7h.01"/><path d="M3.4 18H12a8 8 0 0 0 8-8V7a4 4 0 0 0-7.28-2.3L2 20"/><path d="m20 7 2 .5-2 .5"/><path d="M10 18v3"/><path d="M14 17.75V21"/><path d="M7 18a6 6 0 0 0 3.84-10.61"/></g>
@@ -678,7 +629,6 @@
       <g id="icone-camera"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></g>
       <g id="icone-baixar"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></g>
       <g id="icone-coracao"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></g>
-      <!-- Alto-falante (voz da Lumi ligada) e alto-falante riscado (desligada) -->
       <g id="icone-som"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></g>
       <g id="icone-som-mudo"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="m22 9-6 6"/><path d="m16 9 6 6"/></g>
       <g id="icon-aureola">

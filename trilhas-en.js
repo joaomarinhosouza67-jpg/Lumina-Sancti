@@ -1,12 +1,3 @@
-// ============================================================
-//  LUMINA SANCTI — Trilhas em inglês
-// ============================================================
-// Carregado só quando a pessoa escolhe English no site.
-// Mesma ordem e mesma quantidade de atividades do português (trilhas.js):
-// na múltipla escolha as opções ficam na mesma ordem, para "correta"
-// continuar valendo; no "ordenar", os blocos já vêm na ordem certa da
-// frase neste idioma. Trilha que ainda não está aqui aparece em português.
-
 window.TRILHAS_TRADUZIDAS = window.TRILHAS_TRADUZIDAS || {};
 window.TRILHAS_TRADUZIDAS.en = Object.assign(window.TRILHAS_TRADUZIDAS.en || {}, {
   'santo-francisco': {

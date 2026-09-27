@@ -1,20 +1,3 @@
-// ============================================================
-//  LUMINA SANCTI — TRILHAS DOS SANTOS (estilo Duolingo)
-// ============================================================
-// Uma trilha para cada santo, com lições curtas: múltipla escolha,
-// verdadeiro ou falso e montar frases na ordem certa.
-//
-// As 12 trilhas e todas as perguntas abaixo foram copiadas
-// exatamente do projeto que estava no Lovable.
-//
-// Nesta primeira fase, o progresso (Fé, Santidade, ofensiva e
-// insígnias) fica salvo no próprio aparelho da pessoa. Na próxima
-// fase ele passa a ser salvo na conta dela (Supabase), junto com os
-// perfis estilo streaming e os rankings.
-//
-// Este arquivo precisa ser carregado DEPOIS do script.js — ele usa
-// funções de lá, como mudarDeView, showDetail e buscarImagemSanto.
-
 const TRILHAS_ORIGINAIS = [
   {"slug":"santo-francisco","santo":"São Francisco de Assis","titulo":"São Francisco de Assis","descricao":"O pobre de Assis que abraçou a criação inteira.","medalha":"Pobreza","virtude":"Pobreza",
    "licoes":[
@@ -161,8 +144,6 @@ const TRILHAS_ORIGINAIS = [
       {"tipo":"vf","enunciado":"Teresa teve como discípulo São João da Cruz.","correta":true,"explicacao":"Juntos reformaram o Carmelo."}]}]}
 ];
 
-// Atividades novas: cada missão passa de 2 para 10. As perguntas
-// originais continuam intactas; estas entram depois delas.
 const ATIVIDADES_EXTRAS = {
   "francisco-1": [
     {"tipo":"multipla","enunciado":"Qual era a profissão do pai de Francisco, Pietro di Bernardone?","opcoes":["Comerciante de tecidos","Ferreiro","Soldado","Agricultor"],"correta":0,"explicacao":"Pietro era um rico comerciante de tecidos de Assis."},
@@ -526,7 +507,6 @@ const ATIVIDADES_EXTRAS = {
   ]
 };
 
-// Junta as atividades novas às originais de cada missão
 TRILHAS_ORIGINAIS.forEach((trilha) => {
   trilha.licoes.forEach((licao) => {
     const extras = ATIVIDADES_EXTRAS[licao.slug];
@@ -534,8 +514,6 @@ TRILHAS_ORIGINAIS.forEach((trilha) => {
   });
 });
 
-// Liga cada trilha à biografia do mesmo santo no catálogo do site
-// (Nossa Senhora ainda não tem biografia própria no catálogo).
 const BIOGRAFIA_DA_TRILHA = {
   'santo-francisco': 'francisco-assis',
   'santo-jose': 'jose',
@@ -550,8 +528,6 @@ const BIOGRAFIA_DA_TRILHA = {
   'teresa-avila': 'teresa-avila',
 };
 
-// Santo usado para buscar a foto da trilha (o mesmo do catálogo).
-// Nossa Senhora ainda não tem biografia, então a foto vem da Wikipédia.
 function santoParaFotoDaTrilha(trilha) {
   if (trilha.santoId && typeof santosData !== 'undefined') {
     const santo = santosData.find((s) => s.id === trilha.santoId);
@@ -563,11 +539,6 @@ function santoParaFotoDaTrilha(trilha) {
   return null;
 }
 
-// ============================================================
-//  TEXTOS DAS TRILHAS NOS TRÊS IDIOMAS
-// ============================================================
-// Tudo o que as trilhas escrevem na tela. {nome} é trocado pelo valor
-// certo na hora (o nome do santo, o número da missão...).
 const TEXTOS_TRILHAS = {
   pt: {
     virtude: 'Virtude: {v}',
@@ -763,13 +734,10 @@ const TEXTOS_TRILHAS = {
   },
 };
 
-// Idioma escolhido no site (o script.js guarda em idiomaAtual)
 function idiomaDasTrilhas() {
   return typeof idiomaAtual !== 'undefined' && TEXTOS_TRILHAS[idiomaAtual] ? idiomaAtual : 'pt';
 }
 
-// Busca um texto das trilhas no idioma atual (ou no idioma pedido) e
-// troca as marcas {assim} pelos valores.
 function tt(chave, valores, idioma) {
   const dicionario = TEXTOS_TRILHAS[idioma || idiomaDasTrilhas()] || TEXTOS_TRILHAS.pt;
   const texto = dicionario[chave] !== undefined ? dicionario[chave] : TEXTOS_TRILHAS.pt[chave];
@@ -777,15 +745,10 @@ function tt(chave, valores, idioma) {
   return texto.replace(/\{(\w+)\}/g, (marca, nome) => (valores[nome] !== undefined ? valores[nome] : marca));
 }
 
-// "Medalha da Pobreza", "Medal of Poverty", "Medalla de la Pobreza"
 function nomeDaMedalha(trilha) {
   return trilha.medalhaCompleta || tt('medalha_de', { m: trilha.medalha });
 }
 
-// Cada santo tem 3 capítulos de 10 atividades. Em vez de 3 missões
-// longas, a trilha vira 10 missões curtas: três por capítulo (3
-// atividades cada) e uma missão final de revisão, com a atividade
-// que sobrou de cada capítulo.
 function expandirEmMissoes(trilha, idioma) {
   const missoes = [];
   const revisao = [];
@@ -808,33 +771,12 @@ function expandirEmMissoes(trilha, idioma) {
   return Object.assign({}, trilha, { licoes: missoes });
 }
 
-// ============================================================
-//  TRADUÇÕES E PERGUNTAS DAS CRIANÇAS
-// ============================================================
-// As trilhas em inglês e espanhol ficam em trilhas-en.js e
-// trilhas-es.js; as perguntas fáceis das crianças ficam em
-// trilhas-kids.js (e trilhas-kids-en.js / trilhas-kids-es.js). Esses
-// arquivos só são baixados quando precisam.
-//
-// Com conta, quem entrega as perguntas é o banco do app: o perfil de
-// criança recebe as do público "kid" (o supabase/gerar-importacao.js
-// leva as perguntas fáceis para lá). Sem conta, o site monta tudo
-// daqui, e um perfil infantil no aparelho (se um dia existir) também
-// recebe as perguntas fáceis.
-//
-// As missões têm os mesmos nomes internos em qualquer idioma e para
-// adulto ou criança: o progresso é um só.
-
 function traducaoDaTrilha(slug, idioma) {
   if (!idioma || idioma === 'pt' || typeof window === 'undefined') return null;
   const todas = window.TRILHAS_TRADUZIDAS && window.TRILHAS_TRADUZIDAS[idioma];
   return todas ? todas[slug] || null : null;
 }
 
-// Junta uma atividade em português com a sua tradução. A estrutura
-// (tipo, resposta certa, quantidade de opções e de blocos) vem sempre
-// do português; da tradução vêm só os textos. Se a tradução não
-// combinar, fica o português — nunca uma pergunta quebrada.
 function juntarAtividadeTraduzida(original, traduzida) {
   if (!traduzida || traduzida.tipo !== original.tipo) return original;
   const junta = Object.assign({}, original, {
@@ -846,7 +788,6 @@ function juntarAtividadeTraduzida(original, traduzida) {
     junta.opcoes = traduzida.opcoes;
   }
   if (original.tipo === 'ordenar') {
-    // Os blocos traduzidos já vêm na ordem certa da frase no outro idioma
     if (!Array.isArray(traduzida.blocos) || traduzida.blocos.length !== original.blocos.length) return original;
     junta.blocos = traduzida.blocos;
   }
@@ -861,7 +802,6 @@ function juntarListaTraduzida(originais, traduzidas) {
 function atividadesKidsDoCapitulo(capitulo, idioma, conteudoAdulto) {
   const todas = typeof window !== 'undefined' ? window.ATIVIDADES_KIDS : null;
   const kids = todas ? todas[capitulo.slug] : null;
-  // Capítulo ainda sem versão infantil: fica a de adulto
   if (!Array.isArray(kids) || kids.length === 0) return conteudoAdulto;
   const traducoes = idioma !== 'pt' && typeof window !== 'undefined' && window.ATIVIDADES_KIDS_TRADUZIDAS
     ? (window.ATIVIDADES_KIDS_TRADUZIDAS[idioma] || {})[capitulo.slug]
@@ -869,8 +809,6 @@ function atividadesKidsDoCapitulo(capitulo, idioma, conteudoAdulto) {
   return juntarListaTraduzida(kids, traducoes);
 }
 
-// Monta uma trilha pronta para a tela, no idioma pedido, para adulto
-// ou para criança, já dividida em missões.
 function montarTrilha(original, idioma, kids) {
   const traducao = traducaoDaTrilha(original.slug, idioma);
   const capitulos = original.licoes.map((capitulo) => {
@@ -895,11 +833,8 @@ function montarTrilha(original, idioma, kids) {
   return expandirEmMissoes(montada, idioma);
 }
 
-// A base de sempre: português, adulto (usada também pelo gerador do SQL)
 const TRILHAS = TRILHAS_ORIGINAIS.map((trilha) => montarTrilha(trilha, 'pt', false));
 
-// O mapa guarda uma cópia pronta por idioma (e para criança), para não
-// remontar tudo a cada toque.
 let cacheDeTrilhasLocais = {};
 
 function perfilDeCrianca() {
@@ -925,7 +860,6 @@ function trilhasLocais() {
   return cacheDeTrilhasLocais[chave];
 }
 
-// Baixa um arquivo de conteúdo das trilhas uma vez só
 const arquivosDasTrilhas = {};
 
 function carregarArquivoDasTrilhas(nome) {
@@ -934,21 +868,19 @@ function carregarArquivoDasTrilhas(nome) {
     const script = document.createElement('script');
     script.src = nome;
     script.onload = () => {
-      // Conteúdo novo: as trilhas prontas precisam ser remontadas
       cacheDeTrilhasLocais = {};
       idiomaDasTrilhasDoServidor = null;
       resolve(true);
     };
     script.onerror = () => {
       delete arquivosDasTrilhas[nome];
-      resolve(false); // sem o arquivo, fica o português
+      resolve(false);
     };
     (document.head || document.body).appendChild(script);
   });
   return arquivosDasTrilhas[nome];
 }
 
-// Chamado pelo script.js quando a pessoa troca de idioma
 function carregarTraducoesDasTrilhas(codigo) {
   const arquivos = [];
   if (codigo === 'en' || codigo === 'es') {
@@ -965,23 +897,15 @@ function carregarAtividadesKids() {
   return Promise.all(arquivos.map(carregarArquivoDasTrilhas));
 }
 
-// Depois de trocar de idioma: redesenha o mapa se ele estiver aberto
 function aoMudarIdiomaDasTrilhas() {
   const mapa = document.getElementById('view-trilhas');
   if (mapa && mapa.style.display === 'block') renderizarTrilhas();
 }
 
-// ============================================================
-//  TRILHAS DO BANCO DO APP (quando há conta logada)
-// ============================================================
-// Com conta, as trilhas vêm do mesmo banco do app — as mesmas no
-// site e no celular, e as respostas são conferidas pelo banco.
-// Sem conta, valem as trilhas deste arquivo (progresso no aparelho).
-let dadosDasTrilhasDoServidor = null; // como vieram do banco
-let trilhasDoServidor = null;          // já prontas no idioma abaixo
+let dadosDasTrilhasDoServidor = null;
+let trilhasDoServidor = null;
 let idiomaDasTrilhasDoServidor = null;
 
-// Virtude e medalha das trilhas que só existem no banco do app
 const TRILHAS_EXTRAS_DO_APP = {
   'carlo-acutis': {
     pt: {
@@ -1010,9 +934,6 @@ function escaparHtmlDaTrilha(texto) {
   }[c]));
 }
 
-// Os textos do banco vêm por idioma, com os mesmos códigos que o app
-// usa: { "pt-BR": "...", "en-US": "...", "es": "..." }. Usa o idioma
-// do site; se faltar, fica o português.
 const CODIGOS_DO_IDIOMA_NO_BANCO = { pt: ['pt-BR', 'pt'], en: ['en-US', 'en'], es: ['es', 'es-ES'] };
 
 function valorNoIdioma(campo) {
@@ -1033,7 +954,6 @@ function listaNoIdioma(campo) {
   return valorNoIdioma(campo) || [];
 }
 
-// Nome do santo no idioma do site, quando a biografia já foi traduzida
 function nomeDoSantoNoIdioma(santo) {
   return typeof textoDoSanto === 'function' ? textoDoSanto(santo).nome : santo.nome;
 }
@@ -1070,7 +990,6 @@ function converterTrilhaDoServidor(trilhaDoBanco) {
   };
 }
 
-// As trilhas do banco prontas no idioma atual
 function trilhasDoServidorNoIdioma() {
   if (!dadosDasTrilhasDoServidor) return null;
   const idioma = idiomaDasTrilhas();
@@ -1081,7 +1000,6 @@ function trilhasDoServidorNoIdioma() {
   return trilhasDoServidor;
 }
 
-// Busca as trilhas publicadas (uma vez por visita)
 async function carregarConteudoDoServidor(forcar) {
   if (dadosDasTrilhasDoServidor && !forcar) return trilhasDoServidorNoIdioma();
   const { data, error } = await supabaseCliente
@@ -1099,8 +1017,6 @@ function trilhasEmUso() {
   return modoConta() && dadosDasTrilhasDoServidor ? trilhasDoServidorNoIdioma() : trilhasLocais();
 }
 
-// Avisa a Lumi (a estrelinha do modo infantil, no mascote.js) do que
-// acontece na lição. No perfil adulto ela não faz nada.
 function avisarMascote(evento, dados) {
   if (typeof mascoteReage !== 'function') return null;
   try {
@@ -1111,32 +1027,21 @@ function avisarMascote(evento, dados) {
   }
 }
 
-// Desenha um dos ícones do site (definidos no index.html) — o site
-// não usa emojis.
 function icone(nome, classeExtra) {
   return `<svg class="icone${classeExtra ? ' ' + classeExtra : ''}" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-${nome}"></use></svg>`;
 }
 
-// ============================================================
-//  REGRAS DO JOGO
-// ============================================================
-const SANTIDADE_MAXIMA = 15;             // "vidas" do app
-const MINUTOS_PARA_RENOVAR_SANTIDADE = 30; // +1 de Santidade a cada 30 min
-const FE_BASE_LICAO = 10;                 // Fé por concluir uma lição
-const FE_POR_ACERTO_DE_PRIMEIRA = 5;      // bônus por acertar de primeira
-const FE_REVISAO = 5;                     // Fé ao refazer lição já concluída
+const SANTIDADE_MAXIMA = 15;
+const MINUTOS_PARA_RENOVAR_SANTIDADE = 30;
+const FE_BASE_LICAO = 10;
+const FE_POR_ACERTO_DE_PRIMEIRA = 5;
+const FE_REVISAO = 5;
 const CHAVE_PROGRESSO_TRILHAS = 'lumina-sancti-trilhas-v1';
 
-// No sistema do app, a regra de Santidade vale para todos os perfis,
-// inclusive os de criança (quem confere é o próprio banco). Por isso
-// nenhum perfil tem Santidade infinita.
 function perfilEhInfantil() {
   return false;
 }
 
-// ============================================================
-//  PROGRESSO (salvo no aparelho nesta fase)
-// ============================================================
 function estadoInicialTrilhas() {
   return {
     fe: 0,
@@ -1149,8 +1054,6 @@ function estadoInicialTrilhas() {
   };
 }
 
-// Com um perfil da conta escolhido, o progresso vem do banco (o
-// perfis.js preenche esta variável); sem conta, fica no aparelho.
 let estadoEmMemoriaDaConta = null;
 
 function modoConta() {
@@ -1170,13 +1073,12 @@ function carregarProgressoTrilhas() {
 
 function salvarProgressoTrilhas(estado) {
   if (modoConta()) {
-    estadoEmMemoriaDaConta = estado; // o banco é atualizado pelas funções do perfis.js
+    estadoEmMemoriaDaConta = estado;
     return;
   }
   try {
     localStorage.setItem(CHAVE_PROGRESSO_TRILHAS, JSON.stringify(estado));
   } catch (e) {
-    // modo privado ou armazenamento cheio: o jogo continua, só não salva
   }
 }
 
@@ -1187,8 +1089,6 @@ function dataLocalISO(data) {
   return `${d.getFullYear()}-${mm}-${dd}`;
 }
 
-// Ofensiva: dias seguidos acessando as trilhas (pelo relógio do
-// próprio aparelho, igual ao Santo do Dia).
 function registrarAcessoTrilhas(estado, agora) {
   const hoje = agora || new Date();
   const chaveHoje = dataLocalISO(hoje);
@@ -1199,7 +1099,6 @@ function registrarAcessoTrilhas(estado, agora) {
   return true;
 }
 
-// A Santidade volta sozinha com o tempo, até o máximo.
 function renovarSantidade(estado, agoraMs) {
   const agora = agoraMs || Date.now();
   const passo = MINUTOS_PARA_RENOVAR_SANTIDADE * 60 * 1000;
@@ -1238,9 +1137,6 @@ function trilhaConcluida(trilha, estado) {
   return trilha.licoes.every((licao) => !!estado.licoes[licao.slug]);
 }
 
-// ============================================================
-//  PEQUENOS DETALHES: aviso na tela e sons da lição
-// ============================================================
 let temporizadorAvisoTrilhas = null;
 
 function mostrarAvisoTrilhas(texto) {
@@ -1285,16 +1181,10 @@ function somDaLicao(tipo) {
       osc.stop(t + 0.4);
     });
   } catch (e) {
-    // sem som, a lição segue normalmente
   }
 }
 
-// ============================================================
-//  MAPA DAS TRILHAS
-// ============================================================
 function abrirTrilhas(slugParaMostrar) {
-  // Com conta logada, o perfis.js escolhe o perfil e carrega o
-  // progresso do banco antes de mostrar as trilhas.
   if (typeof prepararTrilhasDaConta === 'function' && prepararTrilhasDaConta(slugParaMostrar)) return;
   exibirTrilhas(slugParaMostrar);
 }
@@ -1318,14 +1208,12 @@ function renderizarTrilhas() {
 
   const estado = carregarProgressoTrilhas();
   renovarSantidade(estado);
-  // Com conta, a ofensiva é contada pelo banco do app (ao concluir missões)
   if (!modoConta()) registrarAcessoTrilhas(estado);
   salvarProgressoTrilhas(estado);
 
   renderizarPlacarDasTrilhas(estado);
   const trilhas = trilhasEmUso();
 
-  // Caminho em zigue-zague, como no Duolingo
   const deslocamentos = ['desloc-0', 'desloc-d', 'desloc-0', 'desloc-e'];
 
   lista.innerHTML = trilhas.map((trilha, posicao) => {
@@ -1333,7 +1221,6 @@ function renderizarTrilhas() {
     const anterior = posicao > 0 ? trilhas[posicao - 1] : null;
     const liberada = !anterior || trilhaConcluida(anterior, estado);
 
-    // Trilha ainda trancada: mostra o santo, mas sem o caminho
     if (!liberada) {
       return `
       <section class="trilha-bloco trilha-trancada" id="trilha-${trilha.slug}">
@@ -1396,7 +1283,6 @@ function renderizarTrilhas() {
     botao.addEventListener('click', () => showDetail(botao.dataset.santo));
   });
 
-  // Foto de cada santo (a mesma do catálogo), no lugar do emoji
   trilhas.forEach((trilha) => {
     const santo = santoParaFotoDaTrilha(trilha);
     if (!santo || typeof buscarImagemSanto !== 'function') return;
@@ -1406,10 +1292,8 @@ function renderizarTrilhas() {
     });
   });
 
-  // Faixa do perfil (ou convite para entrar), desenhada pelo perfis.js
   if (typeof renderizarFaixaDaConta === 'function') renderizarFaixaDaConta();
 
-  // A Lumi aparece no mapa só para crianças (dorme se a Santidade acabou)
   avisarMascote('mapa', { santidade: estado.santidade });
 }
 
@@ -1451,7 +1335,6 @@ function abrirNoDaTrilha(slugTrilha, indice) {
     iniciarLicaoDoServidor(trilha, indice);
     return;
   }
-  // Criança sem conta: primeiro baixa as perguntas fáceis
   const idioma = idiomaDasTrilhas();
   if (perfilDeCrianca() && !conteudoKidsPronto(idioma)) {
     carregarAtividadesKids().then(() => {
@@ -1463,9 +1346,6 @@ function abrirNoDaTrilha(slugTrilha, indice) {
   iniciarLicao(trilha, indice);
 }
 
-// ============================================================
-//  LIÇÃO (tela cheia)
-// ============================================================
 let licaoAtual = null;
 
 function embaralhar(lista) {
@@ -1487,10 +1367,10 @@ function iniciarLicao(trilha, indice) {
     trilha,
     indice,
     licao,
-    fila: licao.conteudo.map((_, i) => i), // perguntas que faltam acertar
+    fila: licao.conteudo.map((_, i) => i),
     total: licao.conteudo.length,
     corretas: 0,
-    primeiraTentativa: {},                  // índice -> acertou de primeira?
+    primeiraTentativa: {},
     selecao: null,
     montagem: null,
     verificada: false,
@@ -1566,8 +1446,6 @@ function renderizarPerguntaAtual() {
   const p = perguntaAtual();
 
   if (p.tipo === 'multipla') {
-    // As opções são embaralhadas a cada vez — a certa nunca fica
-    // sempre no mesmo lugar.
     const opcoes = embaralhar(p.opcoes.map((texto, i) => ({ texto, correta: i === p.correta, original: i })));
     licaoAtual.montagem = { opcoes };
     corpo.innerHTML = `
@@ -1576,7 +1454,6 @@ function renderizarPerguntaAtual() {
       <div class="licao-opcoes">
         ${opcoes.map((o, i) => `<button class="licao-opcao" data-opcao="${i}">${o.texto}</button>`).join('')}
       </div>`;
-    // A Lumi lê as opções na mesma ordem em que aparecem na tela
     avisarMascote('pergunta', { tipo: p.tipo, enunciado: p.enunciado, opcoes: opcoes.map((o) => o.texto) });
   } else if (p.tipo === 'vf') {
     licaoAtual.montagem = {};
@@ -1590,7 +1467,6 @@ function renderizarPerguntaAtual() {
     avisarMascote('pergunta', { tipo: p.tipo, enunciado: p.enunciado });
   } else {
     let ordem = embaralhar(p.blocos.map((_, i) => i));
-    // Nunca começa já na ordem certa
     if (ordem.length > 1 && ordem.every((v, i) => v === i)) ordem = ordem.slice(1).concat(ordem[0]);
     licaoAtual.montagem = { ordem };
     licaoAtual.selecao = [];
@@ -1701,7 +1577,6 @@ function verificarRespostaAtual() {
   if (licaoAtual.selecao === null) return;
   if (p.tipo === 'ordenar' && licaoAtual.selecao.length !== p.blocos.length) return;
 
-  // Com conta, quem confere a resposta é o banco do app
   if (licaoAtual.servidor) {
     verificarRespostaNoServidor();
     return;
@@ -1709,7 +1584,6 @@ function verificarRespostaAtual() {
 
   const certo = respostaEstaCerta();
 
-  // Errou: perde 1 de Santidade
   if (!certo) {
     const estado = carregarProgressoTrilhas();
     renovarSantidade(estado);
@@ -1720,7 +1594,6 @@ function verificarRespostaAtual() {
   mostrarResultadoDaResposta(certo);
 }
 
-// Mostra na tela se acertou ou errou (igual com ou sem conta)
 function mostrarResultadoDaResposta(certo) {
   const p = perguntaAtual();
   const indice = licaoAtual.fila[0];
@@ -1731,12 +1604,11 @@ function mostrarResultadoDaResposta(certo) {
   atualizarTopoDaLicao();
   marcarRespostasNaTela(certo);
 
-  // Com criança, a Lumi reage e a tela mostra a mesma frase que ela fala
   const fraseDaLumi = avisarMascote('resposta', {
     certo,
     explicacao: p.explicacao,
     respostaCerta: certo ? null : textoDaRespostaCerta(p),
-    semRepetir: !!licaoAtual.servidor, // com conta, a pergunta não volta no fim
+    semRepetir: !!licaoAtual.servidor,
   });
 
   const feedback = document.getElementById('licao-feedback');
@@ -1763,7 +1635,6 @@ function continuarLicao() {
     return;
   }
   if (licaoAtual.servidor) {
-    // Regra do app: cada pergunta é respondida uma vez por tentativa
     if (licaoAtual.acertouAtual) licaoAtual.corretas += 1;
     licaoAtual.servidor.respondidas += 1;
     licaoAtual.fila.shift();
@@ -1775,7 +1646,6 @@ function continuarLicao() {
     licaoAtual.fila.shift();
     licaoAtual.corretas += 1;
   } else {
-    // Como no Duolingo: a pergunta errada volta no fim da lição
     licaoAtual.fila.push(licaoAtual.fila.shift());
   }
   if (licaoAtual.fila.length === 0) {
@@ -1858,7 +1728,6 @@ function mostrarFimSemSantidade() {
       });
     }
   }
-  // A Lumi senta e cochila, esperando a Santidade voltar
   avisarMascote('semSantidade');
   prepararRodapeDaLicao(tt('voltar_trilhas'), true);
 }
@@ -1868,7 +1737,6 @@ function sairDaLicao(perguntarAntes) {
     const confirmou = confirm(tt('sair_confirmar'));
     if (!confirmou) return;
   }
-  // Saiu da lição: a voz da Lumi para na hora
   avisarMascote('saiu');
   const slug = licaoAtual ? licaoAtual.trilha.slug : null;
   licaoAtual = null;
@@ -1888,11 +1756,6 @@ function aoClicarBotaoDaLicao() {
   else continuarLicao();
 }
 
-// ============================================================
-//  MINHAS INSÍGNIAS
-// ============================================================
-// Mostra todas as medalhas: as conquistadas e as que ainda faltam.
-// Funciona com ou sem conta.
 function abrirInsignias() {
   const estado = carregarProgressoTrilhas();
   const trilhas = trilhasEmUso();
@@ -1910,7 +1773,6 @@ function abrirInsignias() {
     });
   }
 
-  // Os textos são escritos a cada abertura: seguem o idioma do momento
   modal.querySelector('.insignias-fechar').setAttribute('aria-label', tt('fechar'));
   modal.querySelector('h2').textContent = tt('insignias_titulo');
   modal.querySelector('.insignias-resumo').textContent =
@@ -1929,10 +1791,6 @@ function abrirInsignias() {
   modal.classList.add('aberto');
 }
 
-// ============================================================
-//  LIÇÃO COM CONTA — o banco do app entrega as perguntas (sem as
-//  respostas), confere cada resposta e registra a Fé no final.
-// ============================================================
 function converterPerguntaDoServidor(q) {
   const base = { idServidor: q.id, enunciado: escaparHtmlDaTrilha(textoNoIdioma(q.prompt)), explicacao: '' };
   const opcoes = listaNoIdioma(q.options).map(escaparHtmlDaTrilha);
@@ -1997,7 +1855,6 @@ async function iniciarLicaoDoServidor(trilha, indice) {
   else renderizarPerguntaAtual();
 }
 
-// Algumas lições do app começam com uma leitura curta
 function mostrarHistoriaDaLicao(texto) {
   const corpo = document.getElementById('licao-corpo');
   if (!corpo || !licaoAtual) return;
@@ -2007,7 +1864,6 @@ function mostrarHistoriaDaLicao(texto) {
     <p class="licao-tipo">${tt('leia_antes')}</p>
     <div class="licao-historia">${escaparHtmlDaTrilha(texto)}</div>`;
   prepararRodapeDaLicao(tt('comecar'), true);
-  // Para a criança que ainda não lê, a Lumi conta a historinha
   avisarMascote('historia', { texto });
 }
 
@@ -2042,8 +1898,6 @@ async function verificarRespostaNoServidor() {
   }
   servidor.enviando = false;
 
-  // Agora o banco contou qual era a resposta certa: completa a
-  // pergunta para marcar certo/errado na tela.
   const chave = resultado.answer || {};
   if (p.tipo === 'multipla') {
     p.correta = chave.index;
@@ -2091,7 +1945,6 @@ async function finalizarLicaoNoServidor() {
     return;
   }
 
-  // Números oficiais do banco
   const estado = estadoEmMemoriaDaConta;
   const jaTinhaInsignia = estado ? trilhaConcluida(trilha, estado) : true;
   if (estado) {
@@ -2129,9 +1982,6 @@ async function finalizarLicaoNoServidor() {
   prepararRodapeDaLicao(tt('continuar'), true);
 }
 
-// ============================================================
-//  INICIALIZAÇÃO
-// ============================================================
 function iniciarTrilhas() {
   const botaoInsignias = document.getElementById('trilhas-abrir-insignias');
   if (botaoInsignias) botaoInsignias.addEventListener('click', abrirInsignias);
