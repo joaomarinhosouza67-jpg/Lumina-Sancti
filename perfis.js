@@ -53,7 +53,256 @@ function aplicarModoKids() {
   const eraCrianca = document.body.classList.contains('modo-kids');
   const ehCrianca = !!(membroAtivo && membroAtivo.tipo === 'crianca');
   document.body.classList.toggle('modo-kids', ehCrianca);
+  if (typeof atualizarInterfaceDeConta === 'function') atualizarInterfaceDeConta();
   if (eraCrianca !== ehCrianca || ehCrianca) avisarLumiDaTrocaDePerfil();
+}
+
+function modoInfantilAtivo() {
+  return !!(membroAtivo && membroAtivo.tipo === 'crianca');
+}
+
+const DIGITOS_DO_PIN = 4;
+const TENTATIVAS_ANTES_DE_ESPERAR = 5;
+const ESPERA_APOS_ERROS_MS = 60 * 1000;
+let portao = null;
+
+function pinDosPaisSalvo() {
+  const usuario = typeof sessaoAtual !== 'undefined' && sessaoAtual ? sessaoAtual.user : null;
+  const pin = usuario && usuario.user_metadata ? usuario.user_metadata.pin_pais : null;
+  return pin && pin.hash && pin.sal ? pin : null;
+}
+
+function paraBase64(bytes) {
+  return btoa(String.fromCharCode(...new Uint8Array(bytes)));
+}
+
+function deBase64(texto) {
+  return Uint8Array.from(atob(texto), (c) => c.charCodeAt(0));
+}
+
+async function resumoDoPin(pin, sal) {
+  const chave = await crypto.subtle.importKey('raw', new TextEncoder().encode(pin), 'PBKDF2', false, ['deriveBits']);
+  const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt: deBase64(sal), iterations: 150000 }, chave, 256);
+  return paraBase64(bits);
+}
+
+async function salvarPinDosPais(pin) {
+  const sal = paraBase64(crypto.getRandomValues(new Uint8Array(16)));
+  const pinPais = { sal, hash: await resumoDoPin(pin, sal), versao: 1 };
+  const { error } = await supabaseCliente.auth.updateUser({ data: { pin_pais: pinPais } });
+  if (error) throw error;
+  if (sessaoAtual && sessaoAtual.user) {
+    sessaoAtual.user.user_metadata = Object.assign({}, sessaoAtual.user.user_metadata, { pin_pais: pinPais });
+  }
+  atualizarSecaoDoPin();
+}
+
+async function pinConfere(pin) {
+  const salvo = pinDosPaisSalvo();
+  if (!salvo) return false;
+  return (await resumoDoPin(pin, salvo.sal)) === salvo.hash;
+}
+
+const TEXTOS_DO_PORTAO = {
+  sair: ['Sair do modo infantil', 'Chame um adulto para digitar o PIN dos pais.'],
+  verificar: ['Mudar o PIN dos pais', 'Digite o PIN atual.'],
+  criar: ['Criar o PIN dos pais', 'Escolha 4 números que só os adultos da casa sabem. Eles serão pedidos para sair de um perfil infantil.'],
+  confirmar: ['Criar o PIN dos pais', 'Digite o mesmo PIN de novo, para confirmar.'],
+};
+
+function avisoDoPortao(texto, tipo) {
+  const feedback = document.getElementById('portao-feedback');
+  if (!feedback) return;
+  feedback.textContent = texto || '';
+  feedback.classList.toggle('erro', tipo === 'erro');
+  feedback.classList.toggle('certo', tipo === 'certo');
+}
+
+function desenharPontosDoPortao() {
+  const pontos = document.querySelectorAll('#portao-pontos span');
+  pontos.forEach((ponto, i) => ponto.classList.toggle('cheio', !!portao && i < portao.digitos.length));
+}
+
+function mostrarTecladoDoPortao(modo, texto) {
+  portao.modo = modo;
+  portao.digitos = '';
+  const [titulo, textoPadrao] = TEXTOS_DO_PORTAO[modo];
+  document.getElementById('portao-titulo').textContent = portao.titulo || titulo;
+  document.getElementById('portao-texto').textContent = texto || textoPadrao;
+  document.getElementById('portao-pin').hidden = false;
+  document.getElementById('portao-senha').hidden = true;
+  document.getElementById('portao-esqueci').hidden = !(modo === 'sair' || modo === 'verificar');
+  document.getElementById('portao-sair-conta').hidden = true;
+  desenharPontosDoPortao();
+}
+
+function mostrarSenhaNoPortao(texto) {
+  document.getElementById('portao-texto').textContent = texto;
+  document.getElementById('portao-pin').hidden = true;
+  document.getElementById('portao-senha').hidden = false;
+  document.getElementById('portao-esqueci').hidden = true;
+  document.getElementById('portao-sair-conta').hidden = false;
+  const campo = document.getElementById('portao-senha-campo');
+  campo.value = '';
+  if (typeof carregarCaptcha === 'function') carregarCaptcha();
+  setTimeout(() => campo.focus(), 50);
+}
+
+function abrirPortao(opcoes) {
+  const modal = document.getElementById('portao-modal');
+  if (!modal || !contaLogada()) return;
+  portao = {
+    modo: opcoes.modo,
+    titulo: opcoes.titulo || null,
+    aoConcluir: opcoes.aoConcluir || null,
+    digitos: '',
+    primeiro: null,
+    erros: 0,
+    esperarAte: 0,
+    ocupado: false,
+  };
+  avisoDoPortao('');
+  if ((opcoes.modo === 'sair' || opcoes.modo === 'verificar') && !pinDosPaisSalvo()) {
+    document.getElementById('portao-titulo').textContent = opcoes.titulo || TEXTOS_DO_PORTAO[opcoes.modo][0];
+    mostrarSenhaNoPortao('Ainda não existe um PIN dos pais. Para continuar, um adulto precisa digitar a senha da conta.');
+  } else {
+    mostrarTecladoDoPortao(opcoes.modo, opcoes.texto);
+  }
+  modal.classList.add('active');
+}
+
+function fecharPortao() {
+  const modal = document.getElementById('portao-modal');
+  if (modal) modal.classList.remove('active');
+  portao = null;
+}
+
+function concluirPortao() {
+  const depois = portao && portao.aoConcluir;
+  fecharPortao();
+  if (depois) depois();
+}
+
+async function processarPinDoPortao() {
+  if (!portao || portao.ocupado) return;
+  portao.ocupado = true;
+  const digitado = portao.digitos;
+  try {
+    if (portao.modo === 'sair' || portao.modo === 'verificar') {
+      if (await pinConfere(digitado)) {
+        concluirPortao();
+        return;
+      }
+      portao.erros += 1;
+      portao.digitos = '';
+      desenharPontosDoPortao();
+      document.getElementById('portao-pontos').classList.add('tremendo');
+      setTimeout(() => document.getElementById('portao-pontos').classList.remove('tremendo'), 450);
+      if (portao.erros >= TENTATIVAS_ANTES_DE_ESPERAR) {
+        portao.esperarAte = Date.now() + ESPERA_APOS_ERROS_MS;
+        portao.erros = 0;
+        avisoDoPortao('Muitas tentativas. Espere 1 minuto ou use a senha da conta em "Esqueci o PIN".', 'erro');
+      } else {
+        avisoDoPortao('PIN errado. Tente de novo.', 'erro');
+      }
+      return;
+    }
+    if (portao.modo === 'criar') {
+      portao.primeiro = digitado;
+      mostrarTecladoDoPortao('confirmar');
+      avisoDoPortao('');
+      return;
+    }
+    if (portao.modo === 'confirmar') {
+      if (digitado !== portao.primeiro) {
+        portao.primeiro = null;
+        mostrarTecladoDoPortao('criar');
+        avisoDoPortao('Os dois PINs ficaram diferentes. Comece de novo.', 'erro');
+        return;
+      }
+      avisoDoPortao('Salvando...');
+      await salvarPinDosPais(digitado);
+      avisoDoPortao('PIN dos pais criado!', 'certo');
+      setTimeout(concluirPortao, 700);
+    }
+  } catch (e) {
+    avisoDoPortao('Não foi possível agora. Tente de novo.', 'erro');
+    if (portao) {
+      portao.digitos = '';
+      desenharPontosDoPortao();
+    }
+  } finally {
+    if (portao) portao.ocupado = false;
+  }
+}
+
+function teclaDoPortao(tecla) {
+  if (!portao || portao.ocupado) return;
+  if (Date.now() < portao.esperarAte) {
+    avisoDoPortao('Espere 1 minuto ou use a senha da conta em "Esqueci o PIN".', 'erro');
+    return;
+  }
+  if (tecla === 'apagar') {
+    portao.digitos = portao.digitos.slice(0, -1);
+    desenharPontosDoPortao();
+    return;
+  }
+  if (!/^[0-9]$/.test(tecla) || portao.digitos.length >= DIGITOS_DO_PIN) return;
+  portao.digitos += tecla;
+  desenharPontosDoPortao();
+  if (portao.digitos.length === DIGITOS_DO_PIN) processarPinDoPortao();
+}
+
+async function confirmarSenhaNoPortao(evento) {
+  evento.preventDefault();
+  if (!portao || !sessaoAtual || !sessaoAtual.user) return;
+  const senha = document.getElementById('portao-senha-campo').value;
+  if (!senha) return;
+  const captchaToken = typeof tokenDoCaptcha === 'function' ? tokenDoCaptcha('portao') : undefined;
+  if (captchaToken === null) { avisoDoPortao('Confirme que você não é um robô.', 'erro'); return; }
+  avisoDoPortao('Conferindo...');
+  const { error } = await supabaseCliente.auth.signInWithPassword({ email: sessaoAtual.user.email, password: senha, options: { captchaToken } });
+  if (typeof renovarCaptcha === 'function') renovarCaptcha('portao');
+  if (error) {
+    avisoDoPortao('Senha incorreta.', 'erro');
+    return;
+  }
+  const modo = portao.modo;
+  const depois = portao.aoConcluir;
+  fecharPortao();
+  if (modo === 'verificar') {
+    abrirPortao({ modo: 'criar', aoConcluir: depois });
+    return;
+  }
+  if (depois) depois();
+  setTimeout(() => abrirPortao({ modo: 'criar', titulo: 'Criar um PIN novo' }), 400);
+}
+
+function sairDoModoInfantil(destino) {
+  abrirPortao({
+    modo: 'sair',
+    aoConcluir: () => {
+      limparPerfilAtivo();
+      if (typeof atualizarInterfaceDeConta === 'function') atualizarInterfaceDeConta();
+      abrirSelecaoDePerfis(destino || 'inicio', true);
+    },
+  });
+}
+
+function atualizarSecaoDoPin() {
+  const estado = document.getElementById('perfil-pin-estado');
+  const botao = document.getElementById('perfil-pin-botao');
+  if (!estado || !botao) return;
+  const existe = !!pinDosPaisSalvo();
+  estado.textContent = existe
+    ? 'O PIN dos pais está criado. Ele é pedido para sair de um perfil infantil.'
+    : 'Ainda não existe. Ele será pedido para sair de um perfil infantil.';
+  botao.textContent = existe ? 'Mudar PIN' : 'Criar PIN';
+}
+
+function abrirPinPelaPaginaDaConta() {
+  if (pinDosPaisSalvo()) abrirPortao({ modo: 'verificar', aoConcluir: () => abrirPortao({ modo: 'criar' }) });
+  else abrirPortao({ modo: 'criar' });
 }
 
 function avisarLumiDaTrocaDePerfil() {
@@ -106,9 +355,13 @@ async function anexarFotos(lista) {
   }
 }
 
-function abrirSelecaoDePerfis(destino) {
+function abrirSelecaoDePerfis(destino, liberado) {
   if (!contaLogada()) {
     if (typeof irParaLogin === 'function') irParaLogin();
+    return;
+  }
+  if (modoInfantilAtivo() && !liberado) {
+    sairDoModoInfantil(destino);
     return;
   }
   destinoAposEscolherPerfil = destino || 'trilhas';
@@ -177,6 +430,21 @@ function escolherPerfil(membro) {
   if (destinoAposEscolherPerfil === 'inicio') mudarDeView('view-home');
   else if (destinoAposEscolherPerfil === 'ranking') abrirRanking();
   else abrirTrilhas(slugPendenteDasTrilhas);
+}
+
+async function restaurarPerfilSalvo() {
+  if (typeof supabaseCliente === 'undefined' || !supabaseCliente || membroAtivo) return;
+  let id = null;
+  try { id = localStorage.getItem(CHAVE_MEMBRO_ATIVO); } catch (e) { return; }
+  if (!id) return;
+  const { data } = await supabaseCliente.auth.getSession();
+  if (!data || !data.session) return;
+  try { await carregarMembrosDaConta(); } catch (e) { return; }
+  const membro = membrosDaConta.find((m) => m.id === id);
+  if (membro && !membroAtivo) {
+    membroAtivo = membro;
+    aplicarModoKids();
+  }
 }
 
 function aposEntrarNaConta() {
@@ -266,7 +534,7 @@ function renderizarFaixaDaConta() {
       </button>
       <div class="trilhas-conta-acoes">
         <button class="trilhas-acao" id="trilhas-abrir-ranking">${icone('trofeu')}<span>${tt('faixa_ranking')}</span></button>
-        <button class="trilhas-acao" id="trilhas-trocar-perfil">${icone('usuarios')}<span>${tt('faixa_trocar')}</span></button>
+        <button class="trilhas-acao" id="trilhas-trocar-perfil">${icone('usuarios')}<span>${modoInfantilAtivo() ? tt('faixa_sair_kids') : tt('faixa_trocar')}</span></button>
       </div>`;
     document.getElementById('trilhas-perfil-atual').addEventListener('click', () => abrirPainelDoPerfil(membroAtivo.id));
     document.getElementById('trilhas-abrir-ranking').addEventListener('click', () => abrirRanking());
@@ -303,6 +571,7 @@ async function abrirEditorDePerfil(membro) {
     : (membrosDaConta.length === 0 ? 'Crie o primeiro perfil' : 'Novo perfil');
   campoNome.value = membro ? membro.nome : '';
   document.getElementById('perfil-editor-feedback').textContent = '';
+  document.getElementById('perfil-editor-autorizo').checked = false;
   document.getElementById('perfil-editor-excluir').hidden = !membro;
   document.getElementById('perfil-editor-foto').value = '';
   document.getElementById('perfil-editor-salvar').disabled = false;
@@ -344,6 +613,7 @@ function renderizarEditor() {
     });
   });
 
+  document.getElementById('perfil-editor-consentimento').hidden = !(!e.membro && e.tipo === 'crianca');
   document.getElementById('perfil-editor-previa').innerHTML = desenharAvatar(e.avatar, e.fotoPrevia, 'grande');
   document.getElementById('perfil-editor-remover-foto').hidden = !e.fotoPrevia;
 }
@@ -413,6 +683,11 @@ async function salvarPerfilDoEditor() {
     feedback.textContent = 'Entre na sua conta para salvar perfis.';
     return;
   }
+  const novoInfantil = !e.membro && e.tipo === 'crianca';
+  if (novoInfantil && !document.getElementById('perfil-editor-autorizo').checked) {
+    feedback.textContent = 'Para criar um perfil infantil, marque a autorização do responsável.';
+    return;
+  }
 
   botao.disabled = true;
   feedback.textContent = 'Salvando...';
@@ -450,6 +725,13 @@ async function salvarPerfilDoEditor() {
 
     fecharEditorDePerfil();
     await renderizarSelecaoDePerfis();
+    if (novoInfantil && !pinDosPaisSalvo()) {
+      abrirPortao({
+        modo: 'criar',
+        titulo: 'Crie o PIN dos pais',
+        texto: 'Ele será pedido quando alguém quiser sair do perfil infantil. Escolha 4 números que só os adultos da casa sabem.',
+      });
+    }
     if (membroAtivo) {
       const atualizado = membrosDaConta.find((m) => m.id === membroAtivo.id);
       if (atualizado) {
@@ -667,11 +949,44 @@ function iniciarPerfis() {
 
   const trocarPerfil = document.getElementById('conta-menu-perfis');
   if (trocarPerfil) trocarPerfil.addEventListener('click', () => abrirSelecaoDePerfis('trilhas'));
+  const sairKids = document.getElementById('conta-menu-sair-kids');
+  if (sairKids) sairKids.addEventListener('click', () => sairDoModoInfantil('inicio'));
+
+  ligarFechamentoDeJanela('portao-modal', 'portao-fechar', fecharPortao);
+  const teclado = document.getElementById('portao-teclado');
+  if (teclado) teclado.addEventListener('click', (evento) => {
+    const botao = evento.target.closest('[data-tecla]');
+    if (botao) teclaDoPortao(botao.dataset.tecla);
+  });
+  document.addEventListener('keydown', (evento) => {
+    const modal = document.getElementById('portao-modal');
+    if (!portao || !modal || !modal.classList.contains('active') || document.getElementById('portao-pin').hidden) return;
+    if (/^[0-9]$/.test(evento.key)) teclaDoPortao(evento.key);
+    else if (evento.key === 'Backspace') teclaDoPortao('apagar');
+  });
+  const esqueci = document.getElementById('portao-esqueci');
+  if (esqueci) esqueci.addEventListener('click', () => {
+    if (!portao) return;
+    avisoDoPortao('');
+    mostrarSenhaNoPortao('Um adulto pode digitar a senha da conta para continuar.');
+  });
+  const formSenha = document.getElementById('portao-senha');
+  if (formSenha) formSenha.addEventListener('submit', confirmarSenhaNoPortao);
+  const sairDaConta = document.getElementById('portao-sair-conta');
+  if (sairDaConta) sairDaConta.addEventListener('click', async () => {
+    fecharPortao();
+    limparPerfilAtivo();
+    await supabaseCliente.auth.signOut();
+    if (typeof irParaLogin === 'function') irParaLogin();
+  });
+  const botaoPin = document.getElementById('perfil-pin-botao');
+  if (botaoPin) botaoPin.addEventListener('click', abrirPinPelaPaginaDaConta);
 
   if (typeof supabaseCliente !== 'undefined' && supabaseCliente) {
     supabaseCliente.auth.onAuthStateChange((_evento, sessao) => {
       if (!sessao) limparPerfilAtivo();
     });
+    restaurarPerfilSalvo();
   }
 }
 

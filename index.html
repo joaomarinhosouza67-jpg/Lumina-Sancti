@@ -32,7 +32,7 @@
   <meta name="theme-color" content="#0f172a">
   <meta name="color-scheme" content="dark">
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
 </head>
 <body>
 
@@ -105,6 +105,7 @@
             <button id="conta-menu-perfil" class="conta-opcao" style="display:none;" data-i18n="conta_perfil">Meu perfil</button>
             <button id="conta-menu-perfis" class="conta-opcao" style="display:none;">Trocar perfil</button>
             <button id="conta-menu-sair" class="conta-opcao" style="display:none;" data-i18n="conta_sair">Sair</button>
+            <button id="conta-menu-sair-kids" class="conta-opcao" style="display:none;">Sair do modo infantil</button>
           </div>
         </div>
       </div>
@@ -125,6 +126,10 @@
         <button type="button" class="perfil-tipo" data-tipo="adulto">Adulto</button>
         <button type="button" class="perfil-tipo" data-tipo="crianca">Criança</button>
       </div>
+      <label class="perfil-consentimento" id="perfil-editor-consentimento" hidden>
+        <input type="checkbox" id="perfil-editor-autorizo">
+        <span>Sou pai, mãe ou responsável por esta criança e autorizo o uso deste perfil.</span>
+      </label>
       <p class="perfil-editor-rotulo">Avatar</p>
       <div id="perfil-avatares" class="perfil-avatares"></div>
       <div class="perfil-foto-acoes">
@@ -138,6 +143,39 @@
       <button type="button" id="perfil-editor-salvar" class="licao-botao">Salvar</button>
       <button type="button" id="perfil-editor-excluir" class="perfil-link perfil-link-perigo" hidden>Excluir este perfil</button>
       <p class="auth-feedback" id="perfil-editor-feedback" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <div id="portao-modal" class="search-modal">
+    <div class="search-modal-content portao">
+      <div class="search-header">
+        <h3 id="portao-titulo">Sair do modo infantil</h3>
+        <button id="portao-fechar" class="icon-btn" aria-label="Fechar"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      </div>
+      <p class="portao-texto" id="portao-texto"></p>
+      <div class="portao-pin" id="portao-pin">
+        <div class="portao-pontos" id="portao-pontos"><span></span><span></span><span></span><span></span></div>
+        <div class="portao-teclado" id="portao-teclado">
+          <button type="button" data-tecla="1">1</button><button type="button" data-tecla="2">2</button><button type="button" data-tecla="3">3</button>
+          <button type="button" data-tecla="4">4</button><button type="button" data-tecla="5">5</button><button type="button" data-tecla="6">6</button>
+          <button type="button" data-tecla="7">7</button><button type="button" data-tecla="8">8</button><button type="button" data-tecla="9">9</button>
+          <span></span><button type="button" data-tecla="0">0</button><button type="button" data-tecla="apagar" aria-label="Apagar"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><path d="M18 9l-6 6M12 9l6 6"/></svg></button>
+        </div>
+      </div>
+      <form class="auth-form portao-senha" id="portao-senha" hidden>
+        <label for="portao-senha-campo">Senha da conta</label>
+        <div class="auth-senha">
+          <input type="password" id="portao-senha-campo" autocomplete="current-password">
+          <button type="button" class="auth-olho" data-alvo="portao-senha-campo" aria-label="Mostrar senha" aria-pressed="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+        <div class="auth-captcha" data-captcha="portao"></div>
+        <button type="submit" class="auth-botao">Confirmar</button>
+      </form>
+      <p class="auth-feedback" id="portao-feedback" aria-live="polite"></p>
+      <div class="portao-links">
+        <button type="button" class="auth-link" id="portao-esqueci">Esqueci o PIN</button>
+        <button type="button" class="auth-link" id="portao-sair-conta" hidden>Sair da conta</button>
+      </div>
     </div>
   </div>
 
@@ -334,42 +372,140 @@
         </button>
 
         <div class="auth-card">
-          <div class="auth-tabs">
-            <button class="auth-tab active" id="auth-tab-entrar" data-i18n="conta_entrar_aba">Entrar</button>
-            <button class="auth-tab" id="auth-tab-cadastrar" data-i18n="conta_cadastrar_aba">Criar conta</button>
+          <div class="auth-marca">
+            <svg class="auth-estrela" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 0 C52 35 65 48 100 50 C65 52 52 65 50 100 C48 65 35 52 0 50 C35 48 48 35 50 0 Z"/></svg>
+            <h2 class="auth-titulo" id="auth-titulo">Que bom ter você aqui</h2>
+            <p class="auth-subtitulo" id="auth-subtitulo">Entre para guardar a Fé, as medalhas e o progresso de toda a família.</p>
           </div>
 
-          <button type="button" id="auth-google" class="auth-google">Continuar com Google</button>
-          <div class="auth-divisor" id="auth-divisor"><span>ou com e-mail</span></div>
+          <div class="auth-tabs" id="auth-tabs" role="tablist">
+            <button type="button" class="auth-tab active" id="auth-tab-entrar" role="tab" data-i18n="conta_entrar_aba">Entrar</button>
+            <button type="button" class="auth-tab" id="auth-tab-cadastrar" role="tab" data-i18n="conta_cadastrar_aba">Criar conta</button>
+          </div>
+
+          <button type="button" id="auth-google" class="auth-google">
+            <svg class="auth-google-logo" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+            <span data-i18n="conta_google">Continuar com Google</span>
+          </button>
+          <div class="auth-divisor" id="auth-divisor"><span data-i18n="conta_ou_email">ou com e-mail</span></div>
 
           <form id="auth-form-entrar" class="auth-form">
-            <label data-i18n="conta_email">E-mail</label>
-            <input type="email" id="entrar-email" required autocomplete="email">
-            <label data-i18n="conta_senha">Senha</label>
-            <input type="password" id="entrar-senha" required autocomplete="current-password">
-            <button type="submit" class="filter-btn active" data-i18n="conta_entrar_botao">Entrar</button>
+            <label for="entrar-email" data-i18n="conta_email">E-mail</label>
+            <input type="email" id="entrar-email" required autocomplete="email" placeholder="seu@email.com">
+            <label for="entrar-senha" data-i18n="conta_senha">Senha</label>
+            <div class="auth-senha">
+              <input type="password" id="entrar-senha" required autocomplete="current-password">
+              <button type="button" class="auth-olho" data-alvo="entrar-senha" aria-label="Mostrar senha" aria-pressed="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+            </div>
+            <button type="button" class="auth-link auth-link-direita" id="auth-esqueci" data-i18n="conta_esqueci">Esqueci minha senha</button>
+            <div class="auth-captcha" data-captcha="entrar"></div>
+            <button type="submit" class="auth-botao" data-i18n="conta_entrar_botao">Entrar</button>
           </form>
 
           <form id="auth-form-cadastrar" class="auth-form" style="display:none;">
-            <label data-i18n="conta_nome">Nome</label>
-            <input type="text" id="cadastrar-nome" required autocomplete="name">
-            <label data-i18n="conta_email">E-mail</label>
-            <input type="email" id="cadastrar-email" required autocomplete="email">
-            <label data-i18n="conta_senha">Senha (mínimo 6 caracteres)</label>
-            <input type="password" id="cadastrar-senha" required minlength="6" autocomplete="new-password">
-            <button type="submit" class="filter-btn active" data-i18n="conta_cadastrar_botao">Criar minha conta</button>
+            <label for="cadastrar-nome" data-i18n="conta_nome">Nome</label>
+            <input type="text" id="cadastrar-nome" required autocomplete="name" maxlength="60">
+            <label for="cadastrar-email" data-i18n="conta_email">E-mail</label>
+            <input type="email" id="cadastrar-email" required autocomplete="email" placeholder="seu@email.com">
+            <label for="cadastrar-senha" data-i18n="conta_senha">Senha</label>
+            <div class="auth-senha">
+              <input type="password" id="cadastrar-senha" required minlength="8" autocomplete="new-password">
+              <button type="button" class="auth-olho" data-alvo="cadastrar-senha" aria-label="Mostrar senha" aria-pressed="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+            </div>
+            <p class="auth-dica" data-i18n="conta_senha_dica">Pelo menos 8 caracteres.</p>
+            <label class="auth-aceite">
+              <input type="checkbox" id="cadastrar-aceite" required>
+              <span><span data-i18n="conta_aceito">Li e aceito a</span> <button type="button" class="auth-link auth-link-inline" id="auth-ver-privacidade" data-i18n="conta_politica">Política de Privacidade</button></span>
+            </label>
+            <div class="auth-captcha" data-captcha="cadastrar"></div>
+            <button type="submit" class="auth-botao" data-i18n="conta_cadastrar_botao">Criar minha conta</button>
           </form>
 
           <form id="auth-form-codigo" class="auth-form" style="display:none;">
             <p class="auth-codigo-desc" data-i18n="conta_codigo_desc">Enviamos um código de 6 dígitos para o seu e-mail. Digite-o abaixo para confirmar sua conta.</p>
-            <label data-i18n="conta_codigo_label">Código de confirmação</label>
-            <input type="text" id="codigo-confirmacao" inputmode="numeric" pattern="[0-9]*" maxlength="6" required autocomplete="one-time-code">
-            <button type="submit" class="filter-btn active" data-i18n="conta_codigo_botao">Confirmar código</button>
-            <button type="button" id="reenviar-codigo-btn" class="btn-reenviar-codigo" data-i18n="conta_reenviar">Reenviar código</button>
+            <label for="codigo-confirmacao" data-i18n="conta_codigo_label">Código de confirmação</label>
+            <input type="text" id="codigo-confirmacao" class="auth-codigo" inputmode="numeric" pattern="[0-9]*" maxlength="6" required autocomplete="one-time-code">
+            <button type="submit" class="auth-botao" data-i18n="conta_codigo_botao">Confirmar código</button>
+            <button type="button" id="reenviar-codigo-btn" class="auth-link" data-i18n="conta_reenviar">Reenviar código</button>
+          </form>
+
+          <form id="auth-form-recuperar" class="auth-form" style="display:none;">
+            <p class="auth-codigo-desc" data-i18n="conta_recuperar_desc">Digite o e-mail da sua conta. Vamos mandar um código para você criar uma senha nova.</p>
+            <label for="recuperar-email" data-i18n="conta_email">E-mail</label>
+            <input type="email" id="recuperar-email" required autocomplete="email" placeholder="seu@email.com">
+            <div class="auth-captcha" data-captcha="recuperar"></div>
+            <button type="submit" class="auth-botao" data-i18n="conta_recuperar_botao">Enviar código</button>
+            <button type="button" class="auth-link auth-voltar-entrar" data-i18n="conta_voltar_entrar">Voltar para Entrar</button>
+          </form>
+
+          <form id="auth-form-nova-senha" class="auth-form" style="display:none;">
+            <p class="auth-codigo-desc" id="nova-senha-desc"></p>
+            <label for="recuperar-codigo" data-i18n="conta_codigo_label">Código de confirmação</label>
+            <input type="text" id="recuperar-codigo" class="auth-codigo" inputmode="numeric" pattern="[0-9]*" maxlength="6" required autocomplete="one-time-code">
+            <label for="nova-senha" data-i18n="conta_nova_senha">Nova senha</label>
+            <div class="auth-senha">
+              <input type="password" id="nova-senha" required minlength="8" autocomplete="new-password">
+              <button type="button" class="auth-olho" data-alvo="nova-senha" aria-label="Mostrar senha" aria-pressed="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+            </div>
+            <p class="auth-dica" data-i18n="conta_senha_dica">Pelo menos 8 caracteres.</p>
+            <button type="submit" class="auth-botao" data-i18n="conta_nova_senha_botao">Salvar nova senha</button>
+            <button type="button" class="auth-link auth-voltar-entrar" data-i18n="conta_voltar_entrar">Voltar para Entrar</button>
           </form>
 
           <p class="auth-feedback" id="auth-feedback" aria-live="polite"></p>
         </div>
+      </div>
+    </section>
+
+    <section id="view-privacidade" class="view">
+      <div class="container privacidade-container">
+        <button class="btn-back" id="btn-back-privacidade">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span>Voltar</span>
+        </button>
+        <h2 class="section-title" style="text-align:left; margin: 10px 0 4px;">Política de Privacidade</h2>
+        <div class="title-divider" style="margin: 0 0 16px;"></div>
+        <p class="privacidade-data">Atualizada em 27 de setembro de 2026.</p>
+
+        <h3>Quem somos</h3>
+        <p>O Lumina Sancti (luminasancti.com) é um site e aplicativo católico sobre a vida dos santos. Para falar com a gente sobre seus dados, escreva para <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a>.</p>
+
+        <h3>Sem conta</h3>
+        <p>Você pode usar o Lumina Sancti sem criar conta. Nesse caso não recebemos nenhum dado pessoal seu: o progresso das trilhas, os santos favoritos e o idioma ficam guardados só no seu aparelho.</p>
+
+        <h3>O que guardamos quando você cria uma conta</h3>
+        <ul>
+          <li>Seu nome e seu e-mail.</li>
+          <li>Os perfis da família: nome, avatar ou foto escolhida e se o perfil é de adulto ou de criança.</li>
+          <li>O progresso de cada perfil nas trilhas: Fé, ofensiva, medalhas e respostas das missões.</li>
+          <li>Um código do aparelho, usado para permitir uma conta por aparelho.</li>
+          <li>Quantas perguntas você fez à Lumina, nossa assistente, para controlar o limite diário. O texto das perguntas não fica guardado conosco.</li>
+        </ul>
+
+        <h3>Crianças</h3>
+        <p>Perfis infantis só podem ser criados pelo adulto dono da conta, que declara ser pai, mãe ou responsável pela criança e autoriza o uso do perfil. No perfil infantil não pedimos e-mail nem qualquer dado de contato da criança, e para sair do modo infantil é preciso o PIN dos pais. O Lumina Sancti não mostra anúncios.</p>
+
+        <h3>Para que usamos os dados</h3>
+        <p>Só para fazer a sua conta funcionar: guardar o progresso, montar o ranking da família, enviar os e-mails do código de confirmação e de boas-vindas e responder às perguntas feitas à Lumina. Não vendemos seus dados e não os usamos para publicidade.</p>
+
+        <h3>Quem nos ajuda a oferecer o serviço</h3>
+        <ul>
+          <li>Supabase: banco de dados e login, com servidores em São Paulo.</li>
+          <li>Vercel: hospedagem do site.</li>
+          <li>Resend: envio dos e-mails.</li>
+          <li>Google (Gemini): gera as respostas da Lumina a partir da pergunta enviada.</li>
+          <li>Stripe e Google Play: pagamentos dos planos, quando estiverem disponíveis. Os dados do cartão ficam só com eles; o Lumina Sancti nunca os recebe.</li>
+          <li>Wikipédia (Wikimedia), Google Fonts e jsDelivr: fotos dos santos, letras do site e partes do código, carregadas diretamente pelo seu navegador.</li>
+        </ul>
+
+        <h3>Seus direitos</h3>
+        <p>Pela Lei Geral de Proteção de Dados (LGPD), você pode pedir para ver, corrigir ou apagar seus dados. Você mesmo pode apagar tudo em Meu perfil, na opção "Excluir minha conta", ou nos escrever em <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a>.</p>
+
+        <h3>Segurança</h3>
+        <p>As senhas são guardadas de forma embaralhada pelo serviço de login, e ninguém consegue lê-las, nem nós. Toda a comunicação do site é criptografada (HTTPS).</p>
+
+        <h3>Mudanças nesta política</h3>
+        <p>Se esta política mudar, a data no começo da página será atualizada.</p>
       </div>
     </section>
 
@@ -574,6 +710,12 @@
           </form>
           <p class="auth-feedback" id="perfil-feedback" aria-live="polite"></p>
 
+          <div class="perfil-pin">
+            <h3>PIN dos pais</h3>
+            <p id="perfil-pin-estado">Ele é pedido para sair de um perfil infantil.</p>
+            <button type="button" id="perfil-pin-botao" class="filter-btn active">Criar PIN</button>
+          </div>
+
           <div class="perfil-zona-perigo">
             <h3 data-i18n="perfil_zona_perigo">Excluir conta</h3>
             <p data-i18n="perfil_excluir_aviso">Isso apaga sua conta e todos os dados ligados a ela, para sempre. Não tem como desfazer.</p>
@@ -605,6 +747,7 @@
       </div>
 
       <button type="button" id="footer-instalar" class="footer-instalar" hidden><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-baixar"></use></svg><span>Instalar o app no celular</span></button>
+      <button type="button" id="footer-privacidade" class="footer-privacidade">Política de Privacidade</button>
       <p class="footer-contato" data-i18n="footer_fale_conosco">Fale conosco: <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a></p>
     </div>
   </footer>

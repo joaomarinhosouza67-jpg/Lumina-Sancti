@@ -2221,6 +2221,27 @@ const TRADUCOES = {
     nav_leitura: 'Leitura do dia',
     leitura_titulo: 'Leitura do dia',
     leitura_em_breve: 'Em breve estará disponível.',
+    conta_google: 'Continuar com Google',
+    conta_ou_email: 'ou com e-mail',
+    conta_esqueci: 'Esqueci minha senha',
+    conta_senha_dica: 'Pelo menos 8 caracteres.',
+    conta_aceito: 'Li e aceito a',
+    conta_politica: 'Política de Privacidade',
+    conta_recuperar_desc: 'Digite o e-mail da sua conta. Vamos mandar um código para você criar uma senha nova.',
+    conta_recuperar_botao: 'Enviar código',
+    conta_voltar_entrar: 'Voltar para Entrar',
+    conta_nova_senha: 'Nova senha',
+    conta_nova_senha_botao: 'Salvar nova senha',
+    auth_titulo_entrar: 'Que bom ter você aqui',
+    auth_sub_entrar: 'Entre para guardar a Fé, as medalhas e o progresso de toda a família.',
+    auth_titulo_cadastrar: 'Crie sua conta',
+    auth_sub_cadastrar: 'É grátis. Depois é só criar os perfis da família.',
+    auth_titulo_codigo: 'Confirme seu e-mail',
+    auth_sub_codigo: 'Falta só um passo.',
+    auth_titulo_recuperar: 'Esqueceu a senha?',
+    auth_sub_recuperar: 'Acontece. Vamos resolver agora.',
+    auth_titulo_nova_senha: 'Crie uma senha nova',
+    auth_sub_nova_senha: 'Use o código que enviamos para o seu e-mail.',
   },
   en: {
     hero_subtitulo: 'Light of the Saints',
@@ -2284,6 +2305,27 @@ const TRADUCOES = {
     nav_leitura: 'Daily readings',
     leitura_titulo: 'Daily readings',
     leitura_em_breve: 'Coming soon.',
+    conta_google: 'Continue with Google',
+    conta_ou_email: 'or with email',
+    conta_esqueci: 'Forgot my password',
+    conta_senha_dica: 'At least 8 characters.',
+    conta_aceito: 'I have read and accept the',
+    conta_politica: 'Privacy Policy',
+    conta_recuperar_desc: 'Type the email of your account. We will send you a code to create a new password.',
+    conta_recuperar_botao: 'Send code',
+    conta_voltar_entrar: 'Back to Sign in',
+    conta_nova_senha: 'New password',
+    conta_nova_senha_botao: 'Save new password',
+    auth_titulo_entrar: 'Good to have you here',
+    auth_sub_entrar: 'Sign in to keep the Faith, medals and progress of the whole family.',
+    auth_titulo_cadastrar: 'Create your account',
+    auth_sub_cadastrar: 'It is free. Then just create the family profiles.',
+    auth_titulo_codigo: 'Confirm your email',
+    auth_sub_codigo: 'Just one more step.',
+    auth_titulo_recuperar: 'Forgot your password?',
+    auth_sub_recuperar: 'It happens. Let us fix it now.',
+    auth_titulo_nova_senha: 'Create a new password',
+    auth_sub_nova_senha: 'Use the code we sent to your email.',
   },
   es: {
     hero_subtitulo: 'Luz de los Santos',
@@ -2347,6 +2389,27 @@ const TRADUCOES = {
     nav_leitura: 'Lecturas del día',
     leitura_titulo: 'Lecturas del día',
     leitura_em_breve: 'Próximamente disponible.',
+    conta_google: 'Continuar con Google',
+    conta_ou_email: 'o con correo',
+    conta_esqueci: 'Olvidé mi contraseña',
+    conta_senha_dica: 'Al menos 8 caracteres.',
+    conta_aceito: 'He leído y acepto la',
+    conta_politica: 'Política de Privacidad',
+    conta_recuperar_desc: 'Escribe el correo de tu cuenta. Te enviaremos un código para crear una contraseña nueva.',
+    conta_recuperar_botao: 'Enviar código',
+    conta_voltar_entrar: 'Volver a Entrar',
+    conta_nova_senha: 'Contraseña nueva',
+    conta_nova_senha_botao: 'Guardar contraseña nueva',
+    auth_titulo_entrar: 'Qué bueno tenerte aquí',
+    auth_sub_entrar: 'Entra para guardar la Fe, las medallas y el progreso de toda la familia.',
+    auth_titulo_cadastrar: 'Crea tu cuenta',
+    auth_sub_cadastrar: 'Es gratis. Después solo crea los perfiles de la familia.',
+    auth_titulo_codigo: 'Confirma tu correo',
+    auth_sub_codigo: 'Falta solo un paso.',
+    auth_titulo_recuperar: '¿Olvidaste la contraseña?',
+    auth_sub_recuperar: 'Pasa. Vamos a resolverlo ahora.',
+    auth_titulo_nova_senha: 'Crea una contraseña nueva',
+    auth_sub_nova_senha: 'Usa el código que enviamos a tu correo.',
   },
 };
 
@@ -2436,6 +2499,7 @@ function aplicarIdioma(codigo) {
     });
   }
   if (typeof atualizarSelosLiturgicos === 'function') atualizarSelosLiturgicos();
+  atualizarTitulosDoLogin();
   atualizarBotaoVoltarDaBiografia();
 }
 
@@ -2475,9 +2539,11 @@ function iniciarSeletorDeIdioma() {
 }
 
 const SUPABASE_URL = 'https://upvualhciytwypmwtpye.supabase.co';
-const SUPABASE_ANON_KEY = 'SUA-CHAVE-ANON-OU-PUBLISHABLE-AQUI';
+const SUPABASE_ANON_KEY = 'sb_publishable_l0gk1FiRoSUuuMLjylGsmQ_P5llyDPM';
 
 const LOGIN_COM_GOOGLE_ATIVO = false;
+
+const TURNSTILE_SITE_KEY = '';
 
 const supabaseCliente = (SUPABASE_URL.includes('SEU-PROJETO') || SUPABASE_ANON_KEY.includes('SUA-CHAVE') || !window.supabase)
   ? null
@@ -2596,14 +2662,16 @@ async function usarOutraConta() {
 
 function atualizarInterfaceDeConta() {
   const logado = !!sessaoAtual;
-  const btnEntrar = document.getElementById('conta-menu-entrar');
-  const btnPerfil = document.getElementById('conta-menu-perfil');
-  const btnSair = document.getElementById('conta-menu-sair');
-  if (btnEntrar) btnEntrar.style.display = logado ? 'none' : 'block';
-  if (btnPerfil) btnPerfil.style.display = logado ? 'block' : 'none';
-  if (btnSair) btnSair.style.display = logado ? 'block' : 'none';
-  const btnPerfis = document.getElementById('conta-menu-perfis');
-  if (btnPerfis) btnPerfis.style.display = logado ? 'block' : 'none';
+  const infantil = logado && document.body.classList.contains('modo-kids');
+  const mostrar = (id, visivel) => {
+    const botao = document.getElementById(id);
+    if (botao) botao.style.display = visivel ? 'block' : 'none';
+  };
+  mostrar('conta-menu-entrar', !logado);
+  mostrar('conta-menu-perfil', logado && !infantil);
+  mostrar('conta-menu-sair', logado && !infantil);
+  mostrar('conta-menu-perfis', logado && !infantil);
+  mostrar('conta-menu-sair-kids', infantil);
 
   const precisaLogin = document.getElementById('lumina-precisa-login');
   const chatArea = document.getElementById('lumina-chat-area');
@@ -2614,7 +2682,7 @@ function atualizarInterfaceDeConta() {
 }
 
 function mudarDeView(idNovaView, opcoes) {
-  const todasAsViews = ['view-home', 'view-detail', 'view-ia', 'view-auth', 'view-perfil', 'view-oracoes', 'view-leitura', 'view-terco', 'view-padroeiro', 'view-trilhas', 'view-licao', 'view-perfis', 'view-ranking', 'view-planos', 'view-completar'];
+  const todasAsViews = ['view-home', 'view-detail', 'view-ia', 'view-auth', 'view-perfil', 'view-privacidade', 'view-oracoes', 'view-leitura', 'view-terco', 'view-padroeiro', 'view-trilhas', 'view-licao', 'view-perfis', 'view-ranking', 'view-planos', 'view-completar'];
   const viewAtual = todasAsViews.map(id => document.getElementById(id)).find(v => v && v.classList.contains('active'));
   if (idNovaView !== 'view-licao' && typeof pararVozInfantil === 'function') pararVozInfantil(false);
   const catalogoInterno = idNovaView === 'view-home' && Boolean(opcoes && opcoes.catalogoInterno);
@@ -2643,7 +2711,123 @@ function mudarDeView(idNovaView, opcoes) {
 }
 
 function irParaLogin() {
+  mostrarFormularioDeLogin('entrar');
   mudarDeView('view-auth');
+}
+
+let voltarDaPrivacidadePara = 'view-home';
+
+function abrirPrivacidade() {
+  const atual = typeof idDaPaginaVisivel === 'function' ? idDaPaginaVisivel() : null;
+  voltarDaPrivacidadePara = atual && atual !== 'view-privacidade' ? atual : 'view-home';
+  mudarDeView('view-privacidade');
+}
+
+const widgetsDoCaptcha = {};
+
+function captchaLigado() {
+  return Boolean(TURNSTILE_SITE_KEY);
+}
+
+function desenharCaptcha(area) {
+  if (!window.turnstile || widgetsDoCaptcha[area.dataset.captcha] !== undefined) return;
+  widgetsDoCaptcha[area.dataset.captcha] = window.turnstile.render(area, {
+    sitekey: TURNSTILE_SITE_KEY,
+    theme: 'dark',
+    language: idiomaAtual === 'pt' ? 'pt-br' : idiomaAtual,
+    callback: (token) => { area.dataset.token = token; },
+    'expired-callback': () => { delete area.dataset.token; },
+    'error-callback': () => { delete area.dataset.token; },
+  });
+}
+
+function carregarCaptcha() {
+  if (!captchaLigado()) return;
+  if (window.turnstile) {
+    document.querySelectorAll('.auth-captcha').forEach(desenharCaptcha);
+    return;
+  }
+  if (window.__captchaCarregando) return;
+  window.__captchaCarregando = true;
+  window.aoCarregarCaptcha = () => document.querySelectorAll('.auth-captcha').forEach(desenharCaptcha);
+  const script = document.createElement('script');
+  script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=aoCarregarCaptcha';
+  script.async = true;
+  document.head.appendChild(script);
+}
+
+function tokenDoCaptcha(nome) {
+  if (!captchaLigado()) return undefined;
+  const area = document.querySelector(`.auth-captcha[data-captcha="${nome}"]`);
+  return area && area.dataset.token ? area.dataset.token : null;
+}
+
+function renovarCaptcha(nome) {
+  if (!captchaLigado() || !window.turnstile) return;
+  const area = document.querySelector(`.auth-captcha[data-captcha="${nome}"]`);
+  if (area) delete area.dataset.token;
+  if (widgetsDoCaptcha[nome] !== undefined) window.turnstile.reset(widgetsDoCaptcha[nome]);
+}
+
+function avisoDeLogin(texto, tipo) {
+  const feedback = document.getElementById('auth-feedback');
+  if (!feedback) return;
+  feedback.textContent = texto || '';
+  feedback.classList.toggle('erro', tipo === 'erro');
+  feedback.classList.toggle('certo', tipo === 'certo');
+}
+
+const FORMULARIOS_DE_LOGIN = {
+  entrar: 'auth-form-entrar',
+  cadastrar: 'auth-form-cadastrar',
+  codigo: 'auth-form-codigo',
+  recuperar: 'auth-form-recuperar',
+  'nova-senha': 'auth-form-nova-senha',
+};
+
+let formularioDeLoginAtual = 'entrar';
+
+function atualizarTitulosDoLogin() {
+  const chave = formularioDeLoginAtual.replace('-', '_');
+  const titulo = document.getElementById('auth-titulo');
+  const subtitulo = document.getElementById('auth-subtitulo');
+  if (titulo) titulo.textContent = textoDaInterface(`auth_titulo_${chave}`);
+  if (subtitulo) subtitulo.textContent = textoDaInterface(`auth_sub_${chave}`);
+}
+
+function mostrarFormularioDeLogin(nome) {
+  formularioDeLoginAtual = nome;
+  Object.entries(FORMULARIOS_DE_LOGIN).forEach(([chave, id]) => {
+    const formulario = document.getElementById(id);
+    if (formulario) formulario.style.display = chave === nome ? 'flex' : 'none';
+  });
+  const comAbas = nome === 'entrar' || nome === 'cadastrar';
+  const abas = document.getElementById('auth-tabs');
+  if (abas) abas.style.display = comAbas ? '' : 'none';
+  ['auth-google', 'auth-divisor'].forEach((id) => {
+    const elemento = document.getElementById(id);
+    if (elemento) elemento.style.display = comAbas && LOGIN_COM_GOOGLE_ATIVO ? '' : 'none';
+  });
+  const abaEntrar = document.getElementById('auth-tab-entrar');
+  const abaCadastrar = document.getElementById('auth-tab-cadastrar');
+  if (abaEntrar) abaEntrar.classList.toggle('active', nome === 'entrar');
+  if (abaCadastrar) abaCadastrar.classList.toggle('active', nome === 'cadastrar');
+  atualizarTitulosDoLogin();
+  avisoDeLogin('');
+  carregarCaptcha();
+}
+
+function ligarBotoesDeMostrarSenha() {
+  document.querySelectorAll('.auth-olho').forEach((botao) => {
+    botao.addEventListener('click', () => {
+      const campo = document.getElementById(botao.dataset.alvo);
+      if (!campo) return;
+      const mostrando = campo.type === 'text';
+      campo.type = mostrando ? 'password' : 'text';
+      botao.setAttribute('aria-pressed', mostrando ? 'false' : 'true');
+      botao.setAttribute('aria-label', mostrando ? 'Mostrar senha' : 'Esconder senha');
+    });
+  });
 }
 
 async function confirmarCodigoDeCadastro(email, codigo) {
@@ -2675,113 +2859,193 @@ function irDepoisDeEntrar() {
 
 let emailAguardandoConfirmacao = '';
 
+let emailDaSenhaNova = '';
+
 function iniciarPaginaDeAutenticacao() {
   const abaEntrar = document.getElementById('auth-tab-entrar');
   const abaCadastrar = document.getElementById('auth-tab-cadastrar');
   const formEntrar = document.getElementById('auth-form-entrar');
   const formCadastrar = document.getElementById('auth-form-cadastrar');
   const formCodigo = document.getElementById('auth-form-codigo');
-  const feedback = document.getElementById('auth-feedback');
+  const formRecuperar = document.getElementById('auth-form-recuperar');
+  const formNovaSenha = document.getElementById('auth-form-nova-senha');
   if (!abaEntrar) return;
 
-  function mostrarAbaEntrar() {
-    abaEntrar.classList.add('active');
-    abaCadastrar.classList.remove('active');
-    formEntrar.style.display = 'flex';
-    formCadastrar.style.display = 'none';
-    formCodigo.style.display = 'none';
-    feedback.textContent = '';
-  }
+  ligarBotoesDeMostrarSenha();
+  abaEntrar.addEventListener('click', () => mostrarFormularioDeLogin('entrar'));
+  abaCadastrar.addEventListener('click', () => mostrarFormularioDeLogin('cadastrar'));
+  document.querySelectorAll('.auth-voltar-entrar').forEach((b) => b.addEventListener('click', () => mostrarFormularioDeLogin('entrar')));
 
-  abaEntrar.addEventListener('click', mostrarAbaEntrar);
-  abaCadastrar.addEventListener('click', () => {
-    abaCadastrar.classList.add('active');
-    abaEntrar.classList.remove('active');
-    formCadastrar.style.display = 'flex';
-    formEntrar.style.display = 'none';
-    formCodigo.style.display = 'none';
-    feedback.textContent = '';
+  const esqueci = document.getElementById('auth-esqueci');
+  if (esqueci) esqueci.addEventListener('click', () => {
+    const email = document.getElementById('entrar-email').value.trim();
+    mostrarFormularioDeLogin('recuperar');
+    document.getElementById('recuperar-email').value = email;
   });
+
+  const verPrivacidade = document.getElementById('auth-ver-privacidade');
+  if (verPrivacidade) verPrivacidade.addEventListener('click', abrirPrivacidade);
 
   formEntrar.addEventListener('submit', async (e) => {
     e.preventDefault();
-    if (!supabaseCliente) { feedback.textContent = 'Contas ainda não configuradas neste site.'; return; }
-    feedback.textContent = 'Entrando...';
+    if (!supabaseCliente) { avisoDeLogin('Contas ainda não configuradas neste site.', 'erro'); return; }
     const email = document.getElementById('entrar-email').value.trim();
     const senha = document.getElementById('entrar-senha').value;
-    const { error } = await supabaseCliente.auth.signInWithPassword({ email, password: senha });
+    const captchaToken = tokenDoCaptcha('entrar');
+    if (captchaToken === null) { avisoDeLogin('Confirme que você não é um robô.', 'erro'); return; }
+    avisoDeLogin('Entrando...');
+    const { error } = await supabaseCliente.auth.signInWithPassword({ email, password: senha, options: { captchaToken } });
+    renovarCaptcha('entrar');
     if (error) {
-      feedback.textContent = 'E-mail ou senha incorretos.';
+      if (/not confirmed/i.test(String(error.message || ''))) {
+        emailAguardandoConfirmacao = email;
+        mostrarFormularioDeLogin('codigo');
+        document.getElementById('codigo-confirmacao').value = '';
+        avisoDeLogin('Seu e-mail ainda não foi confirmado. Digite o código que enviamos, ou peça outro.', 'erro');
+        return;
+      }
+      avisoDeLogin('E-mail ou senha incorretos.', 'erro');
       return;
     }
-    feedback.textContent = '';
+    avisoDeLogin('');
     irDepoisDeEntrar();
   });
 
   formCadastrar.addEventListener('submit', async (e) => {
     e.preventDefault();
-    if (!supabaseCliente) { feedback.textContent = 'Contas ainda não configuradas neste site.'; return; }
-    feedback.textContent = 'Criando sua conta...';
+    if (!supabaseCliente) { avisoDeLogin('Contas ainda não configuradas neste site.', 'erro'); return; }
     const nome = document.getElementById('cadastrar-nome').value.trim();
     const email = document.getElementById('cadastrar-email').value.trim();
     const senha = document.getElementById('cadastrar-senha').value;
+    const aceitou = document.getElementById('cadastrar-aceite').checked;
+    if (nome.length < 2) { avisoDeLogin('Digite o seu nome.', 'erro'); return; }
+    if (senha.length < 8) { avisoDeLogin('A senha precisa ter pelo menos 8 caracteres.', 'erro'); return; }
+    if (!aceitou) { avisoDeLogin('Para criar a conta, marque que leu e aceita a Política de Privacidade.', 'erro'); return; }
+    const captchaToken = tokenDoCaptcha('cadastrar');
+    if (captchaToken === null) { avisoDeLogin('Confirme que você não é um robô.', 'erro'); return; }
+    avisoDeLogin('Criando sua conta...');
     const instalacao = idDaInstalacao();
     if (await aparelhoJaTemConta(instalacao)) {
-      feedback.textContent = 'Este aparelho já tem uma conta do Lumina Sancti. Entre com ela na aba Entrar.';
+      avisoDeLogin('Este aparelho já tem uma conta do Lumina Sancti. Entre com ela na aba Entrar.', 'erro');
       return;
     }
     const { data, error } = await supabaseCliente.auth.signUp({
       email,
       password: senha,
-      options: { data: { nome, cadastro_completo: true, install_id: instalacao, locale: 'pt-BR' } },
+      options: {
+        data: { nome, cadastro_completo: true, install_id: instalacao, locale: 'pt-BR', privacidade_aceita_em: new Date().toISOString() },
+        captchaToken,
+      },
     });
+    renovarCaptcha('cadastrar');
     if (error) {
       const mensagem = String(error.message || '');
-      feedback.textContent = mensagem.includes('already registered')
-        ? 'Esse e-mail já tem uma conta.'
-        : mensagem.includes('Database error')
-          ? 'Não foi possível criar a conta neste aparelho. Se você já tem uma conta, entre com ela na aba Entrar.'
-          : 'Não foi possível criar a conta. Tente de novo.';
+      avisoDeLogin(mensagem.includes('already registered')
+        ? 'Esse e-mail já tem uma conta. Entre na aba Entrar.'
+        : /password/i.test(mensagem)
+          ? 'Essa senha é fraca ou já apareceu em vazamentos de dados. Escolha outra.'
+          : mensagem.includes('Database error')
+            ? 'Não foi possível criar a conta neste aparelho. Se você já tem uma conta, entre com ela na aba Entrar.'
+            : 'Não foi possível criar a conta. Tente de novo.', 'erro');
       return;
     }
     if (data.session) {
-      feedback.textContent = '';
+      avisoDeLogin('');
       enviarEmailDeBoasVindas();
       irDepoisDeEntrar();
     } else {
       emailAguardandoConfirmacao = email;
-      formCadastrar.style.display = 'none';
-      formCodigo.style.display = 'flex';
+      mostrarFormularioDeLogin('codigo');
       document.getElementById('codigo-confirmacao').value = '';
-      feedback.textContent = `Enviamos um código para ${email}. Confira sua caixa de entrada (e o spam, só por garantia).`;
+      avisoDeLogin(`Enviamos um código para ${email}. Confira sua caixa de entrada (e o spam, só por garantia).`, 'certo');
     }
   });
 
-  formCodigo.addEventListener('submit', async (e) => {
-    e.preventDefault();
+  async function confirmarCodigo() {
     if (!supabaseCliente || !emailAguardandoConfirmacao) return;
     const codigo = document.getElementById('codigo-confirmacao').value.trim();
-    feedback.textContent = 'Confirmando...';
+    avisoDeLogin('Confirmando...');
     const erro = await confirmarCodigoDeCadastro(emailAguardandoConfirmacao, codigo);
     if (erro) {
-      feedback.textContent = 'Código incorreto ou expirado. Confira e tente de novo, ou peça um novo código.';
+      avisoDeLogin('Código incorreto ou expirado. Confira e tente de novo, ou peça um novo código.', 'erro');
       return;
     }
-    feedback.textContent = '';
+    avisoDeLogin('');
     emailAguardandoConfirmacao = '';
     enviarEmailDeBoasVindas();
     irDepoisDeEntrar();
+  }
+
+  formCodigo.addEventListener('submit', (e) => {
+    e.preventDefault();
+    confirmarCodigo();
+  });
+  document.getElementById('codigo-confirmacao').addEventListener('input', (e) => {
+    const campo = e.target;
+    campo.value = campo.value.replace(/\D/g, '').slice(0, 6);
+    if (campo.value.length === 6) confirmarCodigo();
   });
 
   const btnReenviar = document.getElementById('reenviar-codigo-btn');
   if (btnReenviar) {
     btnReenviar.addEventListener('click', async () => {
       if (!emailAguardandoConfirmacao) return;
-      feedback.textContent = 'Enviando novo código...';
+      avisoDeLogin('Enviando novo código...');
       const { error } = await supabaseCliente.auth.resend({ type: 'signup', email: emailAguardandoConfirmacao });
-      feedback.textContent = error ? 'Não foi possível reenviar agora. Tente novamente em instantes.' : 'Novo código enviado!';
+      avisoDeLogin(error ? 'Não foi possível reenviar agora. Tente novamente em instantes.' : 'Novo código enviado!', error ? 'erro' : 'certo');
     });
   }
+
+  formRecuperar.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!supabaseCliente) { avisoDeLogin('Contas ainda não configuradas neste site.', 'erro'); return; }
+    const email = document.getElementById('recuperar-email').value.trim();
+    const captchaToken = tokenDoCaptcha('recuperar');
+    if (captchaToken === null) { avisoDeLogin('Confirme que você não é um robô.', 'erro'); return; }
+    avisoDeLogin('Enviando código...');
+    const { error } = await supabaseCliente.auth.resetPasswordForEmail(email, { captchaToken });
+    renovarCaptcha('recuperar');
+    if (error) {
+      avisoDeLogin('Não foi possível enviar o código agora. Espere um pouco e tente de novo.', 'erro');
+      return;
+    }
+    emailDaSenhaNova = email;
+    mostrarFormularioDeLogin('nova-senha');
+    document.getElementById('recuperar-codigo').value = '';
+    document.getElementById('nova-senha').value = '';
+    document.getElementById('nova-senha-desc').textContent = `Se existir uma conta com ${email}, enviamos um código de 6 números para ele. Digite o código e a senha nova.`;
+  });
+
+  formNovaSenha.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!supabaseCliente || !emailDaSenhaNova) return;
+    const codigo = document.getElementById('recuperar-codigo').value.trim();
+    const senha = document.getElementById('nova-senha').value;
+    if (senha.length < 8) { avisoDeLogin('A senha precisa ter pelo menos 8 caracteres.', 'erro'); return; }
+    avisoDeLogin('Conferindo o código...');
+    const { error: erroCodigo } = await supabaseCliente.auth.verifyOtp({ email: emailDaSenhaNova, token: codigo, type: 'recovery' });
+    if (erroCodigo) {
+      avisoDeLogin('Código incorreto ou expirado. Confira e tente de novo.', 'erro');
+      return;
+    }
+    const { error: erroSenha } = await supabaseCliente.auth.updateUser({ password: senha });
+    if (erroSenha) {
+      avisoDeLogin(/password/i.test(String(erroSenha.message || ''))
+        ? 'Essa senha é fraca, igual à anterior ou já apareceu em vazamentos. Escolha outra.'
+        : 'Não foi possível salvar a senha nova. Tente de novo.', 'erro');
+      return;
+    }
+    emailDaSenhaNova = '';
+    avisoDeLogin('Senha nova salva!', 'certo');
+    irDepoisDeEntrar();
+  });
+
+  const voltarPrivacidade = document.getElementById('btn-back-privacidade');
+  if (voltarPrivacidade) voltarPrivacidade.addEventListener('click', () => mudarDeView(voltarDaPrivacidadePara));
+  const rodapePrivacidade = document.getElementById('footer-privacidade');
+  if (rodapePrivacidade) rodapePrivacidade.addEventListener('click', abrirPrivacidade);
+
+  mostrarFormularioDeLogin('entrar');
 }
 
 async function carregarPaginaDePerfil() {
@@ -2792,6 +3056,7 @@ async function carregarPaginaDePerfil() {
   const dadosDaConta = sessaoAtual.user.user_metadata || {};
   document.getElementById('perfil-nome').value = dadosDaConta.nome || dadosDaConta.full_name || '';
   if (feedback) feedback.textContent = '';
+  if (typeof atualizarSecaoDoPin === 'function') atualizarSecaoDoPin();
 }
 
 function iniciarPaginaDePerfil() {
