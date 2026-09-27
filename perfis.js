@@ -374,7 +374,10 @@ function abrirSelecaoDePerfis(destino, liberado) {
 async function renderizarSelecaoDePerfis() {
   const grade = document.getElementById('perfis-grade');
   const gerenciar = document.getElementById('perfis-gerenciar');
+  const titulo = document.querySelector('#view-perfis .perfis-titulo');
   if (!grade) return;
+  if (titulo) titulo.textContent = perfisEmModoEdicao ? 'Gerencie os perfis' : 'Quem vai aprender agora?';
+  grade.classList.toggle('editando', perfisEmModoEdicao);
 
   grade.innerHTML = '<p class="perfis-carregando">Carregando perfis...</p>';
   try {
@@ -415,7 +418,7 @@ async function renderizarSelecaoDePerfis() {
   if (botaoAdicionar) botaoAdicionar.addEventListener('click', () => abrirEditorDePerfil(null));
 
   if (gerenciar) {
-    gerenciar.textContent = perfisEmModoEdicao ? 'Concluir' : 'Gerenciar perfis';
+    gerenciar.textContent = perfisEmModoEdicao ? 'Concluído' : 'Gerenciar perfis';
     gerenciar.style.display = membrosDaConta.length ? '' : 'none';
   }
 
@@ -432,19 +435,27 @@ function escolherPerfil(membro) {
   else abrirTrilhas(slugPendenteDasTrilhas);
 }
 
+function aindaNaTelaInicial() {
+  const inicio = document.getElementById('view-home');
+  return !!inicio && inicio.classList.contains('active') && !document.body.classList.contains('catalogo-interno');
+}
+
 async function restaurarPerfilSalvo() {
   if (typeof supabaseCliente === 'undefined' || !supabaseCliente || membroAtivo) return;
-  let id = null;
-  try { id = localStorage.getItem(CHAVE_MEMBRO_ATIVO); } catch (e) { return; }
-  if (!id) return;
   const { data } = await supabaseCliente.auth.getSession();
   if (!data || !data.session) return;
+  if (typeof cadastroCompleto === 'function' && !cadastroCompleto(data.session.user)) return;
+  let id = null;
+  try { id = localStorage.getItem(CHAVE_MEMBRO_ATIVO); } catch (e) {  }
   try { await carregarMembrosDaConta(); } catch (e) { return; }
-  const membro = membrosDaConta.find((m) => m.id === id);
-  if (membro && !membroAtivo) {
+  if (membroAtivo) return;
+  const membro = id ? membrosDaConta.find((m) => m.id === id) : null;
+  if (membro && membro.tipo === 'crianca') {
     membroAtivo = membro;
     aplicarModoKids();
+    return;
   }
+  if (aindaNaTelaInicial()) abrirSelecaoDePerfis('inicio');
 }
 
 function aposEntrarNaConta() {
