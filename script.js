@@ -1975,11 +1975,12 @@ function tocarSomDeBrilho() {
     introScreen.style.display = 'none';
     return;
   }
+  document.body.classList.add('intro-ativa');
 
   const ceu = document.getElementById('intro-sky');
   if (ceu) {
     const fragmento = document.createDocumentFragment();
-    const quantidade = 70;
+    const quantidade = 50;
     for (let i = 0; i < quantidade; i++) {
       const ponto = document.createElement('div');
       const sorteio = Math.random();
@@ -2023,6 +2024,7 @@ function tocarSomDeBrilho() {
   function encerrarIntro() {
     if (introEncerrada) return;
     introEncerrada = true;
+    document.body.classList.remove('intro-ativa');
     introScreen.classList.add('fade-out');
     setTimeout(() => {
       introScreen.style.display = 'none';
@@ -2033,6 +2035,7 @@ function tocarSomDeBrilho() {
   window.addEventListener('load', () => {
     setTimeout(encerrarIntro, 2900);
   });
+  setTimeout(encerrarIntro, 6000);
 })();
 
 const cacheImagens = {};
@@ -3256,7 +3259,7 @@ function iniciarChuvaDeMeteoros() {
   }
 
   function criarMeteoro() {
-    if (vivos >= MAXIMO_NA_TELA || document.hidden) return;
+    if (vivos >= MAXIMO_NA_TELA || document.hidden || document.body.classList.contains('intro-ativa')) return;
 
     const largura = window.innerWidth;
     const altura = window.innerHeight;
@@ -4734,7 +4737,7 @@ const PLANOS = [
     itens: ['Tudo do plano Gratuito', 'Quiz dos Santos criado por IA', 'Narração com voz natural', 'Mais perguntas à Lumina'] },
   { id: 'duo', nome: 'Duo', preco: 'R$ 31,90/mês', perfis: '2 perfis', destaque: false,
     itens: ['Tudo do plano Individual', 'Para duas pessoas', 'Ranking entre vocês dois'] },
-  { id: 'familia', nome: 'Família', preco: 'R$ 36,90/mês', perfis: 'Até 6 perfis', destaque: true,
+  { id: 'familia', nome: 'Família', preco: 'R$ 39,80/mês', perfis: 'Até 6 perfis', destaque: true,
     itens: ['Tudo do plano Individual', 'Perfis de adultos e crianças', 'Modo Kids', 'Ranking da família'] },
 ];
 

@@ -1,4 +1,5 @@
 const CHAVE_MEMBRO_ATIVO = 'lumina-sancti-membro-ativo';
+const CHAVE_TIPO_DO_MEMBRO = 'lumina-sancti-membro-tipo';
 const MAXIMO_DE_PERFIS = 6;
 const TAMANHO_MAXIMO_DO_NOME = 24;
 const PASTA_DE_FOTOS = 'avatars';
@@ -312,7 +313,10 @@ function avisarLumiDaTrocaDePerfil() {
 function limparPerfilAtivo() {
   membroAtivo = null;
   estadoEmMemoriaDaConta = null;
-  try { localStorage.removeItem(CHAVE_MEMBRO_ATIVO); } catch (e) {  }
+  try {
+    localStorage.removeItem(CHAVE_MEMBRO_ATIVO);
+    localStorage.removeItem(CHAVE_TIPO_DO_MEMBRO);
+  } catch (e) {  }
   document.body.classList.remove('modo-kids');
   avisarLumiDaTrocaDePerfil();
 }
@@ -371,7 +375,7 @@ function abrirSelecaoDePerfis(destino, liberado) {
   renderizarSelecaoDePerfis();
 }
 
-async function renderizarSelecaoDePerfis() {
+async function renderizarSelecaoDePerfis(jaCarregados) {
   const grade = document.getElementById('perfis-grade');
   const gerenciar = document.getElementById('perfis-gerenciar');
   const titulo = document.querySelector('#view-perfis .perfis-titulo');
@@ -379,9 +383,9 @@ async function renderizarSelecaoDePerfis() {
   if (titulo) titulo.textContent = perfisEmModoEdicao ? 'Gerencie os perfis' : 'Quem vai aprender agora?';
   grade.classList.toggle('editando', perfisEmModoEdicao);
 
-  grade.innerHTML = '<p class="perfis-carregando">Carregando perfis...</p>';
+  if (!jaCarregados) grade.innerHTML = '<p class="perfis-carregando">Carregando perfis...</p>';
   try {
-    await carregarMembrosDaConta();
+    if (!jaCarregados) await carregarMembrosDaConta();
   } catch (e) {
     grade.innerHTML = '<p class="not-found-msg">Não foi possível carregar os perfis agora. Tente de novo em instantes.</p>';
     return;
@@ -428,11 +432,57 @@ async function renderizarSelecaoDePerfis() {
 function escolherPerfil(membro) {
   membroAtivo = membro;
   estadoEmMemoriaDaConta = null;
-  try { localStorage.setItem(CHAVE_MEMBRO_ATIVO, membro.id); } catch (e) {  }
+  guardarPerfilEscolhido(membro);
   aplicarModoKids();
   if (destinoAposEscolherPerfil === 'inicio') mudarDeView('view-home');
   else if (destinoAposEscolherPerfil === 'ranking') abrirRanking();
   else abrirTrilhas(slugPendenteDasTrilhas);
+}
+
+function guardarPerfilEscolhido(membro) {
+  try {
+    localStorage.setItem(CHAVE_MEMBRO_ATIVO, membro.id);
+    localStorage.setItem(CHAVE_TIPO_DO_MEMBRO, membro.tipo);
+  } catch (e) {  }
+}
+
+function temSessaoGuardada() {
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      if (/^sb-.+-auth-token$/.test(localStorage.key(i) || '')) return true;
+    }
+  } catch (e) {  }
+  return false;
+}
+
+function ultimoPerfilEraCrianca() {
+  try { return localStorage.getItem(CHAVE_TIPO_DO_MEMBRO) === 'crianca'; } catch (e) { return false; }
+}
+
+function telaDePerfisAberta() {
+  const tela = document.getElementById('view-perfis');
+  return !!tela && tela.classList.contains('active');
+}
+
+function abrirPerfisJaNaEntrada() {
+  if (!temSessaoGuardada() || ultimoPerfilEraCrianca() || !aindaNaTelaInicial()) return;
+  destinoAposEscolherPerfil = 'inicio';
+  perfisEmModoEdicao = false;
+  document.querySelectorAll('.view').forEach((v) => {
+    v.classList.remove('active');
+    v.style.display = 'none';
+  });
+  document.body.classList.remove('catalogo-interno');
+  if (typeof aplicarTemaDaPagina === 'function') aplicarTemaDaPagina('view-perfis');
+  const tela = document.getElementById('view-perfis');
+  tela.style.display = 'block';
+  tela.classList.add('active');
+  const titulo = tela.querySelector('.perfis-titulo');
+  if (titulo) titulo.textContent = 'Quem vai aprender agora?';
+  const grade = document.getElementById('perfis-grade');
+  if (grade) grade.innerHTML = '<p class="perfis-carregando">Carregando perfis...</p>';
+  const gerenciar = document.getElementById('perfis-gerenciar');
+  if (gerenciar) gerenciar.style.display = 'none';
 }
 
 function aindaNaTelaInicial() {
@@ -442,20 +492,29 @@ function aindaNaTelaInicial() {
 
 async function restaurarPerfilSalvo() {
   if (typeof supabaseCliente === 'undefined' || !supabaseCliente || membroAtivo) return;
+  const voltarAoInicio = () => { if (telaDePerfisAberta()) mudarDeView('view-home'); };
   const { data } = await supabaseCliente.auth.getSession();
-  if (!data || !data.session) return;
+  if (!data || !data.session) { voltarAoInicio(); return; }
   if (typeof cadastroCompleto === 'function' && !cadastroCompleto(data.session.user)) return;
   let id = null;
   try { id = localStorage.getItem(CHAVE_MEMBRO_ATIVO); } catch (e) {  }
-  try { await carregarMembrosDaConta(); } catch (e) { return; }
+  try {
+    await carregarMembrosDaConta();
+  } catch (e) {
+    if (telaDePerfisAberta()) renderizarSelecaoDePerfis();
+    return;
+  }
   if (membroAtivo) return;
   const membro = id ? membrosDaConta.find((m) => m.id === id) : null;
   if (membro && membro.tipo === 'crianca') {
     membroAtivo = membro;
+    guardarPerfilEscolhido(membro);
     aplicarModoKids();
+    voltarAoInicio();
     return;
   }
-  if (aindaNaTelaInicial()) abrirSelecaoDePerfis('inicio');
+  if (telaDePerfisAberta()) renderizarSelecaoDePerfis(true);
+  else if (aindaNaTelaInicial()) abrirSelecaoDePerfis('inicio');
 }
 
 function aposEntrarNaConta() {
@@ -996,6 +1055,7 @@ function iniciarPerfis() {
     supabaseCliente.auth.onAuthStateChange((_evento, sessao) => {
       if (!sessao) limparPerfilAtivo();
     });
+    abrirPerfisJaNaEntrada();
     restaurarPerfilSalvo();
   }
 }
