@@ -9,6 +9,12 @@ const PRAZOS_DE_SUSPENSAO = [
   { dias: 30, rotulo: '30 dias' },
   { dias: 0, rotulo: 'Tempo indeterminado (enquanto investiga)' },
 ];
+const CHAVE_DO_GIPHY = '';
+const PASTA_DOS_AUDIOS = 'cenaculo-audios';
+const SEGUNDOS_MAXIMOS_DE_AUDIO = 120;
+const VERSAO_DO_SELETOR_DE_EMOJIS = '1.29.1';
+const VERSAO_DOS_DADOS_DE_EMOJIS = '1.8.0';
+const MINUTOS_PARA_JUNTAR_MENSAGENS = 5;
 
 const REGRAS_DOS_CENACULOS = `
   <ol class="cenaculo-regras">
@@ -37,6 +43,8 @@ const ERROS_DO_CENACULO = {
   sem_permissao: 'Só quem organiza o cenáculo pode fazer isso.',
   somente_equipe: 'Só a equipe do Lumina Sancti pode ver isso.',
   cenaculos_nome_check: 'O nome precisa ter de 2 a 60 letras.',
+  audio_invalido: 'Não foi possível enviar o áudio. Tente gravar de novo.',
+  gif_invalido: 'Não foi possível enviar esse GIF.',
 };
 
 let suspensaoAtual = null;
@@ -48,11 +56,23 @@ let temporizadorDoCenaculo = null;
 let haMensagensMaisAntigas = false;
 let abaDaEquipe = 'denuncias';
 let dadosDaEquipe = null;
+let fotosDosMembros = {};
+let gravacaoDeAudio = null;
+let audioTocando = null;
+const enderecosDosAudios = {};
+let abaDoGiphy = 'gifs';
+let temporizadorDoGiphy = null;
+let seletorDeEmojisPronto = null;
+let temporizadorDoNome = null;
 
 function mensagemDoCenaculo(erro) {
   const texto = String((erro && erro.message) || erro || '');
   const chave = Object.keys(ERROS_DO_CENACULO).find((k) => texto.includes(k));
   return chave ? ERROS_DO_CENACULO[chave] : 'Não foi possível fazer isso agora. Tente de novo em instantes.';
+}
+
+function avisoDoCenaculo(texto) {
+  if (typeof mostrarAvisoTrilhas === 'function') mostrarAvisoTrilhas(texto);
 }
 
 async function chamarCenaculo(nome, argumentos) {
@@ -74,6 +94,10 @@ function iconeDoCenaculo(nome) {
   return typeof icone === 'function' ? icone(nome) : '';
 }
 
+function avatarDoCenaculo(avatar, fotoUrl, tamanho) {
+  return typeof desenharAvatar === 'function' ? desenharAvatar(avatar, fotoUrl, tamanho) : '';
+}
+
 function formatarHora(iso) {
   const data = new Date(iso);
   return data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
@@ -92,6 +116,15 @@ function formatarEncontro(iso) {
   const data = new Date(iso);
   const dia = data.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: '2-digit' });
   return `${dia} às ${formatarHora(iso)}`;
+}
+
+function formatarDuracao(segundos) {
+  const total = Math.max(0, Math.round(segundos || 0));
+  return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, '0')}`;
+}
+
+function enderecoDoGif(id) {
+  return `https://media.giphy.com/media/${encodeURIComponent(id)}/200w.webp`;
 }
 
 function janelaDoCenaculo(titulo, corpo) {
@@ -150,10 +183,9 @@ function atualizarMenuDaEquipe() {
 
 function textoDaSuspensao() {
   if (!suspensaoAtual) return '';
-  const ate = suspensaoAtual.fim
+  return suspensaoAtual.fim
     ? `até ${new Date(suspensaoAtual.fim).toLocaleDateString('pt-BR')} às ${formatarHora(suspensaoAtual.fim)}`
     : 'por tempo indeterminado, enquanto a equipe analisa';
-  return ate;
 }
 
 function mostrarAvisoDeSuspensao() {
@@ -178,7 +210,7 @@ function paginaBloqueadaPelaSuspensao(idDaPagina) {
 
 function abrirCenaculos() {
   if (typeof contaLogada !== 'function' || !contaLogada()) {
-    if (typeof mostrarAvisoTrilhas === 'function') mostrarAvisoTrilhas('Entre na sua conta para participar dos Cenáculos.');
+    avisoDoCenaculo('Entre na sua conta para participar dos Cenáculos.');
     if (typeof irParaLogin === 'function') irParaLogin();
     return;
   }
@@ -212,10 +244,12 @@ async function carregarListaDeCenaculos() {
 
 function resumoDaUltimaMensagem(ultima) {
   if (!ultima) return 'Nenhuma mensagem ainda.';
-  if (ultima.apagada) return `${escaparTexto(ultima.autor)}: mensagem apagada`;
-  if (ultima.tipo === 'figurinha') return `${escaparTexto(ultima.autor)}: figurinha`;
-  if (ultima.tipo === 'audio') return `${escaparTexto(ultima.autor)}: áudio`;
-  return `${escaparTexto(ultima.autor)}: ${escaparTexto(ultima.texto || '')}`;
+  const autor = escaparTexto(ultima.autor);
+  if (ultima.apagada) return `${autor}: mensagem apagada`;
+  if (ultima.tipo === 'gif') return `${autor}: GIF`;
+  if (ultima.tipo === 'figurinha') return `${autor}: figurinha`;
+  if (ultima.tipo === 'audio') return `${autor}: áudio`;
+  return `${autor}: ${escaparTexto(ultima.texto || '')}`;
 }
 
 function renderizarListaDeCenaculos(cenaculos) {
@@ -244,6 +278,16 @@ function renderizarListaDeCenaculos(cenaculos) {
   });
 }
 
+function blocoDoParticipante() {
+  const perfil = perfilAdultoAtivo();
+  if (!perfil) return '';
+  return `
+    <div class="cenaculo-participante">
+      ${avatarDoCenaculo(perfil.avatar, perfil.fotoUrl, 'medio')}
+      <span>Você vai participar como <strong>${escaparTexto(perfil.nome)}</strong>, o nome do seu perfil.</span>
+    </div>`;
+}
+
 function blocoDeAceite(idDoCampo) {
   return `
     <div class="cenaculo-regras-caixa">
@@ -270,6 +314,7 @@ function abrirCriacaoDeCenaculo() {
   const perfil = perfilAdultoAtivo();
   if (!perfil) return;
   const corpo = janelaDoCenaculo('Criar cenáculo', `
+    ${blocoDoParticipante()}
     <label class="perfil-editor-rotulo" for="cenaculo-novo-nome">Nome do cenáculo</label>
     <input type="text" id="cenaculo-novo-nome" class="perfil-editor-campo" maxlength="60" placeholder="Ex.: Grupo de oração da paróquia" autocomplete="off">
     <label class="perfil-editor-rotulo" for="cenaculo-novo-descricao">Sobre o grupo (opcional)</label>
@@ -338,6 +383,7 @@ function abrirEntradaPorConvite(codigoInicial) {
             <small>${previa.membros} ${previa.membros === 1 ? 'pessoa participa' : 'pessoas participam'}</small>
           </div>
         </div>
+        ${blocoDoParticipante()}
         ${blocoDeAceite('cenaculo-convite-aceite')}
         <button type="button" class="licao-botao" id="cenaculo-convite-entrar">Entrar no cenáculo</button>`;
       ligarLinkDaPrivacidade(passo2);
@@ -417,23 +463,44 @@ function mostrarConvite(codigo, acabouDeCriar) {
   });
 }
 
+async function carregarFotosDosMembros() {
+  fotosDosMembros = {};
+  const comFoto = ((cenaculoAberto && cenaculoAberto.membros) || []).filter((m) => m.foto);
+  if (comFoto.length === 0) return;
+  try {
+    const { data } = await supabaseCliente.storage.from('avatars').createSignedUrls(comFoto.map((m) => m.foto), 60 * 60);
+    (data || []).forEach((item) => {
+      const membro = comFoto.find((m) => m.foto === item.path);
+      if (membro && item.signedUrl) fotosDosMembros[membro.perfil_id] = item.signedUrl;
+    });
+  } catch (e) {
+  }
+}
+
+function membroDoCenaculo(idDoPerfil) {
+  return ((cenaculoAberto && cenaculoAberto.membros) || []).find((m) => m.perfil_id === idDoPerfil) || null;
+}
+
 async function abrirConversa(idDoCenaculo) {
   const perfil = perfilAdultoAtivo();
   if (!perfil) return;
   if (paginaBloqueadaPelaSuspensao('view-cenaculo')) return;
   pararConversa();
   mensagensDoCenaculo = [];
+  fotosDosMembros = {};
   cenaculoAberto = { id: idDoCenaculo, nome: '', membros: [], bloqueados: [] };
   mudarDeView('view-cenaculo');
   document.getElementById('cenaculo-nome').textContent = 'Carregando...';
   document.getElementById('cenaculo-membros-contagem').textContent = '';
   document.getElementById('cenaculo-mensagens').innerHTML = '';
+  atualizarBotaoDeEnviar();
   try {
     const [detalhes, mensagens] = await Promise.all([
       chamarCenaculo('cenaculo_detalhes', { _pid: perfil.id, _cid: idDoCenaculo }),
       chamarCenaculo('cenaculo_mensagens_lista', { _pid: perfil.id, _cid: idDoCenaculo, _antes: null, _limite: 50 }),
     ]);
     cenaculoAberto = detalhes;
+    await carregarFotosDosMembros();
     mensagensDoCenaculo = (mensagens || []).map(normalizarMensagem);
     haMensagensMaisAntigas = mensagensDoCenaculo.length >= 50;
     renderizarCabecalhoDaConversa();
@@ -454,18 +521,28 @@ function normalizarMensagem(m) {
     tipo: m.tipo,
     texto: m.texto,
     figurinha: m.figurinha,
-    audio_caminho: m.audio_caminho,
-    audio_segundos: m.audio_segundos,
+    gif_id: m.gif_id || null,
+    gif_figurinha: m.gif_figurinha === true,
+    audio_caminho: m.audio_caminho || null,
+    audio_segundos: m.audio_segundos || 0,
     criada_em: m.criada_em,
     apagada: m.apagada === true || !!m.apagada_em,
   };
 }
 
+function nomesParaOCabecalho() {
+  const perfil = perfilAdultoAtivo();
+  const nomes = ((cenaculoAberto && cenaculoAberto.membros) || [])
+    .map((m) => (perfil && m.perfil_id === perfil.id ? 'Você' : m.nome))
+    .filter(Boolean);
+  if (nomes.length <= 3) return nomes.join(', ');
+  return `${nomes.slice(0, 3).join(', ')} e mais ${nomes.length - 3}`;
+}
+
 function renderizarCabecalhoDaConversa() {
   if (!cenaculoAberto) return;
   document.getElementById('cenaculo-nome').textContent = cenaculoAberto.nome || 'Cenáculo';
-  const total = (cenaculoAberto.membros || []).length;
-  document.getElementById('cenaculo-membros-contagem').textContent = `${total} ${total === 1 ? 'pessoa' : 'pessoas'}`;
+  document.getElementById('cenaculo-membros-contagem').textContent = nomesParaOCabecalho();
   const encontro = document.getElementById('cenaculo-encontro');
   if (cenaculoAberto.encontro) {
     encontro.hidden = false;
@@ -486,23 +563,39 @@ function mensagemVisivel(m) {
   return !(cenaculoAberto && (cenaculoAberto.bloqueados || []).includes(m.perfil_id));
 }
 
-function htmlDaMensagem(m) {
+function htmlDoAudio(m) {
+  if (!m.audio_caminho) return '<em class="cenaculo-apagada">Áudio expirado (os áudios ficam guardados por 90 dias)</em>';
+  return `
+    <span class="cenaculo-audio" data-caminho="${escaparTexto(m.audio_caminho)}" data-segundos="${m.audio_segundos}">
+      <button type="button" class="cenaculo-audio-tocar" aria-label="Tocar áudio">${iconeDoCenaculo('tocar')}${iconeDoCenaculo('pausar')}</button>
+      <span class="cenaculo-audio-barra"><span class="cenaculo-audio-progresso"></span></span>
+      <span class="cenaculo-audio-tempo">${formatarDuracao(m.audio_segundos)}</span>
+    </span>`;
+}
+
+function corpoDaMensagem(m) {
+  if (m.apagada) return '<em class="cenaculo-apagada">Mensagem apagada</em>';
+  if (m.tipo === 'gif' && m.gif_id) return `<img class="cenaculo-gif${m.gif_figurinha ? ' figurinha' : ''}" src="${enderecoDoGif(m.gif_id)}" alt="${m.gif_figurinha ? 'Figurinha' : 'GIF'}" loading="lazy">`;
+  if (m.tipo === 'audio') return htmlDoAudio(m);
+  if (m.tipo === 'figurinha') return '<em class="cenaculo-apagada">Figurinha</em>';
+  return `<span class="cenaculo-texto-msg">${escaparTexto(m.texto)}</span>`;
+}
+
+function htmlDaMensagem(m, comecoDoGrupo) {
   const perfil = perfilAdultoAtivo();
   const minha = !!perfil && m.perfil_id === perfil.id;
-  let corpo;
-  if (m.apagada) corpo = '<em class="cenaculo-apagada">Mensagem apagada</em>';
-  else if (m.tipo === 'figurinha') corpo = `<span class="cenaculo-figurinha">${typeof desenharFigurinha === 'function' ? desenharFigurinha(m.figurinha) : ''}</span>`;
-  else if (m.tipo === 'audio') corpo = '<em class="cenaculo-apagada">Áudio</em>';
-  else corpo = `<span class="cenaculo-texto-msg">${escaparTexto(m.texto)}</span>`;
-  const figurinha = m.tipo === 'figurinha' && !m.apagada;
+  const semBalao = !m.apagada && m.tipo === 'gif' && m.gif_figurinha;
+  const membro = membroDoCenaculo(m.perfil_id);
+  const avatar = minha ? '' : (comecoDoGrupo
+    ? `<button type="button" class="cenaculo-msg-avatar" data-nome="${escaparTexto((membro && membro.nome) || m.autor_nome)}" aria-label="Ver quem mandou">${avatarDoCenaculo((membro && membro.avatar) || m.autor_avatar, fotosDosMembros[m.perfil_id], 'pequeno')}</button>`
+    : '<span class="cenaculo-msg-avatar-vazio"></span>');
   return `
-    <div class="cenaculo-msg${minha ? ' minha' : ''}${figurinha ? ' com-figurinha' : ''}" data-id="${m.id}">
-      ${minha ? '' : `<span class="cenaculo-msg-avatar">${typeof desenharAvatar === 'function' ? desenharAvatar(m.autor_avatar, null, 'pequeno') : ''}</span>`}
-      <button type="button" class="cenaculo-balao"${m.apagada ? ' disabled' : ''}>
-        ${minha ? '' : `<span class="cenaculo-autor">${escaparTexto(m.autor_nome)}</span>`}
-        ${corpo}
+    <div class="cenaculo-msg${minha ? ' minha' : ''}${comecoDoGrupo ? ' comeco' : ''}${semBalao ? ' sem-balao' : ''}${m.tipo === 'gif' && !m.apagada ? ' com-gif' : ''}" data-id="${m.id}">
+      ${avatar}
+      <div class="cenaculo-balao${m.apagada ? ' apagada' : ''}"${m.apagada ? '' : ' role="button" tabindex="0"'}>
+        ${corpoDaMensagem(m)}
         <span class="cenaculo-hora">${formatarHora(m.criada_em)}</span>
-      </button>
+      </div>
     </div>`;
 }
 
@@ -512,26 +605,147 @@ function renderizarMensagens(rolarParaOFim) {
   const pertoDoFim = lugar.scrollHeight - lugar.scrollTop - lugar.clientHeight < 120;
   const visiveis = mensagensDoCenaculo.filter(mensagemVisivel);
   let diaAnterior = '';
+  let anterior = null;
   let html = haMensagensMaisAntigas ? '<button type="button" class="perfil-link cenaculo-mais-antigas" id="cenaculo-mais-antigas">Ver mensagens anteriores</button>' : '';
   if (visiveis.length === 0) {
     html += '<p class="cenaculo-sem-mensagens">Ainda não há mensagens. Que tal começar com uma saudação?</p>';
   }
   visiveis.forEach((m) => {
     const dia = formatarDia(m.criada_em);
+    let comeco = true;
     if (dia !== diaAnterior) {
       html += `<p class="cenaculo-dia"><span>${dia}</span></p>`;
       diaAnterior = dia;
+    } else if (anterior && anterior.perfil_id === m.perfil_id
+      && (new Date(m.criada_em) - new Date(anterior.criada_em)) < MINUTOS_PARA_JUNTAR_MENSAGENS * 60000) {
+      comeco = false;
     }
-    html += htmlDaMensagem(m);
+    html += htmlDaMensagem(m, comeco);
+    anterior = m;
   });
   lugar.innerHTML = html;
   lugar.querySelectorAll('.cenaculo-msg').forEach((linha) => {
     const balao = linha.querySelector('.cenaculo-balao');
-    if (balao && !balao.disabled) balao.addEventListener('click', () => abrirAcoesDaMensagem(linha.dataset.id));
+    if (balao && !balao.classList.contains('apagada')) {
+      balao.addEventListener('click', (evento) => {
+        if (evento.target.closest('.cenaculo-audio')) return;
+        abrirAcoesDaMensagem(linha.dataset.id);
+      });
+      balao.addEventListener('keydown', (evento) => {
+        if (evento.key === 'Enter') abrirAcoesDaMensagem(linha.dataset.id);
+      });
+    }
+    const avatar = linha.querySelector('.cenaculo-msg-avatar');
+    if (avatar) avatar.addEventListener('click', () => mostrarNomeDoAutor(avatar));
   });
+  ligarPlayersDeAudio(lugar);
   const antigas = document.getElementById('cenaculo-mais-antigas');
   if (antigas) antigas.addEventListener('click', carregarMensagensAntigas);
   if (rolarParaOFim || pertoDoFim) lugar.scrollTop = lugar.scrollHeight;
+}
+
+function mostrarNomeDoAutor(botao) {
+  document.querySelectorAll('.cenaculo-nome-flutuante').forEach((e) => e.remove());
+  clearTimeout(temporizadorDoNome);
+  const etiqueta = document.createElement('span');
+  etiqueta.className = 'cenaculo-nome-flutuante';
+  etiqueta.textContent = botao.dataset.nome || '';
+  botao.parentElement.appendChild(etiqueta);
+  temporizadorDoNome = setTimeout(() => etiqueta.remove(), 2600);
+}
+
+function enderecoGuardado(caminho) {
+  const guardado = enderecosDosAudios[caminho];
+  return guardado && guardado.vale > Date.now() ? guardado.url : '';
+}
+
+function guardarEndereco(caminho, url) {
+  enderecosDosAudios[caminho] = { url, vale: Date.now() + 50 * 60 * 1000 };
+}
+
+async function enderecoDoAudio(caminho) {
+  const guardado = enderecoGuardado(caminho);
+  if (guardado) return guardado;
+  const { data, error } = await supabaseCliente.storage.from(PASTA_DOS_AUDIOS).createSignedUrl(caminho, 60 * 60);
+  if (error || !data || !data.signedUrl) throw error || new Error('sem_endereco');
+  guardarEndereco(caminho, data.signedUrl);
+  return data.signedUrl;
+}
+
+async function prepararEnderecosDosAudios(lugar) {
+  const caminhos = Array.from(new Set(Array.from(lugar.querySelectorAll('.cenaculo-audio[data-caminho]'))
+    .map((caixa) => caixa.dataset.caminho)
+    .filter((caminho) => caminho && !enderecoGuardado(caminho))));
+  if (caminhos.length === 0) return;
+  try {
+    const { data } = await supabaseCliente.storage.from(PASTA_DOS_AUDIOS).createSignedUrls(caminhos, 60 * 60);
+    (data || []).forEach((item) => {
+      if (item && item.path && item.signedUrl) guardarEndereco(item.path, item.signedUrl);
+    });
+  } catch (e) {
+  }
+}
+
+function pararAudioTocando() {
+  if (!audioTocando) return;
+  audioTocando.elemento.pause();
+  audioTocando.caixa.classList.remove('tocando');
+  audioTocando = null;
+}
+
+function falhaAoTocar(caixa) {
+  caixa.classList.remove('tocando');
+  if (audioTocando && audioTocando.caixa === caixa) audioTocando = null;
+  avisoDoCenaculo('Não foi possível tocar este áudio neste aparelho.');
+}
+
+function comecarAudio(caixa, url) {
+  const segundos = Number(caixa.dataset.segundos) || 0;
+  const progresso = caixa.querySelector('.cenaculo-audio-progresso');
+  const tempo = caixa.querySelector('.cenaculo-audio-tempo');
+  const elemento = new Audio(url);
+  audioTocando = { elemento, caixa };
+  caixa.classList.add('tocando');
+  elemento.addEventListener('timeupdate', () => {
+    const total = Number.isFinite(elemento.duration) && elemento.duration > 0 ? elemento.duration : segundos;
+    if (total > 0) progresso.style.width = `${Math.min(100, (elemento.currentTime / total) * 100)}%`;
+    tempo.textContent = formatarDuracao(Math.max(0, total - elemento.currentTime));
+  });
+  elemento.addEventListener('ended', () => {
+    progresso.style.width = '0%';
+    tempo.textContent = formatarDuracao(segundos);
+    if (audioTocando && audioTocando.caixa === caixa) pararAudioTocando();
+  });
+  const tocando = elemento.play();
+  if (tocando && tocando.catch) tocando.catch(() => falhaAoTocar(caixa));
+}
+
+function tocarOuPausarAudio(caixa) {
+  if (audioTocando && audioTocando.caixa === caixa) {
+    pararAudioTocando();
+    return;
+  }
+  pararAudioTocando();
+  const caminho = caixa.dataset.caminho;
+  const guardado = enderecoGuardado(caminho);
+  if (guardado) {
+    comecarAudio(caixa, guardado);
+    return;
+  }
+  caixa.classList.add('tocando');
+  enderecoDoAudio(caminho)
+    .then((url) => comecarAudio(caixa, url))
+    .catch(() => falhaAoTocar(caixa));
+}
+
+function ligarPlayersDeAudio(lugar) {
+  lugar.querySelectorAll('.cenaculo-audio-tocar').forEach((botao) => {
+    botao.addEventListener('click', (evento) => {
+      evento.stopPropagation();
+      tocarOuPausarAudio(botao.closest('.cenaculo-audio'));
+    });
+  });
+  prepararEnderecosDosAudios(lugar);
 }
 
 async function carregarMensagensAntigas() {
@@ -547,7 +761,7 @@ async function carregarMensagensAntigas() {
     renderizarMensagens(false);
     lugar.scrollTop = lugar.scrollHeight - alturaAntes;
   } catch (erro) {
-    if (typeof mostrarAvisoTrilhas === 'function') mostrarAvisoTrilhas(mensagemDoCenaculo(erro));
+    avisoDoCenaculo(mensagemDoCenaculo(erro));
   }
 }
 
@@ -570,8 +784,10 @@ function ouvirMensagensNovas() {
         .channel(`cenaculo-${idDoCenaculo}`)
         .on('postgres_changes', { event: '*', schema: 'public', table: 'cenaculo_mensagens', filter: `cenaculo_id=eq.${idDoCenaculo}` }, (mudanca) => {
           if (!cenaculoAberto || cenaculoAberto.id !== idDoCenaculo || !mudanca.new || !mudanca.new.id) return;
+          const nova = !mensagensDoCenaculo.some((m) => m.id === mudanca.new.id);
           juntarMensagem(mudanca.new);
           renderizarMensagens(false);
+          if (nova && !membroDoCenaculo(mudanca.new.perfil_id)) recarregarMembros();
         })
         .subscribe();
     }
@@ -581,6 +797,19 @@ function ouvirMensagensNovas() {
   temporizadorDoCenaculo = setInterval(() => {
     if (!document.hidden) buscarMensagensRecentes();
   }, 20000);
+}
+
+async function recarregarMembros() {
+  const perfil = perfilAdultoAtivo();
+  if (!perfil || !cenaculoAberto) return;
+  try {
+    const detalhes = await chamarCenaculo('cenaculo_detalhes', { _pid: perfil.id, _cid: cenaculoAberto.id });
+    cenaculoAberto = Object.assign(cenaculoAberto, detalhes);
+    await carregarFotosDosMembros();
+    renderizarCabecalhoDaConversa();
+    renderizarMensagens(false);
+  } catch (e) {
+  }
 }
 
 async function buscarMensagensRecentes() {
@@ -603,35 +832,43 @@ function pararConversa() {
   canalDoCenaculo = null;
   clearInterval(temporizadorDoCenaculo);
   temporizadorDoCenaculo = null;
+  pararAudioTocando();
+  if (gravacaoDeAudio) pararGravacao(false);
   fecharPaineisDoCenaculo();
 }
 
 async function enviarAoCenaculo(tipo, conteudo) {
   const perfil = perfilAdultoAtivo();
   if (!perfil || !cenaculoAberto) return false;
+  const argumentos = { _pid: perfil.id, _cid: cenaculoAberto.id, _tipo: tipo };
+  const local = { perfil_id: perfil.id, autor_nome: perfil.nome, autor_avatar: perfil.avatar, tipo, apagada: false };
+  if (tipo === 'texto') {
+    argumentos._texto = conteudo;
+    local.texto = conteudo;
+  } else if (tipo === 'gif') {
+    argumentos._gif_id = conteudo.id;
+    argumentos._gif_figurinha = !!conteudo.figurinha;
+    local.gif_id = conteudo.id;
+    local.gif_figurinha = !!conteudo.figurinha;
+  } else if (tipo === 'audio') {
+    argumentos._audio_caminho = conteudo.caminho;
+    argumentos._audio_segundos = conteudo.segundos;
+    local.audio_caminho = conteudo.caminho;
+    local.audio_segundos = conteudo.segundos;
+  }
   try {
-    const enviada = await chamarCenaculo('cenaculo_enviar', {
-      _pid: perfil.id,
-      _cid: cenaculoAberto.id,
-      _tipo: tipo,
-      _texto: tipo === 'texto' ? conteudo : null,
-      _figurinha: tipo === 'figurinha' ? conteudo : null,
-    });
-    juntarMensagem({
-      id: enviada.id, perfil_id: perfil.id, autor_nome: perfil.nome, autor_avatar: perfil.avatar,
-      tipo, texto: tipo === 'texto' ? conteudo : null, figurinha: tipo === 'figurinha' ? conteudo : null,
-      criada_em: enviada.criada_em, apagada: false,
-    });
+    const enviada = await chamarCenaculo('cenaculo_enviar', argumentos);
+    juntarMensagem(Object.assign(local, { id: enviada.id, criada_em: enviada.criada_em }));
     renderizarMensagens(true);
     return true;
   } catch (erro) {
-    if (typeof mostrarAvisoTrilhas === 'function') mostrarAvisoTrilhas(mensagemDoCenaculo(erro));
+    avisoDoCenaculo(mensagemDoCenaculo(erro));
     return false;
   }
 }
 
 function fecharPaineisDoCenaculo() {
-  ['cenaculo-painel-emojis', 'cenaculo-painel-figurinhas'].forEach((id) => {
+  ['cenaculo-painel-emojis', 'cenaculo-painel-gifs'].forEach((id) => {
     const painel = document.getElementById(id);
     if (painel) painel.hidden = true;
   });
@@ -639,38 +876,99 @@ function fecharPaineisDoCenaculo() {
 
 function alternarPainel(id) {
   const painel = document.getElementById(id);
-  if (!painel) return;
+  if (!painel) return false;
   const abrir = painel.hidden;
   fecharPaineisDoCenaculo();
   painel.hidden = !abrir;
+  return abrir;
 }
 
-function montarPaineisDoCenaculo() {
-  const emojis = document.getElementById('cenaculo-painel-emojis');
-  const figurinhas = document.getElementById('cenaculo-painel-figurinhas');
+function inserirNoCampo(texto) {
   const campo = document.getElementById('cenaculo-texto');
-  if (emojis && typeof EMOJIS_DO_CENACULO !== 'undefined') {
-    emojis.innerHTML = EMOJIS_DO_CENACULO.map((e) => `<button type="button" class="cenaculo-emoji" data-emoji="${e}">${e}</button>`).join('');
-    emojis.querySelectorAll('.cenaculo-emoji').forEach((botao) => {
-      botao.addEventListener('click', () => {
-        const inicio = campo.selectionStart != null ? campo.selectionStart : campo.value.length;
-        const fim = campo.selectionEnd != null ? campo.selectionEnd : campo.value.length;
-        campo.value = campo.value.slice(0, inicio) + botao.dataset.emoji + campo.value.slice(fim);
-        const posicao = inicio + botao.dataset.emoji.length;
-        campo.focus();
-        try { campo.setSelectionRange(posicao, posicao); } catch (e) {  }
-        ajustarAlturaDoCampo();
+  if (!campo) return;
+  const inicio = campo.selectionStart != null ? campo.selectionStart : campo.value.length;
+  const fim = campo.selectionEnd != null ? campo.selectionEnd : campo.value.length;
+  campo.value = campo.value.slice(0, inicio) + texto + campo.value.slice(fim);
+  const posicao = inicio + texto.length;
+  try { campo.setSelectionRange(posicao, posicao); } catch (e) {  }
+  ajustarAlturaDoCampo();
+  atualizarBotaoDeEnviar();
+}
+
+function prepararSeletorDeEmojis() {
+  if (seletorDeEmojisPronto) return seletorDeEmojisPronto;
+  const painel = document.getElementById('cenaculo-painel-emojis');
+  const base = `https://cdn.jsdelivr.net/npm/emoji-picker-element@${VERSAO_DO_SELETOR_DE_EMOJIS}`;
+  painel.innerHTML = '<p class="cenaculo-painel-aviso">Carregando emojis...</p>';
+  seletorDeEmojisPronto = Promise.all([import(`${base}/index.js`), import(`${base}/i18n/pt_BR.js`)])
+    .then(([modulo, traducao]) => {
+      const seletor = new modulo.Picker({
+        locale: 'pt',
+        dataSource: `https://cdn.jsdelivr.net/npm/emoji-picker-element-data@${VERSAO_DOS_DADOS_DE_EMOJIS}/pt/cldr-native/data.json`,
+        i18n: traducao.default,
       });
+      seletor.classList.add('dark');
+      seletor.addEventListener('emoji-click', (evento) => {
+        if (evento.detail && evento.detail.unicode) inserirNoCampo(evento.detail.unicode);
+      });
+      painel.innerHTML = '';
+      painel.appendChild(seletor);
+    })
+    .catch(() => {
+      seletorDeEmojisPronto = null;
+      painel.innerHTML = '<p class="cenaculo-painel-aviso">Não foi possível carregar os emojis agora. Use os emojis do teclado do seu celular.</p>';
     });
+  return seletorDeEmojisPronto;
+}
+
+function abrirPainelDeEmojis() {
+  if (alternarPainel('cenaculo-painel-emojis')) prepararSeletorDeEmojis();
+}
+
+function abrirPainelDeGifs() {
+  if (alternarPainel('cenaculo-painel-gifs')) buscarNoGiphy();
+}
+
+async function buscarNoGiphy() {
+  const grade = document.getElementById('cenaculo-gifs-grade');
+  if (!grade) return;
+  if (!CHAVE_DO_GIPHY) {
+    grade.innerHTML = '<p class="cenaculo-painel-aviso">Os GIFs e as figurinhas chegam em breve.</p>';
+    return;
   }
-  if (figurinhas && typeof FIGURINHAS !== 'undefined') {
-    figurinhas.innerHTML = FIGURINHAS.map((f) => `<button type="button" class="cenaculo-figurinha-opcao" data-figurinha="${f.id}" aria-label="${f.rotulo}">${desenharFigurinha(f.id)}</button>`).join('');
-    figurinhas.querySelectorAll('.cenaculo-figurinha-opcao').forEach((botao) => {
+  const campo = document.getElementById('cenaculo-gifs-busca');
+  const termo = campo ? campo.value.trim() : '';
+  const tipo = abaDoGiphy === 'figurinhas' ? 'stickers' : 'gifs';
+  const parametros = new URLSearchParams({ api_key: CHAVE_DO_GIPHY, limit: '24', rating: 'g' });
+  if (termo) {
+    parametros.set('q', termo);
+    parametros.set('lang', 'pt');
+  }
+  grade.innerHTML = '<p class="cenaculo-painel-aviso">Carregando...</p>';
+  try {
+    const resposta = await fetch(`https://api.giphy.com/v1/${tipo}/${termo ? 'search' : 'trending'}?${parametros}`);
+    if (!resposta.ok) throw new Error('giphy');
+    const dados = await resposta.json();
+    const itens = (dados && dados.data) || [];
+    if (itens.length === 0) {
+      grade.innerHTML = '<p class="cenaculo-painel-aviso">Nada encontrado. Tente outra palavra.</p>';
+      return;
+    }
+    grade.innerHTML = itens.map((item) => {
+      const imagens = item.images || {};
+      const previa = (imagens.fixed_width_small && (imagens.fixed_width_small.webp || imagens.fixed_width_small.url))
+        || (imagens.fixed_width && (imagens.fixed_width.webp || imagens.fixed_width.url)) || '';
+      if (!/^[A-Za-z0-9]{3,60}$/.test(String(item.id || '')) || !/^https:\/\/[a-z0-9.-]*giphy\.com\//.test(previa)) return '';
+      return `<button type="button" class="cenaculo-gif-opcao${tipo === 'stickers' ? ' figurinha' : ''}" data-gif="${item.id}" aria-label="${escaparTexto(item.title || 'GIF')}"><img src="${escaparTexto(previa)}" alt="" loading="lazy"></button>`;
+    }).join('');
+    grade.querySelectorAll('.cenaculo-gif-opcao').forEach((botao) => {
       botao.addEventListener('click', async () => {
         fecharPaineisDoCenaculo();
-        await enviarAoCenaculo('figurinha', botao.dataset.figurinha);
+        await enviarAoCenaculo('gif', { id: botao.dataset.gif, figurinha: abaDoGiphy === 'figurinhas' });
       });
     });
+  } catch (e) {
+    grade.innerHTML = '<p class="cenaculo-painel-aviso">Não foi possível buscar agora. Tente de novo em instantes.</p>';
   }
 }
 
@@ -679,6 +977,16 @@ function ajustarAlturaDoCampo() {
   if (!campo) return;
   campo.style.height = 'auto';
   campo.style.height = `${Math.min(campo.scrollHeight, 140)}px`;
+}
+
+function atualizarBotaoDeEnviar() {
+  const campo = document.getElementById('cenaculo-texto');
+  const enviar = document.getElementById('cenaculo-enviar-btn');
+  const microfone = document.getElementById('cenaculo-microfone-btn');
+  if (!campo || !enviar || !microfone) return;
+  const temTexto = campo.value.trim().length > 0;
+  enviar.hidden = !temTexto;
+  microfone.hidden = temTexto;
 }
 
 async function enviarTextoDoCampo() {
@@ -692,9 +1000,112 @@ async function enviarTextoDoCampo() {
   if (foi) {
     campo.value = '';
     ajustarAlturaDoCampo();
+    atualizarBotaoDeEnviar();
     fecharPaineisDoCenaculo();
   }
   campo.focus();
+}
+
+function formatoDeGravacao() {
+  if (typeof MediaRecorder === 'undefined') return null;
+  const opcoes = ['audio/mp4;codecs=mp4a.40.2', 'audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg;codecs=opus'];
+  const suporta = (tipo) => { try { return MediaRecorder.isTypeSupported(tipo); } catch (e) { return false; } };
+  return opcoes.find(suporta) || '';
+}
+
+function extensaoDoAudio(tipo) {
+  if (tipo.includes('mp4')) return 'm4a';
+  if (tipo.includes('ogg')) return 'ogg';
+  return 'webm';
+}
+
+function mostrarBarraDeGravacao(mostrar) {
+  const barra = document.getElementById('cenaculo-gravando');
+  const formulario = document.getElementById('cenaculo-escrever');
+  if (barra) barra.hidden = !mostrar;
+  if (formulario) formulario.hidden = mostrar;
+}
+
+async function comecarGravacao() {
+  if (gravacaoDeAudio || !cenaculoAberto) return;
+  const formato = formatoDeGravacao();
+  if (formato === null || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    avisoDoCenaculo('Este aparelho não consegue gravar áudio pelo site.');
+    return;
+  }
+  let fluxo;
+  try {
+    fluxo = await navigator.mediaDevices.getUserMedia({ audio: true });
+  } catch (e) {
+    avisoDoCenaculo('Para gravar, permita que o site use o microfone.');
+    return;
+  }
+  let gravador;
+  try {
+    gravador = formato
+      ? new MediaRecorder(fluxo, { mimeType: formato, audioBitsPerSecond: 64000 })
+      : new MediaRecorder(fluxo, { audioBitsPerSecond: 64000 });
+  } catch (e) {
+    fluxo.getTracks().forEach((t) => t.stop());
+    avisoDoCenaculo('Este aparelho não consegue gravar áudio pelo site.');
+    return;
+  }
+  fecharPaineisDoCenaculo();
+  pararAudioTocando();
+  gravacaoDeAudio = { gravador, fluxo, partes: [], inicio: Date.now(), enviar: false, temporizador: null };
+  gravador.addEventListener('dataavailable', (evento) => {
+    if (gravacaoDeAudio && evento.data && evento.data.size) gravacaoDeAudio.partes.push(evento.data);
+  });
+  gravador.addEventListener('stop', terminarGravacao);
+  gravador.start(250);
+  const tempo = document.getElementById('cenaculo-gravando-tempo');
+  if (tempo) tempo.textContent = '0:00';
+  mostrarBarraDeGravacao(true);
+  gravacaoDeAudio.temporizador = setInterval(() => {
+    if (!gravacaoDeAudio) return;
+    const segundos = (Date.now() - gravacaoDeAudio.inicio) / 1000;
+    if (tempo) tempo.textContent = formatarDuracao(segundos);
+    if (segundos >= SEGUNDOS_MAXIMOS_DE_AUDIO) pararGravacao(true);
+  }, 250);
+}
+
+function pararGravacao(enviar) {
+  if (!gravacaoDeAudio) return;
+  gravacaoDeAudio.enviar = enviar;
+  clearInterval(gravacaoDeAudio.temporizador);
+  try {
+    if (gravacaoDeAudio.gravador.state !== 'inactive') gravacaoDeAudio.gravador.stop();
+    else terminarGravacao();
+  } catch (e) {
+    terminarGravacao();
+  }
+}
+
+async function terminarGravacao() {
+  const gravacao = gravacaoDeAudio;
+  gravacaoDeAudio = null;
+  mostrarBarraDeGravacao(false);
+  if (!gravacao) return;
+  gravacao.fluxo.getTracks().forEach((t) => t.stop());
+  const segundos = Math.min(SEGUNDOS_MAXIMOS_DE_AUDIO, Math.round((Date.now() - gravacao.inicio) / 1000));
+  if (!gravacao.enviar) return;
+  if (segundos < 1 || gravacao.partes.length === 0) {
+    avisoDoCenaculo('O áudio ficou curto demais.');
+    return;
+  }
+  if (!cenaculoAberto) return;
+  const formato = (gravacao.gravador.mimeType || gravacao.partes[0].type || 'audio/webm').split(';')[0];
+  const arquivo = new Blob(gravacao.partes, { type: formato });
+  const nome = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}`;
+  const caminho = `${cenaculoAberto.id}/${nome}.${extensaoDoAudio(formato)}`;
+  avisoDoCenaculo('Enviando áudio...');
+  try {
+    const { error } = await supabaseCliente.storage.from(PASTA_DOS_AUDIOS).upload(caminho, arquivo, { contentType: formato, upsert: false });
+    if (error) throw error;
+    await enviarAoCenaculo('audio', { caminho, segundos: Math.max(1, segundos) });
+  } catch (erro) {
+    avisoDoCenaculo(ERROS_DO_CENACULO.audio_invalido);
+  }
 }
 
 function abrirAcoesDaMensagem(idDaMensagem) {
@@ -727,11 +1138,12 @@ async function apagarMensagem(m) {
     await chamarCenaculo('cenaculo_apagar_mensagem', { _pid: perfil.id, _mid: m.id });
     m.apagada = true;
     m.texto = null;
-    m.figurinha = null;
+    m.gif_id = null;
+    m.audio_caminho = null;
     fecharJanelaDoCenaculo();
     renderizarMensagens(false);
   } catch (erro) {
-    if (typeof mostrarAvisoTrilhas === 'function') mostrarAvisoTrilhas(mensagemDoCenaculo(erro));
+    avisoDoCenaculo(mensagemDoCenaculo(erro));
   }
 }
 
@@ -784,15 +1196,11 @@ async function mudarBloqueio(idDoPerfil, bloquear) {
     if (bloquear) lista.add(idDoPerfil); else lista.delete(idDoPerfil);
     cenaculoAberto.bloqueados = Array.from(lista);
     fecharJanelaDoCenaculo();
-    if (!bloquear) await buscarMensagensAntigasDoDesbloqueado();
+    if (!bloquear) await buscarMensagensRecentes();
     renderizarMensagens(false);
   } catch (erro) {
-    if (typeof mostrarAvisoTrilhas === 'function') mostrarAvisoTrilhas(mensagemDoCenaculo(erro));
+    avisoDoCenaculo(mensagemDoCenaculo(erro));
   }
-}
-
-async function buscarMensagensAntigasDoDesbloqueado() {
-  await buscarMensagensRecentes();
 }
 
 function abrirMenuDoCenaculo() {
@@ -879,6 +1287,7 @@ function abrirMarcacaoDeEncontro() {
 
 function abrirMembros() {
   const perfil = perfilAdultoAtivo();
+  if (!perfil || !cenaculoAberto) return;
   const organizador = cenaculoAberto.papel === 'organizador';
   const bloqueados = cenaculoAberto.bloqueados || [];
   const linhas = (cenaculoAberto.membros || []).map((membro) => {
@@ -889,7 +1298,7 @@ function abrirMembros() {
       ${organizador ? `<button type="button" class="perfil-link perfil-link-perigo" data-acao="remover" data-perfil="${membro.perfil_id}" data-nome="${escaparTexto(membro.nome)}">Remover</button>` : ''}`;
     return `
       <div class="cenaculo-membro">
-        ${typeof desenharAvatar === 'function' ? desenharAvatar(membro.avatar, null, 'pequeno') : ''}
+        ${avatarDoCenaculo(membro.avatar, fotosDosMembros[membro.perfil_id], 'pequeno')}
         <span class="cenaculo-membro-nome">${escaparTexto(membro.nome)}${membro.papel === 'organizador' ? ' <small>organiza</small>' : ''}</span>
         <span class="cenaculo-membro-acoes">${acoes}</span>
       </div>`;
@@ -929,7 +1338,7 @@ function confirmarSaida() {
       fecharJanelaDoCenaculo();
       abrirCenaculos();
     } catch (erro) {
-      if (typeof mostrarAvisoTrilhas === 'function') mostrarAvisoTrilhas(mensagemDoCenaculo(erro));
+      avisoDoCenaculo(mensagemDoCenaculo(erro));
     }
   });
 }
@@ -960,7 +1369,7 @@ function verificarConvitePendente() {
   const codigo = convitePendente();
   if (!codigo) return;
   if (typeof contaLogada !== 'function' || !contaLogada()) {
-    if (typeof mostrarAvisoTrilhas === 'function') mostrarAvisoTrilhas('Você recebeu um convite para um cenáculo. Entre na sua conta para participar.');
+    avisoDoCenaculo('Você recebeu um convite para um cenáculo. Entre na sua conta para participar.');
     return;
   }
   if (!perfilAdultoAtivo()) return;
@@ -996,8 +1405,9 @@ async function carregarPainelDaEquipe() {
 }
 
 function conteudoParaEquipe(m) {
-  if (m.tipo === 'figurinha') return `<span class="equipe-figurinha">Figurinha: ${escaparTexto(typeof rotuloDaFigurinha === 'function' ? rotuloDaFigurinha(m.figurinha) : m.figurinha)}</span>`;
-  if (m.tipo === 'audio') return '<em>Áudio</em>';
+  if (m.tipo === 'gif' && m.gif_id) return `<img class="equipe-gif" src="${enderecoDoGif(m.gif_id)}" alt="${m.gif_figurinha ? 'Figurinha' : 'GIF'}" loading="lazy">`;
+  if (m.tipo === 'audio') return m.audio_caminho ? htmlDoAudio(m) : '<em>Áudio expirado</em>';
+  if (m.tipo === 'figurinha') return '<em>Figurinha</em>';
   return escaparTexto(m.texto || '');
 }
 
@@ -1038,6 +1448,7 @@ function renderizarPainelDaEquipe() {
       </article>`).join('');
   }
   lugar.querySelectorAll('[data-acao]').forEach((botao) => botao.addEventListener('click', () => acaoDaEquipe(botao)));
+  ligarPlayersDeAudio(lugar);
 }
 
 async function acaoDaEquipe(botao) {
@@ -1056,7 +1467,7 @@ async function acaoDaEquipe(botao) {
       await carregarPainelDaEquipe();
     }
   } catch (erro) {
-    if (typeof mostrarAvisoTrilhas === 'function') mostrarAvisoTrilhas(mensagemDoCenaculo(erro));
+    avisoDoCenaculo(mensagemDoCenaculo(erro));
   }
 }
 
@@ -1065,13 +1476,14 @@ async function abrirConversaParaEquipe(idDoCenaculo, nome) {
   const linhas = (mensagens || []).map((m) => `
     <div class="equipe-conversa-msg${m.apagada ? ' apagada' : ''}">
       <p class="equipe-linha"><strong>${escaparTexto(m.autor_nome)}</strong> <small>${escaparTexto(m.autor_email || '')} · ${new Date(m.criada_em).toLocaleString('pt-BR')}${m.apagada ? ' · apagada' : ''}</small></p>
-      <p class="equipe-conversa-texto">${conteudoParaEquipe(m)}</p>
+      <div class="equipe-conversa-texto">${conteudoParaEquipe(m)}</div>
       <div class="equipe-botoes">
         ${m.apagada ? '' : `<button type="button" class="perfil-link" data-acao="apagar" data-mensagem="${m.id}">Apagar</button>`}
         ${m.autor_conta ? `<button type="button" class="perfil-link perfil-link-perigo" data-acao="suspender" data-conta="${m.autor_conta}" data-nome="${escaparTexto(m.autor_nome)}">Suspender autor</button>` : ''}
       </div>
     </div>`).join('');
   const corpo = janelaDoCenaculo(`Conversa: ${nome || 'cenáculo'}`, `<div class="equipe-conversa">${linhas || '<p class="equipe-vazio">Sem mensagens.</p>'}</div>`);
+  ligarPlayersDeAudio(corpo);
   corpo.querySelectorAll('[data-acao]').forEach((botao) => {
     botao.addEventListener('click', async () => {
       if (botao.dataset.acao === 'suspender') { abrirSuspensao(botao.dataset.conta, botao.dataset.nome); return; }
@@ -1080,7 +1492,7 @@ async function abrirConversaParaEquipe(idDoCenaculo, nome) {
         await abrirConversaParaEquipe(idDoCenaculo, nome);
         carregarPainelDaEquipe();
       } catch (erro) {
-        if (typeof mostrarAvisoTrilhas === 'function') mostrarAvisoTrilhas(mensagemDoCenaculo(erro));
+        avisoDoCenaculo(mensagemDoCenaculo(erro));
       }
     });
   });
@@ -1104,7 +1516,7 @@ function abrirSuspensao(conta, nome) {
       await chamarCenaculo('equipe_suspender', { _conta: conta, _motivo: motivo, _dias: dias > 0 ? dias : null });
       fecharJanelaDoCenaculo();
       await carregarPainelDaEquipe();
-      if (typeof mostrarAvisoTrilhas === 'function') mostrarAvisoTrilhas('Conta suspensa.');
+      avisoDoCenaculo('Conta suspensa.');
     } catch (erro) {
       corpo.querySelector('#equipe-suspensao-aviso').textContent = mensagemDoCenaculo(erro);
     }
@@ -1149,7 +1561,6 @@ function irPelaBarra(destino) {
 
 function iniciarCenaculos() {
   guardarConvitePendente();
-  montarPaineisDoCenaculo();
 
   document.querySelectorAll('[data-destino]').forEach((botao) => {
     if (botao.closest('#barra-app') || botao.closest('#atalhos-app')) {
@@ -1172,8 +1583,28 @@ function iniciarCenaculos() {
   ligar('cenaculo-voltar', abrirCenaculos);
   ligar('cenaculo-menu-btn', abrirMenuDoCenaculo);
   ligar('cenaculo-titulo-btn', abrirMembros);
-  ligar('cenaculo-emoji-btn', () => alternarPainel('cenaculo-painel-emojis'));
-  ligar('cenaculo-figurinha-btn', () => alternarPainel('cenaculo-painel-figurinhas'));
+  ligar('cenaculo-emoji-btn', abrirPainelDeEmojis);
+  ligar('cenaculo-gif-btn', abrirPainelDeGifs);
+  const botaoDeGifs = document.getElementById('cenaculo-gif-btn');
+  if (botaoDeGifs) botaoDeGifs.hidden = !CHAVE_DO_GIPHY;
+  ligar('cenaculo-microfone-btn', comecarGravacao);
+  ligar('cenaculo-gravando-cancelar', () => pararGravacao(false));
+  ligar('cenaculo-gravando-enviar', () => pararGravacao(true));
+
+  document.querySelectorAll('.cenaculo-gifs-aba').forEach((aba) => {
+    aba.addEventListener('click', () => {
+      abaDoGiphy = aba.dataset.aba;
+      document.querySelectorAll('.cenaculo-gifs-aba').forEach((a) => a.classList.toggle('ativa', a === aba));
+      buscarNoGiphy();
+    });
+  });
+  const buscaDeGifs = document.getElementById('cenaculo-gifs-busca');
+  if (buscaDeGifs) {
+    buscaDeGifs.addEventListener('input', () => {
+      clearTimeout(temporizadorDoGiphy);
+      temporizadorDoGiphy = setTimeout(buscarNoGiphy, 450);
+    });
+  }
 
   const formulario = document.getElementById('cenaculo-escrever');
   if (formulario) {
@@ -1184,7 +1615,10 @@ function iniciarCenaculos() {
   }
   const campo = document.getElementById('cenaculo-texto');
   if (campo) {
-    campo.addEventListener('input', ajustarAlturaDoCampo);
+    campo.addEventListener('input', () => {
+      ajustarAlturaDoCampo();
+      atualizarBotaoDeEnviar();
+    });
     campo.addEventListener('keydown', (evento) => {
       if (evento.key === 'Enter' && !evento.shiftKey && !evento.isComposing) {
         evento.preventDefault();
@@ -1192,6 +1626,7 @@ function iniciarCenaculos() {
       }
     });
   }
+  atualizarBotaoDeEnviar();
 
   document.querySelectorAll('#equipe-abas .ranking-aba').forEach((aba) => {
     aba.addEventListener('click', () => {

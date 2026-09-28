@@ -3973,16 +3973,58 @@ function closeSearch() {
 searchBtn.addEventListener('click', openSearch);
 closeSearchBtn.addEventListener('click', closeSearch);
 
+const PALAVRAS_DE_TITULO_NA_BUSCA = new Set([
+  'sao', 'santo', 'santa', 'santos', 'santas', 'san', 'saint', 'saints', 'st', 'ste', 'sainte',
+  'beato', 'beata', 'beatos', 'blessed', 'papa', 'pope', 'the', 'de', 'da', 'do', 'das', 'dos',
+  'of', 'del', 'la', 'las', 'los', 'el', 'e', 'y', 'and', 'di', 'du',
+]);
+
+function termosDaBuscaDeSantos(texto) {
+  return BuscaInteligente.normalizar(texto).split(' ').filter((p) => p.length > 1 && !PALAVRAS_DE_TITULO_NA_BUSCA.has(p));
+}
+
+function nomesDoSantoParaBusca(santo) {
+  const outros = (typeof NOMES_DOS_SANTOS_EM_OUTRAS_LINGUAS !== 'undefined' && NOMES_DOS_SANTOS_EM_OUTRAS_LINGUAS[santo.id]) || [];
+  return BuscaInteligente.normalizar([santo.nome, textoDoSanto(santo).nome].concat(outros).join(' '));
+}
+
+function termoAparece(termo, texto, palavrasDoTexto) {
+  if (texto.includes(termo)) return true;
+  if (termo.length < 4) return false;
+  const limite = termo.length >= 7 ? 2 : 1;
+  return palavrasDoTexto.some((p) => Math.abs(p.length - termo.length) <= limite && BuscaInteligente.distancia(termo, p, limite) <= limite);
+}
+
+function pontuarSantoNaBusca(santo, termos) {
+  const nomes = nomesDoSantoParaBusca(santo);
+  if (termos.every((t) => nomes.includes(t))) return 3;
+  const palavrasDosNomes = nomes.split(' ');
+  if (termos.every((t) => termoAparece(t, nomes, palavrasDosNomes))) return 2;
+  const resumo = BuscaInteligente.normalizar(textoDoSanto(santo).resumo);
+  if (termos.every((t) => nomes.includes(t) || resumo.includes(t))) return 1;
+  return 0;
+}
+
+function buscarSantos(texto) {
+  const termos = termosDaBuscaDeSantos(texto);
+  if (termos.length === 0) {
+    const inteiro = BuscaInteligente.normalizar(texto);
+    return inteiro ? santosData.filter((s) => nomesDoSantoParaBusca(s).includes(inteiro)) : [];
+  }
+  return santosData
+    .map((santo, ordem) => ({ santo, ordem, pontos: pontuarSantoNaBusca(santo, termos) }))
+    .filter((x) => x.pontos > 0)
+    .sort((a, b) => b.pontos - a.pontos || a.ordem - b.ordem)
+    .map((x) => x.santo);
+}
+
 searchInput.addEventListener('input', (e) => {
-  const query = e.target.value.toLowerCase().trim();
+  const query = e.target.value.trim();
   searchResults.innerHTML = '';
 
   if (query.length < 2) return;
 
-  const match = santosData.filter(s => {
-    const t = textoDoSanto(s);
-    return s.nome.toLowerCase().includes(query) || t.nome.toLowerCase().includes(query) || t.resumo.toLowerCase().includes(query);
-  });
+  const match = buscarSantos(query);
 
   if (match.length === 0) {
     searchResults.innerHTML = '<div class="not-found-msg">Nenhum santo ou beato encontrado.</div>';

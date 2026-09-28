@@ -507,11 +507,11 @@
           <li>O progresso de cada perfil nas trilhas: Fé, ofensiva, medalhas e respostas das missões.</li>
           <li>Um código do aparelho, usado para permitir uma conta por aparelho.</li>
           <li>Quantas perguntas você fez à Lumina, nossa assistente, para controlar o limite diário. O texto das perguntas não fica guardado conosco.</li>
-          <li>Se você usar os Cenáculos: os grupos de que participa, as mensagens, figurinhas e áudios que envia, os encontros marcados e as denúncias e bloqueios que fizer.</li>
+          <li>Se você usar os Cenáculos: os grupos de que participa, as mensagens, GIFs, figurinhas e áudios que envia, os encontros marcados e as denúncias e bloqueios que fizer.</li>
         </ul>
 
         <h3>Cenáculos (grupos)</h3>
-        <p>Os Cenáculos são só para adultos, e para entrar é preciso aceitar as Regras dos Cenáculos. As conversas não são secretas: a equipe do Lumina Sancti pode ler as mensagens e ouvir os áudios para proteger os participantes e investigar denúncias. Uma mensagem apagada some para o grupo, mas a equipe guarda uma cópia para poder investigar denúncias. Os áudios ficam guardados por até 90 dias.</p>
+        <p>Os Cenáculos são só para adultos, e para entrar é preciso aceitar as Regras dos Cenáculos. As conversas não são secretas: a equipe do Lumina Sancti pode ler as mensagens e ouvir os áudios para proteger os participantes e investigar denúncias. Uma mensagem apagada some para o grupo, mas a equipe guarda uma cópia para poder investigar denúncias. Os áudios ficam guardados por até 90 dias. O microfone só é usado enquanto você grava um áudio, e só com a sua permissão. Nos cenáculos, os outros participantes veem o nome e a foto do seu perfil.</p>
         <p>Se as regras forem desrespeitadas, a equipe pode apagar mensagens e suspender a conta, por um tempo ou por tempo indeterminado. Nada da conta suspensa é apagado.</p>
         <p>As reuniões por vídeo acontecem no Google Meet, fora do Lumina Sancti. Não gravamos nem guardamos nada dessas chamadas, e o uso do Meet segue as regras do Google.</p>
 
@@ -528,8 +528,9 @@
           <li>Resend: envio dos e-mails.</li>
           <li>Google (Gemini): gera as respostas da Lumina a partir da pergunta enviada.</li>
           <li>Google Meet: reuniões por vídeo dos Cenáculos, abertas direto no Google.</li>
+          <li>GIPHY: busca de GIFs e figurinhas nos Cenáculos. As palavras pesquisadas vão direto do seu navegador para o GIPHY, e só aparecem resultados de classificação livre.</li>
           <li>Stripe e Google Play: pagamentos dos planos, quando estiverem disponíveis. Os dados do cartão ficam só com eles; o Lumina Sancti nunca os recebe.</li>
-          <li>Wikipédia (Wikimedia), Google Fonts e jsDelivr: fotos dos santos, letras do site e partes do código, carregadas diretamente pelo seu navegador.</li>
+          <li>Wikipédia (Wikimedia), Google Fonts e jsDelivr: fotos dos santos, letras do site, partes do código e a lista de emojis, carregadas diretamente pelo seu navegador.</li>
         </ul>
 
         <h3>Seus direitos</h3>
@@ -790,12 +791,32 @@
         <div id="cenaculo-encontro" class="cenaculo-encontro" hidden></div>
         <div id="cenaculo-mensagens" class="cenaculo-mensagens"></div>
         <div id="cenaculo-painel-emojis" class="cenaculo-painel cenaculo-painel-emojis" hidden></div>
-        <div id="cenaculo-painel-figurinhas" class="cenaculo-painel cenaculo-painel-figurinhas" hidden></div>
+        <div id="cenaculo-painel-gifs" class="cenaculo-painel cenaculo-painel-gifs" hidden>
+          <div class="cenaculo-gifs-topo">
+            <div class="cenaculo-gifs-abas" role="tablist">
+              <button type="button" class="cenaculo-gifs-aba ativa" data-aba="gifs" role="tab">GIFs</button>
+              <button type="button" class="cenaculo-gifs-aba" data-aba="figurinhas" role="tab">Figurinhas</button>
+            </div>
+            <input type="search" id="cenaculo-gifs-busca" class="cenaculo-gifs-busca" placeholder="Pesquisar no GIPHY" aria-label="Pesquisar GIFs e figurinhas" autocomplete="off">
+          </div>
+          <div id="cenaculo-gifs-grade" class="cenaculo-gifs-grade"></div>
+          <p class="cenaculo-gifs-giphy">Powered by GIPHY</p>
+        </div>
+        <div id="cenaculo-gravando" class="cenaculo-gravando" hidden>
+          <button type="button" class="icon-btn cenaculo-gravando-cancelar" id="cenaculo-gravando-cancelar" aria-label="Cancelar áudio"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lixeira"></use></svg></button>
+          <span class="cenaculo-gravando-ponto" aria-hidden="true"></span>
+          <span class="cenaculo-gravando-tempo" id="cenaculo-gravando-tempo">0:00</span>
+          <span class="cenaculo-gravando-texto">Gravando áudio...</span>
+          <button type="button" class="cenaculo-enviar" id="cenaculo-gravando-enviar" aria-label="Enviar áudio"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-enviar"></use></svg></button>
+        </div>
         <form id="cenaculo-escrever" class="cenaculo-escrever" autocomplete="off">
-          <button type="button" class="icon-btn cenaculo-ferramenta" id="cenaculo-emoji-btn" aria-label="Emojis"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-emoji"></use></svg></button>
-          <button type="button" class="icon-btn cenaculo-ferramenta" id="cenaculo-figurinha-btn" aria-label="Figurinhas"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-figurinha"></use></svg></button>
-          <textarea id="cenaculo-texto" rows="1" maxlength="2000" placeholder="Escreva uma mensagem" aria-label="Mensagem"></textarea>
-          <button type="submit" class="cenaculo-enviar" id="cenaculo-enviar-btn" aria-label="Enviar"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-enviar"></use></svg></button>
+          <div class="cenaculo-caixa">
+            <button type="button" class="icon-btn cenaculo-ferramenta" id="cenaculo-emoji-btn" aria-label="Emojis"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-emoji"></use></svg></button>
+            <textarea id="cenaculo-texto" rows="1" maxlength="2000" placeholder="Mensagem" aria-label="Mensagem"></textarea>
+            <button type="button" class="icon-btn cenaculo-ferramenta cenaculo-gif-btn" id="cenaculo-gif-btn" aria-label="GIFs e figurinhas"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-figurinha"></use></svg></button>
+          </div>
+          <button type="submit" class="cenaculo-enviar" id="cenaculo-enviar-btn" aria-label="Enviar" hidden><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-enviar"></use></svg></button>
+          <button type="button" class="cenaculo-enviar" id="cenaculo-microfone-btn" aria-label="Gravar áudio"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-microfone"></use></svg></button>
         </form>
       </div>
     </section>
@@ -876,6 +897,10 @@
       <g id="icone-pontos"><circle cx="12" cy="5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="19" r="1.2"/></g>
       <g id="icone-escudo"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></g>
       <g id="icone-pessoa"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></g>
+      <g id="icone-microfone"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><path d="M12 18v4"/></g>
+      <g id="icone-lixeira"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></g>
+      <g id="icone-tocar"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></g>
+      <g id="icone-pausar"><path d="M8 5v14M16 5v14" stroke-width="3.2"/></g>
       <g id="icon-aureola">
         <circle cx="12" cy="8" r="6" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-dasharray="2 2" opacity="0.8"/>
         <path d="M12 14c-4.4 0-8 2.7-8 6v2h16v-2c0-3.3-3.6-6-8-6z" fill="var(--primary-color)" opacity="0.3"/>
@@ -884,12 +909,12 @@
   </svg>
 
   <script src="busca.js"></script>
+  <script src="nomes-santos.js"></script>
   <script src="liturgia.js"></script>
   <script src="script.js"></script>
   <script src="trilhas.js"></script>
   <script src="perfis.js"></script>
   <script src="mascote.js"></script>
-  <script src="figurinhas.js"></script>
   <script src="cenaculos.js"></script>
 </body>
 </html>
