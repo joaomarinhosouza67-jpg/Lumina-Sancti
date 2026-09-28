@@ -2802,6 +2802,21 @@ body.catalogo-interno #view-home .catalog { padding-top: 10px; }
 }
 .perfil-consentimento input { width: 18px; height: 18px; margin-top: 1px; flex-shrink: 0; accent-color: var(--primary-color); }
 
+.perfil-editor-pin {
+  margin: 16px 0 4px;
+  padding: 12px 14px;
+  border: 1px solid var(--secondary-color);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.15);
+  text-align: left;
+}
+.perfil-editor-pin .perfil-editor-rotulo { margin-top: 0; }
+.perfil-editor-pin-estado { font-size: 0.86rem; color: var(--text-muted); line-height: 1.5; margin: 4px 0 10px; }
+.perfil-editor-pin-botoes { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.perfil-cadeado { display: inline-flex; color: var(--text-muted); margin-top: -4px; }
+.perfil-cadeado .icone { width: 20px; height: 20px; }
+.perfil-cartao:hover .perfil-cadeado { color: var(--primary-color); }
+
 .perfil-aviso-extra {
   display: flex;
   flex-direction: column;

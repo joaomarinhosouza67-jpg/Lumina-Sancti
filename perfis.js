@@ -87,9 +87,52 @@ async function resumoDoPin(pin, sal) {
   return paraBase64(bits);
 }
 
-async function salvarPinDosPais(pin) {
+async function registroDoPin(pin) {
   const sal = paraBase64(crypto.getRandomValues(new Uint8Array(16)));
-  const pinPais = { sal, hash: await resumoDoPin(pin, sal), versao: 1 };
+  return { sal, hash: await resumoDoPin(pin, sal), versao: 1 };
+}
+
+function pinsDosPerfis() {
+  const usuario = typeof sessaoAtual !== 'undefined' && sessaoAtual ? sessaoAtual.user : null;
+  const pins = usuario && usuario.user_metadata ? usuario.user_metadata.pins_perfis : null;
+  return pins && typeof pins === 'object' ? pins : {};
+}
+
+function pinDoPerfil(idDoPerfil) {
+  const pin = pinsDosPerfis()[idDoPerfil];
+  return pin && pin.hash && pin.sal ? pin : null;
+}
+
+function perfilTrancado(membro) {
+  return !!membro && membro.tipo === 'adulto' && !!pinDoPerfil(membro.id);
+}
+
+async function salvarPinDoPerfil(idDoPerfil, pin) {
+  const pins = Object.assign({}, pinsDosPerfis());
+  if (pin === null) delete pins[idDoPerfil];
+  else pins[idDoPerfil] = await registroDoPin(pin);
+  const { error } = await supabaseCliente.auth.updateUser({ data: { pins_perfis: pins } });
+  if (error) throw error;
+  if (sessaoAtual && sessaoAtual.user) {
+    sessaoAtual.user.user_metadata = Object.assign({}, sessaoAtual.user.user_metadata, { pins_perfis: pins });
+  }
+}
+
+function textosDoPinDoPerfil(nome) {
+  return {
+    entrar: [`Perfil de ${nome}`, 'Digite o PIN deste perfil.'],
+    verificar: [`PIN do perfil de ${nome}`, 'Digite o PIN atual deste perfil.'],
+    criar: [`PIN do perfil de ${nome}`, 'Escolha 4 números. Eles serão pedidos sempre que alguém escolher este perfil.'],
+    confirmar: [`PIN do perfil de ${nome}`, 'Digite o mesmo PIN de novo, para confirmar.'],
+  };
+}
+
+function pinSalvoDoPortao() {
+  return portao && portao.alvo ? pinDoPerfil(portao.alvo) : pinDosPaisSalvo();
+}
+
+async function salvarPinDosPais(pin) {
+  const pinPais = await registroDoPin(pin);
   const { error } = await supabaseCliente.auth.updateUser({ data: { pin_pais: pinPais } });
   if (error) throw error;
   if (sessaoAtual && sessaoAtual.user) {
@@ -99,7 +142,7 @@ async function salvarPinDosPais(pin) {
 }
 
 async function pinConfere(pin) {
-  const salvo = pinDosPaisSalvo();
+  const salvo = pinSalvoDoPortao();
   if (!salvo) return false;
   return (await resumoDoPin(pin, salvo.sal)) === salvo.hash;
 }
@@ -127,12 +170,12 @@ function desenharPontosDoPortao() {
 function mostrarTecladoDoPortao(modo, texto) {
   portao.modo = modo;
   portao.digitos = '';
-  const [titulo, textoPadrao] = TEXTOS_DO_PORTAO[modo];
+  const [titulo, textoPadrao] = (portao.textos && portao.textos[modo]) || TEXTOS_DO_PORTAO[modo];
   document.getElementById('portao-titulo').textContent = portao.titulo || titulo;
   document.getElementById('portao-texto').textContent = texto || textoPadrao;
   document.getElementById('portao-pin').hidden = false;
   document.getElementById('portao-senha').hidden = true;
-  document.getElementById('portao-esqueci').hidden = !(modo === 'sair' || modo === 'verificar');
+  document.getElementById('portao-esqueci').hidden = !['sair', 'verificar', 'entrar'].includes(modo);
   document.getElementById('portao-sair-conta').hidden = true;
   desenharPontosDoPortao();
 }
@@ -156,6 +199,8 @@ function abrirPortao(opcoes) {
     modo: opcoes.modo,
     titulo: opcoes.titulo || null,
     aoConcluir: opcoes.aoConcluir || null,
+    alvo: opcoes.alvo || null,
+    textos: opcoes.textos || null,
     digitos: '',
     primeiro: null,
     erros: 0,
@@ -163,8 +208,14 @@ function abrirPortao(opcoes) {
     ocupado: false,
   };
   avisoDoPortao('');
-  if ((opcoes.modo === 'sair' || opcoes.modo === 'verificar') && !pinDosPaisSalvo()) {
-    document.getElementById('portao-titulo').textContent = opcoes.titulo || TEXTOS_DO_PORTAO[opcoes.modo][0];
+  if (opcoes.modo === 'entrar' && !pinSalvoDoPortao()) {
+    const depois = portao.aoConcluir;
+    portao = null;
+    if (depois) depois();
+    return;
+  }
+  if ((opcoes.modo === 'sair' || opcoes.modo === 'verificar') && !pinSalvoDoPortao()) {
+    document.getElementById('portao-titulo').textContent = opcoes.titulo || ((portao.textos && portao.textos[opcoes.modo]) || TEXTOS_DO_PORTAO[opcoes.modo])[0];
     mostrarSenhaNoPortao('Ainda não existe um PIN dos pais. Para continuar, um adulto precisa digitar a senha da conta.');
   } else {
     mostrarTecladoDoPortao(opcoes.modo, opcoes.texto);
@@ -189,7 +240,7 @@ async function processarPinDoPortao() {
   portao.ocupado = true;
   const digitado = portao.digitos;
   try {
-    if (portao.modo === 'sair' || portao.modo === 'verificar') {
+    if (['sair', 'verificar', 'entrar'].includes(portao.modo)) {
       if (await pinConfere(digitado)) {
         concluirPortao();
         return;
@@ -222,8 +273,9 @@ async function processarPinDoPortao() {
         return;
       }
       avisoDoPortao('Salvando...');
-      await salvarPinDosPais(digitado);
-      avisoDoPortao('PIN dos pais criado!', 'certo');
+      if (portao.alvo) await salvarPinDoPerfil(portao.alvo, digitado);
+      else await salvarPinDosPais(digitado);
+      avisoDoPortao(portao.alvo ? 'PIN do perfil criado!' : 'PIN dos pais criado!', 'certo');
       setTimeout(concluirPortao, 700);
     }
   } catch (e) {
@@ -270,13 +322,15 @@ async function confirmarSenhaNoPortao(evento) {
   }
   const modo = portao.modo;
   const depois = portao.aoConcluir;
+  const alvo = portao.alvo;
+  const textos = portao.textos;
   fecharPortao();
   if (modo === 'verificar') {
-    abrirPortao({ modo: 'criar', aoConcluir: depois });
+    if (depois) depois();
     return;
   }
   if (depois) depois();
-  setTimeout(() => abrirPortao({ modo: 'criar', titulo: 'Criar um PIN novo' }), 400);
+  setTimeout(() => abrirPortao({ modo: 'criar', titulo: 'Criar um PIN novo', alvo, textos }), 400);
 }
 
 function sairDoModoInfantil(destino) {
@@ -399,6 +453,7 @@ async function renderizarSelecaoDePerfis(jaCarregados) {
       </span>
       <span class="perfil-nome">${escaparTexto(m.nome)}</span>
       ${m.tipo === 'crianca' ? '<span class="perfil-tag">Kids</span>' : ''}
+      ${perfilTrancado(m) ? `<span class="perfil-cadeado" title="Perfil com PIN" aria-label="Perfil com PIN">${icone('cadeado')}</span>` : ''}
     </button>`).join('');
 
   const adicionar = membrosDaConta.length < MAXIMO_DE_PERFIS ? `
@@ -414,8 +469,12 @@ async function renderizarSelecaoDePerfis(jaCarregados) {
     cartao.addEventListener('click', () => {
       const membro = membrosDaConta.find((m) => m.id === cartao.dataset.membro);
       if (!membro) return;
-      if (perfisEmModoEdicao) abrirEditorDePerfil(membro);
-      else escolherPerfil(membro);
+      const seguir = () => (perfisEmModoEdicao ? abrirEditorDePerfil(membro) : escolherPerfil(membro));
+      if (perfilTrancado(membro)) {
+        abrirPortao({ modo: 'entrar', alvo: membro.id, textos: textosDoPinDoPerfil(membro.nome), aoConcluir: seguir });
+      } else {
+        seguir();
+      }
     });
   });
   const botaoAdicionar = document.getElementById('perfil-adicionar');
@@ -564,6 +623,7 @@ async function carregarTrilhasDaConta() {
     try { idSalvo = localStorage.getItem(CHAVE_MEMBRO_ATIVO); } catch (e) {  }
     try { await carregarMembrosDaConta(); } catch (e) { membrosDaConta = []; }
     membroAtivo = membrosDaConta.find((m) => m.id === idSalvo) || null;
+    if (membroAtivo && perfilTrancado(membroAtivo)) membroAtivo = null;
     if (!membroAtivo) {
       abrirSelecaoDePerfis('trilhas');
       return;
@@ -646,6 +706,7 @@ async function abrirEditorDePerfil(membro) {
   document.getElementById('perfil-editor-autorizo').checked = false;
   document.getElementById('perfil-editor-excluir').hidden = !membro;
   document.getElementById('perfil-editor-extra').hidden = !!membro || membrosDaConta.length === 0;
+  atualizarPinNoEditor(membro);
   document.getElementById('perfil-editor-foto').value = '';
   document.getElementById('perfil-editor-salvar').disabled = false;
   renderizarEditor();
@@ -826,6 +887,55 @@ async function salvarPerfilDoEditor() {
   }
 }
 
+function atualizarPinNoEditor(membro) {
+  const bloco = document.getElementById('perfil-editor-pin');
+  if (!bloco) return;
+  const mostrar = !!membro && membro.tipo === 'adulto';
+  bloco.hidden = !mostrar;
+  if (!mostrar) return;
+  const tem = !!pinDoPerfil(membro.id);
+  document.getElementById('perfil-editor-pin-estado').textContent = tem
+    ? 'Este perfil está trancado. O PIN é pedido sempre que alguém escolhe este perfil.'
+    : 'Tranque este perfil com um PIN de 4 números. Assim ninguém entra nele sem saber o PIN, nem as crianças.';
+  document.getElementById('perfil-editor-pin-criar').textContent = tem ? 'Mudar PIN' : 'Criar PIN do perfil';
+  document.getElementById('perfil-editor-pin-tirar').hidden = !tem;
+}
+
+function depoisDeMudarPinDoPerfil(membro, aviso) {
+  atualizarPinNoEditor(membro);
+  if (document.getElementById('perfis-grade')) renderizarSelecaoDePerfis(true);
+  if (aviso && typeof mostrarAvisoTrilhas === 'function') mostrarAvisoTrilhas(aviso);
+}
+
+function criarOuMudarPinDoPerfil() {
+  const membro = editorEstado && editorEstado.membro;
+  if (!membro || membro.tipo !== 'adulto') return;
+  const textos = textosDoPinDoPerfil(membro.nome);
+  const criar = () => abrirPortao({ modo: 'criar', alvo: membro.id, textos, aoConcluir: () => depoisDeMudarPinDoPerfil(membro) });
+  if (pinDoPerfil(membro.id)) abrirPortao({ modo: 'verificar', alvo: membro.id, textos, aoConcluir: criar });
+  else criar();
+}
+
+function tirarPinDoPerfil() {
+  const membro = editorEstado && editorEstado.membro;
+  if (!membro || !pinDoPerfil(membro.id)) return;
+  const textos = textosDoPinDoPerfil(membro.nome);
+  textos.verificar = [`Tirar o PIN de ${membro.nome}`, 'Digite o PIN atual para destrancar este perfil.'];
+  abrirPortao({
+    modo: 'verificar',
+    alvo: membro.id,
+    textos,
+    aoConcluir: async () => {
+      try {
+        await salvarPinDoPerfil(membro.id, null);
+        depoisDeMudarPinDoPerfil(membro, 'Pronto! Este perfil não pede mais PIN.');
+      } catch (e) {
+        if (typeof mostrarAvisoTrilhas === 'function') mostrarAvisoTrilhas('Não foi possível tirar o PIN agora. Tente de novo.');
+      }
+    },
+  });
+}
+
 async function excluirPerfilDoEditor() {
   const e = editorEstado;
   if (!e || !e.membro) return;
@@ -837,6 +947,9 @@ async function excluirPerfilDoEditor() {
     if (error) throw error;
     if (e.membro.foto_path) await supabaseCliente.storage.from(PASTA_DE_FOTOS).remove([e.membro.foto_path]);
     if (membroAtivo && membroAtivo.id === e.membro.id) limparPerfilAtivo();
+    if (pinDoPerfil(e.membro.id)) {
+      try { await salvarPinDoPerfil(e.membro.id, null); } catch (erroDoPin) {  }
+    }
     fecharEditorDePerfil();
     renderizarSelecaoDePerfis();
   } catch (erro) {
@@ -1059,6 +1172,10 @@ function iniciarPerfis() {
   });
   const botaoPin = document.getElementById('perfil-pin-botao');
   if (botaoPin) botaoPin.addEventListener('click', abrirPinPelaPaginaDaConta);
+  const criarPinDoPerfil = document.getElementById('perfil-editor-pin-criar');
+  if (criarPinDoPerfil) criarPinDoPerfil.addEventListener('click', criarOuMudarPinDoPerfil);
+  const tirarPin = document.getElementById('perfil-editor-pin-tirar');
+  if (tirarPin) tirarPin.addEventListener('click', tirarPinDoPerfil);
 
   if (typeof supabaseCliente !== 'undefined' && supabaseCliente) {
     supabaseCliente.auth.onAuthStateChange((_evento, sessao) => {
