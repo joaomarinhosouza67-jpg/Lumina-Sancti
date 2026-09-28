@@ -1804,6 +1804,7 @@ function converterPerguntaDoServidor(q) {
 
 function mensagemDeErroDaLicao(erro) {
   const texto = String((erro && erro.message) || '');
+  if (texto.includes('account_suspended')) return 'Sua conta está suspensa. Enquanto isso, as trilhas ficam paradas, mas nada do seu progresso é apagado.';
   if (texto.includes('no_santidade')) return tt('erro_sem_santidade');
   if (texto.includes('lesson_locked')) return tt('conclua_missao');
   if (texto.includes('lesson_empty')) return tt('erro_sem_perguntas');

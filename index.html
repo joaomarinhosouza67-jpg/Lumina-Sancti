@@ -240,12 +240,14 @@
 
       <div class="sidebar-divisor"></div>
       <button class="side-nav-link side-nav-destaque" id="nav-trilhas"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-trilha"></use></svg><span data-i18n="trilhas_titulo">Trilhas dos Santos</span></button>
+      <button class="side-nav-link side-nav-destaque" id="nav-cenaculos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-usuarios"></use></svg><span>Cenáculos</span></button>
       <button class="side-nav-link" id="nav-leitura"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-biblia"></use></svg><span data-i18n="nav_leitura">Leitura do dia</span></button>
       <button class="side-nav-link" id="nav-oracoes"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-livro"></use></svg><span data-i18n="nav_oracoes">Orações do dia a dia</span></button>
       <button class="side-nav-link" id="nav-terco"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-terco"></use></svg><span data-i18n="nav_terco">Terço guiado</span></button>
       <button class="side-nav-link" id="nav-padroeiro"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lupa"></use></svg><span data-i18n="nav_padroeiro">Padroeiro de...</span></button>
       <button class="side-nav-link" id="nav-planos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-estrela"></use></svg><span>Planos</span></button>
       <button class="side-nav-link" id="nav-instalar" hidden><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-baixar"></use></svg><span>Instalar o app</span></button>
+      <button class="side-nav-link" id="nav-equipe" hidden><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-escudo"></use></svg><span>Painel da equipe</span></button>
 
     </nav>
 
@@ -273,6 +275,17 @@
       </section>
 
       <section class="santo-do-dia container" id="santo-do-dia">
+      </section>
+
+      <section class="atalhos-app container" id="atalhos-app">
+        <button type="button" class="atalho-cartao" data-destino="trilhas">
+          <span class="atalho-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-trilha"></use></svg></span>
+          <span class="atalho-textos"><strong data-i18n="trilhas_titulo">Trilhas dos Santos</strong><span>Aprenda com a vida dos santos, missão por missão.</span></span>
+        </button>
+        <button type="button" class="atalho-cartao" data-destino="cenaculos">
+          <span class="atalho-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-usuarios"></use></svg></span>
+          <span class="atalho-textos"><strong>Cenáculos</strong><span>Grupos de oração e amizade na fé, com encontros pelo Google Meet.</span></span>
+        </button>
       </section>
 
       <section class="about container">
@@ -471,7 +484,7 @@
         </button>
         <h2 class="section-title" style="text-align:left; margin: 10px 0 4px;">Política de Privacidade</h2>
         <div class="title-divider" style="margin: 0 0 16px;"></div>
-        <p class="privacidade-data">Atualizada em 27 de setembro de 2026.</p>
+        <p class="privacidade-data">Atualizada em 28 de setembro de 2026.</p>
 
         <h3>Quem somos</h3>
         <p>O Lumina Sancti (luminasancti.com) é um site e aplicativo católico sobre a vida dos santos. Para falar com a gente sobre seus dados, escreva para <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a>.</p>
@@ -486,7 +499,13 @@
           <li>O progresso de cada perfil nas trilhas: Fé, ofensiva, medalhas e respostas das missões.</li>
           <li>Um código do aparelho, usado para permitir uma conta por aparelho.</li>
           <li>Quantas perguntas você fez à Lumina, nossa assistente, para controlar o limite diário. O texto das perguntas não fica guardado conosco.</li>
+          <li>Se você usar os Cenáculos: os grupos de que participa, as mensagens, figurinhas e áudios que envia, os encontros marcados e as denúncias e bloqueios que fizer.</li>
         </ul>
+
+        <h3>Cenáculos (grupos)</h3>
+        <p>Os Cenáculos são só para adultos, e para entrar é preciso aceitar as Regras dos Cenáculos. As conversas não são secretas: a equipe do Lumina Sancti pode ler as mensagens e ouvir os áudios para proteger os participantes e investigar denúncias. Uma mensagem apagada some para o grupo, mas a equipe guarda uma cópia para poder investigar denúncias. Os áudios ficam guardados por até 90 dias.</p>
+        <p>Se as regras forem desrespeitadas, a equipe pode apagar mensagens e suspender a conta, por um tempo ou por tempo indeterminado. Nada da conta suspensa é apagado.</p>
+        <p>As reuniões por vídeo acontecem no Google Meet, fora do Lumina Sancti. Não gravamos nem guardamos nada dessas chamadas, e o uso do Meet segue as regras do Google.</p>
 
         <h3>Crianças</h3>
         <p>Perfis infantis só podem ser criados pelo adulto dono da conta, que declara ser pai, mãe ou responsável pela criança e autoriza o uso do perfil. No perfil infantil não pedimos e-mail nem qualquer dado de contato da criança, e para sair do modo infantil é preciso o PIN dos pais. O Lumina Sancti não mostra anúncios.</p>
@@ -500,6 +519,7 @@
           <li>Vercel: hospedagem do site.</li>
           <li>Resend: envio dos e-mails.</li>
           <li>Google (Gemini): gera as respostas da Lumina a partir da pergunta enviada.</li>
+          <li>Google Meet: reuniões por vídeo dos Cenáculos, abertas direto no Google.</li>
           <li>Stripe e Google Play: pagamentos dos planos, quando estiverem disponíveis. Os dados do cartão ficam só com eles; o Lumina Sancti nunca os recebe.</li>
           <li>Wikipédia (Wikimedia), Google Fonts e jsDelivr: fotos dos santos, letras do site e partes do código, carregadas diretamente pelo seu navegador.</li>
         </ul>
@@ -731,6 +751,63 @@
       </div>
     </section>
 
+    <section id="view-cenaculos" class="view">
+      <div class="container cenaculos-container">
+        <button class="btn-back" id="btn-back-cenaculos">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span data-i18n="voltar_inicio">Voltar para o início</span>
+        </button>
+        <h2 class="section-title trilhas-titulo">Cenáculos</h2>
+        <p class="trilhas-intro">Grupos de oração e amizade na fé. Converse com o seu grupo e marque encontros pelo Google Meet.</p>
+        <div class="cenaculos-acoes">
+          <button type="button" class="licao-botao" id="cenaculo-criar-btn"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-mais"></use></svg> Criar cenáculo</button>
+          <button type="button" class="filter-btn" id="cenaculo-entrar-btn">Entrar com convite</button>
+        </div>
+        <div id="cenaculos-lista" class="cenaculos-lista"></div>
+      </div>
+    </section>
+
+    <section id="view-cenaculo" class="view">
+      <div class="cenaculo-tela">
+        <header class="cenaculo-topo">
+          <button type="button" class="icon-btn" id="cenaculo-voltar" aria-label="Voltar aos cenáculos">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          </button>
+          <button type="button" class="cenaculo-titulo" id="cenaculo-titulo-btn">
+            <strong id="cenaculo-nome">Cenáculo</strong>
+            <small id="cenaculo-membros-contagem"></small>
+          </button>
+          <button type="button" class="icon-btn" id="cenaculo-menu-btn" aria-label="Opções do cenáculo"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-pontos"></use></svg></button>
+        </header>
+        <div id="cenaculo-encontro" class="cenaculo-encontro" hidden></div>
+        <div id="cenaculo-mensagens" class="cenaculo-mensagens"></div>
+        <div id="cenaculo-painel-emojis" class="cenaculo-painel cenaculo-painel-emojis" hidden></div>
+        <div id="cenaculo-painel-figurinhas" class="cenaculo-painel cenaculo-painel-figurinhas" hidden></div>
+        <form id="cenaculo-escrever" class="cenaculo-escrever" autocomplete="off">
+          <button type="button" class="icon-btn cenaculo-ferramenta" id="cenaculo-emoji-btn" aria-label="Emojis"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-emoji"></use></svg></button>
+          <button type="button" class="icon-btn cenaculo-ferramenta" id="cenaculo-figurinha-btn" aria-label="Figurinhas"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-figurinha"></use></svg></button>
+          <textarea id="cenaculo-texto" rows="1" maxlength="2000" placeholder="Escreva uma mensagem" aria-label="Mensagem"></textarea>
+          <button type="submit" class="cenaculo-enviar" id="cenaculo-enviar-btn" aria-label="Enviar"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-enviar"></use></svg></button>
+        </form>
+      </div>
+    </section>
+
+    <section id="view-equipe" class="view">
+      <div class="container equipe-container">
+        <button class="btn-back" id="btn-back-equipe">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span data-i18n="voltar_inicio">Voltar para o início</span>
+        </button>
+        <h2 class="section-title trilhas-titulo">Painel da equipe</h2>
+        <p class="trilhas-intro">Só a equipe do Lumina Sancti vê esta página. Aqui ficam as denúncias dos Cenáculos, as conversas e as contas suspensas.</p>
+        <div class="ranking-abas" id="equipe-abas">
+          <button type="button" class="ranking-aba active" data-aba="denuncias">Denúncias</button>
+          <button type="button" class="ranking-aba" data-aba="suspensoes">Suspensões</button>
+          <button type="button" class="ranking-aba" data-aba="cenaculos">Cenáculos</button>
+        </div>
+        <div id="equipe-conteudo" class="equipe-conteudo"></div>
+      </div>
+    </section>
   </main>
 
   <footer class="site-footer">
@@ -752,6 +829,14 @@
       <p class="footer-contato" data-i18n="footer_fale_conosco">Fale conosco: <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a></p>
     </div>
   </footer>
+
+  <nav id="barra-app" class="barra-app" aria-label="Navegação principal">
+    <button type="button" class="barra-app-botao" data-destino="inicio"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-inicio"></use></svg><span>Início</span></button>
+    <button type="button" class="barra-app-botao" data-destino="trilhas"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-trilha"></use></svg><span>Trilhas</span></button>
+    <button type="button" class="barra-app-botao" data-destino="cenaculos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-usuarios"></use></svg><span>Cenáculos</span></button>
+    <button type="button" class="barra-app-botao" data-destino="oracoes"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-livro"></use></svg><span>Orações</span></button>
+    <button type="button" class="barra-app-botao" data-destino="conta"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-pessoa"></use></svg><span>Conta</span></button>
+  </nav>
 
   <svg style="display: none;">
     <defs>
@@ -775,6 +860,14 @@
       <g id="icone-coracao"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></g>
       <g id="icone-som"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></g>
       <g id="icone-som-mudo"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="m22 9-6 6"/><path d="m16 9 6 6"/></g>
+      <g id="icone-inicio"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></g>
+      <g id="icone-enviar"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></g>
+      <g id="icone-emoji"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 9h.01"/><path d="M15 9h.01"/></g>
+      <g id="icone-figurinha"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h9.5L21 15.5V5a2 2 0 0 0-2-2z"/><path d="M14 21v-4a2 2 0 0 1 2-2h5"/></g>
+      <g id="icone-video"><path d="m22 8-6 4 6 4V8z"/><rect x="2" y="6" width="14" height="12" rx="2"/></g>
+      <g id="icone-pontos"><circle cx="12" cy="5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="19" r="1.2"/></g>
+      <g id="icone-escudo"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></g>
+      <g id="icone-pessoa"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></g>
       <g id="icon-aureola">
         <circle cx="12" cy="8" r="6" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-dasharray="2 2" opacity="0.8"/>
         <path d="M12 14c-4.4 0-8 2.7-8 6v2h16v-2c0-3.3-3.6-6-8-6z" fill="var(--primary-color)" opacity="0.3"/>
@@ -788,5 +881,7 @@
   <script src="trilhas.js"></script>
   <script src="perfis.js"></script>
   <script src="mascote.js"></script>
+  <script src="figurinhas.js"></script>
+  <script src="cenaculos.js"></script>
 </body>
 </html>

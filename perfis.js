@@ -436,7 +436,9 @@ function escolherPerfil(membro) {
   aplicarModoKids();
   if (destinoAposEscolherPerfil === 'inicio') mudarDeView('view-home');
   else if (destinoAposEscolherPerfil === 'ranking') abrirRanking();
+  else if (destinoAposEscolherPerfil === 'cenaculos' && typeof abrirCenaculos === 'function') abrirCenaculos();
   else abrirTrilhas(slugPendenteDasTrilhas);
+  if (typeof aposEscolherPerfil === 'function') aposEscolherPerfil(membro);
 }
 
 function guardarPerfilEscolhido(membro) {
