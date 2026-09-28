@@ -1539,7 +1539,8 @@ body.intro-ativa .navbar { backdrop-filter: none; }
 .avatar-grande .icone { width: 50px; height: 50px; }
 .avatar-adicionar { background: transparent; border: 2px dashed var(--text-muted); box-shadow: none; color: var(--text-muted); }
 
-body:has(#view-perfis.active) .site-footer { display: none; }
+body:has(#view-perfis.active) .site-footer,
+body:has(#view-ranking.active) .site-footer { display: none; }
 @media (min-width: 768px) {
   .nav-container {
     position: relative;
