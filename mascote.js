@@ -19,6 +19,8 @@ const FALAS_DA_LUMI = {
     tocarParaOuvir: '{nome}. Toque para ouvir de novo.',
     ligarVoz: 'Ligar a voz',
     desligarVoz: 'Desligar a voz',
+    areaDosAdultos: 'Desculpa! Você é criança, e essa parte do site é só para os adultos. Que tal continuar a sua trilha dos santos?',
+    areaDosAdultosBotao: 'Tudo bem!',
   },
   en: {
     ola: "Hi! I'm {nome}. Shall we learn together?",
@@ -37,6 +39,8 @@ const FALAS_DA_LUMI = {
     tocarParaOuvir: '{nome}. Tap to hear it again.',
     ligarVoz: 'Turn the voice on',
     desligarVoz: 'Turn the voice off',
+    areaDosAdultos: 'Sorry! You are a kid, and this part of the site is only for grown-ups. How about continuing your saints trail?',
+    areaDosAdultosBotao: 'Okay!',
   },
   es: {
     ola: '¡Hola! Soy {nome}. ¿Aprendemos juntos?',
@@ -55,6 +59,8 @@ const FALAS_DA_LUMI = {
     tocarParaOuvir: '{nome}. Toca para escuchar otra vez.',
     ligarVoz: 'Encender la voz',
     desligarVoz: 'Apagar la voz',
+    areaDosAdultos: '¡Perdón! Eres un niño, y esta parte del sitio es solo para los adultos. ¿Qué tal seguir tu sendero de los santos?',
+    areaDosAdultosBotao: '¡Está bien!',
   },
 };
 
@@ -398,6 +404,44 @@ function mudarLumi(palco, estado, rosto, fala) {
       if (estado !== 'concluiu') lumi.dataset.bracos = 'baixo';
     }, duracao);
   }
+}
+
+const PAGINAS_SO_PARA_ADULTOS = ['view-ia', 'view-planos'];
+
+function paginaSoParaAdultos(idDaPagina) {
+  if (!modoInfantilAtivo() || !PAGINAS_SO_PARA_ADULTOS.includes(idDaPagina)) return false;
+  mostrarAvisoDaLumiParaCriancas();
+  return true;
+}
+
+function fecharAvisoDaLumi() {
+  const modal = document.getElementById('lumi-aviso-modal');
+  if (modal) modal.classList.remove('active');
+  pararVozInfantil(true);
+}
+
+function mostrarAvisoDaLumiParaCriancas() {
+  let modal = document.getElementById('lumi-aviso-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'lumi-aviso-modal';
+    modal.className = 'search-modal';
+    modal.innerHTML = '<div class="search-modal-content lumi-aviso" role="dialog" aria-modal="true"><div class="lumi-aviso-lugar"></div><button type="button" class="licao-botao" id="lumi-aviso-ok"></button></div>';
+    document.body.appendChild(modal);
+    modal.querySelector('#lumi-aviso-ok').addEventListener('click', fecharAvisoDaLumi);
+    modal.addEventListener('click', (evento) => { if (evento.target === modal) fecharAvisoDaLumi(); });
+  }
+  const falas = falasDaLumi();
+  const fala = comNomeDaLumi(falas.areaDosAdultos);
+  const lugar = modal.querySelector('.lumi-aviso-lugar');
+  lugar.innerHTML = '';
+  const palco = criarPalcoDaLumi('lumi-aviso');
+  lugar.appendChild(palco);
+  modal.querySelector('#lumi-aviso-ok').textContent = falas.areaDosAdultosBotao;
+  modal.classList.add('active');
+  palco.falaParaRepetir = [fala];
+  mudarLumi(palco, 'cutucada', 'quase', fala);
+  falarParaCrianca([fala]);
 }
 
 let lumiPrimeiraPergunta = true;

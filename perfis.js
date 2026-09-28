@@ -901,6 +901,8 @@ function abrirRanking() {
 }
 
 function marcarAbaDoRanking() {
+  const aviso = document.getElementById('ranking-aviso-assinantes');
+  if (aviso) aviso.hidden = abaDoRanking !== 'familia';
   document.querySelectorAll('.ranking-aba').forEach((b) => b.classList.toggle('active', b.dataset.aba === abaDoRanking));
   document.querySelectorAll('.ranking-periodo').forEach((b) => b.classList.toggle('active', b.dataset.periodo === periodoDoRanking));
 }

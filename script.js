@@ -2210,8 +2210,6 @@ const TRADUCOES = {
     perfil_excluir_botao: 'Excluir minha conta',
     footer_fale_conosco: 'Fale conosco: <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a>',
     nav_compartilhar: 'Compartilhar o site',
-    footer_compartilhe_texto: 'Ajude o Lumina Sancti a chegar a mais pessoas e iluminar a vida delas.',
-    footer_compartilhe_botao: 'Compartilhar o site',
     trilhas_titulo: 'Trilhas dos Santos',
     trilhas_intro: 'Uma trilha para cada santo. Complete as missões para ganhar Fé, manter sua ofensiva e conquistar a insígnia e a medalha da virtude de cada um.',
     trilhas_insignias: 'Minhas insígnias',
@@ -2294,8 +2292,6 @@ const TRADUCOES = {
     perfil_excluir_botao: 'Delete my account',
     footer_fale_conosco: 'Contact us: <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a>',
     nav_compartilhar: 'Share the site',
-    footer_compartilhe_texto: 'Help Lumina Sancti reach more people and light up their lives.',
-    footer_compartilhe_botao: 'Share the site',
     trilhas_titulo: 'Trails of the Saints',
     trilhas_intro: 'One trail for each saint. Complete the missions to earn Faith, keep your streak and win each saint\'s badge and virtue medal.',
     trilhas_insignias: 'My badges',
@@ -2378,8 +2374,6 @@ const TRADUCOES = {
     perfil_excluir_botao: 'Eliminar mi cuenta',
     footer_fale_conosco: 'Contáctanos: <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a>',
     nav_compartilhar: 'Compartir el sitio',
-    footer_compartilhe_texto: 'Ayuda a Lumina Sancti a llegar a más personas e iluminar sus vidas.',
-    footer_compartilhe_botao: 'Compartir el sitio',
     trilhas_titulo: 'Senderos de los Santos',
     trilhas_intro: 'Un sendero para cada santo. Completa las misiones para ganar Fe, mantener tu racha y conquistar la insignia y la medalla de la virtud de cada uno.',
     trilhas_insignias: 'Mis insignias',
@@ -2685,6 +2679,7 @@ function atualizarInterfaceDeConta() {
 }
 
 function mudarDeView(idNovaView, opcoes) {
+  if (typeof paginaSoParaAdultos === 'function' && paginaSoParaAdultos(idNovaView)) return;
   const todasAsViews = ['view-home', 'view-detail', 'view-ia', 'view-auth', 'view-perfil', 'view-privacidade', 'view-oracoes', 'view-leitura', 'view-terco', 'view-padroeiro', 'view-trilhas', 'view-licao', 'view-perfis', 'view-ranking', 'view-planos', 'view-completar'];
   const viewAtual = todasAsViews.map(id => document.getElementById(id)).find(v => v && v.classList.contains('active'));
   if (idNovaView !== 'view-licao' && typeof pararVozInfantil === 'function') pararVozInfantil(false);

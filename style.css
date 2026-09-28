@@ -799,9 +799,6 @@ body.intro-ativa .navbar { backdrop-filter: none; }
 .footer-contato a { color: var(--primary-color); text-decoration: none; }
 .footer-contato a:hover { text-decoration: underline; }
 
-.footer-compartilhe { margin: 18px 0; padding: 16px; background: var(--bg-alt); border-radius: 10px; border: 1px solid var(--secondary-color); }
-.footer-compartilhe p { font-size: 0.88rem; color: var(--text-main); margin-bottom: 10px; }
-.footer-compartilhe .filter-btn { font-size: 0.85rem; padding: 8px 20px; }
 
 .footer-social { margin-bottom: 16px; }
 .footer-social-link {
@@ -1799,6 +1796,21 @@ button.ranking-linha { cursor: pointer; }
 .ranking-nome small { color: var(--primary-color); font-weight: 700; margin-left: 4px; }
 .ranking-numero { display: inline-flex; align-items: center; gap: 4px; font-weight: 700; font-size: 0.9rem; }
 .ranking-fe { color: var(--primary-color); }
+.ranking-aviso-assinantes {
+  margin-top: 20px;
+  padding: 12px 16px;
+  border: 1px dashed rgba(var(--primary-rgb), 0.5);
+  border-radius: 12px;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.lumi-aviso { max-width: 380px; text-align: center; padding: 26px 22px 22px; }
+body.modo-kids .lumi-aviso .lumi-palco { flex-direction: column; margin: 0 0 18px; }
+.lumi-aviso .lumi-balao { font-size: 1.02rem; }
+.lumi-aviso .licao-botao { width: 100%; }
 .ranking-ofensiva { color: #fb923c; }
 
 body.modo-kids #view-trilhas .trilha-banner { background: linear-gradient(135deg, #312e81, #1e3a8a); border-color: #818cf8; }
