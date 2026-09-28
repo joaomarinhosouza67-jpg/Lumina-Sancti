@@ -1,6 +1,6 @@
 const CHAVE_MEMBRO_ATIVO = 'lumina-sancti-membro-ativo';
 const CHAVE_TIPO_DO_MEMBRO = 'lumina-sancti-membro-tipo';
-const MAXIMO_DE_PERFIS = 6;
+const MAXIMO_DE_PERFIS = 3;
 const TAMANHO_MAXIMO_DO_NOME = 24;
 const PASTA_DE_FOTOS = 'avatars';
 
@@ -643,6 +643,7 @@ async function abrirEditorDePerfil(membro) {
   document.getElementById('perfil-editor-feedback').textContent = '';
   document.getElementById('perfil-editor-autorizo').checked = false;
   document.getElementById('perfil-editor-excluir').hidden = !membro;
+  document.getElementById('perfil-editor-extra').hidden = !!membro || membrosDaConta.length === 0;
   document.getElementById('perfil-editor-foto').value = '';
   document.getElementById('perfil-editor-salvar').disabled = false;
   renderizarEditor();
@@ -751,6 +752,10 @@ async function salvarPerfilDoEditor() {
   }
   if (!contaLogada()) {
     feedback.textContent = 'Entre na sua conta para salvar perfis.';
+    return;
+  }
+  if (!e.membro && membrosDaConta.length >= MAXIMO_DE_PERFIS) {
+    feedback.textContent = `Esta conta já tem o máximo de ${MAXIMO_DE_PERFIS} perfis.`;
     return;
   }
   const novoInfantil = !e.membro && e.tipo === 'crianca';

@@ -2789,6 +2789,23 @@ body.catalogo-interno #view-home .catalog { padding-top: 10px; }
 }
 .perfil-consentimento input { width: 18px; height: 18px; margin-top: 1px; flex-shrink: 0; accent-color: var(--primary-color); }
 
+.perfil-aviso-extra {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 18px 0 6px;
+  padding: 14px 16px;
+  border: 1px solid var(--primary-color);
+  border-left-width: 4px;
+  border-radius: 12px;
+  background: rgba(var(--primary-rgb), 0.1);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--text-main);
+  text-align: left;
+}
+.perfil-aviso-extra strong { color: var(--primary-color); font-size: 0.95rem; }
+
 .perfil-pin {
   margin-top: 26px;
   padding-top: 20px;
