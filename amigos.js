@@ -11,6 +11,7 @@ const REGEX_CODIGO_PESSOAL = /^[A-HJ-NP-Z2-9]{8}$/;
 let bibliotecaDoQrPronta = null;
 let bibliotecaDeLeituraPronta = null;
 let leitorDeQrAtivo = null;
+const enderecosDosFundos = {};
 
 function formatarCodigoPessoal(codigo) {
   const limpo = String(codigo || '').toUpperCase();
@@ -447,13 +448,17 @@ function blocoDaComparacao(dados, fotoDoOutro) {
   const minha = Math.max(0, Number(dados.minha_fe || 0));
   const dela = Math.max(0, Number(dados.fe || 0));
   const maior = Math.max(minha, dela, 1);
-  const lado = (avatar, nome, valor, classe) => `
-    <div class="perfil-duelo-lado ${classe}${valor >= Math.max(minha, dela) && valor > 0 ? ' na-frente' : ''}">
+  const lado = (avatar, nome, valor, classe) => {
+    const lider = valor > 0 && valor >= Math.max(minha, dela) && minha !== dela;
+    return `
+    <div class="perfil-duelo-lado ${classe}${lider ? ' na-frente' : ''}">
+      ${lider ? `<span class="perfil-duelo-coroa" aria-label="Na frente">${iconeDoCenaculo('trofeu')}</span>` : ''}
       ${avatar}
       <strong>${valor}</strong>
       <small>${nome}</small>
       <span class="perfil-duelo-barra"><span style="height:${Math.max(6, Math.round((valor / maior) * 100))}%"></span></span>
     </div>`;
+  };
   return `
     <section class="perfil-secao">
       <h4 class="perfil-secao-titulo">Você x ${escaparTexto(primeiroNome(dados.nome))}</h4>
@@ -524,6 +529,12 @@ async function abrirPerfilPublico(idDoPerfil) {
         <div class="perfil-publico-topo">
           <strong class="perfil-publico-nome">${escaparTexto(dados.nome)}</strong>
           <small>${desdeQuando(dados.desde)}</small>
+          <div class="perfil-selos">
+            ${dados.eu ? '<span class="perfil-selo">Você</span>' : ''}
+            ${dados.contato ? `<span class="perfil-selo">${iconeDoCenaculo('conversa')} Contato</span>` : ''}
+            ${sequencia >= 3 ? `<span class="perfil-selo fogo">${iconeDoCenaculo('chama')} ${sequencia} dias seguidos</span>` : ''}
+            ${licoes >= 10 ? `<span class="perfil-selo estudioso">${iconeDoCenaculo('livro')} ${licoes} lições</span>` : ''}
+          </div>
         </div>
         ${acoesDoPerfil(dados)}
         <section class="perfil-secao">
@@ -566,11 +577,153 @@ async function abrirPerfilPublico(idDoPerfil) {
   }
 }
 
-function abrirEscolhaDeFundo() {
-  if (!cenaculoAberto) return;
+function metadadosDaConta() {
+  return (typeof sessaoAtual !== 'undefined' && sessaoAtual && sessaoAtual.user && sessaoAtual.user.user_metadata) || {};
+}
+
+function fundoPessoal() {
+  const perfil = perfilAdultoAtivo();
+  if (!perfil) return null;
+  const todos = metadadosDaConta().fundos_pessoais || {};
+  return todos[perfil.id] || null;
+}
+
+async function salvarFundoPessoal(valor) {
+  const perfil = perfilAdultoAtivo();
+  if (!perfil) return;
+  const todos = Object.assign({}, metadadosDaConta().fundos_pessoais || {});
+  if (valor) todos[perfil.id] = valor;
+  else delete todos[perfil.id];
+  const { error } = await supabaseCliente.auth.updateUser({ data: { fundos_pessoais: todos } });
+  if (error) throw error;
+  if (sessaoAtual && sessaoAtual.user) {
+    sessaoAtual.user.user_metadata = Object.assign({}, sessaoAtual.user.user_metadata || {}, { fundos_pessoais: todos });
+  }
+}
+
+async function enderecoDoFundoPessoal(caminho) {
+  if (!caminho) return '';
+  const guardado = enderecosDosFundos[caminho];
+  if (guardado && guardado.vale > Date.now()) return guardado.url;
+  const enderecos = await enderecosAssinados('avatars', [caminho]);
+  if (enderecos[caminho]) enderecosDosFundos[caminho] = { url: enderecos[caminho], vale: Date.now() + 50 * 60 * 1000 };
+  return enderecos[caminho] || '';
+}
+
+function reduzirImagemDeFundo(arquivo, maiorLado) {
+  return new Promise((resolver, rejeitar) => {
+    const imagem = new Image();
+    const endereco = URL.createObjectURL(arquivo);
+    imagem.onload = () => {
+      const escala = Math.min(1, maiorLado / Math.max(imagem.width, imagem.height));
+      const tela = document.createElement('canvas');
+      tela.width = Math.max(1, Math.round(imagem.width * escala));
+      tela.height = Math.max(1, Math.round(imagem.height * escala));
+      tela.getContext('2d').drawImage(imagem, 0, 0, tela.width, tela.height);
+      URL.revokeObjectURL(endereco);
+      tela.toBlob((blob) => (blob ? resolver(blob) : rejeitar(new Error('falha'))), 'image/jpeg', 0.82);
+    };
+    imagem.onerror = () => {
+      URL.revokeObjectURL(endereco);
+      rejeitar(new Error('falha'));
+    };
+    imagem.src = endereco;
+  });
+}
+
+function podeMudarFundoDeTodos() {
+  return !!cenaculoAberto && !!cenaculoAberto.id && (ehConversaADois() || cenaculoAberto.papel === 'organizador');
+}
+
+function reaplicarFundoDaConversa() {
+  if (cenaculoAberto && cenaculoAberto.id) aplicarFundo(cenaculoAberto.fundo);
+}
+
+async function amostraDaFotoPessoal(botao, caminho) {
+  const url = await enderecoDoFundoPessoal(caminho);
+  const amostra = botao && botao.querySelector('.fundo-amostra');
+  if (url && amostra) {
+    amostra.style.backgroundImage = `url("${url}")`;
+    amostra.classList.add('com-foto');
+  }
+}
+
+function mostrarFundosPessoais(lugar) {
+  const atual = fundoPessoal();
+  const escolhido = !atual ? 'nenhum' : (atual.foto ? 'foto' : atual.pronto);
+  lugar.innerHTML = `
+    <p class="cenaculo-explica">Só você vê este papel de parede. Ele vale para todas as suas conversas neste perfil.</p>
+    <div class="fundo-opcoes">
+      <button type="button" class="fundo-opcao${escolhido === 'nenhum' ? ' escolhido' : ''}" data-pessoal="nenhum">
+        <span class="fundo-amostra fundo-cada">${iconeDoCenaculo('conversa')}</span>
+        <span class="fundo-opcao-nome">Fundo de cada conversa</span>
+      </button>
+      ${FUNDOS_DA_CONVERSA.map((f) => `
+        <button type="button" class="fundo-opcao${escolhido === f.id ? ' escolhido' : ''}" data-pessoal="${f.id}">
+          <span class="fundo-amostra fundo-${f.id}"></span>
+          <span class="fundo-opcao-nome">${f.nome}</span>
+        </button>`).join('')}
+      <button type="button" class="fundo-opcao${escolhido === 'foto' ? ' escolhido' : ''}" data-pessoal="foto">
+        <span class="fundo-amostra fundo-da-galeria">${iconeDoCenaculo('camera')}</span>
+        <span class="fundo-opcao-nome">${escolhido === 'foto' ? 'Trocar a minha foto' : 'Foto do celular'}</span>
+      </button>
+    </div>
+    <input type="file" id="papel-foto" accept="image/*" hidden>
+    <p class="auth-feedback" id="papel-aviso" aria-live="polite"></p>`;
+  const aviso = lugar.querySelector('#papel-aviso');
+  const arquivo = lugar.querySelector('#papel-foto');
+  if (atual && atual.foto) amostraDaFotoPessoal(lugar.querySelector('[data-pessoal="foto"]'), atual.foto);
+  const concluir = () => {
+    reaplicarFundoDaConversa();
+    fecharJanelaDoCenaculo();
+    avisoDoCenaculo('Papel de parede salvo.');
+  };
+  lugar.querySelectorAll('.fundo-opcao[data-pessoal]').forEach((botao) => {
+    botao.addEventListener('click', async () => {
+      const valor = botao.dataset.pessoal;
+      if (valor === 'foto') { arquivo.click(); return; }
+      try {
+        const anterior = fundoPessoal();
+        await salvarFundoPessoal(valor === 'nenhum' ? null : { pronto: valor });
+        if (anterior && anterior.foto) {
+          try { await supabaseCliente.storage.from('avatars').remove([anterior.foto]); } catch (e) {  }
+        }
+        concluir();
+      } catch (erro) {
+        aviso.textContent = 'Não foi possível salvar agora. Tente de novo.';
+      }
+    });
+  });
+  arquivo.addEventListener('change', async () => {
+    const escolhida = arquivo.files && arquivo.files[0];
+    if (!escolhida) return;
+    if (!escolhida.type || !escolhida.type.startsWith('image/')) { aviso.textContent = 'Escolha um arquivo de imagem.'; return; }
+    const conta = sessaoAtual && sessaoAtual.user;
+    const perfil = perfilAdultoAtivo();
+    if (!conta || !perfil) return;
+    aviso.textContent = 'Enviando a foto...';
+    try {
+      const imagem = await reduzirImagemDeFundo(escolhida, 1280);
+      const caminho = `${conta.id}/fundo-${perfil.id}-${Date.now()}.jpg`;
+      const { error } = await supabaseCliente.storage.from('avatars').upload(caminho, imagem, { contentType: 'image/jpeg', upsert: false });
+      if (error) throw error;
+      const anterior = fundoPessoal();
+      await salvarFundoPessoal({ foto: caminho });
+      enderecosDosFundos[caminho] = { url: URL.createObjectURL(imagem), vale: Date.now() + 50 * 60 * 1000 };
+      if (anterior && anterior.foto && anterior.foto !== caminho) {
+        try { await supabaseCliente.storage.from('avatars').remove([anterior.foto]); } catch (e) {  }
+      }
+      concluir();
+    } catch (erro) {
+      aviso.textContent = 'Não foi possível usar essa foto. Tente outra.';
+    }
+  });
+}
+
+function mostrarFundosDeTodos(lugar) {
   const atual = cenaculoAberto.fundo || 'padrao';
-  const corpo = janelaDoCenaculo('Fundo da conversa', `
-    <p class="cenaculo-explica">${ehConversaADois() ? 'O fundo muda para vocês dois.' : 'O fundo muda para todos do cenáculo.'}</p>
+  lugar.innerHTML = `
+    <p class="cenaculo-explica">${ehConversaADois() ? 'Este fundo aparece para vocês dois, a menos que alguém tenha escolhido um papel de parede só para si.' : 'Este fundo aparece para todos do cenáculo, a menos que alguém tenha escolhido um papel de parede só para si.'}</p>
     <div class="fundo-opcoes">
       ${FUNDOS_DA_CONVERSA.map((f) => `
         <button type="button" class="fundo-opcao${f.id === atual ? ' escolhido' : ''}" data-fundo="${f.id}">
@@ -578,8 +731,8 @@ function abrirEscolhaDeFundo() {
           <span class="fundo-opcao-nome">${f.nome}</span>
         </button>`).join('')}
     </div>
-    <p class="auth-feedback" id="fundo-aviso" aria-live="polite"></p>`);
-  corpo.querySelectorAll('.fundo-opcao').forEach((botao) => {
+    <p class="auth-feedback" id="fundo-aviso" aria-live="polite"></p>`;
+  lugar.querySelectorAll('.fundo-opcao[data-fundo]').forEach((botao) => {
     botao.addEventListener('click', async () => {
       const fundo = botao.dataset.fundo;
       try {
@@ -588,10 +741,151 @@ function abrirEscolhaDeFundo() {
         aplicarFundo(fundo);
         fecharJanelaDoCenaculo();
       } catch (erro) {
-        corpo.querySelector('#fundo-aviso').textContent = mensagemDoCenaculo(erro);
+        lugar.querySelector('#fundo-aviso').textContent = mensagemDoCenaculo(erro);
       }
     });
   });
+}
+
+function abrirEscolhaDeFundo(aba) {
+  if (!perfilAdultoAtivo()) return;
+  const deTodos = podeMudarFundoDeTodos();
+  const corpo = janelaDoCenaculo('Papel de parede', `
+    ${deTodos ? `
+    <div class="codigo-qr-abas" role="tablist">
+      <button type="button" class="codigo-qr-aba papel-aba" data-aba="meu" role="tab">Só para mim</button>
+      <button type="button" class="codigo-qr-aba papel-aba" data-aba="todos" role="tab">${ehConversaADois() ? 'Para nós dois' : 'Para todos'}</button>
+    </div>` : ''}
+    <div id="papel-conteudo"></div>`);
+  const lugar = corpo.querySelector('#papel-conteudo');
+  const mostrar = (qual) => {
+    corpo.querySelectorAll('.papel-aba').forEach((b) => b.classList.toggle('ativa', b.dataset.aba === qual));
+    if (qual === 'todos') mostrarFundosDeTodos(lugar);
+    else mostrarFundosPessoais(lugar);
+  };
+  corpo.querySelectorAll('.papel-aba').forEach((botao) => botao.addEventListener('click', () => mostrar(botao.dataset.aba)));
+  mostrar(aba === 'todos' && deTodos ? 'todos' : 'meu');
+}
+
+function acaoDoMeuPerfil(id, icone, texto) {
+  return `<button type="button" class="perfil-acao" id="${id}">${iconeDoCenaculo(icone)}<span>${texto}</span></button>`;
+}
+
+function blocoDasInsignias() {
+  if (typeof carregarProgressoTrilhas !== 'function' || typeof trilhasEmUso !== 'function' || typeof trilhaConcluida !== 'function') return '';
+  let trilhas = [];
+  let estado = null;
+  try {
+    trilhas = trilhasEmUso() || [];
+    estado = carregarProgressoTrilhas();
+  } catch (e) {
+    return '';
+  }
+  if (!trilhas.length || !estado) return '';
+  const conquistadas = trilhas.filter((t) => trilhaConcluida(t, estado));
+  const mostrar = trilhas.slice().sort((a, b) => Number(trilhaConcluida(b, estado)) - Number(trilhaConcluida(a, estado))).slice(0, 6);
+  return `
+    <section class="perfil-secao">
+      <div class="perfil-secao-cabecalho">
+        <h4 class="perfil-secao-titulo">Insígnias</h4>
+        <button type="button" class="perfil-link" id="meu-perfil-insignias">Ver todas</button>
+      </div>
+      <div class="meu-perfil-insignias">
+        ${mostrar.map((trilha) => {
+          const tem = trilhaConcluida(trilha, estado);
+          return `<span class="meu-perfil-insignia${tem ? ' conquistada' : ''}" title="${escaparTexto(trilha.santo || '')}">${iconeDoCenaculo(tem ? 'medalha' : 'cadeado')}<small>${escaparTexto(trilha.santo || '')}</small></span>`;
+        }).join('')}
+      </div>
+      <p class="meu-perfil-insignias-resumo">${conquistadas.length} de ${trilhas.length} insígnias conquistadas</p>
+    </section>`;
+}
+
+async function renderizarMeuPerfil() {
+  const lugar = document.getElementById('meu-perfil-cabecalho');
+  if (!lugar) return;
+  const perfil = (typeof membroAtivo !== 'undefined' && membroAtivo) || null;
+  const meta = metadadosDaConta();
+  const nomeDaConta = meta.nome || meta.full_name || '';
+  const nome = perfil ? perfil.nome : (nomeDaConta || 'Minha conta');
+  const adulto = !!perfil && perfil.tipo === 'adulto';
+  const fundo = fundoPessoal();
+  lugar.innerHTML = `
+    <div class="perfil-publico meu-perfil">
+      <div class="perfil-publico-capa meu-perfil-capa">
+        <span class="perfil-publico-foto">${avatarDoCenaculo(perfil ? perfil.avatar : 'adulto-estrela', perfil ? perfil.fotoUrl : '', 'grande')}</span>
+        ${perfil ? `<button type="button" class="meu-perfil-camera" id="meu-perfil-foto" aria-label="Trocar a foto do perfil">${iconeDoCenaculo('camera')}</button>` : ''}
+      </div>
+      <div class="perfil-publico-topo">
+        <strong class="perfil-publico-nome" id="meu-perfil-nome">${escaparTexto(nome)}</strong>
+        <small>${perfil ? `Perfil de ${adulto ? 'adulto' : 'criança'}${nomeDaConta ? ` na conta de ${escaparTexto(nomeDaConta)}` : ''}` : 'Escolha um perfil para ver as suas estatísticas'}</small>
+        <small id="meu-perfil-desde"></small>
+      </div>
+      <div class="perfil-acoes perfil-acoes-tres">
+        ${perfil ? acaoDoMeuPerfil('meu-perfil-editar', 'lapis', 'Editar perfil') : ''}
+        ${adulto ? acaoDoMeuPerfil('meu-perfil-codigo', 'qr', 'Meu código') : ''}
+        ${acaoDoMeuPerfil('meu-perfil-trocar', 'usuarios', 'Trocar perfil')}
+      </div>
+      ${perfil ? `
+      <section class="perfil-secao">
+        <h4 class="perfil-secao-titulo">Estatísticas</h4>
+        <div class="perfil-publico-numeros" id="meu-perfil-numeros">
+          ${cartaoDeEstatistica('chama', '#ff9600', perfil.ofensiva || 0, (perfil.ofensiva || 0) === 1 ? 'dia seguido' : 'dias seguidos', perfil.melhorOfensiva ? `recorde: ${perfil.melhorOfensiva}` : '')}
+          ${cartaoDeEstatistica('estrela', '#f5b400', perfil.fe || 0, 'Fé no total', '')}
+          ${cartaoDeEstatistica('trofeu', '#58cc02', '...', 'Fé nesta semana', '')}
+          ${cartaoDeEstatistica('livro', '#1cb0f6', '...', 'lições concluídas', '')}
+        </div>
+      </section>` : ''}
+      ${perfil ? blocoDasInsignias() : ''}
+      <section class="perfil-secao">
+        <h4 class="perfil-secao-titulo">Conversas</h4>
+        <div class="ajustes-lista">
+          ${adulto ? `<button type="button" class="ajuste" id="meu-perfil-papel">
+            <span class="ajuste-icone">${iconeDoCenaculo('paleta')}</span>
+            <span class="ajuste-textos"><strong>Papel de parede</strong><small>${fundo ? (fundo.foto ? 'Uma foto sua' : (FUNDOS_DA_CONVERSA.find((f) => f.id === fundo.pronto) || {}).nome || 'Personalizado') : 'O fundo de cada conversa'}</small></span>
+            ${iconeDoCenaculo('seta-direita')}
+          </button>` : ''}
+          <button type="button" class="ajuste" id="meu-perfil-ranking">
+            <span class="ajuste-icone">${iconeDoCenaculo('trofeu')}</span>
+            <span class="ajuste-textos"><strong>Ranking</strong><small>Veja a sua posição na família e no mundo</small></span>
+            ${iconeDoCenaculo('seta-direita')}
+          </button>
+        </div>
+      </section>
+    </div>`;
+
+  const ligar = (id, funcao) => {
+    const botao = lugar.querySelector(`#${id}`);
+    if (botao) botao.addEventListener('click', funcao);
+  };
+  ligar('meu-perfil-foto', () => { if (typeof abrirEditorDePerfil === 'function') abrirEditorDePerfil(perfil); });
+  ligar('meu-perfil-editar', () => { if (typeof abrirEditorDePerfil === 'function') abrirEditorDePerfil(perfil); });
+  ligar('meu-perfil-codigo', () => abrirMeuCodigo());
+  ligar('meu-perfil-trocar', () => { if (typeof abrirSelecaoDePerfis === 'function') abrirSelecaoDePerfis('inicio'); });
+  ligar('meu-perfil-papel', () => abrirEscolhaDeFundo('meu'));
+  ligar('meu-perfil-ranking', () => { if (typeof abrirRanking === 'function') abrirRanking(); });
+  ligar('meu-perfil-insignias', () => { if (typeof abrirInsignias === 'function') abrirInsignias(); });
+
+  if (adulto) {
+    try {
+      const dados = await chamarCenaculo('perfil_publico', { _pid: perfil.id, _alvo: perfil.id });
+      const numeros = document.getElementById('meu-perfil-numeros');
+      const desde = document.getElementById('meu-perfil-desde');
+      if (desde) desde.textContent = desdeQuando(dados.desde);
+      if (numeros) {
+        const sequencia = Number(dados.sequencia || 0);
+        const licoes = Number(dados.licoes || 0);
+        numeros.innerHTML = [
+          cartaoDeEstatistica('chama', '#ff9600', sequencia, sequencia === 1 ? 'dia seguido' : 'dias seguidos', Number(dados.melhor_sequencia) ? `recorde: ${Number(dados.melhor_sequencia)}` : ''),
+          cartaoDeEstatistica('estrela', '#f5b400', Number(dados.fe || 0), 'Fé no total', ''),
+          cartaoDeEstatistica('trofeu', '#58cc02', Number(dados.fe_semana || 0), 'Fé nesta semana', ''),
+          cartaoDeEstatistica('livro', '#1cb0f6', licoes, licoes === 1 ? 'lição concluída' : 'lições concluídas', ''),
+        ].join('');
+      }
+    } catch (e) {
+      const numeros = document.getElementById('meu-perfil-numeros');
+      if (numeros) numeros.querySelectorAll('.perfil-estatistica strong').forEach((s) => { if (s.textContent === '...') s.textContent = '-'; });
+    }
+  }
 }
 
 function previaDaFotoDoGrupo() {

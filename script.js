@@ -3057,12 +3057,23 @@ async function carregarPaginaDePerfil() {
   document.getElementById('perfil-nome').value = dadosDaConta.nome || dadosDaConta.full_name || '';
   if (feedback) feedback.textContent = '';
   if (typeof atualizarSecaoDoPin === 'function') atualizarSecaoDoPin();
+  if (typeof renderizarMeuPerfil === 'function') renderizarMeuPerfil();
 }
 
 function iniciarPaginaDePerfil() {
   const form = document.getElementById('perfil-form');
   const feedback = document.getElementById('perfil-feedback');
   if (!form) return;
+
+  const privacidade = document.getElementById('meu-perfil-privacidade');
+  if (privacidade) privacidade.addEventListener('click', abrirPrivacidade);
+  const sair = document.getElementById('meu-perfil-sair');
+  if (sair) {
+    sair.addEventListener('click', async () => {
+      if (supabaseCliente) await supabaseCliente.auth.signOut();
+      mudarDeView('view-home');
+    });
+  }
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();

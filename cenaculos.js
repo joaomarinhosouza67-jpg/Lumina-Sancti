@@ -15,6 +15,11 @@ const SEGUNDOS_MAXIMOS_DE_AUDIO = 120;
 const VERSAO_DO_SELETOR_DE_EMOJIS = '1.29.1';
 const VERSAO_DOS_DADOS_DE_EMOJIS = '1.8.0';
 const MINUTOS_PARA_JUNTAR_MENSAGENS = 5;
+const BARRAS_DA_ONDA = 36;
+const BARRAS_AO_VIVO = 40;
+const CHAVE_DAS_ONDAS = 'lumina-sancti-ondas-dos-audios';
+const DISTANCIA_PARA_CANCELAR = 110;
+const DISTANCIA_PARA_TRAVAR = 80;
 const FUNDOS_DA_CONVERSA = [
   { id: 'padrao', nome: 'Padrão' },
   { id: 'estrelas', nome: 'Noite estrelada' },
@@ -75,6 +80,12 @@ let dadosDaEquipe = null;
 let fotosDosMembros = {};
 let gravacaoDeAudio = null;
 let audioTocando = null;
+let velocidadeDosAudios = 1;
+let ondasEmMemoria = null;
+const ondasEmCalculo = new Set();
+const ondasQueFalharam = new Set();
+let toqueNoMicrofone = null;
+let gravacaoIniciando = false;
 const enderecosDosAudios = {};
 let abaDoGiphy = 'gifs';
 let temporizadorDoGiphy = null;
@@ -782,7 +793,18 @@ function aplicarFundo(nome) {
   const lugar = document.getElementById('cenaculo-mensagens');
   if (!lugar) return;
   FUNDOS_DA_CONVERSA.forEach((f) => lugar.classList.remove(`fundo-${f.id}`));
-  const escolhido = FUNDOS_DA_CONVERSA.some((f) => f.id === nome) ? nome : 'padrao';
+  lugar.classList.remove('fundo-foto');
+  lugar.style.removeProperty('--fundo-foto');
+  const pessoal = typeof fundoPessoal === 'function' ? fundoPessoal() : null;
+  if (pessoal && pessoal.foto && typeof enderecoDoFundoPessoal === 'function') {
+    lugar.classList.add('fundo-foto');
+    enderecoDoFundoPessoal(pessoal.foto).then((url) => {
+      if (url && lugar.classList.contains('fundo-foto')) lugar.style.setProperty('--fundo-foto', `url("${url}")`);
+    });
+    return;
+  }
+  const preferido = pessoal && pessoal.pronto ? pessoal.pronto : nome;
+  const escolhido = FUNDOS_DA_CONVERSA.some((f) => f.id === preferido) ? preferido : 'padrao';
   lugar.classList.add(`fundo-${escolhido}`);
 }
 
@@ -827,11 +849,25 @@ function mensagemVisivel(m) {
 
 function htmlDoAudio(m) {
   if (!m.audio_caminho) return '<em class="cenaculo-apagada">Áudio expirado (os áudios ficam guardados por 90 dias)</em>';
+  const guardada = ondaGuardada(m.audio_caminho);
+  const niveis = guardada || ondaProvisoria(m.audio_caminho);
+  const perfil = perfilAdultoAtivo();
+  const minha = !!perfil && m.perfil_id === perfil.id;
+  const membro = membroDoCenaculo(m.perfil_id);
+  const avatar = minha
+    ? avatarDoCenaculo(perfil.avatar, perfil.fotoUrl, 'pequeno')
+    : avatarDoCenaculo((membro && membro.avatar) || m.autor_avatar, fotosDosMembros[m.perfil_id], 'pequeno');
   return `
-    <span class="cenaculo-audio" data-caminho="${escaparTexto(m.audio_caminho)}" data-segundos="${m.audio_segundos}">
-      <button type="button" class="cenaculo-audio-tocar" aria-label="Tocar áudio">${iconeDoCenaculo('tocar')}${iconeDoCenaculo('pausar')}</button>
-      <span class="cenaculo-audio-barra"><span class="cenaculo-audio-progresso"></span></span>
-      <span class="cenaculo-audio-tempo">${formatarDuracao(m.audio_segundos)}</span>
+    <span class="cenaculo-audio${guardada ? ' onda-real' : ''}" data-caminho="${escaparTexto(m.audio_caminho)}" data-segundos="${m.audio_segundos}">
+      <button type="button" class="cenaculo-audio-tocar" aria-label="Tocar ou pausar o áudio">${iconeDoCenaculo('tocar')}${iconeDoCenaculo('pausar')}</button>
+      <span class="cenaculo-audio-meio">
+        <span class="cenaculo-onda" role="slider" tabindex="0" aria-label="Posição do áudio" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">${niveis.map((n) => `<i style="height:${alturaDaBarra(n)}%"></i>`).join('')}</span>
+        <span class="cenaculo-audio-rodape">
+          <span class="cenaculo-audio-tempo">${formatarDuracao(m.audio_segundos)}</span>
+          <button type="button" class="cenaculo-audio-velocidade" aria-label="Mudar a velocidade do áudio">${textoDaVelocidade()}</button>
+        </span>
+      </span>
+      <span class="cenaculo-audio-quem">${avatar}<span class="cenaculo-audio-selo">${iconeDoCenaculo('microfone')}</span></span>
     </span>`;
 }
 
@@ -967,63 +1003,254 @@ async function prepararEnderecosDosAudios(lugar) {
 function pararAudioTocando() {
   if (!audioTocando) return;
   audioTocando.elemento.pause();
-  audioTocando.caixa.classList.remove('tocando');
+  reiniciarVisualDoAudio(audioTocando.caixa);
   audioTocando = null;
 }
 
+function reiniciarVisualDoAudio(caixa) {
+  if (!caixa) return;
+  caixa.classList.remove('tocando', 'pausado');
+  caixa.querySelectorAll('.cenaculo-onda i').forEach((barra) => barra.classList.remove('tocada'));
+  const onda = caixa.querySelector('.cenaculo-onda');
+  if (onda) onda.setAttribute('aria-valuenow', '0');
+  const tempo = caixa.querySelector('.cenaculo-audio-tempo');
+  if (tempo) tempo.textContent = formatarDuracao(Number(caixa.dataset.segundos) || 0);
+}
+
 function falhaAoTocar(caixa) {
-  caixa.classList.remove('tocando');
+  reiniciarVisualDoAudio(caixa);
   if (audioTocando && audioTocando.caixa === caixa) audioTocando = null;
   avisoDoCenaculo('Não foi possível tocar este áudio neste aparelho.');
 }
 
-function comecarAudio(caixa, url) {
+function pintarProgressoDoAudio(caixa, proporcao) {
+  const barras = caixa.querySelectorAll('.cenaculo-onda i');
+  const limite = Math.round(Math.max(0, Math.min(1, proporcao)) * barras.length);
+  barras.forEach((barra, indice) => barra.classList.toggle('tocada', indice < limite));
+  const onda = caixa.querySelector('.cenaculo-onda');
+  if (onda) onda.setAttribute('aria-valuenow', String(Math.round(proporcao * 100)));
+}
+
+function comecarAudio(caixa, url, proporcaoInicial) {
   const segundos = Number(caixa.dataset.segundos) || 0;
-  const progresso = caixa.querySelector('.cenaculo-audio-progresso');
   const tempo = caixa.querySelector('.cenaculo-audio-tempo');
   const elemento = new Audio(url);
+  elemento.playbackRate = velocidadeDosAudios;
   audioTocando = { elemento, caixa };
   caixa.classList.add('tocando');
+  caixa.classList.remove('pausado');
+  const duracao = () => (Number.isFinite(elemento.duration) && elemento.duration > 0 ? elemento.duration : segundos);
+  if (proporcaoInicial > 0) {
+    const pular = () => { try { elemento.currentTime = proporcaoInicial * duracao(); } catch (e) {  } };
+    if (elemento.readyState >= 1) pular(); else elemento.addEventListener('loadedmetadata', pular, { once: true });
+  }
   elemento.addEventListener('timeupdate', () => {
-    const total = Number.isFinite(elemento.duration) && elemento.duration > 0 ? elemento.duration : segundos;
-    if (total > 0) progresso.style.width = `${Math.min(100, (elemento.currentTime / total) * 100)}%`;
-    tempo.textContent = formatarDuracao(Math.max(0, total - elemento.currentTime));
+    const total = duracao();
+    if (total > 0) pintarProgressoDoAudio(caixa, elemento.currentTime / total);
+    tempo.textContent = formatarDuracao(elemento.currentTime);
   });
   elemento.addEventListener('ended', () => {
-    progresso.style.width = '0%';
-    tempo.textContent = formatarDuracao(segundos);
-    if (audioTocando && audioTocando.caixa === caixa) pararAudioTocando();
+    if (audioTocando && audioTocando.caixa === caixa) audioTocando = null;
+    reiniciarVisualDoAudio(caixa);
   });
   const tocando = elemento.play();
   if (tocando && tocando.catch) tocando.catch(() => falhaAoTocar(caixa));
 }
 
-function tocarOuPausarAudio(caixa) {
+function tocarOuPausarAudio(caixa, proporcao) {
   if (audioTocando && audioTocando.caixa === caixa) {
-    pararAudioTocando();
+    const elemento = audioTocando.elemento;
+    if (typeof proporcao === 'number') {
+      const total = Number.isFinite(elemento.duration) && elemento.duration > 0 ? elemento.duration : Number(caixa.dataset.segundos) || 0;
+      try { elemento.currentTime = proporcao * total; } catch (e) {  }
+      pintarProgressoDoAudio(caixa, proporcao);
+      if (!elemento.paused) return;
+    }
+    if (elemento.paused) {
+      caixa.classList.add('tocando');
+      caixa.classList.remove('pausado');
+      const tocando = elemento.play();
+      if (tocando && tocando.catch) tocando.catch(() => falhaAoTocar(caixa));
+    } else {
+      elemento.pause();
+      caixa.classList.remove('tocando');
+      caixa.classList.add('pausado');
+    }
     return;
   }
   pararAudioTocando();
   const caminho = caixa.dataset.caminho;
+  const inicio = typeof proporcao === 'number' ? proporcao : 0;
   const guardado = enderecoGuardado(caminho);
   if (guardado) {
-    comecarAudio(caixa, guardado);
+    comecarAudio(caixa, guardado, inicio);
     return;
   }
   caixa.classList.add('tocando');
   enderecoDoAudio(caminho)
-    .then((url) => comecarAudio(caixa, url))
+    .then((url) => comecarAudio(caixa, url, inicio))
     .catch(() => falhaAoTocar(caixa));
 }
 
-function ligarPlayersDeAudio(lugar) {
-  lugar.querySelectorAll('.cenaculo-audio-tocar').forEach((botao) => {
-    botao.addEventListener('click', (evento) => {
-      evento.stopPropagation();
-      tocarOuPausarAudio(botao.closest('.cenaculo-audio'));
-    });
+function trocarVelocidadeDosAudios() {
+  const ordem = [1, 1.5, 2];
+  velocidadeDosAudios = ordem[(ordem.indexOf(velocidadeDosAudios) + 1) % ordem.length];
+  document.querySelectorAll('.cenaculo-audio-velocidade').forEach((botao) => {
+    botao.textContent = textoDaVelocidade();
   });
-  prepararEnderecosDosAudios(lugar);
+  if (audioTocando) audioTocando.elemento.playbackRate = velocidadeDosAudios;
+}
+
+function textoDaVelocidade() {
+  return `${String(velocidadeDosAudios).replace('.', ',')}x`;
+}
+
+function ligarPlayersDeAudio(lugar) {
+  lugar.querySelectorAll('.cenaculo-audio').forEach((caixa) => {
+    const tocar = caixa.querySelector('.cenaculo-audio-tocar');
+    if (tocar) {
+      tocar.addEventListener('click', (evento) => {
+        evento.stopPropagation();
+        tocarOuPausarAudio(caixa);
+      });
+    }
+    const onda = caixa.querySelector('.cenaculo-onda');
+    if (onda) {
+      onda.addEventListener('click', (evento) => {
+        evento.stopPropagation();
+        const retangulo = onda.getBoundingClientRect();
+        if (!retangulo.width) return;
+        tocarOuPausarAudio(caixa, Math.max(0, Math.min(1, (evento.clientX - retangulo.left) / retangulo.width)));
+      });
+    }
+    const velocidade = caixa.querySelector('.cenaculo-audio-velocidade');
+    if (velocidade) {
+      velocidade.textContent = textoDaVelocidade();
+      velocidade.addEventListener('click', (evento) => {
+        evento.stopPropagation();
+        trocarVelocidadeDosAudios();
+      });
+    }
+  });
+  prepararEnderecosDosAudios(lugar).then(() => desenharOndasReais(lugar));
+}
+
+function ondasGuardadas() {
+  if (ondasEmMemoria) return ondasEmMemoria;
+  try { ondasEmMemoria = JSON.parse(localStorage.getItem(CHAVE_DAS_ONDAS) || '{}') || {}; } catch (e) { ondasEmMemoria = {}; }
+  return ondasEmMemoria;
+}
+
+function guardarOnda(caminho, niveis) {
+  const todas = ondasGuardadas();
+  todas[caminho] = niveis.map((n) => String.fromCharCode(97 + Math.round(Math.max(0, Math.min(1, n)) * 25))).join('');
+  const chaves = Object.keys(todas);
+  if (chaves.length > 400) chaves.slice(0, chaves.length - 400).forEach((c) => { delete todas[c]; });
+  try { localStorage.setItem(CHAVE_DAS_ONDAS, JSON.stringify(todas)); } catch (e) {  }
+}
+
+function ondaGuardada(caminho) {
+  const texto = ondasGuardadas()[caminho];
+  if (!texto || texto.length !== BARRAS_DA_ONDA) return null;
+  return Array.from(texto).map((letra) => (letra.charCodeAt(0) - 97) / 25);
+}
+
+function ondaProvisoria(caminho) {
+  let semente = 0;
+  for (let i = 0; i < caminho.length; i += 1) semente = (semente * 31 + caminho.charCodeAt(i)) >>> 0;
+  const niveis = [];
+  for (let i = 0; i < BARRAS_DA_ONDA; i += 1) {
+    semente = (semente * 1103515245 + 12345) >>> 0;
+    const aleatorio = (semente >>> 8) / 16777216;
+    const curva = 0.45 + 0.35 * Math.sin((i / BARRAS_DA_ONDA) * Math.PI * 3 + (semente % 7));
+    niveis.push(Math.max(0.12, Math.min(1, curva * 0.7 + aleatorio * 0.45)));
+  }
+  return niveis;
+}
+
+function reduzirNiveis(valores, quantidade) {
+  if (!valores.length) return new Array(quantidade).fill(0);
+  if (valores.length < quantidade) {
+    const esticados = [];
+    for (let i = 0; i < quantidade; i += 1) {
+      const posicao = valores.length === 1 ? 0 : (i * (valores.length - 1)) / (quantidade - 1);
+      const antes = Math.floor(posicao);
+      const depois = Math.min(valores.length - 1, antes + 1);
+      const fracao = posicao - antes;
+      esticados.push(valores[antes] * (1 - fracao) + valores[depois] * fracao);
+    }
+    const maiorEsticado = Math.max(...esticados);
+    return esticados.map((v) => (maiorEsticado > 0 ? Math.sqrt(v / maiorEsticado) : 0));
+  }
+  const resultado = [];
+  for (let i = 0; i < quantidade; i += 1) {
+    const inicio = Math.floor((i * valores.length) / quantidade);
+    const fim = Math.max(inicio + 1, Math.floor(((i + 1) * valores.length) / quantidade));
+    let soma = 0;
+    for (let j = inicio; j < fim; j += 1) soma += valores[Math.min(j, valores.length - 1)];
+    resultado.push(soma / (fim - inicio));
+  }
+  const maior = Math.max(...resultado);
+  return resultado.map((v) => (maior > 0 ? Math.sqrt(v / maior) : 0));
+}
+
+function alturaDaBarra(nivel) {
+  return Math.round(14 + Math.max(0, Math.min(1, nivel)) * 86);
+}
+
+function aplicarOndaNaTela(caminho, niveis) {
+  document.querySelectorAll('.cenaculo-audio').forEach((caixa) => {
+    if (caixa.dataset.caminho !== caminho) return;
+    caixa.querySelectorAll('.cenaculo-onda i').forEach((barra, indice) => {
+      barra.style.height = `${alturaDaBarra(niveis[indice] || 0)}%`;
+    });
+    caixa.classList.add('onda-real');
+  });
+}
+
+async function calcularOndaReal(caminho) {
+  const Contexto = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+  if (!Contexto) return null;
+  const url = await enderecoDoAudio(caminho);
+  const resposta = await fetch(url);
+  if (!resposta.ok) return null;
+  const dados = await resposta.arrayBuffer();
+  const contexto = new Contexto(1, 1, 44100);
+  const som = await new Promise((resolver, rejeitar) => {
+    const promessa = contexto.decodeAudioData(dados, resolver, rejeitar);
+    if (promessa && promessa.then) promessa.then(resolver, rejeitar);
+  });
+  const canal = som.getChannelData(0);
+  const pedacos = BARRAS_DA_ONDA * 4;
+  const tamanho = Math.max(1, Math.floor(canal.length / pedacos));
+  const forcas = [];
+  for (let p = 0; p < pedacos; p += 1) {
+    let soma = 0;
+    const inicio = p * tamanho;
+    for (let i = inicio; i < Math.min(canal.length, inicio + tamanho); i += 1) soma += canal[i] * canal[i];
+    forcas.push(Math.sqrt(soma / tamanho));
+  }
+  return reduzirNiveis(forcas, BARRAS_DA_ONDA);
+}
+
+async function desenharOndasReais(lugar) {
+  const caminhos = Array.from(new Set(Array.from(lugar.querySelectorAll('.cenaculo-audio:not(.onda-real)[data-caminho]')).map((c) => c.dataset.caminho)));
+  for (const caminho of caminhos) {
+    if (ondasEmCalculo.has(caminho) || ondasQueFalharam.has(caminho)) continue;
+    ondasEmCalculo.add(caminho);
+    try {
+      const niveis = await calcularOndaReal(caminho);
+      if (niveis) {
+        guardarOnda(caminho, niveis);
+        aplicarOndaNaTela(caminho, niveis);
+      } else {
+        ondasQueFalharam.add(caminho);
+      }
+    } catch (e) {
+      ondasQueFalharam.add(caminho);
+    }
+    ondasEmCalculo.delete(caminho);
+  }
 }
 
 async function carregarMensagensAntigas() {
@@ -1309,18 +1536,100 @@ function mostrarBarraDeGravacao(mostrar) {
   if (formulario) formulario.hidden = mostrar;
 }
 
-async function comecarGravacao() {
-  if (gravacaoDeAudio || !cenaculoAberto) return;
+function mostrarGravacaoSegurando(mostrar) {
+  const faixa = document.getElementById('cenaculo-segurando');
+  const caixa = document.querySelector('#cenaculo-escrever .cenaculo-caixa');
+  const trava = document.getElementById('cenaculo-trava');
+  const microfone = document.getElementById('cenaculo-microfone-btn');
+  const deslize = document.getElementById('cenaculo-deslize');
+  if (faixa) faixa.hidden = !mostrar;
+  if (caixa) caixa.hidden = mostrar;
+  if (trava) {
+    trava.hidden = !mostrar;
+    trava.style.transform = '';
+  }
+  if (microfone) {
+    microfone.classList.toggle('segurando', mostrar);
+    microfone.style.transform = '';
+  }
+  if (deslize) {
+    deslize.style.transform = '';
+    deslize.style.opacity = '';
+  }
+}
+
+function esconderTodaGravacao() {
+  mostrarGravacaoSegurando(false);
+  mostrarBarraDeGravacao(false);
+  const onda = document.getElementById('cenaculo-gravando-onda');
+  if (onda) onda.innerHTML = '';
+}
+
+function vibrar(ms) {
+  try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {  }
+}
+
+function medirNivelDaVoz(gravacao) {
+  if (gravacao.analisador) {
+    const amostras = new Uint8Array(gravacao.analisador.fftSize);
+    gravacao.analisador.getByteTimeDomainData(amostras);
+    let soma = 0;
+    for (let i = 0; i < amostras.length; i += 1) {
+      const v = (amostras[i] - 128) / 128;
+      soma += v * v;
+    }
+    return Math.min(1, Math.sqrt(soma / amostras.length) * 3.2);
+  }
+  const t = (Date.now() - gravacao.inicio) / 1000;
+  return Math.max(0.08, Math.min(1, 0.35 + 0.3 * Math.sin(t * 5.3) * Math.sin(t * 1.7) + Math.random() * 0.3));
+}
+
+function desenharOndaAoVivo(gravacao) {
+  const onda = document.getElementById('cenaculo-gravando-onda');
+  if (!onda || onda.offsetParent === null) return;
+  const ultimos = gravacao.niveis.slice(-BARRAS_AO_VIVO);
+  while (ultimos.length < BARRAS_AO_VIVO) ultimos.unshift(0);
+  onda.innerHTML = ultimos.map((n) => `<i style="height:${alturaDaBarra(n)}%"></i>`).join('');
+}
+
+function prepararAnalisador(gravacao) {
+  try {
+    const Contexto = window.AudioContext || window.webkitAudioContext;
+    if (!Contexto) return;
+    gravacao.contexto = new Contexto();
+    const fonte = gravacao.contexto.createMediaStreamSource(gravacao.fluxo);
+    gravacao.analisador = gravacao.contexto.createAnalyser();
+    gravacao.analisador.fftSize = 1024;
+    fonte.connect(gravacao.analisador);
+  } catch (e) {
+    gravacao.analisador = null;
+    if (gravacao.contexto) { try { gravacao.contexto.close(); } catch (e2) {  } }
+    gravacao.contexto = null;
+  }
+}
+
+async function comecarGravacao(modo) {
+  const jeito = modo === 'segurando' ? 'segurando' : 'travado';
+  if (gravacaoDeAudio || gravacaoIniciando || !cenaculoAberto) return;
   const formato = formatoDeGravacao();
   if (formato === null || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     avisoDoCenaculo('Este aparelho não consegue gravar áudio pelo site.');
     return;
   }
+  const toque = toqueNoMicrofone;
+  gravacaoIniciando = true;
   let fluxo;
   try {
     fluxo = await navigator.mediaDevices.getUserMedia({ audio: true });
   } catch (e) {
+    gravacaoIniciando = false;
     avisoDoCenaculo('Para gravar, permita que o site use o microfone.');
+    return;
+  }
+  gravacaoIniciando = false;
+  if (jeito === 'segurando' && (!toqueNoMicrofone || toqueNoMicrofone !== toque)) {
+    fluxo.getTracks().forEach((t) => t.stop());
+    avisoDoCenaculo('Pronto! Agora toque e segure o microfone para gravar.');
     return;
   }
   let gravador;
@@ -1335,41 +1644,66 @@ async function comecarGravacao() {
   }
   fecharPaineisDoCenaculo();
   pararAudioTocando();
-  gravacaoDeAudio = { gravador, fluxo, partes: [], inicio: Date.now(), enviar: false, temporizador: null };
+  const gravacao = { gravador, fluxo, partes: [], inicio: Date.now(), enviar: false, temporizador: null, modo: jeito, niveis: [], analisador: null, contexto: null };
+  gravacaoDeAudio = gravacao;
+  prepararAnalisador(gravacao);
   gravador.addEventListener('dataavailable', (evento) => {
-    if (gravacaoDeAudio && evento.data && evento.data.size) gravacaoDeAudio.partes.push(evento.data);
+    if (evento.data && evento.data.size) gravacao.partes.push(evento.data);
   });
-  gravador.addEventListener('stop', terminarGravacao);
+  gravador.addEventListener('stop', () => terminarGravacao(gravacao));
   gravador.start(250);
-  const tempo = document.getElementById('cenaculo-gravando-tempo');
-  if (tempo) tempo.textContent = '0:00';
-  mostrarBarraDeGravacao(true);
-  gravacaoDeAudio.temporizador = setInterval(() => {
-    if (!gravacaoDeAudio) return;
-    const segundos = (Date.now() - gravacaoDeAudio.inicio) / 1000;
-    if (tempo) tempo.textContent = formatarDuracao(segundos);
+  ['cenaculo-gravando-tempo', 'cenaculo-segurando-tempo'].forEach((id) => {
+    const tempo = document.getElementById(id);
+    if (tempo) tempo.textContent = '0:00';
+  });
+  if (jeito === 'segurando') mostrarGravacaoSegurando(true);
+  else mostrarBarraDeGravacao(true);
+  vibrar(20);
+  gravacao.temporizador = setInterval(() => {
+    if (gravacaoDeAudio !== gravacao) return;
+    const segundos = (Date.now() - gravacao.inicio) / 1000;
+    ['cenaculo-gravando-tempo', 'cenaculo-segurando-tempo'].forEach((id) => {
+      const tempo = document.getElementById(id);
+      if (tempo) tempo.textContent = formatarDuracao(segundos);
+    });
+    gravacao.niveis.push(medirNivelDaVoz(gravacao));
+    if (gravacao.modo === 'travado') desenharOndaAoVivo(gravacao);
     if (segundos >= SEGUNDOS_MAXIMOS_DE_AUDIO) pararGravacao(true);
-  }, 250);
+  }, 100);
+}
+
+function travarGravacao() {
+  if (!gravacaoDeAudio || gravacaoDeAudio.modo !== 'segurando') return;
+  gravacaoDeAudio.modo = 'travado';
+  toqueNoMicrofone = null;
+  mostrarGravacaoSegurando(false);
+  mostrarBarraDeGravacao(true);
+  desenharOndaAoVivo(gravacaoDeAudio);
+  vibrar(15);
 }
 
 function pararGravacao(enviar) {
-  if (!gravacaoDeAudio) return;
-  gravacaoDeAudio.enviar = enviar;
-  clearInterval(gravacaoDeAudio.temporizador);
+  const gravacao = gravacaoDeAudio;
+  if (!gravacao) return;
+  gravacaoDeAudio = null;
+  gravacao.enviar = enviar;
+  clearInterval(gravacao.temporizador);
+  esconderTodaGravacao();
   try {
-    if (gravacaoDeAudio.gravador.state !== 'inactive') gravacaoDeAudio.gravador.stop();
-    else terminarGravacao();
+    if (gravacao.gravador.state !== 'inactive') gravacao.gravador.stop();
+    else terminarGravacao(gravacao);
   } catch (e) {
-    terminarGravacao();
+    terminarGravacao(gravacao);
   }
 }
 
-async function terminarGravacao() {
-  const gravacao = gravacaoDeAudio;
-  gravacaoDeAudio = null;
-  mostrarBarraDeGravacao(false);
-  if (!gravacao) return;
+async function terminarGravacao(gravacao) {
+  if (!gravacao || gravacao.terminada) return;
+  gravacao.terminada = true;
+  if (gravacaoDeAudio === gravacao) gravacaoDeAudio = null;
+  esconderTodaGravacao();
   gravacao.fluxo.getTracks().forEach((t) => t.stop());
+  if (gravacao.contexto) { try { gravacao.contexto.close(); } catch (e) {  } }
   const segundos = Math.min(SEGUNDOS_MAXIMOS_DE_AUDIO, Math.round((Date.now() - gravacao.inicio) / 1000));
   if (!gravacao.enviar) return;
   if (segundos < 1 || gravacao.partes.length === 0) {
@@ -1385,10 +1719,71 @@ async function terminarGravacao() {
   try {
     const { error } = await supabaseCliente.storage.from(PASTA_DOS_AUDIOS).upload(caminho, arquivo, { contentType: formato, upsert: false });
     if (error) throw error;
+    guardarOnda(caminho, reduzirNiveis(gravacao.niveis, BARRAS_DA_ONDA));
     await enviarAoCenaculo('audio', { caminho, segundos: Math.max(1, segundos) });
   } catch (erro) {
     avisoDoCenaculo(ERROS_DO_CENACULO.audio_invalido);
   }
+}
+
+function ligarMicrofone() {
+  const microfone = document.getElementById('cenaculo-microfone-btn');
+  if (!microfone) return;
+  let ultimoFoiDedo = false;
+  microfone.addEventListener('pointerdown', (evento) => {
+    if (evento.pointerType === 'mouse') { ultimoFoiDedo = false; return; }
+    ultimoFoiDedo = true;
+    evento.preventDefault();
+    try { microfone.setPointerCapture(evento.pointerId); } catch (e) {  }
+    toqueNoMicrofone = { id: evento.pointerId, x: evento.clientX, y: evento.clientY, quando: Date.now() };
+    comecarGravacao('segurando');
+  });
+  microfone.addEventListener('pointermove', (evento) => {
+    const toque = toqueNoMicrofone;
+    if (!toque || evento.pointerId !== toque.id || !gravacaoDeAudio || gravacaoDeAudio.modo !== 'segurando') return;
+    const paraOLado = Math.min(0, evento.clientX - toque.x);
+    const paraCima = Math.max(0, toque.y - evento.clientY);
+    const deslize = document.getElementById('cenaculo-deslize');
+    const trava = document.getElementById('cenaculo-trava');
+    if (deslize) {
+      deslize.style.transform = `translateX(${Math.max(-DISTANCIA_PARA_CANCELAR, paraOLado)}px)`;
+      deslize.style.opacity = String(Math.max(0.2, 1 + paraOLado / DISTANCIA_PARA_CANCELAR));
+    }
+    if (trava) trava.style.transform = `translateY(${-Math.min(DISTANCIA_PARA_TRAVAR, paraCima) * 0.5}px)`;
+    microfone.style.transform = paraCima > Math.abs(paraOLado) ? `translateY(${-Math.min(DISTANCIA_PARA_TRAVAR, paraCima)}px)` : `translateX(${Math.max(-DISTANCIA_PARA_CANCELAR, paraOLado)}px)`;
+    if (paraOLado <= -DISTANCIA_PARA_CANCELAR) {
+      toqueNoMicrofone = null;
+      vibrar(30);
+      pararGravacao(false);
+      avisoDoCenaculo('Áudio cancelado.');
+    } else if (paraCima >= DISTANCIA_PARA_TRAVAR) {
+      travarGravacao();
+    }
+  });
+  const soltar = (evento) => {
+    const toque = toqueNoMicrofone;
+    if (!toque || evento.pointerId !== toque.id) return;
+    toqueNoMicrofone = null;
+    if (!gravacaoDeAudio || gravacaoDeAudio.modo !== 'segurando') return;
+    if (Date.now() - gravacaoDeAudio.inicio < 700) {
+      pararGravacao(false);
+      avisoDoCenaculo('Segure o microfone para gravar e solte para enviar.');
+      return;
+    }
+    pararGravacao(true);
+  };
+  microfone.addEventListener('pointerup', soltar);
+  microfone.addEventListener('pointercancel', (evento) => {
+    const toque = toqueNoMicrofone;
+    if (!toque || evento.pointerId !== toque.id) return;
+    if (gravacaoDeAudio && gravacaoDeAudio.modo === 'segurando') travarGravacao();
+    toqueNoMicrofone = null;
+  });
+  microfone.addEventListener('contextmenu', (evento) => evento.preventDefault());
+  microfone.addEventListener('click', (evento) => {
+    if (ultimoFoiDedo) { ultimoFoiDedo = false; evento.preventDefault(); return; }
+    comecarGravacao('travado');
+  });
 }
 
 function abrirAcoesDaMensagem(idDaMensagem) {
@@ -1494,7 +1889,7 @@ function abrirMenuDoCenaculo() {
   const bloqueado = !!outro && (cenaculoAberto.bloqueados || []).includes(outro.perfil_id);
   const opcoes = conversa ? [
     outro ? '<button type="button" class="cenaculo-opcao" data-acao="perfil">Ver perfil</button>' : '',
-    '<button type="button" class="cenaculo-opcao" data-acao="fundo">Fundo da conversa</button>',
+    '<button type="button" class="cenaculo-opcao" data-acao="fundo">Papel de parede</button>',
     outro ? `<button type="button" class="cenaculo-opcao" data-acao="${bloqueado ? 'desbloquear' : 'bloquear'}">${bloqueado ? 'Desbloquear' : 'Bloquear'} ${escaparTexto(outro.nome)}</button>` : '',
     '<button type="button" class="cenaculo-opcao" data-acao="regras">Regras dos Cenáculos</button>',
     '<button type="button" class="cenaculo-opcao cenaculo-opcao-perigo" data-acao="sair">Apagar esta conversa da lista</button>',
@@ -1502,7 +1897,7 @@ function abrirMenuDoCenaculo() {
     organizador ? '<button type="button" class="cenaculo-opcao" data-acao="convidar">Convidar pessoas</button>' : '',
     organizador ? '<button type="button" class="cenaculo-opcao" data-acao="encontro">Marcar encontro no Google Meet</button>' : '',
     organizador ? '<button type="button" class="cenaculo-opcao" data-acao="foto">Foto do grupo</button>' : '',
-    organizador ? '<button type="button" class="cenaculo-opcao" data-acao="fundo">Fundo da conversa</button>' : '',
+    '<button type="button" class="cenaculo-opcao" data-acao="fundo">Papel de parede</button>',
     '<button type="button" class="cenaculo-opcao" data-acao="membros">Pessoas do cenáculo</button>',
     '<button type="button" class="cenaculo-opcao" data-acao="regras">Regras dos Cenáculos</button>',
     '<button type="button" class="cenaculo-opcao cenaculo-opcao-perigo" data-acao="sair">Sair do cenáculo</button>',
@@ -1917,7 +2312,7 @@ function iniciarCenaculos() {
   ligar('cenaculo-gif-btn', abrirPainelDeGifs);
   const botaoDeGifs = document.getElementById('cenaculo-gif-btn');
   if (botaoDeGifs) botaoDeGifs.hidden = !CHAVE_DO_GIPHY;
-  ligar('cenaculo-microfone-btn', comecarGravacao);
+  ligarMicrofone();
   ligar('cenaculo-gravando-cancelar', () => pararGravacao(false));
   ligar('cenaculo-gravando-enviar', () => pararGravacao(true));
 

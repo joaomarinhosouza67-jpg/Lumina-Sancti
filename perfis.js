@@ -877,6 +877,8 @@ async function salvarPerfilDoEditor() {
         aplicarModoKids();
       }
     }
+    const paginaDoPerfil = document.getElementById('view-perfil');
+    if (paginaDoPerfil && paginaDoPerfil.classList.contains('active') && typeof renderizarMeuPerfil === 'function') renderizarMeuPerfil();
   } catch (erro) {
     const texto = String((erro && erro.message) || '');
     const mensagem = texto.includes('profile_limit_reached')
