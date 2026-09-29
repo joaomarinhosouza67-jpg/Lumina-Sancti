@@ -3,8 +3,14 @@ const BIBLIOTECA_DO_QR = {
   endereco: 'https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js',
   integridade: 'sha384-8FWZA6BGMXhsfO+BLtrJK0We6gg5o1JyO8xQm6peWDEUs17ACA5ziE/NIAkl9z2k',
 };
+const BIBLIOTECA_DE_LEITURA = {
+  endereco: 'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js',
+  integridade: 'sha384-b5Ya4Bq3qCyz39m2ISh+4DxjAIljdeFwK/BsXLuj9gugaNwAcj/ia15fxNZL9Nlx',
+};
 const REGEX_CODIGO_PESSOAL = /^[A-HJ-NP-Z2-9]{8}$/;
 let bibliotecaDoQrPronta = null;
+let bibliotecaDeLeituraPronta = null;
+let leitorDeQrAtivo = null;
 
 function formatarCodigoPessoal(codigo) {
   const limpo = String(codigo || '').toUpperCase();
@@ -60,7 +66,7 @@ function svgDoQr(texto) {
   for (let l = 0; l < n; l += 1) {
     for (let c = 0; c < n; c += 1) {
       if (qr.isDark(l, c) && !ehOlho(l, c) && !noBuraco(l, c)) {
-        pontos += `<circle cx="${c + margem + 0.5}" cy="${l + margem + 0.5}" r="0.44"/>`;
+        pontos += `<rect x="${c + margem}" y="${l + margem}" width="1" height="1" rx="0.32"/>`;
       }
     }
   }
@@ -93,16 +99,52 @@ async function copiarTexto(texto) {
   }
 }
 
-async function abrirMeuCodigo() {
+function abrirMeuCodigo() {
+  return abrirCodigoQr('meu');
+}
+
+function abrirEscanearCodigo() {
+  return abrirCodigoQr('escanear');
+}
+
+async function abrirCodigoQr(aba) {
   const perfil = perfilAdultoAtivo();
   if (!perfil || !(await garantirAceite())) return;
-  const corpo = janelaDoCenaculo('Meu código', '<p class="perfis-carregando">Carregando...</p>');
-  try {
-    const codigo = await chamarCenaculo('amigo_meu_codigo', { _pid: perfil.id });
-    mostrarCartaoDoCodigo(corpo, codigo);
-  } catch (erro) {
-    corpo.innerHTML = `<p class="not-found-msg">${mensagemDoCenaculo(erro)}</p>`;
-  }
+  pararLeitorDeQr();
+  const corpo = janelaDoCenaculo('Código QR', `
+    <div class="codigo-qr-abas" role="tablist">
+      <button type="button" class="codigo-qr-aba" data-aba="meu" role="tab">Meu código</button>
+      <button type="button" class="codigo-qr-aba" data-aba="escanear" role="tab">Escanear código</button>
+    </div>
+    <div id="codigo-qr-conteudo"></div>`);
+  const modal = document.getElementById('cenaculo-janela');
+  const aoFechar = new MutationObserver(() => {
+    if (!modal.classList.contains('active') || !document.getElementById('codigo-qr-conteudo')) {
+      pararLeitorDeQr();
+      aoFechar.disconnect();
+    }
+  });
+  aoFechar.observe(modal, { attributes: true, attributeFilter: ['class'], childList: true, subtree: true });
+  const mostrar = async (qual) => {
+    pararLeitorDeQr();
+    corpo.querySelectorAll('.codigo-qr-aba').forEach((b) => b.classList.toggle('ativa', b.dataset.aba === qual));
+    const lugar = corpo.querySelector('#codigo-qr-conteudo');
+    if (qual === 'escanear') {
+      mostrarLeitorDeQr(lugar);
+      return;
+    }
+    lugar.innerHTML = '<p class="perfis-carregando">Carregando...</p>';
+    try {
+      const codigo = await chamarCenaculo('amigo_meu_codigo', { _pid: perfil.id });
+      mostrarCartaoDoCodigo(lugar, codigo);
+    } catch (erro) {
+      lugar.innerHTML = `<p class="not-found-msg">${mensagemDoCenaculo(erro)}</p>`;
+    }
+  };
+  corpo.querySelectorAll('.codigo-qr-aba').forEach((botao) => {
+    botao.addEventListener('click', () => mostrar(botao.dataset.aba));
+  });
+  mostrar(aba === 'escanear' ? 'escanear' : 'meu');
 }
 
 function mostrarCartaoDoCodigo(corpo, codigo) {
@@ -115,7 +157,7 @@ function mostrarCartaoDoCodigo(corpo, codigo) {
         <strong class="meu-codigo-nome">${escaparTexto(perfil.nome)}</strong>
         <span class="meu-codigo-texto" id="meu-codigo-texto">${formatarCodigoPessoal(codigo)}</span>
       </div>
-      <p class="cenaculo-explica">Quem apontar a câmera do celular para este QR Code, ou colar o seu código em "Nova conversa", já pode conversar com você. Mande só para quem você conhece.</p>
+      <p class="cenaculo-explica">Quem escanear este QR Code, no Lumina Sancti ou com a câmera do celular, ou colar o seu código em "Nova conversa", já pode conversar com você. Mande só para quem você conhece.</p>
       <div class="cenaculo-botoes">
         <button type="button" class="licao-botao" id="meu-codigo-copiar">Copiar código</button>
         <button type="button" class="filter-btn" id="meu-codigo-compartilhar">${navigator.share ? 'Compartilhar' : 'Copiar link'}</button>
@@ -146,13 +188,156 @@ function mostrarCartaoDoCodigo(corpo, codigo) {
   corpo.querySelector('#meu-codigo-novo').addEventListener('click', async () => {
     if (!window.confirm('Gerar um código novo? Quem tiver o código antigo não vai mais conseguir adicionar você. As conversas que você já tem continuam.')) return;
     try {
-      const novo = await chamarCenaculo('amigo_novo_codigo', { _pid: perfil.id });
+      const novo = await chamarCenaculo('amigo_novo_codigo', { _pid: perfilAdultoAtivo().id });
       mostrarCartaoDoCodigo(corpo, novo);
       corpo.querySelector('#meu-codigo-aviso').textContent = 'Pronto! Agora só o código novo funciona.';
     } catch (erro) {
       aviso.textContent = mensagemDoCenaculo(erro);
     }
   });
+}
+
+function carregarLeitorJsQr() {
+  if (typeof jsQR === 'function') return Promise.resolve();
+  if (bibliotecaDeLeituraPronta) return bibliotecaDeLeituraPronta;
+  bibliotecaDeLeituraPronta = new Promise((resolver, rejeitar) => {
+    const script = document.createElement('script');
+    script.src = BIBLIOTECA_DE_LEITURA.endereco;
+    script.integrity = BIBLIOTECA_DE_LEITURA.integridade;
+    script.crossOrigin = 'anonymous';
+    script.onload = () => (typeof jsQR === 'function' ? resolver() : rejeitar(new Error('leitor')));
+    script.onerror = () => {
+      bibliotecaDeLeituraPronta = null;
+      rejeitar(new Error('leitor'));
+    };
+    document.head.appendChild(script);
+  });
+  return bibliotecaDeLeituraPronta;
+}
+
+async function prepararLeitorDeQr() {
+  if (typeof BarcodeDetector !== 'undefined') {
+    try {
+      const formatos = await BarcodeDetector.getSupportedFormats();
+      if (formatos.includes('qr_code')) {
+        const detector = new BarcodeDetector({ formats: ['qr_code'] });
+        return async (fonte) => {
+          const achados = await detector.detect(fonte);
+          return achados.length ? achados[0].rawValue : '';
+        };
+      }
+    } catch (e) {
+    }
+  }
+  await carregarLeitorJsQr();
+  const tela = document.createElement('canvas');
+  const contexto = tela.getContext('2d', { willReadFrequently: true });
+  return async (fonte) => {
+    const largura = fonte.videoWidth || fonte.naturalWidth || fonte.width;
+    const altura = fonte.videoHeight || fonte.naturalHeight || fonte.height;
+    if (!largura || !altura) return '';
+    const escala = Math.min(1, 720 / Math.max(largura, altura));
+    tela.width = Math.max(1, Math.round(largura * escala));
+    tela.height = Math.max(1, Math.round(altura * escala));
+    contexto.drawImage(fonte, 0, 0, tela.width, tela.height);
+    const imagem = contexto.getImageData(0, 0, tela.width, tela.height);
+    const achado = jsQR(imagem.data, tela.width, tela.height, { inversionAttempts: 'attemptBoth' });
+    return achado ? achado.data : '';
+  };
+}
+
+function pararLeitorDeQr() {
+  if (!leitorDeQrAtivo) return;
+  leitorDeQrAtivo.ativo = false;
+  clearTimeout(leitorDeQrAtivo.temporizador);
+  if (leitorDeQrAtivo.fluxo) leitorDeQrAtivo.fluxo.getTracks().forEach((faixa) => faixa.stop());
+  leitorDeQrAtivo = null;
+}
+
+function aoLerQr(texto, aviso) {
+  const codigo = codigoDeAmigo(texto);
+  if (!codigo) {
+    if (aviso) aviso.textContent = 'Esse QR Code não é um código do Lumina Sancti.';
+    return false;
+  }
+  pararLeitorDeQr();
+  abrirAdicionarPessoa(codigo);
+  return true;
+}
+
+async function mostrarLeitorDeQr(lugar) {
+  lugar.innerHTML = `
+    <div class="escanear">
+      <div class="escanear-camera">
+        <video id="escanear-video" playsinline muted autoplay></video>
+        <span class="escanear-mira" aria-hidden="true"></span>
+      </div>
+      <p class="cenaculo-explica">Aponte a câmera para o QR Code da outra pessoa. Quando o código for lido, a conversa já começa.</p>
+      <input type="file" id="escanear-foto" accept="image/*" hidden>
+      <button type="button" class="filter-btn" id="escanear-foto-btn">Ler o QR Code de uma foto</button>
+      <p class="auth-feedback" id="escanear-aviso" aria-live="polite"></p>
+    </div>`;
+  const aviso = lugar.querySelector('#escanear-aviso');
+  const video = lugar.querySelector('#escanear-video');
+  const arquivo = lugar.querySelector('#escanear-foto');
+  lugar.querySelector('#escanear-foto-btn').addEventListener('click', () => arquivo.click());
+  arquivo.addEventListener('change', async () => {
+    const escolhido = arquivo.files && arquivo.files[0];
+    if (!escolhido) return;
+    aviso.textContent = 'Lendo a foto...';
+    try {
+      const ler = await prepararLeitorDeQr();
+      const imagem = new Image();
+      const endereco = URL.createObjectURL(escolhido);
+      imagem.src = endereco;
+      await imagem.decode();
+      const texto = await ler(imagem);
+      URL.revokeObjectURL(endereco);
+      if (!texto) { aviso.textContent = 'Não encontramos um QR Code nessa foto. Tente uma foto mais nítida.'; return; }
+      aoLerQr(texto, aviso);
+    } catch (e) {
+      aviso.textContent = 'Não foi possível ler essa foto.';
+    }
+  });
+
+  const sessao = { ativo: true, fluxo: null, temporizador: null };
+  leitorDeQrAtivo = sessao;
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    aviso.textContent = 'Este aparelho não abre a câmera pelo site. Use "Ler o QR Code de uma foto".';
+    return;
+  }
+  let ler;
+  try {
+    ler = await prepararLeitorDeQr();
+    sessao.fluxo = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false });
+  } catch (e) {
+    if (sessao.fluxo) sessao.fluxo.getTracks().forEach((faixa) => faixa.stop());
+    if (leitorDeQrAtivo === sessao) leitorDeQrAtivo = null;
+    aviso.textContent = 'Não foi possível abrir a câmera. Permita o uso da câmera ou use "Ler o QR Code de uma foto".';
+    return;
+  }
+  if (!sessao.ativo) {
+    sessao.fluxo.getTracks().forEach((faixa) => faixa.stop());
+    return;
+  }
+  video.srcObject = sessao.fluxo;
+  try { await video.play(); } catch (e) {  }
+  let ultimoAviso = 0;
+  const procurar = async () => {
+    if (!sessao.ativo) return;
+    try {
+      if (video.readyState >= 2) {
+        const texto = await ler(video);
+        if (texto && sessao.ativo) {
+          if (aoLerQr(texto, Date.now() - ultimoAviso > 2500 ? aviso : null)) return;
+          ultimoAviso = Date.now();
+        }
+      }
+    } catch (e) {
+    }
+    if (sessao.ativo) sessao.temporizador = setTimeout(procurar, 250);
+  };
+  procurar();
 }
 
 async function abrirAdicionarPessoa(codigoInicial) {
@@ -167,10 +352,14 @@ async function abrirAdicionarPessoa(codigoInicial) {
     </div>
     <div id="amigo-passo2" hidden></div>
     <p class="auth-feedback" id="amigo-codigo-aviso" aria-live="polite"></p>
-    <button type="button" class="perfil-link" id="amigo-ver-meu-codigo">Mostrar o meu código e o meu QR Code</button>`);
+    <div class="amigo-atalhos">
+      <button type="button" class="filter-btn" id="amigo-escanear">${iconeDoCenaculo('escanear')} Escanear QR Code</button>
+      <button type="button" class="filter-btn" id="amigo-ver-meu-codigo">${iconeDoCenaculo('qr')} Meu código</button>
+    </div>`);
   const aviso = corpo.querySelector('#amigo-codigo-aviso');
   const campo = corpo.querySelector('#amigo-codigo-campo');
-  corpo.querySelector('#amigo-ver-meu-codigo').addEventListener('click', abrirMeuCodigo);
+  corpo.querySelector('#amigo-ver-meu-codigo').addEventListener('click', () => abrirMeuCodigo());
+  corpo.querySelector('#amigo-escanear').addEventListener('click', () => abrirEscanearCodigo());
 
   const mostrarPrevia = async (codigo) => {
     aviso.textContent = 'Procurando...';
@@ -229,22 +418,9 @@ async function abrirAdicionarPessoa(codigoInicial) {
 function frasesDaComparacao(dados) {
   const nome = escaparTexto(primeiroNome(dados.nome));
   const diferenca = Number(dados.minha_fe || 0) - Number(dados.fe || 0);
-  if (diferenca > 0) return `Você tem <strong>${diferenca}</strong> de Fé a mais que ${nome}.`;
+  if (diferenca > 0) return `Você tem <strong>${diferenca}</strong> de Fé a mais que ${nome}. Continue assim!`;
   if (diferenca < 0) return `Faltam <strong>${-diferenca}</strong> de Fé para você alcançar ${nome}.`;
   return `Você e ${nome} estão empatados em Fé.`;
-}
-
-function barrasDaComparacao(dados) {
-  const minha = Math.max(0, Number(dados.minha_fe || 0));
-  const dela = Math.max(0, Number(dados.fe || 0));
-  const maior = Math.max(minha, dela, 1);
-  const barra = (rotulo, valor, classe) => `
-    <div class="perfil-publico-barra ${classe}">
-      <span class="perfil-publico-barra-nome">${rotulo}</span>
-      <span class="perfil-publico-barra-trilho"><span style="width:${Math.max(4, Math.round((valor / maior) * 100))}%"></span></span>
-      <span class="perfil-publico-barra-valor">${valor}</span>
-    </div>`;
-  return barra('Você', minha, 'eu') + barra(escaparTexto(primeiroNome(dados.nome)), dela, 'outro');
 }
 
 function desdeQuando(iso) {
@@ -252,6 +428,78 @@ function desdeQuando(iso) {
   const data = new Date(iso);
   if (Number.isNaN(data.getTime())) return '';
   return `No Lumina Sancti desde ${data.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}`;
+}
+
+function cartaoDeEstatistica(icone, cor, valor, rotulo, detalhe) {
+  return `
+    <div class="perfil-estatistica" style="--cor-da-estatistica:${cor}">
+      <span class="perfil-estatistica-icone">${iconeDoCenaculo(icone)}</span>
+      <span class="perfil-estatistica-textos">
+        <strong>${valor}</strong>
+        <small>${rotulo}</small>
+        ${detalhe ? `<small class="perfil-estatistica-detalhe">${detalhe}</small>` : ''}
+      </span>
+    </div>`;
+}
+
+function blocoDaComparacao(dados, fotoDoOutro) {
+  const perfil = perfilAdultoAtivo();
+  const minha = Math.max(0, Number(dados.minha_fe || 0));
+  const dela = Math.max(0, Number(dados.fe || 0));
+  const maior = Math.max(minha, dela, 1);
+  const lado = (avatar, nome, valor, classe) => `
+    <div class="perfil-duelo-lado ${classe}${valor >= Math.max(minha, dela) && valor > 0 ? ' na-frente' : ''}">
+      ${avatar}
+      <strong>${valor}</strong>
+      <small>${nome}</small>
+      <span class="perfil-duelo-barra"><span style="height:${Math.max(6, Math.round((valor / maior) * 100))}%"></span></span>
+    </div>`;
+  return `
+    <section class="perfil-secao">
+      <h4 class="perfil-secao-titulo">Você x ${escaparTexto(primeiroNome(dados.nome))}</h4>
+      <div class="perfil-duelo">
+        ${lado(avatarDoCenaculo(perfil.avatar, perfil.fotoUrl, 'pequeno'), 'Você', minha, 'eu')}
+        <span class="perfil-duelo-x">x</span>
+        ${lado(avatarDoCenaculo(dados.avatar, fotoDoOutro, 'pequeno'), escaparTexto(primeiroNome(dados.nome)), dela, 'outro')}
+      </div>
+      <p class="perfil-duelo-frase">${frasesDaComparacao(dados)}</p>
+    </section>`;
+}
+
+function acoesDoPerfil(dados) {
+  const nome = escaparTexto(primeiroNome(dados.nome));
+  if (dados.eu) {
+    return `
+      <div class="perfil-acoes">
+        <button type="button" class="perfil-acao" id="perfil-publico-meu-codigo">${iconeDoCenaculo('qr')}<span>Meu código</span></button>
+      </div>`;
+  }
+  if (dados.contato) {
+    return `
+      <div class="perfil-acoes">
+        <button type="button" class="perfil-acao" id="perfil-publico-conversar">${iconeDoCenaculo('conversa')}<span>Conversar</span></button>
+        <button type="button" class="perfil-acao" id="perfil-publico-audio">${iconeDoCenaculo('microfone')}<span>Áudio</span></button>
+      </div>`;
+  }
+  return `<p class="cenaculo-explica perfil-publico-nota">Para conversar com ${nome}, peça o código pessoal a essa pessoa, ou escaneie o QR Code dela em "Nova conversa".</p>`;
+}
+
+function rodapeDoPerfil(dados) {
+  if (dados.eu || !cenaculoAberto || !membroDoCenaculo(dados.perfil_id)) return '';
+  const bloqueado = (cenaculoAberto.bloqueados || []).includes(dados.perfil_id);
+  const nome = escaparTexto(primeiroNome(dados.nome));
+  return `
+    <div class="perfil-perigo">
+      <button type="button" class="perfil-perigo-botao" id="perfil-publico-bloquear" data-bloqueado="${bloqueado ? 'sim' : 'nao'}">${iconeDoCenaculo('escudo')}<span>${bloqueado ? `Desbloquear ${nome}` : `Bloquear ${nome}`}</span></button>
+    </div>`;
+}
+
+async function abrirConversaComContato(dados, gravarAudio) {
+  const perfil = perfilAdultoAtivo();
+  const idDaConversa = await chamarCenaculo('conversa_abrir', { _pid: perfil.id, _contato: dados.perfil_id });
+  fecharJanelaDoCenaculo();
+  if (!cenaculoAberto || cenaculoAberto.id !== idDaConversa) await abrirConversa(idDaConversa);
+  if (gravarAudio && typeof comecarGravacao === 'function') comecarGravacao();
 }
 
 async function abrirPerfilPublico(idDoPerfil) {
@@ -264,44 +512,53 @@ async function abrirPerfilPublico(idDoPerfil) {
     if (dados.eu) foto = perfil.fotoUrl || '';
     else if (dados.foto) foto = (await enderecosAssinados('avatars', [dados.foto]))[dados.foto] || '';
     const titulo = document.getElementById('cenaculo-janela-titulo');
-    if (titulo) titulo.textContent = dados.eu ? 'Seu perfil' : 'Perfil';
+    if (titulo) titulo.textContent = dados.eu ? 'Seu perfil' : 'Dados do contato';
     const sequencia = Number(dados.sequencia || 0);
-    let rodape = '';
-    if (dados.eu) rodape = '<p class="cenaculo-explica perfil-publico-nota">Este é o seu perfil, do jeito que os outros veem.</p>';
-    else if (dados.contato) rodape = '<button type="button" class="licao-botao" id="perfil-publico-conversar">Conversar</button>';
-    else rodape = `<p class="cenaculo-explica perfil-publico-nota">Para conversar com ${escaparTexto(primeiroNome(dados.nome))}, peça o código pessoal a essa pessoa e cole em "Nova conversa", nos Cenáculos.</p>`;
+    const recorde = Number(dados.melhor_sequencia || 0);
+    const licoes = Number(dados.licoes || 0);
     corpo.innerHTML = `
       <div class="perfil-publico">
+        <div class="perfil-publico-capa">
+          <span class="perfil-publico-foto">${avatarDoCenaculo(dados.avatar, foto, 'grande')}</span>
+        </div>
         <div class="perfil-publico-topo">
-          ${avatarDoCenaculo(dados.avatar, foto, 'grande')}
           <strong class="perfil-publico-nome">${escaparTexto(dados.nome)}</strong>
           <small>${desdeQuando(dados.desde)}</small>
         </div>
-        <div class="perfil-publico-numeros">
-          <div><strong>${Number(dados.fe || 0)}</strong><small>Fé no total</small></div>
-          <div><strong>${Number(dados.fe_semana || 0)}</strong><small>Fé nesta semana</small></div>
-          <div><strong>${sequencia}</strong><small>${sequencia === 1 ? 'dia seguido' : 'dias seguidos'}</small></div>
-          <div><strong>${Number(dados.licoes || 0)}</strong><small>${Number(dados.licoes) === 1 ? 'lição concluída' : 'lições concluídas'}</small></div>
-        </div>
-        ${dados.eu ? '' : `
-        <div class="perfil-publico-comparacao">
-          <p>${frasesDaComparacao(dados)}</p>
-          ${barrasDaComparacao(dados)}
-        </div>`}
-        ${rodape}
+        ${acoesDoPerfil(dados)}
+        <section class="perfil-secao">
+          <h4 class="perfil-secao-titulo">Estatísticas</h4>
+          <div class="perfil-publico-numeros">
+            ${cartaoDeEstatistica('chama', '#ff9600', sequencia, sequencia === 1 ? 'dia seguido' : 'dias seguidos', recorde > 0 ? `recorde: ${recorde}` : '')}
+            ${cartaoDeEstatistica('estrela', '#f5b400', Number(dados.fe || 0), 'Fé no total', '')}
+            ${cartaoDeEstatistica('trofeu', '#58cc02', Number(dados.fe_semana || 0), 'Fé nesta semana', '')}
+            ${cartaoDeEstatistica('livro', '#1cb0f6', licoes, licoes === 1 ? 'lição concluída' : 'lições concluídas', '')}
+          </div>
+        </section>
+        ${dados.eu ? '' : blocoDaComparacao(dados, foto)}
+        ${rodapeDoPerfil(dados)}
       </div>`;
     const conversar = corpo.querySelector('#perfil-publico-conversar');
-    if (conversar) {
-      conversar.addEventListener('click', async () => {
-        conversar.disabled = true;
+    const audio = corpo.querySelector('#perfil-publico-audio');
+    [[conversar, false], [audio, true]].forEach(([botao, gravar]) => {
+      if (!botao) return;
+      botao.addEventListener('click', async () => {
+        botao.disabled = true;
         try {
-          const idDaConversa = await chamarCenaculo('conversa_abrir', { _pid: perfil.id, _contato: dados.perfil_id });
-          fecharJanelaDoCenaculo();
-          abrirConversa(idDaConversa);
+          await abrirConversaComContato(dados, gravar);
         } catch (erro) {
-          conversar.disabled = false;
+          botao.disabled = false;
           avisoDoCenaculo(mensagemDoCenaculo(erro));
         }
+      });
+    });
+    const meuCodigo = corpo.querySelector('#perfil-publico-meu-codigo');
+    if (meuCodigo) meuCodigo.addEventListener('click', () => abrirMeuCodigo());
+    const bloquear = corpo.querySelector('#perfil-publico-bloquear');
+    if (bloquear) {
+      bloquear.addEventListener('click', () => {
+        if (bloquear.dataset.bloqueado === 'sim') mudarBloqueio(dados.perfil_id, false);
+        else confirmarBloqueio(dados.perfil_id, dados.nome);
       });
     }
   } catch (erro) {
@@ -435,8 +692,7 @@ function verificarAmigoPendente() {
   if (!perfilAdultoAtivo()) return;
   try { sessionStorage.removeItem(CHAVE_AMIGO_PENDENTE); } catch (e) {  }
   if (paginaBloqueadaPelaSuspensao('view-cenaculos')) return;
-  mudarDeView('view-cenaculos');
-  carregarListaDeCenaculos();
+  mostrarListaDeCenaculos();
   abrirAdicionarPessoa(codigo);
 }
 

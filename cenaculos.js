@@ -81,6 +81,12 @@ let temporizadorDoGiphy = null;
 let seletorDeEmojisPronto = null;
 let temporizadorDoNome = null;
 let fotoDoGrupoUrl = '';
+let ultimaListaDeCenaculos = null;
+let fotosDaUltimaLista = {};
+let filtroDaLista = 'tudo';
+let buscaDaLista = '';
+let temporizadorDaLista = null;
+const TELA_GRANDE = window.matchMedia('(min-width: 900px)');
 const aceitesDosPerfis = {};
 const enderecosDasFotosDosGrupos = {};
 
@@ -305,16 +311,61 @@ function abrirCenaculos() {
   if (paginaBloqueadaPelaSuspensao('view-cenaculos')) return;
   pararConversa();
   if (typeof closeSidebar === 'function') closeSidebar();
-  mudarDeView('view-cenaculos');
-  carregarListaDeCenaculos();
+  mostrarListaDeCenaculos();
   garantirAceite();
 }
 
-async function carregarListaDeCenaculos() {
+function telaGrande() {
+  return TELA_GRANDE.matches;
+}
+
+function posicionarPainelDaLista() {
+  const painel = document.getElementById('cenaculos-painel');
+  const destino = document.getElementById(telaGrande() ? 'cenaculo-lateral' : 'cenaculos-casa');
+  if (painel && destino && painel.parentElement !== destino) destino.appendChild(painel);
+}
+
+function marcarSemConversa(semConversa) {
+  const tela = document.getElementById('cenaculo-tela');
+  if (tela) tela.classList.toggle('sem-conversa', semConversa);
+}
+
+function mostrarListaDeCenaculos() {
+  posicionarPainelDaLista();
+  if (telaGrande()) {
+    pararConversa();
+    cenaculoAberto = null;
+    marcarSemConversa(true);
+    mudarDeView('view-cenaculo');
+  } else {
+    cenaculoAberto = null;
+    mudarDeView('view-cenaculos');
+  }
+  carregarListaDeCenaculos();
+}
+
+function aoMudarTamanhoDaTela() {
+  posicionarPainelDaLista();
+  const ativa = document.querySelector('.view.active');
+  const idAtiva = ativa ? ativa.id : '';
+  if (telaGrande() && idAtiva === 'view-cenaculos') {
+    mostrarListaDeCenaculos();
+  } else if (!telaGrande() && idAtiva === 'view-cenaculo' && !cenaculoAberto) {
+    mudarDeView('view-cenaculos');
+  }
+}
+
+function agendarAtualizacaoDaLista() {
+  if (!telaGrande()) return;
+  clearTimeout(temporizadorDaLista);
+  temporizadorDaLista = setTimeout(() => carregarListaDeCenaculos(true), 1200);
+}
+
+async function carregarListaDeCenaculos(semAvisoDeCarregando) {
   const lista = document.getElementById('cenaculos-lista');
   const perfil = perfilAdultoAtivo();
   if (!lista || !perfil) return;
-  lista.innerHTML = '<p class="perfis-carregando">Carregando seus cenáculos...</p>';
+  if (!semAvisoDeCarregando || !ultimaListaDeCenaculos) lista.innerHTML = '<p class="perfis-carregando">Carregando suas conversas...</p>';
   try {
     const cenaculos = await chamarCenaculo('cenaculo_meus', { _pid: perfil.id });
     const fotos = await enderecosDasFotosDaLista(cenaculos || []);
@@ -369,34 +420,88 @@ function iconeDaLista(c, fotos) {
   return `<span class="cenaculo-cartao-icone">${iconeDoCenaculo('usuarios')}</span>`;
 }
 
+function horaNaLista(iso) {
+  if (!iso) return '';
+  const data = new Date(iso);
+  if (Number.isNaN(data.getTime())) return '';
+  const hoje = new Date();
+  if (data.toDateString() === hoje.toDateString()) return formatarHora(iso);
+  if (data.toDateString() === new Date(Date.now() - 86400000).toDateString()) return 'Ontem';
+  if (Date.now() - data.getTime() < 6 * 86400000) {
+    const dia = data.toLocaleDateString('pt-BR', { weekday: 'long' });
+    return dia.charAt(0).toUpperCase() + dia.slice(1);
+  }
+  return data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+
+function textoParaBusca(texto) {
+  return String(texto || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
+
+function passaNoFiltro(c) {
+  if (filtroDaLista === 'conversas' && c.tipo !== 'conversa') return false;
+  if (filtroDaLista === 'grupos' && c.tipo === 'conversa') return false;
+  const busca = textoParaBusca(buscaDaLista).trim();
+  return !busca || textoParaBusca(nomeDaConversa(c)).includes(busca);
+}
+
+function marcarConversaAtivaNaLista() {
+  document.querySelectorAll('.cenaculo-cartao').forEach((botao) => {
+    botao.classList.toggle('ativa', !!cenaculoAberto && botao.dataset.cenaculo === cenaculoAberto.id);
+  });
+}
+
 function renderizarListaDeCenaculos(cenaculos, fotos) {
   const lista = document.getElementById('cenaculos-lista');
   if (!lista) return;
-  const enderecos = fotos || {};
-  if (cenaculos.length === 0) {
+  if (cenaculos) {
+    ultimaListaDeCenaculos = cenaculos;
+    fotosDaUltimaLista = fotos || {};
+  }
+  const todos = ultimaListaDeCenaculos || [];
+  const enderecos = fotosDaUltimaLista;
+  document.querySelectorAll('.cenaculos-filtro').forEach((b) => b.classList.toggle('ativo', b.dataset.filtro === filtroDaLista));
+  if (todos.length === 0) {
     lista.innerHTML = `
       <div class="cenaculos-vazio">
         <p><strong>Você ainda não tem conversas nem cenáculos.</strong></p>
-        <p>Toque em "Nova conversa" e cole o código de um amigo, crie um cenáculo para o seu grupo de oração ou peça o link de convite para quem já organiza um.</p>
+        <p>Toque em "Nova conversa" para colar o código de um amigo ou escanear o QR Code dele. No menu, você também pode criar um cenáculo para o seu grupo de oração ou entrar com um convite.</p>
       </div>`;
     return;
   }
-  lista.innerHTML = cenaculos.map((c) => {
+  const visiveis = todos.filter(passaNoFiltro);
+  if (visiveis.length === 0) {
+    lista.innerHTML = '<p class="cenaculos-nada">Nenhuma conversa encontrada.</p>';
+    return;
+  }
+  lista.innerHTML = visiveis.map((c) => {
     const conversa = c.tipo === 'conversa';
     return `
     <button type="button" class="cenaculo-cartao${conversa ? ' conversa' : ''}" data-cenaculo="${c.id}">
       ${iconeDaLista(c, enderecos)}
       <span class="cenaculo-cartao-textos">
-        <strong>${escaparTexto(nomeDaConversa(c))}</strong>
+        <span class="cenaculo-cartao-linha">
+          <strong>${escaparTexto(nomeDaConversa(c))}</strong>
+          <span class="cenaculo-cartao-hora">${horaNaLista(c.ultima ? c.ultima.quando : c.atividade)}</span>
+        </span>
         <small>${resumoDaUltimaMensagem(c.ultima, conversa)}</small>
         ${c.encontro ? `<small class="cenaculo-cartao-encontro">${iconeDoCenaculo('video')} ${escaparTexto(c.encontro.titulo)}: ${formatarEncontro(c.encontro.quando)}</small>` : ''}
       </span>
-      <span class="cenaculo-cartao-membros">${conversa ? 'conversa' : `${c.membros} ${c.membros === 1 ? 'pessoa' : 'pessoas'}`}</span>
     </button>`;
   }).join('');
   lista.querySelectorAll('.cenaculo-cartao').forEach((botao) => {
     botao.addEventListener('click', () => abrirConversa(botao.dataset.cenaculo));
   });
+  marcarConversaAtivaNaLista();
+}
+
+function alternarMenuDaLista(abrir) {
+  const menu = document.getElementById('cenaculos-menu');
+  const botao = document.getElementById('cenaculos-menu-btn');
+  if (!menu || !botao) return;
+  const vaiAbrir = typeof abrir === 'boolean' ? abrir : menu.hidden;
+  menu.hidden = !vaiAbrir;
+  botao.setAttribute('aria-expanded', vaiAbrir ? 'true' : 'false');
 }
 
 function blocoDoParticipante() {
@@ -612,7 +717,11 @@ async function abrirConversa(idDoCenaculo) {
   fotosDosMembros = {};
   cenaculoAberto = { id: idDoCenaculo, nome: '', membros: [], bloqueados: [] };
   fotoDoGrupoUrl = '';
+  posicionarPainelDaLista();
+  marcarSemConversa(false);
+  marcarConversaAtivaNaLista();
   mudarDeView('view-cenaculo');
+  if (telaGrande() && !ultimaListaDeCenaculos) carregarListaDeCenaculos();
   document.getElementById('cenaculo-nome').textContent = 'Carregando...';
   document.getElementById('cenaculo-membros-contagem').textContent = '';
   const fotoDoTopo = document.getElementById('cenaculo-topo-foto');
@@ -955,6 +1064,7 @@ function ouvirMensagensNovas() {
           if (!cenaculoAberto || cenaculoAberto.id !== idDoCenaculo || !mudanca.new || !mudanca.new.id) return;
           const nova = !mensagensDoCenaculo.some((m) => m.id === mudanca.new.id);
           juntarMensagem(mudanca.new);
+          agendarAtualizacaoDaLista();
           renderizarMensagens(false);
           if (nova && !membroDoCenaculo(mudanca.new.perfil_id)) recarregarMembros();
         })
@@ -989,7 +1099,10 @@ async function buscarMensagensRecentes() {
     const recentes = await chamarCenaculo('cenaculo_mensagens_lista', { _pid: perfil.id, _cid: cenaculoAberto.id, _antes: null, _limite: 50 });
     const antes = JSON.stringify(mensagensDoCenaculo);
     (recentes || []).forEach(juntarMensagem);
-    if (JSON.stringify(mensagensDoCenaculo) !== antes) renderizarMensagens(false);
+    if (JSON.stringify(mensagensDoCenaculo) !== antes) {
+      renderizarMensagens(false);
+      agendarAtualizacaoDaLista();
+    }
   } catch (e) {
   }
 }
@@ -1029,6 +1142,7 @@ async function enviarAoCenaculo(tipo, conteudo) {
     const enviada = await chamarCenaculo('cenaculo_enviar', argumentos);
     juntarMensagem(Object.assign(local, { id: enviada.id, criada_em: enviada.criada_em }));
     renderizarMensagens(true);
+    agendarAtualizacaoDaLista();
     return true;
   } catch (erro) {
     avisoDoCenaculo(mensagemDoCenaculo(erro));
@@ -1566,8 +1680,7 @@ function verificarConvitePendente() {
   if (!perfilAdultoAtivo()) return;
   try { sessionStorage.removeItem(CHAVE_CONVITE_PENDENTE); } catch (e) {  }
   if (paginaBloqueadaPelaSuspensao('view-cenaculos')) return;
-  mudarDeView('view-cenaculos');
-  carregarListaDeCenaculos();
+  mostrarListaDeCenaculos();
   abrirEntradaPorConvite(codigo);
 }
 
@@ -1772,13 +1885,34 @@ function iniciarCenaculos() {
   };
   ligar('btn-back-cenaculos', () => mudarDeView('view-home'));
   ligar('btn-back-equipe', () => mudarDeView('view-home'));
-  ligar('cenaculo-criar-btn', abrirCriacaoDeCenaculo);
-  ligar('cenaculo-entrar-btn', () => abrirEntradaPorConvite(''));
+  const doMenu = (funcao) => () => { alternarMenuDaLista(false); funcao(); };
+  ligar('cenaculo-criar-btn', doMenu(abrirCriacaoDeCenaculo));
+  ligar('cenaculo-entrar-btn', doMenu(() => abrirEntradaPorConvite('')));
+  ligar('cenaculo-regras-btn', doMenu(() => janelaDoCenaculo('Regras dos Cenáculos', REGRAS_DOS_CENACULOS)));
+  ligar('cenaculos-menu-btn', (evento) => { evento.stopPropagation(); alternarMenuDaLista(); });
+  document.addEventListener('click', (evento) => {
+    if (!evento.target.closest('.cenaculos-menu-caixa')) alternarMenuDaLista(false);
+  });
+  ligar('cenaculo-nova-btn', () => { if (typeof abrirAdicionarPessoa === 'function') abrirAdicionarPessoa(''); });
+  ligar('cenaculo-escanear-btn', () => { if (typeof abrirEscanearCodigo === 'function') abrirEscanearCodigo(); });
+  document.querySelectorAll('.cenaculos-filtro').forEach((botao) => {
+    botao.addEventListener('click', () => {
+      filtroDaLista = botao.dataset.filtro;
+      renderizarListaDeCenaculos();
+    });
+  });
+  const buscaDaListaCampo = document.getElementById('cenaculos-busca');
+  if (buscaDaListaCampo) {
+    buscaDaListaCampo.addEventListener('input', () => {
+      buscaDaLista = buscaDaListaCampo.value;
+      renderizarListaDeCenaculos();
+    });
+  }
   ligar('cenaculo-voltar', abrirCenaculos);
   ligar('cenaculo-menu-btn', abrirMenuDoCenaculo);
   ligar('cenaculo-titulo-btn', tocarNoTituloDaConversa);
   ligar('cenaculo-conversa-btn', () => { if (typeof abrirAdicionarPessoa === 'function') abrirAdicionarPessoa(''); });
-  ligar('cenaculo-meu-codigo-btn', () => { if (typeof abrirMeuCodigo === 'function') abrirMeuCodigo(); });
+  ligar('cenaculo-meu-codigo-btn', doMenu(() => { if (typeof abrirMeuCodigo === 'function') abrirMeuCodigo(); }));
   ligar('cenaculo-emoji-btn', abrirPainelDeEmojis);
   ligar('cenaculo-gif-btn', abrirPainelDeGifs);
   const botaoDeGifs = document.getElementById('cenaculo-gif-btn');
@@ -1841,6 +1975,10 @@ function iniciarCenaculos() {
     }, 300);
     setInterval(() => { if (!document.hidden) atualizarSituacaoDaConta(); }, 5 * 60 * 1000);
   }
+  posicionarPainelDaLista();
+  marcarSemConversa(true);
+  if (TELA_GRANDE.addEventListener) TELA_GRANDE.addEventListener('change', aoMudarTamanhoDaTela);
+  else if (TELA_GRANDE.addListener) TELA_GRANDE.addListener(aoMudarTamanhoDaTela);
   const ativa = document.querySelector('.view.active');
   atualizarBarraDoApp(ativa ? ativa.id : 'view-home');
 }

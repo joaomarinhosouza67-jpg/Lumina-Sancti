@@ -511,7 +511,7 @@
         </ul>
 
         <h3>Cenáculos (grupos)</h3>
-        <p>Os Cenáculos são só para adultos, e para entrar é preciso aceitar as Regras dos Cenáculos. As conversas não são secretas: a equipe do Lumina Sancti pode ler as mensagens e ouvir os áudios para proteger os participantes e investigar denúncias. Uma mensagem apagada some para o grupo, mas a equipe guarda uma cópia para poder investigar denúncias. Os áudios ficam guardados por até 90 dias. O microfone só é usado enquanto você grava um áudio, e só com a sua permissão. Nos cenáculos, os outros participantes veem o nome e a foto do seu perfil.</p>
+        <p>Os Cenáculos são só para adultos, e para entrar é preciso aceitar as Regras dos Cenáculos. As conversas não são secretas: a equipe do Lumina Sancti pode ler as mensagens e ouvir os áudios para proteger os participantes e investigar denúncias. Uma mensagem apagada some para o grupo, mas a equipe guarda uma cópia para poder investigar denúncias. Os áudios ficam guardados por até 90 dias. O microfone só é usado enquanto você grava um áudio, e a câmera só enquanto você escaneia o QR Code de alguém, sempre com a sua permissão. A imagem da câmera é lida no seu próprio aparelho: não é gravada nem enviada para ninguém. Nos cenáculos, os outros participantes veem o nome e a foto do seu perfil.</p>
         <p>Cada perfil de adulto tem um código pessoal, com QR Code. Quem recebe o seu código pode adicionar você e conversar com você; se ele cair em mãos erradas, gere um código novo, e o antigo para de funcionar. Você também pode bloquear e denunciar.</p>
         <p>Quem conversa com você, participa de um cenáculo com você ou é da sua família vê o seu perfil com nome, foto, Fé, sequência de dias e lições concluídas. No ranking geral, os outros adultos veem só o seu primeiro nome, o seu avatar e esses números, sem a sua foto. Perfis infantis não aparecem para ninguém de fora da família.</p>
         <p>Se as regras forem desrespeitadas, a equipe pode apagar mensagens e suspender a conta, por um tempo ou por tempo indeterminado. Nada da conta suspensa é apagado.</p>
@@ -763,25 +763,50 @@
     </section>
 
     <section id="view-cenaculos" class="view">
-      <div class="container cenaculos-container">
-        <button class="btn-back" id="btn-back-cenaculos">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-          <span data-i18n="voltar_inicio">Voltar para o início</span>
-        </button>
-        <h2 class="section-title trilhas-titulo">Cenáculos</h2>
-        <p class="trilhas-intro">Grupos de oração e conversas com amigos na fé. Converse com o seu grupo, fale com quem você adicionou e marque encontros pelo Google Meet.</p>
-        <div class="cenaculos-acoes">
-          <button type="button" class="licao-botao" id="cenaculo-conversa-btn"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-conversa"></use></svg> Nova conversa</button>
-          <button type="button" class="filter-btn" id="cenaculo-meu-codigo-btn"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-qr"></use></svg> Meu código</button>
-          <button type="button" class="filter-btn" id="cenaculo-criar-btn"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-mais"></use></svg> Criar cenáculo</button>
-          <button type="button" class="filter-btn" id="cenaculo-entrar-btn">Entrar com convite</button>
+      <div class="cenaculos-casa" id="cenaculos-casa">
+        <div class="cenaculos-painel" id="cenaculos-painel">
+          <div class="cenaculos-topo">
+            <h2 class="cenaculos-titulo">Cenáculos</h2>
+            <div class="cenaculos-topo-icones">
+              <button type="button" class="icon-btn cenaculos-topo-botao" id="cenaculo-escanear-btn" aria-label="Escanear QR Code"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-escanear"></use></svg></button>
+              <button type="button" class="icon-btn cenaculos-topo-botao cenaculos-so-computador" id="cenaculo-nova-btn" aria-label="Nova conversa"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-conversa-mais"></use></svg></button>
+              <div class="cenaculos-menu-caixa">
+                <button type="button" class="icon-btn cenaculos-topo-botao" id="cenaculos-menu-btn" aria-label="Mais opções" aria-haspopup="true" aria-expanded="false"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-pontos"></use></svg></button>
+                <div class="cenaculos-menu" id="cenaculos-menu" role="menu" hidden>
+                  <button type="button" role="menuitem" id="cenaculo-meu-codigo-btn"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-qr"></use></svg><span>Meu código</span></button>
+                  <button type="button" role="menuitem" id="cenaculo-criar-btn"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-usuarios"></use></svg><span>Criar cenáculo</span></button>
+                  <button type="button" role="menuitem" id="cenaculo-entrar-btn"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-mais"></use></svg><span>Entrar com convite</span></button>
+                  <button type="button" role="menuitem" id="cenaculo-regras-btn"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-escudo"></use></svg><span>Regras dos Cenáculos</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <label class="cenaculos-busca">
+            <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lupa"></use></svg>
+            <input type="search" id="cenaculos-busca" placeholder="Pesquisar" aria-label="Pesquisar conversas" autocomplete="off">
+          </label>
+          <div class="cenaculos-filtros" role="tablist" aria-label="Filtrar conversas">
+            <button type="button" class="cenaculos-filtro ativo" data-filtro="tudo" role="tab">Tudo</button>
+            <button type="button" class="cenaculos-filtro" data-filtro="conversas" role="tab">Conversas</button>
+            <button type="button" class="cenaculos-filtro" data-filtro="grupos" role="tab">Cenáculos</button>
+          </div>
+          <div id="cenaculos-lista" class="cenaculos-lista"></div>
+          <button type="button" class="cenaculos-fab" id="cenaculo-conversa-btn" aria-label="Nova conversa"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-conversa-mais"></use></svg></button>
         </div>
-        <div id="cenaculos-lista" class="cenaculos-lista"></div>
       </div>
     </section>
 
     <section id="view-cenaculo" class="view">
-      <div class="cenaculo-tela">
+      <div class="cenaculo-tela sem-conversa" id="cenaculo-tela">
+        <aside class="cenaculo-lateral" id="cenaculo-lateral" aria-label="Conversas"></aside>
+        <div class="cenaculo-principal">
+        <div class="cenaculo-vazio" id="cenaculo-vazio">
+          <span class="cenaculo-vazio-estrela" aria-hidden="true"><svg viewBox="0 0 100 100" width="84" height="84"><path d="M50 0 C52 35 65 48 100 50 C65 52 52 65 50 100 C48 65 35 52 0 50 C35 48 48 35 50 0 Z" fill="currentColor"/></svg></span>
+          <h3>Cenáculos no computador</h3>
+          <p>Escolha uma conversa na lista ao lado, ou comece uma nova com o código ou o QR Code de um amigo.</p>
+          <small><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-escudo"></use></svg> As conversas não são secretas: a equipe do Lumina Sancti pode lê-las para proteger todos.</small>
+        </div>
+        <div class="cenaculo-conversa" id="cenaculo-conversa">
         <header class="cenaculo-topo">
           <button type="button" class="icon-btn" id="cenaculo-voltar" aria-label="Voltar aos cenáculos">
             <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
@@ -825,6 +850,8 @@
           <button type="submit" class="cenaculo-enviar" id="cenaculo-enviar-btn" aria-label="Enviar" hidden><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-enviar"></use></svg></button>
           <button type="button" class="cenaculo-enviar" id="cenaculo-microfone-btn" aria-label="Gravar áudio"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-microfone"></use></svg></button>
         </form>
+        </div>
+        </div>
       </div>
     </section>
 
@@ -905,6 +932,8 @@
       <g id="icone-escudo"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></g>
       <g id="icone-pessoa"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></g>
       <g id="icone-conversa"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.8 8.8 0 0 1-3.9-.9L3 20.5l1.5-4.6A8.4 8.4 0 1 1 21 11.5z"/></g>
+      <g id="icone-conversa-mais"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.8 8.8 0 0 1-3.9-.9L3 20.5l1.5-4.6A8.4 8.4 0 1 1 21 11.5z"/><path d="M12 8v7M8.5 11.5h7"/></g>
+      <g id="icone-escanear"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M7 12h10"/></g>
       <g id="icone-qr"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 14h3v3h-3zM20 14v.01M14 20v.01M17 20h4v-3"/></g>
       <g id="icone-microfone"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><path d="M12 18v4"/></g>
       <g id="icone-lixeira"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></g>
