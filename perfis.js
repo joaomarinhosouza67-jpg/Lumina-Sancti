@@ -1023,10 +1023,11 @@ function marcarAbaDoRanking() {
 }
 
 function linhaDoRanking(item) {
-  const clicavel = !!item.membroId;
+  const clicavel = !!(item.membroId || item.publicoId);
   const tag = clicavel ? 'button' : 'div';
+  const dados = item.membroId ? ` data-membro="${item.membroId}"` : (item.publicoId ? ` data-publico="${escaparTexto(item.publicoId)}"` : '');
   return `
-    <${tag} class="ranking-linha${item.destaque ? ' destaque' : ''}"${clicavel ? ` data-membro="${item.membroId}"` : ''}>
+    <${tag} class="ranking-linha${item.destaque ? ' destaque' : ''}"${clicavel ? `${dados} type="button"` : ''}>
       ${desenharAvatar(item.avatar, item.fotoUrl, 'pequeno')}
       <span class="ranking-nome">${escaparTexto(item.nome)}${item.destaque ? ' <small>você</small>' : ''}</span>
       <span class="ranking-numero ranking-fe">${icone('estrela')}${item.fe}</span>
@@ -1044,10 +1045,15 @@ async function renderizarRanking() {
         _pid: membroAtivo.id, _period: periodoDoRanking, _limit: 50,
       });
       if (error) throw error;
+      const podeAbrirPerfil = typeof abrirPerfilPublico === 'function';
       const linhas = (data || []).map((l) => linhaDoRanking({
         posicao: l.rank, nome: l.display_name, avatar: l.avatar_key, fe: l.faith, destaque: l.is_me,
+        publicoId: podeAbrirPerfil ? l.profile_id : null,
       })).join('');
       lista.innerHTML = linhas || '<p class="painel-vazio">Ainda não há ninguém no ranking global.</p>';
+      lista.querySelectorAll('.ranking-linha[data-publico]').forEach((linha) => {
+        linha.addEventListener('click', () => abrirPerfilPublico(linha.dataset.publico));
+      });
     } else {
       const [{ data, error }] = await Promise.all([
         supabaseCliente.rpc('leaderboard_family', { _pid: membroAtivo.id, _period: periodoDoRanking }),

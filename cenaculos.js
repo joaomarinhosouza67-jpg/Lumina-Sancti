@@ -15,6 +15,16 @@ const SEGUNDOS_MAXIMOS_DE_AUDIO = 120;
 const VERSAO_DO_SELETOR_DE_EMOJIS = '1.29.1';
 const VERSAO_DOS_DADOS_DE_EMOJIS = '1.8.0';
 const MINUTOS_PARA_JUNTAR_MENSAGENS = 5;
+const FUNDOS_DA_CONVERSA = [
+  { id: 'padrao', nome: 'Padrão' },
+  { id: 'estrelas', nome: 'Noite estrelada' },
+  { id: 'dourado', nome: 'Dourado' },
+  { id: 'ceu', nome: 'Manto azul' },
+  { id: 'rosas', nome: 'Rosas' },
+  { id: 'oliveiras', nome: 'Oliveiras' },
+  { id: 'vinho', nome: 'Vinho' },
+  { id: 'vitral', nome: 'Vitral' },
+];
 
 const REGRAS_DOS_CENACULOS = `
   <ol class="cenaculo-regras">
@@ -45,6 +55,12 @@ const ERROS_DO_CENACULO = {
   cenaculos_nome_check: 'O nome precisa ter de 2 a 60 letras.',
   audio_invalido: 'Não foi possível enviar o áudio. Tente gravar de novo.',
   gif_invalido: 'Não foi possível enviar esse GIF.',
+  codigo_invalido: 'Não encontramos ninguém com esse código. Confira se copiou o código inteiro.',
+  codigo_proprio: 'Esse é o seu próprio código. Mande ele para quem você quer adicionar.',
+  muitos_contatos: 'Você já adicionou muitas pessoas hoje. Tente de novo amanhã.',
+  perfil_nao_encontrado: 'Não é possível ver este perfil.',
+  fundo_invalido: 'Esse fundo não existe.',
+  foto_invalida: 'Não foi possível usar essa foto. Tente outra.',
 };
 
 let suspensaoAtual = null;
@@ -64,6 +80,9 @@ let abaDoGiphy = 'gifs';
 let temporizadorDoGiphy = null;
 let seletorDeEmojisPronto = null;
 let temporizadorDoNome = null;
+let fotoDoGrupoUrl = '';
+const aceitesDosPerfis = {};
+const enderecosDasFotosDosGrupos = {};
 
 function mensagemDoCenaculo(erro) {
   const texto = String((erro && erro.message) || erro || '');
@@ -208,6 +227,67 @@ function paginaBloqueadaPelaSuspensao(idDaPagina) {
   return true;
 }
 
+async function perfilJaAceitou() {
+  const perfil = perfilAdultoAtivo();
+  if (!perfil) return false;
+  if (aceitesDosPerfis[perfil.id]) return true;
+  try {
+    aceitesDosPerfis[perfil.id] = (await chamarCenaculo('cenaculo_aceite', { _pid: perfil.id })) === true;
+  } catch (e) {
+    return false;
+  }
+  return aceitesDosPerfis[perfil.id];
+}
+
+function pedirAceite() {
+  return new Promise((resolver) => {
+    let respondeu = false;
+    const corpo = janelaDoCenaculo('Antes de começar', `
+      ${blocoDoParticipante()}
+      <p class="cenaculo-explica">Nos Cenáculos você conversa com o seu grupo e com os amigos que adicionar. Leia as regras com atenção: esta mensagem aparece só uma vez.</p>
+      ${blocoDeAceite('cenaculo-aceite-unico')}
+      <label class="perfil-consentimento cenaculo-aceite">
+        <input type="checkbox" id="cenaculo-aceite-leitura">
+        <span>Entendo que a equipe do Lumina Sancti pode ler as mensagens e ouvir os áudios de todos, para proteger quem participa.</span>
+      </label>
+      <button type="button" class="licao-botao" id="cenaculo-aceite-continuar">Concordo e quero participar</button>
+      <p class="auth-feedback" id="cenaculo-aceite-aviso" aria-live="polite"></p>`);
+    ligarLinkDaPrivacidade(corpo);
+    const modal = document.getElementById('cenaculo-janela');
+    const aoFechar = new MutationObserver(() => {
+      if (!modal.classList.contains('active') && !respondeu) {
+        respondeu = true;
+        aoFechar.disconnect();
+        resolver(false);
+      }
+    });
+    aoFechar.observe(modal, { attributes: true, attributeFilter: ['class'] });
+    corpo.querySelector('#cenaculo-aceite-continuar').addEventListener('click', async () => {
+      const aviso = corpo.querySelector('#cenaculo-aceite-aviso');
+      if (!corpo.querySelector('#cenaculo-aceite-unico').checked || !corpo.querySelector('#cenaculo-aceite-leitura').checked) {
+        aviso.textContent = 'Para participar, marque as duas caixinhas.';
+        return;
+      }
+      const perfil = perfilAdultoAtivo();
+      try {
+        await chamarCenaculo('cenaculo_aceitar_regras', { _pid: perfil.id });
+        aceitesDosPerfis[perfil.id] = true;
+        respondeu = true;
+        aoFechar.disconnect();
+        fecharJanelaDoCenaculo();
+        resolver(true);
+      } catch (erro) {
+        aviso.textContent = mensagemDoCenaculo(erro);
+      }
+    });
+  });
+}
+
+async function garantirAceite() {
+  if (await perfilJaAceitou()) return true;
+  return pedirAceite();
+}
+
 function abrirCenaculos() {
   if (typeof contaLogada !== 'function' || !contaLogada()) {
     avisoDoCenaculo('Entre na sua conta para participar dos Cenáculos.');
@@ -227,6 +307,7 @@ function abrirCenaculos() {
   if (typeof closeSidebar === 'function') closeSidebar();
   mudarDeView('view-cenaculos');
   carregarListaDeCenaculos();
+  garantirAceite();
 }
 
 async function carregarListaDeCenaculos() {
@@ -236,43 +317,83 @@ async function carregarListaDeCenaculos() {
   lista.innerHTML = '<p class="perfis-carregando">Carregando seus cenáculos...</p>';
   try {
     const cenaculos = await chamarCenaculo('cenaculo_meus', { _pid: perfil.id });
-    renderizarListaDeCenaculos(cenaculos || []);
+    const fotos = await enderecosDasFotosDaLista(cenaculos || []);
+    renderizarListaDeCenaculos(cenaculos || [], fotos);
   } catch (erro) {
     lista.innerHTML = `<p class="not-found-msg">${mensagemDoCenaculo(erro)}</p>`;
   }
 }
 
-function resumoDaUltimaMensagem(ultima) {
-  if (!ultima) return 'Nenhuma mensagem ainda.';
-  const autor = escaparTexto(ultima.autor);
-  if (ultima.apagada) return `${autor}: mensagem apagada`;
-  if (ultima.tipo === 'gif') return `${autor}: GIF`;
-  if (ultima.tipo === 'figurinha') return `${autor}: figurinha`;
-  if (ultima.tipo === 'audio') return `${autor}: áudio`;
-  return `${autor}: ${escaparTexto(ultima.texto || '')}`;
+async function enderecosAssinados(pasta, caminhos) {
+  const unicos = Array.from(new Set(caminhos.filter(Boolean)));
+  const resultado = {};
+  if (unicos.length === 0) return resultado;
+  try {
+    const { data } = await supabaseCliente.storage.from(pasta).createSignedUrls(unicos, 60 * 60);
+    (data || []).forEach((item) => {
+      if (item && item.path && item.signedUrl) resultado[item.path] = item.signedUrl;
+    });
+  } catch (e) {
+  }
+  return resultado;
 }
 
-function renderizarListaDeCenaculos(cenaculos) {
+async function enderecosDasFotosDaLista(cenaculos) {
+  const [pessoas, grupos] = await Promise.all([
+    enderecosAssinados('avatars', cenaculos.map((c) => c.outro && c.outro.foto)),
+    enderecosAssinados('cenaculo-fotos', cenaculos.map((c) => c.tipo !== 'conversa' && c.foto)),
+  ]);
+  Object.assign(enderecosDasFotosDosGrupos, grupos);
+  return Object.assign({}, pessoas, grupos);
+}
+
+function nomeDaConversa(c) {
+  return c.tipo === 'conversa' && c.outro ? c.outro.nome : c.nome;
+}
+
+function resumoDaUltimaMensagem(ultima, ehConversa) {
+  if (!ultima) return ehConversa ? 'Diga olá!' : 'Nenhuma mensagem ainda.';
+  const perfil = perfilAdultoAtivo();
+  const minha = perfil && ultima.perfil_id === perfil.id;
+  const prefixo = minha ? 'Você: ' : (ehConversa ? '' : `${escaparTexto(ultima.autor)}: `);
+  if (ultima.apagada) return `${prefixo}mensagem apagada`;
+  if (ultima.tipo === 'gif') return `${prefixo}GIF`;
+  if (ultima.tipo === 'figurinha') return `${prefixo}figurinha`;
+  if (ultima.tipo === 'audio') return `${prefixo}áudio`;
+  return `${prefixo}${escaparTexto(ultima.texto || '')}`;
+}
+
+function iconeDaLista(c, fotos) {
+  if (c.tipo === 'conversa' && c.outro) return avatarDoCenaculo(c.outro.avatar, fotos[c.outro.foto], 'medio');
+  if (c.foto && fotos[c.foto]) return `<span class="avatar avatar-medio"><img src="${escaparTexto(fotos[c.foto])}" alt=""></span>`;
+  return `<span class="cenaculo-cartao-icone">${iconeDoCenaculo('usuarios')}</span>`;
+}
+
+function renderizarListaDeCenaculos(cenaculos, fotos) {
   const lista = document.getElementById('cenaculos-lista');
   if (!lista) return;
+  const enderecos = fotos || {};
   if (cenaculos.length === 0) {
     lista.innerHTML = `
       <div class="cenaculos-vazio">
-        <p><strong>Você ainda não participa de nenhum cenáculo.</strong></p>
-        <p>Crie um para o seu grupo de oração, a sua pastoral ou a sua família, ou peça o link de convite para quem já organiza um.</p>
+        <p><strong>Você ainda não tem conversas nem cenáculos.</strong></p>
+        <p>Toque em "Nova conversa" e cole o código de um amigo, crie um cenáculo para o seu grupo de oração ou peça o link de convite para quem já organiza um.</p>
       </div>`;
     return;
   }
-  lista.innerHTML = cenaculos.map((c) => `
-    <button type="button" class="cenaculo-cartao" data-cenaculo="${c.id}">
-      <span class="cenaculo-cartao-icone">${iconeDoCenaculo('usuarios')}</span>
+  lista.innerHTML = cenaculos.map((c) => {
+    const conversa = c.tipo === 'conversa';
+    return `
+    <button type="button" class="cenaculo-cartao${conversa ? ' conversa' : ''}" data-cenaculo="${c.id}">
+      ${iconeDaLista(c, enderecos)}
       <span class="cenaculo-cartao-textos">
-        <strong>${escaparTexto(c.nome)}</strong>
-        <small>${resumoDaUltimaMensagem(c.ultima)}</small>
+        <strong>${escaparTexto(nomeDaConversa(c))}</strong>
+        <small>${resumoDaUltimaMensagem(c.ultima, conversa)}</small>
         ${c.encontro ? `<small class="cenaculo-cartao-encontro">${iconeDoCenaculo('video')} ${escaparTexto(c.encontro.titulo)}: ${formatarEncontro(c.encontro.quando)}</small>` : ''}
       </span>
-      <span class="cenaculo-cartao-membros">${c.membros} ${c.membros === 1 ? 'pessoa' : 'pessoas'}</span>
-    </button>`).join('');
+      <span class="cenaculo-cartao-membros">${conversa ? 'conversa' : `${c.membros} ${c.membros === 1 ? 'pessoa' : 'pessoas'}`}</span>
+    </button>`;
+  }).join('');
   lista.querySelectorAll('.cenaculo-cartao').forEach((botao) => {
     botao.addEventListener('click', () => abrirConversa(botao.dataset.cenaculo));
   });
@@ -310,16 +431,15 @@ function ligarLinkDaPrivacidade(lugar) {
   });
 }
 
-function abrirCriacaoDeCenaculo() {
+async function abrirCriacaoDeCenaculo() {
   const perfil = perfilAdultoAtivo();
-  if (!perfil) return;
+  if (!perfil || !(await garantirAceite())) return;
   const corpo = janelaDoCenaculo('Criar cenáculo', `
     ${blocoDoParticipante()}
     <label class="perfil-editor-rotulo" for="cenaculo-novo-nome">Nome do cenáculo</label>
     <input type="text" id="cenaculo-novo-nome" class="perfil-editor-campo" maxlength="60" placeholder="Ex.: Grupo de oração da paróquia" autocomplete="off">
     <label class="perfil-editor-rotulo" for="cenaculo-novo-descricao">Sobre o grupo (opcional)</label>
     <textarea id="cenaculo-novo-descricao" class="perfil-editor-campo cenaculo-area" maxlength="300" rows="2" placeholder="Ex.: Terço toda quinta, às 20h"></textarea>
-    ${blocoDeAceite('cenaculo-novo-aceite')}
     <button type="button" class="licao-botao" id="cenaculo-novo-salvar">Criar cenáculo</button>
     <p class="auth-feedback" id="cenaculo-novo-aviso" aria-live="polite"></p>`);
   ligarLinkDaPrivacidade(corpo);
@@ -328,7 +448,6 @@ function abrirCriacaoDeCenaculo() {
     const nome = corpo.querySelector('#cenaculo-novo-nome').value.trim();
     const descricao = corpo.querySelector('#cenaculo-novo-descricao').value.trim();
     if (nome.length < 2) { aviso.textContent = 'Escreva um nome com pelo menos 2 letras.'; return; }
-    if (!corpo.querySelector('#cenaculo-novo-aceite').checked) { aviso.textContent = ERROS_DO_CENACULO.regras_nao_aceitas; return; }
     const botao = corpo.querySelector('#cenaculo-novo-salvar');
     botao.disabled = true;
     aviso.textContent = 'Criando...';
@@ -351,9 +470,9 @@ function codigoDoConvite(texto) {
   return /^[a-z0-9]{6,20}$/i.test(valor) ? valor.toLowerCase() : '';
 }
 
-function abrirEntradaPorConvite(codigoInicial) {
+async function abrirEntradaPorConvite(codigoInicial) {
   const perfil = perfilAdultoAtivo();
-  if (!perfil) return;
+  if (!perfil || !(await garantirAceite())) return;
   const corpo = janelaDoCenaculo('Entrar com convite', `
     <div id="cenaculo-convite-passo1">
       <label class="perfil-editor-rotulo" for="cenaculo-convite-campo">Cole aqui o link ou o código do convite</label>
@@ -384,11 +503,8 @@ function abrirEntradaPorConvite(codigoInicial) {
           </div>
         </div>
         ${blocoDoParticipante()}
-        ${blocoDeAceite('cenaculo-convite-aceite')}
         <button type="button" class="licao-botao" id="cenaculo-convite-entrar">Entrar no cenáculo</button>`;
-      ligarLinkDaPrivacidade(passo2);
       passo2.querySelector('#cenaculo-convite-entrar').addEventListener('click', async () => {
-        if (!passo2.querySelector('#cenaculo-convite-aceite').checked) { aviso.textContent = ERROS_DO_CENACULO.regras_nao_aceitas; return; }
         const botao = passo2.querySelector('#cenaculo-convite-entrar');
         botao.disabled = true;
         aviso.textContent = 'Entrando...';
@@ -465,6 +581,12 @@ function mostrarConvite(codigo, acabouDeCriar) {
 
 async function carregarFotosDosMembros() {
   fotosDosMembros = {};
+  fotoDoGrupoUrl = '';
+  const caminhoDoGrupo = cenaculoAberto && cenaculoAberto.tipo !== 'conversa' ? cenaculoAberto.foto : '';
+  if (caminhoDoGrupo) {
+    const enderecos = await enderecosAssinados('cenaculo-fotos', [caminhoDoGrupo]);
+    fotoDoGrupoUrl = enderecos[caminhoDoGrupo] || '';
+  }
   const comFoto = ((cenaculoAberto && cenaculoAberto.membros) || []).filter((m) => m.foto);
   if (comFoto.length === 0) return;
   try {
@@ -489,10 +611,14 @@ async function abrirConversa(idDoCenaculo) {
   mensagensDoCenaculo = [];
   fotosDosMembros = {};
   cenaculoAberto = { id: idDoCenaculo, nome: '', membros: [], bloqueados: [] };
+  fotoDoGrupoUrl = '';
   mudarDeView('view-cenaculo');
   document.getElementById('cenaculo-nome').textContent = 'Carregando...';
   document.getElementById('cenaculo-membros-contagem').textContent = '';
+  const fotoDoTopo = document.getElementById('cenaculo-topo-foto');
+  if (fotoDoTopo) fotoDoTopo.innerHTML = '';
   document.getElementById('cenaculo-mensagens').innerHTML = '';
+  aplicarFundo('padrao');
   atualizarBotaoDeEnviar();
   try {
     const [detalhes, mensagens] = await Promise.all([
@@ -539,10 +665,37 @@ function nomesParaOCabecalho() {
   return `${nomes.slice(0, 3).join(', ')} e mais ${nomes.length - 3}`;
 }
 
+function ehConversaADois() {
+  return !!cenaculoAberto && cenaculoAberto.tipo === 'conversa';
+}
+
+function aplicarFundo(nome) {
+  const lugar = document.getElementById('cenaculo-mensagens');
+  if (!lugar) return;
+  FUNDOS_DA_CONVERSA.forEach((f) => lugar.classList.remove(`fundo-${f.id}`));
+  const escolhido = FUNDOS_DA_CONVERSA.some((f) => f.id === nome) ? nome : 'padrao';
+  lugar.classList.add(`fundo-${escolhido}`);
+}
+
+function fotoDoTopoDaConversa() {
+  if (ehConversaADois()) {
+    const outro = cenaculoAberto.outro;
+    return outro ? avatarDoCenaculo(outro.avatar, fotosDosMembros[outro.perfil_id], 'pequeno') : '';
+  }
+  if (fotoDoGrupoUrl) return `<span class="avatar avatar-pequeno"><img src="${escaparTexto(fotoDoGrupoUrl)}" alt=""></span>`;
+  return `<span class="cenaculo-topo-icone">${iconeDoCenaculo('usuarios')}</span>`;
+}
+
 function renderizarCabecalhoDaConversa() {
   if (!cenaculoAberto) return;
-  document.getElementById('cenaculo-nome').textContent = cenaculoAberto.nome || 'Cenáculo';
-  document.getElementById('cenaculo-membros-contagem').textContent = nomesParaOCabecalho();
+  const conversa = ehConversaADois();
+  document.getElementById('cenaculo-nome').textContent = conversa
+    ? ((cenaculoAberto.outro && cenaculoAberto.outro.nome) || 'Conversa')
+    : (cenaculoAberto.nome || 'Cenáculo');
+  document.getElementById('cenaculo-membros-contagem').textContent = conversa ? 'toque aqui para ver o perfil' : nomesParaOCabecalho();
+  const fotoDoTopo = document.getElementById('cenaculo-topo-foto');
+  if (fotoDoTopo) fotoDoTopo.innerHTML = fotoDoTopoDaConversa();
+  aplicarFundo(cenaculoAberto.fundo);
   const encontro = document.getElementById('cenaculo-encontro');
   if (cenaculoAberto.encontro) {
     encontro.hidden = false;
@@ -586,8 +739,8 @@ function htmlDaMensagem(m, comecoDoGrupo) {
   const minha = !!perfil && m.perfil_id === perfil.id;
   const semBalao = !m.apagada && m.tipo === 'gif' && m.gif_figurinha;
   const membro = membroDoCenaculo(m.perfil_id);
-  const avatar = minha ? '' : (comecoDoGrupo
-    ? `<button type="button" class="cenaculo-msg-avatar" data-nome="${escaparTexto((membro && membro.nome) || m.autor_nome)}" aria-label="Ver quem mandou">${avatarDoCenaculo((membro && membro.avatar) || m.autor_avatar, fotosDosMembros[m.perfil_id], 'pequeno')}</button>`
+  const avatar = minha || ehConversaADois() ? '' : (comecoDoGrupo
+    ? `<button type="button" class="cenaculo-msg-avatar" data-perfil="${escaparTexto(m.perfil_id || '')}" data-nome="${escaparTexto((membro && membro.nome) || m.autor_nome)}" aria-label="Ver quem mandou">${avatarDoCenaculo((membro && membro.avatar) || m.autor_avatar, fotosDosMembros[m.perfil_id], 'pequeno')}</button>`
     : '<span class="cenaculo-msg-avatar-vazio"></span>');
   return `
     <div class="cenaculo-msg${minha ? ' minha' : ''}${comecoDoGrupo ? ' comeco' : ''}${semBalao ? ' sem-balao' : ''}${m.tipo === 'gif' && !m.apagada ? ' com-gif' : ''}" data-id="${m.id}">
@@ -647,11 +800,27 @@ function renderizarMensagens(rolarParaOFim) {
 function mostrarNomeDoAutor(botao) {
   document.querySelectorAll('.cenaculo-nome-flutuante').forEach((e) => e.remove());
   clearTimeout(temporizadorDoNome);
-  const etiqueta = document.createElement('span');
+  const etiqueta = document.createElement('button');
+  etiqueta.type = 'button';
   etiqueta.className = 'cenaculo-nome-flutuante';
   etiqueta.textContent = botao.dataset.nome || '';
+  etiqueta.setAttribute('aria-label', `Ver o perfil de ${botao.dataset.nome || ''}`);
+  const idDoPerfil = botao.dataset.perfil;
+  etiqueta.addEventListener('click', (evento) => {
+    evento.stopPropagation();
+    etiqueta.remove();
+    if (idDoPerfil && typeof abrirPerfilPublico === 'function') abrirPerfilPublico(idDoPerfil);
+  });
   botao.parentElement.appendChild(etiqueta);
-  temporizadorDoNome = setTimeout(() => etiqueta.remove(), 2600);
+  temporizadorDoNome = setTimeout(() => etiqueta.remove(), 4000);
+}
+
+function tocarNoTituloDaConversa() {
+  if (ehConversaADois()) {
+    if (cenaculoAberto.outro && typeof abrirPerfilPublico === 'function') abrirPerfilPublico(cenaculoAberto.outro.perfil_id);
+    return;
+  }
+  abrirMembros();
 }
 
 function enderecoGuardado(caminho) {
@@ -1205,21 +1374,39 @@ async function mudarBloqueio(idDoPerfil, bloquear) {
 
 function abrirMenuDoCenaculo() {
   if (!cenaculoAberto) return;
-  const organizador = cenaculoAberto.papel === 'organizador';
-  const corpo = janelaDoCenaculo(cenaculoAberto.nome || 'Cenáculo', `
-    ${cenaculoAberto.descricao ? `<p class="cenaculo-explica">${escaparTexto(cenaculoAberto.descricao)}</p>` : ''}
-    <div class="cenaculo-opcoes">
-      ${organizador ? '<button type="button" class="cenaculo-opcao" data-acao="convidar">Convidar pessoas</button>' : ''}
-      ${organizador ? '<button type="button" class="cenaculo-opcao" data-acao="encontro">Marcar encontro no Google Meet</button>' : ''}
-      <button type="button" class="cenaculo-opcao" data-acao="membros">Pessoas do cenáculo</button>
-      <button type="button" class="cenaculo-opcao" data-acao="regras">Regras dos Cenáculos</button>
-      <button type="button" class="cenaculo-opcao cenaculo-opcao-perigo" data-acao="sair">Sair do cenáculo</button>
-    </div>`);
+  const conversa = ehConversaADois();
+  const organizador = !conversa && cenaculoAberto.papel === 'organizador';
+  const outro = conversa ? cenaculoAberto.outro : null;
+  const bloqueado = !!outro && (cenaculoAberto.bloqueados || []).includes(outro.perfil_id);
+  const opcoes = conversa ? [
+    outro ? '<button type="button" class="cenaculo-opcao" data-acao="perfil">Ver perfil</button>' : '',
+    '<button type="button" class="cenaculo-opcao" data-acao="fundo">Fundo da conversa</button>',
+    outro ? `<button type="button" class="cenaculo-opcao" data-acao="${bloqueado ? 'desbloquear' : 'bloquear'}">${bloqueado ? 'Desbloquear' : 'Bloquear'} ${escaparTexto(outro.nome)}</button>` : '',
+    '<button type="button" class="cenaculo-opcao" data-acao="regras">Regras dos Cenáculos</button>',
+    '<button type="button" class="cenaculo-opcao cenaculo-opcao-perigo" data-acao="sair">Apagar esta conversa da lista</button>',
+  ] : [
+    organizador ? '<button type="button" class="cenaculo-opcao" data-acao="convidar">Convidar pessoas</button>' : '',
+    organizador ? '<button type="button" class="cenaculo-opcao" data-acao="encontro">Marcar encontro no Google Meet</button>' : '',
+    organizador ? '<button type="button" class="cenaculo-opcao" data-acao="foto">Foto do grupo</button>' : '',
+    organizador ? '<button type="button" class="cenaculo-opcao" data-acao="fundo">Fundo da conversa</button>' : '',
+    '<button type="button" class="cenaculo-opcao" data-acao="membros">Pessoas do cenáculo</button>',
+    '<button type="button" class="cenaculo-opcao" data-acao="regras">Regras dos Cenáculos</button>',
+    '<button type="button" class="cenaculo-opcao cenaculo-opcao-perigo" data-acao="sair">Sair do cenáculo</button>',
+  ];
+  const titulo = conversa ? ((outro && outro.nome) || 'Conversa') : (cenaculoAberto.nome || 'Cenáculo');
+  const corpo = janelaDoCenaculo(titulo, `
+    ${!conversa && cenaculoAberto.descricao ? `<p class="cenaculo-explica">${escaparTexto(cenaculoAberto.descricao)}</p>` : ''}
+    <div class="cenaculo-opcoes">${opcoes.join('')}</div>`);
   corpo.querySelectorAll('.cenaculo-opcao').forEach((botao) => {
     botao.addEventListener('click', () => {
       const acao = botao.dataset.acao;
       if (acao === 'convidar') mostrarConvite(cenaculoAberto.codigo, false);
       else if (acao === 'encontro') abrirMarcacaoDeEncontro();
+      else if (acao === 'foto' && typeof abrirFotoDoGrupo === 'function') abrirFotoDoGrupo();
+      else if (acao === 'fundo' && typeof abrirEscolhaDeFundo === 'function') abrirEscolhaDeFundo();
+      else if (acao === 'perfil' && typeof abrirPerfilPublico === 'function') abrirPerfilPublico(outro.perfil_id);
+      else if (acao === 'bloquear') confirmarBloqueio(outro.perfil_id, outro.nome);
+      else if (acao === 'desbloquear') mudarBloqueio(outro.perfil_id, false);
       else if (acao === 'membros') abrirMembros();
       else if (acao === 'regras') janelaDoCenaculo('Regras dos Cenáculos', REGRAS_DOS_CENACULOS);
       else if (acao === 'sair') confirmarSaida();
@@ -1299,7 +1486,7 @@ function abrirMembros() {
     return `
       <div class="cenaculo-membro">
         ${avatarDoCenaculo(membro.avatar, fotosDosMembros[membro.perfil_id], 'pequeno')}
-        <span class="cenaculo-membro-nome">${escaparTexto(membro.nome)}${membro.papel === 'organizador' ? ' <small>organiza</small>' : ''}</span>
+        <button type="button" class="cenaculo-membro-nome" data-acao="perfil" data-perfil="${membro.perfil_id}">${escaparTexto(membro.nome)}${membro.papel === 'organizador' ? ' <small>organiza</small>' : ''}</button>
         <span class="cenaculo-membro-acoes">${acoes}</span>
       </div>`;
   }).join('');
@@ -1308,7 +1495,8 @@ function abrirMembros() {
     botao.addEventListener('click', async () => {
       const acao = botao.dataset.acao;
       const alvo = botao.dataset.perfil;
-      if (acao === 'bloquear') confirmarBloqueio(alvo, botao.dataset.nome);
+      if (acao === 'perfil') { if (typeof abrirPerfilPublico === 'function') abrirPerfilPublico(alvo); }
+      else if (acao === 'bloquear') confirmarBloqueio(alvo, botao.dataset.nome);
       else if (acao === 'desbloquear') mudarBloqueio(alvo, false);
       else if (acao === 'remover') {
         try {
@@ -1325,8 +1513,11 @@ function abrirMembros() {
 }
 
 function confirmarSaida() {
-  const corpo = janelaDoCenaculo('Sair do cenáculo?', `
-    <p class="cenaculo-explica">Você deixa de ver as mensagens deste cenáculo. Para voltar, vai precisar de um convite novo.</p>
+  const conversa = ehConversaADois();
+  const corpo = janelaDoCenaculo(conversa ? 'Apagar esta conversa?' : 'Sair do cenáculo?', `
+    <p class="cenaculo-explica">${conversa
+      ? 'A conversa sai da sua lista. Se vocês voltarem a conversar, ela aparece de novo.'
+      : 'Você deixa de ver as mensagens deste cenáculo. Para voltar, vai precisar de um convite novo.'}</p>
     <div class="cenaculo-botoes">
       <button type="button" class="filter-btn" id="cenaculo-sair-cancelar">Ficar</button>
       <button type="button" class="licao-botao" id="cenaculo-sair-confirmar">Sair</button>
@@ -1381,7 +1572,10 @@ function verificarConvitePendente() {
 }
 
 function aposEscolherPerfil() {
-  atualizarSituacaoDaConta().then(verificarConvitePendente);
+  atualizarSituacaoDaConta().then(() => {
+    verificarConvitePendente();
+    if (typeof verificarAmigoPendente === 'function') verificarAmigoPendente();
+  });
 }
 
 async function abrirPainelDaEquipe() {
@@ -1582,7 +1776,9 @@ function iniciarCenaculos() {
   ligar('cenaculo-entrar-btn', () => abrirEntradaPorConvite(''));
   ligar('cenaculo-voltar', abrirCenaculos);
   ligar('cenaculo-menu-btn', abrirMenuDoCenaculo);
-  ligar('cenaculo-titulo-btn', abrirMembros);
+  ligar('cenaculo-titulo-btn', tocarNoTituloDaConversa);
+  ligar('cenaculo-conversa-btn', () => { if (typeof abrirAdicionarPessoa === 'function') abrirAdicionarPessoa(''); });
+  ligar('cenaculo-meu-codigo-btn', () => { if (typeof abrirMeuCodigo === 'function') abrirMeuCodigo(); });
   ligar('cenaculo-emoji-btn', abrirPainelDeEmojis);
   ligar('cenaculo-gif-btn', abrirPainelDeGifs);
   const botaoDeGifs = document.getElementById('cenaculo-gif-btn');
