@@ -2066,6 +2066,7 @@ function verificarConvitePendente() {
 }
 
 function aposEscolherPerfil() {
+  if (typeof verificarAdvertencia === 'function') setTimeout(verificarAdvertencia, 600);
   atualizarSituacaoDaConta().then(() => {
     verificarConvitePendente();
     if (typeof verificarAmigoPendente === 'function') verificarAmigoPendente();

@@ -1,4 +1,4 @@
-const CACHE_NOME = 'lumina-sancti-1.27.1';
+const CACHE_NOME = 'lumina-sancti-1.28.0';
 const ARQUIVOS_ESSENCIAIS = [
   './',
   './index.html',
@@ -14,6 +14,7 @@ const ARQUIVOS_ESSENCIAIS = [
   './amigos.js',
   './planos.js',
   './enfeites.js',
+  './avisos.js',
   './favicon.svg',
   './favicon-48.png',
   './apple-touch-icon.png',
