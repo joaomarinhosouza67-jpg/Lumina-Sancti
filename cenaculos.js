@@ -2,13 +2,6 @@ const CHAVE_CONVITE_PENDENTE = 'lumina-sancti-convite-cenaculo';
 const REGEX_LINK_DO_MEET = /^https:\/\/meet\.google\.com\/[a-z]{3}-[a-z]{4}-[a-z]{3}$/;
 const PAGINAS_BLOQUEADAS_NA_SUSPENSAO = ['view-trilhas', 'view-licao', 'view-ranking', 'view-cenaculos', 'view-cenaculo'];
 const MOTIVOS_DE_DENUNCIA = ['Ofensa ou xingamento', 'Conteúdo impróprio', 'Spam ou propaganda', 'Mentira ou golpe', 'Outro motivo'];
-const PRAZOS_DE_SUSPENSAO = [
-  { dias: 1, rotulo: '1 dia' },
-  { dias: 3, rotulo: '3 dias' },
-  { dias: 7, rotulo: '7 dias' },
-  { dias: 30, rotulo: '30 dias' },
-  { dias: 0, rotulo: 'Tempo indeterminado (enquanto investiga)' },
-];
 const CHAVE_DO_GIPHY = '';
 const PASTA_DOS_AUDIOS = 'cenaculo-audios';
 const SEGUNDOS_MAXIMOS_DE_AUDIO = 120;
@@ -75,8 +68,6 @@ let mensagensDoCenaculo = [];
 let canalDoCenaculo = null;
 let temporizadorDoCenaculo = null;
 let haMensagensMaisAntigas = false;
-let abaDaEquipe = 'denuncias';
-let dadosDaEquipe = null;
 let fotosDosMembros = {};
 let gravacaoDeAudio = null;
 let audioTocando = null;
@@ -197,24 +188,17 @@ async function atualizarSituacaoDaConta() {
   if (typeof contaLogada !== 'function' || !contaLogada()) {
     suspensaoAtual = null;
     contaEhDaEquipe = false;
-    atualizarMenuDaEquipe();
     return;
   }
   try {
     const [suspensao, equipe] = await Promise.all([
       supabaseCliente.rpc('minha_suspensao'),
-      supabaseCliente.rpc('eh_da_equipe'),
+      supabaseCliente.rpc('equipe_membro'),
     ]);
     suspensaoAtual = suspensao && !suspensao.error && suspensao.data ? suspensao.data : null;
     contaEhDaEquipe = !!(equipe && !equipe.error && equipe.data === true);
   } catch (e) {
   }
-  atualizarMenuDaEquipe();
-}
-
-function atualizarMenuDaEquipe() {
-  const item = document.getElementById('nav-equipe');
-  if (item) item.hidden = !contaEhDaEquipe;
 }
 
 function textoDaSuspensao() {
@@ -2088,145 +2072,6 @@ function aposEscolherPerfil() {
   });
 }
 
-async function abrirPainelDaEquipe() {
-  if (typeof closeSidebar === 'function') closeSidebar();
-  await atualizarSituacaoDaConta();
-  if (!contaEhDaEquipe) return;
-  mudarDeView('view-equipe');
-  carregarPainelDaEquipe();
-}
-
-async function carregarPainelDaEquipe() {
-  const lugar = document.getElementById('equipe-conteudo');
-  if (!lugar) return;
-  lugar.innerHTML = '<p class="perfis-carregando">Carregando...</p>';
-  try {
-    dadosDaEquipe = await chamarCenaculo('equipe_painel');
-    renderizarPainelDaEquipe();
-  } catch (erro) {
-    lugar.innerHTML = `<p class="not-found-msg">${mensagemDoCenaculo(erro)}</p>`;
-  }
-}
-
-function conteudoParaEquipe(m) {
-  if (m.tipo === 'gif' && m.gif_id) return `<img class="equipe-gif" src="${enderecoDoGif(m.gif_id)}" alt="${m.gif_figurinha ? 'Figurinha' : 'GIF'}" loading="lazy">`;
-  if (m.tipo === 'audio') return m.audio_caminho ? htmlDoAudio(m) : '<em>Áudio expirado</em>';
-  if (m.tipo === 'figurinha') return '<em>Figurinha</em>';
-  return escaparTexto(m.texto || '');
-}
-
-function renderizarPainelDaEquipe() {
-  const lugar = document.getElementById('equipe-conteudo');
-  if (!lugar || !dadosDaEquipe) return;
-  document.querySelectorAll('#equipe-abas .ranking-aba').forEach((b) => b.classList.toggle('active', b.dataset.aba === abaDaEquipe));
-  if (abaDaEquipe === 'denuncias') {
-    const denuncias = dadosDaEquipe.denuncias || [];
-    lugar.innerHTML = denuncias.length === 0 ? '<p class="equipe-vazio">Nenhuma denúncia aberta.</p>' : denuncias.map((d) => `
-      <article class="equipe-cartao" data-denuncia="${d.id}">
-        <p class="equipe-linha"><strong>${escaparTexto(d.cenaculo || 'Cenáculo')}</strong> <small>${new Date(d.criada_em).toLocaleString('pt-BR')}</small></p>
-        <p class="equipe-linha">Autor: <strong>${escaparTexto(d.autor_nome)}</strong> <small>${escaparTexto(d.autor_email || '')}</small></p>
-        <blockquote class="equipe-mensagem${d.apagada ? ' apagada' : ''}">${conteudoParaEquipe(d)}${d.apagada ? ' <small>(já apagada)</small>' : ''}</blockquote>
-        <p class="equipe-linha">Motivo: ${escaparTexto(d.motivo)} <small>denunciado por ${escaparTexto(d.denunciante || 'alguém')}</small></p>
-        <div class="equipe-botoes">
-          <button type="button" class="filter-btn" data-acao="conversa" data-cenaculo="${d.cenaculo_id}" data-nome="${escaparTexto(d.cenaculo || '')}">Ver conversa</button>
-          ${d.apagada ? '' : `<button type="button" class="filter-btn" data-acao="apagar" data-mensagem="${d.mensagem_id}">Apagar mensagem</button>`}
-          ${d.autor_conta ? `<button type="button" class="filter-btn" data-acao="suspender" data-conta="${d.autor_conta}" data-nome="${escaparTexto(d.autor_nome)}">Suspender autor</button>` : ''}
-          <button type="button" class="licao-botao" data-acao="resolver" data-denuncia="${d.id}">Marcar como resolvida</button>
-        </div>
-      </article>`).join('');
-  } else if (abaDaEquipe === 'suspensoes') {
-    const suspensoes = dadosDaEquipe.suspensoes || [];
-    lugar.innerHTML = suspensoes.length === 0 ? '<p class="equipe-vazio">Nenhuma conta suspensa.</p>' : suspensoes.map((s) => `
-      <article class="equipe-cartao">
-        <p class="equipe-linha"><strong>${escaparTexto(s.email || s.conta)}</strong></p>
-        <p class="equipe-linha">Motivo: ${escaparTexto(s.motivo || '-')}</p>
-        <p class="equipe-linha"><small>Desde ${new Date(s.inicio).toLocaleString('pt-BR')} ${s.fim ? `até ${new Date(s.fim).toLocaleString('pt-BR')}` : 'por tempo indeterminado'}</small></p>
-        <div class="equipe-botoes"><button type="button" class="licao-botao" data-acao="encerrar" data-suspensao="${s.id}">Tirar suspensão</button></div>
-      </article>`).join('');
-  } else {
-    const cenaculos = dadosDaEquipe.cenaculos || [];
-    lugar.innerHTML = cenaculos.length === 0 ? '<p class="equipe-vazio">Nenhum cenáculo criado ainda.</p>' : cenaculos.map((c) => `
-      <article class="equipe-cartao">
-        <p class="equipe-linha"><strong>${escaparTexto(c.nome)}</strong> <small>${c.membros} pessoas, ${c.mensagens} mensagens</small></p>
-        <div class="equipe-botoes"><button type="button" class="filter-btn" data-acao="conversa" data-cenaculo="${c.id}" data-nome="${escaparTexto(c.nome)}">Ver conversa</button></div>
-      </article>`).join('');
-  }
-  lugar.querySelectorAll('[data-acao]').forEach((botao) => botao.addEventListener('click', () => acaoDaEquipe(botao)));
-  ligarPlayersDeAudio(lugar);
-}
-
-async function acaoDaEquipe(botao) {
-  const acao = botao.dataset.acao;
-  try {
-    if (acao === 'conversa') await abrirConversaParaEquipe(botao.dataset.cenaculo, botao.dataset.nome);
-    else if (acao === 'apagar') {
-      await chamarCenaculo('equipe_apagar_mensagem', { _mid: botao.dataset.mensagem });
-      await carregarPainelDaEquipe();
-    } else if (acao === 'suspender') abrirSuspensao(botao.dataset.conta, botao.dataset.nome);
-    else if (acao === 'resolver') {
-      await chamarCenaculo('equipe_resolver_denuncia', { _id: Number(botao.dataset.denuncia), _resultado: 'resolvida' });
-      await carregarPainelDaEquipe();
-    } else if (acao === 'encerrar') {
-      await chamarCenaculo('equipe_encerrar_suspensao', { _id: Number(botao.dataset.suspensao) });
-      await carregarPainelDaEquipe();
-    }
-  } catch (erro) {
-    avisoDoCenaculo(mensagemDoCenaculo(erro));
-  }
-}
-
-async function abrirConversaParaEquipe(idDoCenaculo, nome) {
-  const mensagens = await chamarCenaculo('equipe_conversa', { _cid: idDoCenaculo, _antes: null });
-  const linhas = (mensagens || []).map((m) => `
-    <div class="equipe-conversa-msg${m.apagada ? ' apagada' : ''}">
-      <p class="equipe-linha"><strong>${escaparTexto(m.autor_nome)}</strong> <small>${escaparTexto(m.autor_email || '')} · ${new Date(m.criada_em).toLocaleString('pt-BR')}${m.apagada ? ' · apagada' : ''}</small></p>
-      <div class="equipe-conversa-texto">${conteudoParaEquipe(m)}</div>
-      <div class="equipe-botoes">
-        ${m.apagada ? '' : `<button type="button" class="perfil-link" data-acao="apagar" data-mensagem="${m.id}">Apagar</button>`}
-        ${m.autor_conta ? `<button type="button" class="perfil-link perfil-link-perigo" data-acao="suspender" data-conta="${m.autor_conta}" data-nome="${escaparTexto(m.autor_nome)}">Suspender autor</button>` : ''}
-      </div>
-    </div>`).join('');
-  const corpo = janelaDoCenaculo(`Conversa: ${nome || 'cenáculo'}`, `<div class="equipe-conversa">${linhas || '<p class="equipe-vazio">Sem mensagens.</p>'}</div>`);
-  ligarPlayersDeAudio(corpo);
-  corpo.querySelectorAll('[data-acao]').forEach((botao) => {
-    botao.addEventListener('click', async () => {
-      if (botao.dataset.acao === 'suspender') { abrirSuspensao(botao.dataset.conta, botao.dataset.nome); return; }
-      try {
-        await chamarCenaculo('equipe_apagar_mensagem', { _mid: botao.dataset.mensagem });
-        await abrirConversaParaEquipe(idDoCenaculo, nome);
-        carregarPainelDaEquipe();
-      } catch (erro) {
-        avisoDoCenaculo(mensagemDoCenaculo(erro));
-      }
-    });
-  });
-}
-
-function abrirSuspensao(conta, nome) {
-  const corpo = janelaDoCenaculo(`Suspender ${nome || 'conta'}`, `
-    <p class="cenaculo-explica">A conta inteira fica suspensa: não escreve nos cenáculos e não usa as trilhas. Nada é apagado, e tudo volta quando a suspensão acabar.</p>
-    <label class="perfil-editor-rotulo" for="equipe-suspensao-prazo">Por quanto tempo</label>
-    <select id="equipe-suspensao-prazo" class="perfil-editor-campo">
-      ${PRAZOS_DE_SUSPENSAO.map((p) => `<option value="${p.dias}">${p.rotulo}</option>`).join('')}
-    </select>
-    <label class="perfil-editor-rotulo" for="equipe-suspensao-motivo">Motivo (a pessoa vai ver)</label>
-    <textarea id="equipe-suspensao-motivo" class="perfil-editor-campo cenaculo-area" maxlength="300" rows="2" placeholder="Ex.: ofensas no cenáculo"></textarea>
-    <button type="button" class="licao-botao" id="equipe-suspensao-confirmar">Suspender</button>
-    <p class="auth-feedback" id="equipe-suspensao-aviso" aria-live="polite"></p>`);
-  corpo.querySelector('#equipe-suspensao-confirmar').addEventListener('click', async () => {
-    const dias = Number(corpo.querySelector('#equipe-suspensao-prazo').value);
-    const motivo = corpo.querySelector('#equipe-suspensao-motivo').value.trim();
-    try {
-      await chamarCenaculo('equipe_suspender', { _conta: conta, _motivo: motivo, _dias: dias > 0 ? dias : null });
-      fecharJanelaDoCenaculo();
-      await carregarPainelDaEquipe();
-      avisoDoCenaculo('Conta suspensa.');
-    } catch (erro) {
-      corpo.querySelector('#equipe-suspensao-aviso').textContent = mensagemDoCenaculo(erro);
-    }
-  });
-}
-
 const DESTINOS_DA_BARRA = {
   'view-home': 'inicio', 'view-detail': 'inicio',
   'view-trilhas': 'trilhas', 'view-licao': 'trilhas', 'view-ranking': 'trilhas',
@@ -2273,15 +2118,12 @@ function iniciarCenaculos() {
   });
   const navCenaculos = document.getElementById('nav-cenaculos');
   if (navCenaculos) navCenaculos.addEventListener('click', abrirCenaculos);
-  const navEquipe = document.getElementById('nav-equipe');
-  if (navEquipe) navEquipe.addEventListener('click', abrirPainelDaEquipe);
 
   const ligar = (id, funcao) => {
     const elemento = document.getElementById(id);
     if (elemento) elemento.addEventListener('click', funcao);
   };
   ligar('btn-back-cenaculos', () => mudarDeView('view-home'));
-  ligar('btn-back-equipe', () => mudarDeView('view-home'));
   const doMenu = (funcao) => () => { alternarMenuDaLista(false); funcao(); };
   ligar('cenaculo-criar-btn', doMenu(abrirCriacaoDeCenaculo));
   ligar('cenaculo-entrar-btn', doMenu(() => abrirEntradaPorConvite('')));
@@ -2354,13 +2196,6 @@ function iniciarCenaculos() {
     });
   }
   atualizarBotaoDeEnviar();
-
-  document.querySelectorAll('#equipe-abas .ranking-aba').forEach((aba) => {
-    aba.addEventListener('click', () => {
-      abaDaEquipe = aba.dataset.aba;
-      renderizarPainelDaEquipe();
-    });
-  });
 
   if (typeof supabaseCliente !== 'undefined' && supabaseCliente) {
     supabaseCliente.auth.onAuthStateChange(() => {

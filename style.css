@@ -3449,8 +3449,6 @@ body:has(#view-cenaculo.active) .site-footer { display: none; }
   line-height: 1.4;
 }
 .cenaculo-participante strong { color: var(--primary-color); }
-.equipe-gif { display: block; width: 160px; max-width: 100%; border-radius: 8px; }
-.equipe-conversa-texto .cenaculo-audio, .equipe-mensagem .cenaculo-audio { max-width: 320px; }
 @media (prefers-reduced-motion: reduce) {
   .cenaculo-gravando-ponto, .cenaculo-nome-flutuante { animation: none; }
 }
@@ -3532,34 +3530,6 @@ body:has(#view-cenaculo.active) .site-footer { display: none; }
 .cenaculo-suspensao-motivo { color: var(--primary-color); }
 .cenaculo-suspensao-contato a { color: var(--primary-color); }
 
-.equipe-container { max-width: 900px; }
-#equipe-abas { grid-template-columns: repeat(3, 1fr); }
-.equipe-conteudo { margin-top: 16px; }
-.equipe-cartao {
-  padding: 14px 16px;
-  margin-bottom: 12px;
-  border-radius: 14px;
-  border: 1px solid var(--secondary-color);
-  background: var(--bg-alt);
-}
-.equipe-linha { font-size: 0.9rem; margin-bottom: 6px; line-height: 1.45; }
-.equipe-linha small { color: var(--text-muted); margin-left: 6px; }
-.equipe-mensagem {
-  margin: 8px 0;
-  padding: 8px 12px;
-  border-left: 3px solid var(--primary-color);
-  background: rgba(0, 0, 0, 0.18);
-  border-radius: 0 10px 10px 0;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-.equipe-mensagem.apagada, .equipe-conversa-msg.apagada { opacity: 0.75; }
-.equipe-botoes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-.equipe-botoes .licao-botao { width: auto; padding: 8px 16px; }
-.equipe-vazio { text-align: center; color: var(--text-muted); padding: 24px; }
-.equipe-conversa { max-height: 62vh; overflow-y: auto; }
-.equipe-conversa-msg { padding: 10px 0; border-bottom: 1px solid var(--secondary-color); }
-.equipe-conversa-texto { white-space: pre-wrap; word-break: break-word; font-size: 0.93rem; }
 
 .cenaculos-acoes .filter-btn { display: inline-flex; align-items: center; gap: 8px; }
 .cenaculo-cartao > .avatar { flex-shrink: 0; width: 46px; height: 46px; }
