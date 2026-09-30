@@ -487,8 +487,10 @@ function renderizarListaDeCenaculos(cenaculos, fotos) {
   }
   lista.innerHTML = visiveis.map((c) => {
     const conversa = c.tipo === 'conversa';
+    const faixa = conversa && typeof faixaDaLinhaDaConversa === 'function' ? faixaDaLinhaDaConversa(c.outro) : '';
     return `
-    <button type="button" class="cenaculo-cartao${conversa ? ' conversa' : ''}" data-cenaculo="${c.id}">
+    <button type="button" class="cenaculo-cartao${conversa ? ' conversa' : ''}${faixa ? ' com-faixa' : ''}" data-cenaculo="${c.id}">
+      ${faixa}
       ${iconeDaLista(c, enderecos)}
       <span class="cenaculo-cartao-textos">
         <span class="cenaculo-cartao-linha">

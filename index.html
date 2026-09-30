@@ -151,8 +151,8 @@
       </div>
       <div class="perfil-aviso-extra" id="perfil-editor-extra" hidden>
         <strong>Atenção: este é um perfil extra.</strong>
-        <span>Hoje ele é grátis. Quando as assinaturas chegarem ao site e ao aplicativo, só o primeiro perfil da conta continua grátis. Para continuar usando este perfil, será preciso assinar um plano.</span>
-        <span>Cada conta pode ter no máximo 3 perfis.</span>
+        <span>Hoje ele é grátis. Quando as assinaturas começarem, só o primeiro perfil da conta (de adulto ou de criança) continua grátis. Para continuar usando este perfil, será preciso assinar o plano Duo ou o Família.</span>
+        <span>Por enquanto, cada conta pode ter no máximo 3 perfis.</span>
       </div>
       <button type="button" id="perfil-editor-salvar" class="licao-botao">Salvar</button>
       <button type="button" id="perfil-editor-excluir" class="perfil-link perfil-link-perigo" hidden>Excluir este perfil</button>
@@ -531,7 +531,7 @@
           <li>Google (Gemini): gera as respostas da Lumina a partir da pergunta enviada.</li>
           <li>Google Meet: reuniões por vídeo dos Cenáculos, abertas direto no Google.</li>
           <li>GIPHY: busca de GIFs e figurinhas nos Cenáculos. As palavras pesquisadas vão direto do seu navegador para o GIPHY, e só aparecem resultados de classificação livre.</li>
-          <li>Stripe e Google Play: pagamentos dos planos, quando estiverem disponíveis. Os dados do cartão ficam só com eles; o Lumina Sancti nunca os recebe.</li>
+          <li>Stripe e Google Play: pagamentos dos planos. Os dados do cartão ficam só com eles; o Lumina Sancti nunca os recebe. Guardamos apenas o plano escolhido, a situação da assinatura, a data de renovação e o código de cliente que o Stripe nos devolve.</li>
           <li>Wikipédia (Wikimedia), Google Fonts e jsDelivr: fotos dos santos, letras do site, partes do código e a lista de emojis, carregadas diretamente pelo seu navegador.</li>
         </ul>
 
@@ -709,7 +709,67 @@
         </button>
         <h2 class="section-title trilhas-titulo">Planos</h2>
         <p class="trilhas-intro">Escolha o jeito de caminhar com os santos: sozinho, a dois ou com toda a família.</p>
+        <div class="planos-periodo" role="group" aria-label="Como pagar">
+          <button type="button" class="planos-periodo-botao ativo" data-periodo="mensal" aria-pressed="true">Mensal</button>
+          <button type="button" class="planos-periodo-botao" data-periodo="anual" aria-pressed="false">Anual <small>1 mês de desconto</small></button>
+        </div>
         <div id="planos-grade" class="planos-grade"></div>
+        <div class="planos-rodape">
+          <div id="planos-situacao" class="planos-situacao" hidden></div>
+          <p class="planos-mensagem" id="planos-mensagem" aria-live="polite"></p>
+          <p class="planos-letras">Pagamento seguro pelo Stripe, com cartão. A assinatura renova sozinha e pode ser cancelada quando você quiser. Se desistir em até 7 dias da primeira compra, devolvemos todo o valor.</p>
+          <button type="button" class="footer-privacidade" id="planos-termos">Termos da Assinatura</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-termos" class="view">
+      <div class="container privacidade-container">
+        <button class="btn-back" id="btn-back-termos">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span>Voltar</span>
+        </button>
+        <h2 class="section-title" style="text-align:left; margin: 10px 0 4px;">Termos da Assinatura</h2>
+        <div class="title-divider" style="margin: 0 0 16px;"></div>
+        <p class="privacidade-data">Atualizados em 29 de setembro de 2026.</p>
+
+        <h3>O que é a assinatura</h3>
+        <p>O Lumina Sancti (luminasancti.com) tem um plano Gratuito e três planos pagos: Individual, Duo e Família. O plano Gratuito continua existindo sempre, com as biografias dos santos, as orações, o terço guiado e as trilhas, para um perfil (de adulto ou de criança). Os planos pagos liberam mais perfis e outros recursos, descritos na página Planos. Os recursos marcados como "em breve" ainda não estão prontos e não fazem parte do que é cobrado hoje.</p>
+
+        <h3>Preços</h3>
+        <ul>
+          <li>Individual: R$ 19,90 por mês ou R$ 219 por ano, para 1 perfil.</li>
+          <li>Duo: R$ 31,90 por mês ou R$ 349 por ano, para 2 perfis.</li>
+          <li>Família: R$ 43,80 por mês ou R$ 481 por ano, para até 6 perfis.</li>
+        </ul>
+        <p>O preço cobrado é sempre o que aparece na tela de pagamento. Se um preço mudar, avisaremos por e-mail com pelo menos 30 dias de antecedência, e você poderá cancelar antes da nova cobrança.</p>
+
+        <h3>Como funciona a cobrança</h3>
+        <p>No site, o pagamento é feito com cartão pelo Stripe. No aplicativo para Android, será feito pela Google Play. O Lumina Sancti não recebe nem guarda os dados do seu cartão. A assinatura renova sozinha ao fim de cada período (todo mês ou todo ano, conforme a sua escolha), com a cobrança no mesmo cartão, até que você cancele.</p>
+
+        <h3>Cancelamento</h3>
+        <p>Você pode cancelar quando quiser, sem multa: na página Planos, toque em "Gerenciar assinatura". Se assinou pela Google Play, cancele na própria Google Play. Depois de cancelar, o plano continua valendo até o fim do período que já foi pago, e não há novas cobranças.</p>
+
+        <h3>Direito de arrependimento</h3>
+        <p>Pelo Código de Defesa do Consumidor (artigo 49), você pode desistir da primeira assinatura em até 7 dias depois da compra e receber de volta todo o valor pago. Para isso, escreva para <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a> com o e-mail da sua conta. O valor volta para o mesmo cartão; o prazo para aparecer na fatura depende do banco. Fora desse prazo, não devolvemos valores de períodos já iniciados, mas você pode cancelar a renovação a qualquer momento.</p>
+
+        <h3>Troca de plano</h3>
+        <p>Você pode trocar de plano pela opção "Gerenciar assinatura". A diferença de preço é calculada de forma proporcional ao tempo que falta no período.</p>
+
+        <h3>Se o pagamento falhar</h3>
+        <p>Se não conseguirmos cobrar o cartão, tentaremos de novo nos dias seguintes, e o plano continua valendo por mais 3 dias. Se o pagamento não for resolvido, a conta volta ao plano Gratuito.</p>
+
+        <h3>Quando o plano termina</h3>
+        <p>Nada é apagado. Os perfis continuam guardados, com a Fé, as medalhas e o progresso. Ficam liberados só os perfis que cabem no plano atual (os mais antigos da conta), e os outros ficam trancados até a conta ter um plano com mais perfis.</p>
+
+        <h3>Excluir a conta</h3>
+        <p>Ao excluir a conta, uma assinatura feita pelo site é cancelada na hora, sem novas cobranças. Uma assinatura feita pela Google Play precisa ser cancelada na Google Play antes de excluir a conta.</p>
+
+        <h3>Uso correto</h3>
+        <p>A assinatura é para uso da sua família. Contas que desrespeitarem as regras do Lumina Sancti podem ser suspensas, como explicado nas Regras dos Cenáculos.</p>
+
+        <h3>Fale conosco</h3>
+        <p>Dúvidas, cobranças que você não reconhece ou pedidos de reembolso: <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a>.</p>
       </div>
     </section>
 
@@ -911,6 +971,7 @@
 
       <button type="button" id="footer-instalar" class="footer-instalar" hidden><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-baixar"></use></svg><span>Instalar o app no celular</span></button>
       <button type="button" id="footer-privacidade" class="footer-privacidade">Política de Privacidade</button>
+      <button type="button" id="footer-termos" class="footer-privacidade footer-termos">Termos da Assinatura</button>
       <p class="footer-contato" data-i18n="footer_fale_conosco">Fale conosco: <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a></p>
     </div>
   </footer>
@@ -982,5 +1043,7 @@
   <script src="mascote.js"></script>
   <script src="cenaculos.js"></script>
   <script src="amigos.js"></script>
+  <script src="planos.js"></script>
+  <script src="enfeites.js"></script>
 </body>
 </html>

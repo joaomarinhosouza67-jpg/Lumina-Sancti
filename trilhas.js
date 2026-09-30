@@ -1806,6 +1806,12 @@ function mensagemDeErroDaLicao(erro) {
   const texto = String((erro && erro.message) || '');
   if (texto.includes('account_suspended')) return 'Sua conta está suspensa. Enquanto isso, as trilhas ficam paradas, mas nada do seu progresso é apagado.';
   if (texto.includes('no_santidade')) return tt('erro_sem_santidade');
+  if (texto.includes('perfil_trancado')) {
+    const membro = typeof obterMembroAtivo === 'function' ? obterMembroAtivo() : null;
+    return membro && membro.tipo === 'crianca'
+      ? 'Este perfil está descansando por enquanto. Chame um adulto da sua casa.'
+      : 'Este perfil está guardado, porque o plano da conta libera menos perfis. Veja os planos para usá-lo de novo.';
+  }
   if (texto.includes('lesson_locked')) return tt('conclua_missao');
   if (texto.includes('lesson_empty')) return tt('erro_sem_perguntas');
   return tt('erro_abrir');

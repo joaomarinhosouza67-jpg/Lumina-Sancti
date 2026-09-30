@@ -2649,6 +2649,7 @@ async function concluirCadastro(evento) {
     return;
   }
   feedback.textContent = '';
+  enviarEmailDeBoasVindas();
   irDepoisDeEntrar();
 }
 
@@ -2681,7 +2682,7 @@ function atualizarInterfaceDeConta() {
 function mudarDeView(idNovaView, opcoes) {
   if (typeof paginaSoParaAdultos === 'function' && paginaSoParaAdultos(idNovaView)) return;
   if (typeof paginaBloqueadaPelaSuspensao === 'function' && paginaBloqueadaPelaSuspensao(idNovaView)) return;
-  const todasAsViews = ['view-home', 'view-detail', 'view-ia', 'view-auth', 'view-perfil', 'view-privacidade', 'view-oracoes', 'view-leitura', 'view-terco', 'view-padroeiro', 'view-trilhas', 'view-licao', 'view-perfis', 'view-ranking', 'view-planos', 'view-completar', 'view-cenaculos', 'view-cenaculo', 'view-equipe'];
+  const todasAsViews = ['view-home', 'view-detail', 'view-ia', 'view-auth', 'view-perfil', 'view-privacidade', 'view-oracoes', 'view-leitura', 'view-terco', 'view-padroeiro', 'view-trilhas', 'view-licao', 'view-perfis', 'view-ranking', 'view-planos', 'view-termos', 'view-completar', 'view-cenaculos', 'view-cenaculo', 'view-equipe'];
   const viewAtual = todasAsViews.map(id => document.getElementById(id)).find(v => v && v.classList.contains('active'));
   if (idNovaView !== 'view-licao' && typeof pararVozInfantil === 'function') pararVozInfantil(false);
   const catalogoInterno = idNovaView === 'view-home' && Boolean(opcoes && opcoes.catalogoInterno);
@@ -2721,6 +2722,14 @@ function abrirPrivacidade() {
   const atual = typeof idDaPaginaVisivel === 'function' ? idDaPaginaVisivel() : null;
   voltarDaPrivacidadePara = atual && atual !== 'view-privacidade' ? atual : 'view-home';
   mudarDeView('view-privacidade');
+}
+
+let voltarDosTermosPara = 'view-home';
+
+function abrirTermosDaAssinatura() {
+  const atual = typeof idDaPaginaVisivel === 'function' ? idDaPaginaVisivel() : null;
+  voltarDosTermosPara = atual && atual !== 'view-termos' ? atual : 'view-home';
+  mudarDeView('view-termos');
 }
 
 const widgetsDoCaptcha = {};
@@ -3044,6 +3053,10 @@ function iniciarPaginaDeAutenticacao() {
   if (voltarPrivacidade) voltarPrivacidade.addEventListener('click', () => mudarDeView(voltarDaPrivacidadePara));
   const rodapePrivacidade = document.getElementById('footer-privacidade');
   if (rodapePrivacidade) rodapePrivacidade.addEventListener('click', abrirPrivacidade);
+  const voltarDosTermos = document.getElementById('btn-back-termos');
+  if (voltarDosTermos) voltarDosTermos.addEventListener('click', () => mudarDeView(voltarDosTermosPara));
+  const rodapeTermos = document.getElementById('footer-termos');
+  if (rodapeTermos) rodapeTermos.addEventListener('click', abrirTermosDaAssinatura);
 
   mostrarFormularioDeLogin('entrar');
 }
@@ -3083,7 +3096,15 @@ function iniciarPaginaDePerfil() {
   });
 
   document.getElementById('perfil-excluir-btn').addEventListener('click', async () => {
-    const primeira = confirm('Tem certeza que quer excluir sua conta do Lumina Sancti? Essa ação não pode ser desfeita.');
+    const assinatura = typeof estadoDaAssinatura !== 'undefined' && estadoDaAssinatura ? estadoDaAssinatura.assinatura : null;
+    if (assinatura && assinatura.vale && assinatura.origem === 'google_play' && !assinatura.cancela_no_fim) {
+      feedback.textContent = 'Antes de excluir a conta, cancele a sua assinatura na Google Play. Depois volte aqui.';
+      return;
+    }
+    const comAssinatura = !!(assinatura && assinatura.vale && assinatura.origem === 'stripe' && !assinatura.cancela_no_fim);
+    const primeira = confirm(comAssinatura
+      ? 'Tem certeza que quer excluir sua conta do Lumina Sancti? A sua assinatura será cancelada agora e não haverá novas cobranças. Essa ação não pode ser desfeita.'
+      : 'Tem certeza que quer excluir sua conta do Lumina Sancti? Essa ação não pode ser desfeita.');
     if (!primeira) return;
     const segunda = confirm('Só para confirmar de novo: excluir sua conta APAGA TUDO para sempre. Continuar mesmo assim?');
     if (!segunda) return;
@@ -3097,6 +3118,10 @@ function iniciarPaginaDePerfil() {
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       });
       const dados = await resp.json().catch(() => null);
+      if (dados && dados.erro === 'cancele_no_google_play') {
+        feedback.textContent = 'Antes de excluir a conta, cancele a sua assinatura na Google Play. Depois volte aqui.';
+        return;
+      }
       if (!resp.ok || !dados?.sucesso) throw new Error('falha');
       await supabaseCliente.auth.signOut();
       mudarDeView('view-home');
@@ -4781,36 +4806,77 @@ function iniciarInstalacaoDoApp() {
 }
 
 const PLANOS = [
-  { id: 'gratuito', nome: 'Gratuito', preco: 'Grátis', perfis: '1 perfil', destaque: false,
-    itens: ['Todas as biografias dos santos', 'Santo do Dia, orações e terço guiado', 'Trilhas dos Santos', 'Lumina: 5 perguntas por dia'] },
-  { id: 'individual', nome: 'Individual', preco: 'R$ 19,90/mês', perfis: '1 perfil', destaque: false,
-    itens: ['Tudo do plano Gratuito', 'Quiz dos Santos criado por IA', 'Narração com voz natural', 'Mais perguntas à Lumina'] },
-  { id: 'duo', nome: 'Duo', preco: 'R$ 31,90/mês', perfis: '2 perfis', destaque: false,
+  { id: 'free', nome: 'Gratuito', mensal: null, anual: null, perfis: '1 perfil', destaque: false,
+    itens: ['Todas as biografias dos santos', 'Santo do Dia, orações e terço guiado', 'Trilhas dos Santos', 'Lumina: 5 perguntas por dia', 'Um perfil, de adulto ou de criança'] },
+  { id: 'individual', nome: 'Individual', mensal: 'R$ 19,90', anual: 'R$ 219', porMesNoAnual: 'R$ 18,25', perfis: '1 perfil', destaque: false,
+    itens: ['Tudo do plano Gratuito', 'Mais perguntas à Lumina', 'Quiz dos Santos criado por IA (em breve)', 'Narração com voz natural (em breve)'] },
+  { id: 'duo', nome: 'Duo', mensal: 'R$ 31,90', anual: 'R$ 349', porMesNoAnual: 'R$ 29,08', perfis: '2 perfis', destaque: false,
     itens: ['Tudo do plano Individual', 'Para duas pessoas', 'Ranking entre vocês dois'] },
-  { id: 'familia', nome: 'Família', preco: 'R$ 39,80/mês', perfis: 'Até 6 perfis', destaque: true,
-    itens: ['Tudo do plano Individual', 'Perfis de adultos e crianças', 'Modo Kids', 'Ranking da família'] },
+  { id: 'familia', nome: 'Família', mensal: 'R$ 43,80', anual: 'R$ 481', porMesNoAnual: 'R$ 40,08', perfis: 'Até 6 perfis', destaque: true,
+    itens: ['Tudo do plano Individual', 'Até 6 perfis, de adultos e crianças', 'Modo Kids para as crianças', 'Ranking da família'] },
 ];
+let periodoDosPlanos = 'mensal';
+
+function estadoDaAssinaturaAtual() {
+  return typeof estadoDaAssinatura !== 'undefined' ? estadoDaAssinatura : null;
+}
+
+function botaoDoPlano(plano) {
+  const estado = estadoDaAssinaturaAtual();
+  const logado = typeof contaLogada === 'function' && contaLogada();
+  const planoAtual = estado && estado.plano ? estado.plano.id : (logado ? 'free' : null);
+  const assinante = !!(estado && estado.assinatura && estado.assinatura.vale);
+  const equipe = typeof contaEhDaEquipe !== 'undefined' && contaEhDaEquipe;
+  const podeAssinar = !!estado && (estado.cobranca_ligada || equipe);
+  if (plano.id === 'free') {
+    return `<button class="plano-botao" disabled>${planoAtual === 'free' ? 'Plano atual' : 'Grátis'}</button>`;
+  }
+  if (assinante && plano.id === planoAtual) return '<button class="plano-botao plano-botao-atual" disabled>Plano atual</button>';
+  if (assinante) return `<button class="plano-botao plano-botao-assinar" data-gerenciar="1">Trocar para ${plano.nome}</button>`;
+  if (podeAssinar) return `<button class="plano-botao plano-botao-assinar" data-plano="${plano.id}">Assinar o ${plano.nome}</button>`;
+  return '<button class="plano-botao" disabled>Em breve</button>';
+}
+
+function precoDoPlano(plano) {
+  if (!plano.mensal) return '<p class="plano-preco">Grátis</p><p class="plano-preco-detalhe">Para sempre, sem cartão.</p>';
+  if (periodoDosPlanos === 'anual') {
+    return `<p class="plano-preco">${plano.anual}<small>/ano</small></p><p class="plano-preco-detalhe">Dá ${plano.porMesNoAnual} por mês. Pague 11 meses, use 12.</p>`;
+  }
+  return `<p class="plano-preco">${plano.mensal}<small>/mês</small></p><p class="plano-preco-detalhe">Cancele quando quiser.</p>`;
+}
 
 function renderizarPlanos() {
   const grade = document.getElementById('planos-grade');
   if (!grade) return;
+  document.querySelectorAll('.planos-periodo-botao').forEach((botao) => {
+    botao.classList.toggle('ativo', botao.dataset.periodo === periodoDosPlanos);
+    botao.setAttribute('aria-pressed', botao.dataset.periodo === periodoDosPlanos ? 'true' : 'false');
+  });
   grade.innerHTML = PLANOS.map((plano) => `
-    <div class="plano-cartao${plano.destaque ? ' destaque' : ''}">
+    <div class="plano-cartao${plano.destaque ? ' destaque' : ''}" data-plano-cartao="${plano.id}">
       ${plano.destaque ? '<span class="plano-selo">Mais completo</span>' : ''}
       <h3 class="plano-nome">${plano.nome}</h3>
       <p class="plano-perfis">${plano.perfis}</p>
-      <p class="plano-preco">${plano.preco || 'Em breve'}</p>
+      ${precoDoPlano(plano)}
       <ul class="plano-itens">
         ${plano.itens.map((item) => `<li>${icone('check')}<span>${item}</span></li>`).join('')}
       </ul>
-      <button class="plano-botao" disabled>${plano.id === 'gratuito' ? 'Plano atual' : 'Em breve'}</button>
+      ${botaoDoPlano(plano)}
     </div>`).join('');
+  grade.querySelectorAll('[data-plano]').forEach((botao) => {
+    botao.addEventListener('click', () => { if (typeof assinarPlano === 'function') assinarPlano(botao.dataset.plano, periodoDosPlanos, botao); });
+  });
+  grade.querySelectorAll('[data-gerenciar]').forEach((botao) => {
+    botao.addEventListener('click', () => { if (typeof gerenciarAssinatura === 'function') gerenciarAssinatura(botao); });
+  });
+  if (typeof atualizarRodapeDosPlanos === 'function') atualizarRodapeDosPlanos();
 }
 
 function abrirPlanos() {
   if (typeof closeSidebar === 'function') closeSidebar();
   mudarDeView('view-planos');
   renderizarPlanos();
+  if (typeof carregarAssinaturaSemFalhar === 'function') carregarAssinaturaSemFalhar().then(() => renderizarPlanos());
 }
 
 function iniciarContaGooglePlanosEApp() {
@@ -4831,6 +4897,12 @@ function iniciarContaGooglePlanosEApp() {
   if (planos) planos.addEventListener('click', abrirPlanos);
   const voltarPlanos = document.getElementById('btn-back-planos');
   if (voltarPlanos) voltarPlanos.addEventListener('click', () => mudarDeView('view-home'));
+  document.querySelectorAll('.planos-periodo-botao').forEach((botao) => {
+    botao.addEventListener('click', () => {
+      periodoDosPlanos = botao.dataset.periodo === 'anual' ? 'anual' : 'mensal';
+      renderizarPlanos();
+    });
+  });
 
   iniciarInstalacaoDoApp();
 }

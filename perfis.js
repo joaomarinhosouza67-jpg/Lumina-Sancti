@@ -390,11 +390,28 @@ function membroDoPerfil(perfil) {
   };
 }
 
+function limiteDePerfis() {
+  return typeof maximoDePerfisDoPlano === 'function' ? maximoDePerfisDoPlano(MAXIMO_DE_PERFIS) : MAXIMO_DE_PERFIS;
+}
+
+function perfilGuardadoPeloPlano(membro) {
+  return !!membro && typeof perfilPrecisaDePlano === 'function' && perfilPrecisaDePlano(membro.id);
+}
+
+function mensagemDoLimiteDePerfis() {
+  const limite = limiteDePerfis();
+  if (typeof cobrancaLigadaNoSite === 'function' && cobrancaLigadaNoSite() && limite < 6) {
+    return `O plano da conta permite ${limite === 1 ? '1 perfil' : `${limite} perfis`}. Para ter mais, veja os planos Duo e Família.`;
+  }
+  return `Esta conta já tem o máximo de ${limite} perfis.`;
+}
+
 async function carregarMembrosDaConta() {
+  const assinatura = typeof carregarAssinaturaSemFalhar === 'function' ? carregarAssinaturaSemFalhar() : null;
   const { data, error } = await supabaseCliente.rpc('list_profiles');
   if (error) throw error;
   membrosDaConta = (data || []).map(membroDoPerfil);
-  await anexarFotos(membrosDaConta);
+  await Promise.all([anexarFotos(membrosDaConta), assinatura]);
   return membrosDaConta;
 }
 
@@ -446,21 +463,30 @@ async function renderizarSelecaoDePerfis(jaCarregados) {
   }
 
   const cartoes = membrosDaConta.map((m) => `
-    <button class="perfil-cartao${perfisEmModoEdicao ? ' editando' : ''}" data-membro="${m.id}">
+    <button class="perfil-cartao${perfisEmModoEdicao ? ' editando' : ''}${perfilGuardadoPeloPlano(m) ? ' guardado' : ''}" data-membro="${m.id}">
       <span class="perfil-avatar-wrap">
         ${desenharAvatar(m.avatar, m.fotoUrl, 'grande')}
         ${perfisEmModoEdicao ? `<span class="perfil-editar-selo">${icone('lapis')}</span>` : ''}
       </span>
       <span class="perfil-nome">${escaparTexto(m.nome)}</span>
       ${m.tipo === 'crianca' ? '<span class="perfil-tag">Kids</span>' : ''}
+      ${perfilGuardadoPeloPlano(m) ? '<span class="perfil-tag perfil-tag-plano">Assine para usar</span>' : ''}
       ${perfilTrancado(m) ? `<span class="perfil-cadeado" title="Perfil com PIN" aria-label="Perfil com PIN">${icone('cadeado')}</span>` : ''}
     </button>`).join('');
 
-  const adicionar = membrosDaConta.length < MAXIMO_DE_PERFIS ? `
+  let adicionar = membrosDaConta.length < limiteDePerfis() ? `
     <button class="perfil-cartao perfil-adicionar" id="perfil-adicionar">
       <span class="perfil-avatar-wrap"><span class="avatar avatar-grande avatar-adicionar">${icone('mais')}</span></span>
       <span class="perfil-nome">Adicionar perfil</span>
     </button>` : '';
+  if (!adicionar && typeof podeOferecerMaisPerfis === 'function' && podeOferecerMaisPerfis(membrosDaConta.length)) {
+    adicionar = `
+    <button class="perfil-cartao perfil-adicionar perfil-mais" id="perfil-mais">
+      <span class="perfil-avatar-wrap"><span class="avatar avatar-grande avatar-adicionar">${icone('cadeado')}</span></span>
+      <span class="perfil-nome">Mais perfis</span>
+      <span class="perfil-tag perfil-tag-plano">Ver planos</span>
+    </button>`;
+  }
 
   grade.innerHTML = cartoes + adicionar;
 
@@ -470,6 +496,10 @@ async function renderizarSelecaoDePerfis(jaCarregados) {
       const membro = membrosDaConta.find((m) => m.id === cartao.dataset.membro);
       if (!membro) return;
       const seguir = () => (perfisEmModoEdicao ? abrirEditorDePerfil(membro) : escolherPerfil(membro));
+      if (!perfisEmModoEdicao && perfilGuardadoPeloPlano(membro)) {
+        if (typeof avisarPerfilSemPlano === 'function') avisarPerfilSemPlano(membro);
+        return;
+      }
       if (perfilTrancado(membro)) {
         abrirPortao({ modo: 'entrar', alvo: membro.id, textos: textosDoPinDoPerfil(membro.nome), aoConcluir: seguir });
       } else {
@@ -479,6 +509,8 @@ async function renderizarSelecaoDePerfis(jaCarregados) {
   });
   const botaoAdicionar = document.getElementById('perfil-adicionar');
   if (botaoAdicionar) botaoAdicionar.addEventListener('click', () => abrirEditorDePerfil(null));
+  const botaoMais = document.getElementById('perfil-mais');
+  if (botaoMais) botaoMais.addEventListener('click', () => { if (typeof abrirPlanos === 'function') abrirPlanos(); });
 
   if (gerenciar) {
     gerenciar.textContent = perfisEmModoEdicao ? 'Concluído' : 'Gerenciar perfis';
@@ -623,7 +655,7 @@ async function carregarTrilhasDaConta() {
     try { idSalvo = localStorage.getItem(CHAVE_MEMBRO_ATIVO); } catch (e) {  }
     try { await carregarMembrosDaConta(); } catch (e) { membrosDaConta = []; }
     membroAtivo = membrosDaConta.find((m) => m.id === idSalvo) || null;
-    if (membroAtivo && perfilTrancado(membroAtivo)) membroAtivo = null;
+    if (membroAtivo && (perfilTrancado(membroAtivo) || (membroAtivo.tipo === 'adulto' && perfilGuardadoPeloPlano(membroAtivo)))) membroAtivo = null;
     if (!membroAtivo) {
       abrirSelecaoDePerfis('trilhas');
       return;
@@ -705,7 +737,7 @@ async function abrirEditorDePerfil(membro) {
   document.getElementById('perfil-editor-feedback').textContent = '';
   document.getElementById('perfil-editor-autorizo').checked = false;
   document.getElementById('perfil-editor-excluir').hidden = !membro;
-  document.getElementById('perfil-editor-extra').hidden = !!membro || membrosDaConta.length === 0;
+  document.getElementById('perfil-editor-extra').hidden = !!membro || membrosDaConta.length === 0 || (typeof cobrancaLigadaNoSite === 'function' && cobrancaLigadaNoSite());
   atualizarPinNoEditor(membro);
   document.getElementById('perfil-editor-foto').value = '';
   document.getElementById('perfil-editor-salvar').disabled = false;
@@ -817,8 +849,8 @@ async function salvarPerfilDoEditor() {
     feedback.textContent = 'Entre na sua conta para salvar perfis.';
     return;
   }
-  if (!e.membro && membrosDaConta.length >= MAXIMO_DE_PERFIS) {
-    feedback.textContent = `Esta conta já tem o máximo de ${MAXIMO_DE_PERFIS} perfis.`;
+  if (!e.membro && membrosDaConta.length >= limiteDePerfis()) {
+    feedback.textContent = mensagemDoLimiteDePerfis();
     return;
   }
   const novoInfantil = !e.membro && e.tipo === 'crianca';
@@ -882,7 +914,7 @@ async function salvarPerfilDoEditor() {
   } catch (erro) {
     const texto = String((erro && erro.message) || '');
     const mensagem = texto.includes('profile_limit_reached')
-      ? `Esta conta já tem o máximo de ${MAXIMO_DE_PERFIS} perfis.`
+      ? mensagemDoLimiteDePerfis()
       : 'Não foi possível salvar agora. Tente de novo.';
     feedback.textContent = mensagem;
     botao.disabled = false;
@@ -998,6 +1030,7 @@ async function abrirPainelDoPerfil(membroId) {
       ${itens
         ? `<ul class="painel-insignias">${itens}</ul>`
         : '<p class="painel-vazio">Ainda nenhuma. Complete uma trilha inteira para ganhar a primeira.</p>'}`;
+    if (typeof aplicarEnfeitesNoPainel === 'function') aplicarEnfeitesNoPainel(conteudo, membroId);
   } catch (e) {
     conteudo.innerHTML = '<p class="not-found-msg">Não foi possível carregar este perfil agora.</p>';
   }
@@ -1019,7 +1052,8 @@ function abrirRanking() {
 
 function marcarAbaDoRanking() {
   const aviso = document.getElementById('ranking-aviso-assinantes');
-  if (aviso) aviso.hidden = abaDoRanking !== 'familia';
+  const cobrando = typeof cobrancaLigadaNoSite === 'function' && cobrancaLigadaNoSite();
+  if (aviso) aviso.hidden = abaDoRanking !== 'familia' || cobrando;
   document.querySelectorAll('.ranking-aba').forEach((b) => b.classList.toggle('active', b.dataset.aba === abaDoRanking));
   document.querySelectorAll('.ranking-periodo').forEach((b) => b.classList.toggle('active', b.dataset.periodo === periodoDoRanking));
 }
@@ -1074,8 +1108,28 @@ async function renderizarRanking() {
       });
     }
   } catch (e) {
+    if (String((e && e.message) || '').includes('recurso_de_assinante')) {
+      mostrarRankingDaFamiliaTrancado(lista);
+      return;
+    }
     lista.innerHTML = '<p class="not-found-msg">Não foi possível carregar o ranking agora.</p>';
   }
+}
+
+function mostrarRankingDaFamiliaTrancado(lista) {
+  marcarAbaDoRanking();
+  if (membroAtivo && membroAtivo.tipo === 'crianca') {
+    lista.innerHTML = '<p class="painel-vazio">O ranking da família está descansando. Continue aprendendo nas trilhas!</p>';
+    return;
+  }
+  lista.innerHTML = `
+    <div class="ranking-plano">
+      ${icone('trofeu')}
+      <p>O ranking da família faz parte dos planos Duo e Família. Com ele, vocês acompanham juntos quem juntou mais Fé na semana.</p>
+      <button type="button" class="licao-botao" id="ranking-ver-planos">Ver planos</button>
+    </div>`;
+  const botao = document.getElementById('ranking-ver-planos');
+  if (botao) botao.addEventListener('click', () => { if (typeof abrirPlanos === 'function') abrirPlanos(); });
 }
 
 function ligarFechamentoDeJanela(idJanela, idBotao, aoFechar) {

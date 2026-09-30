@@ -549,6 +549,7 @@ async function abrirPerfilPublico(idDoPerfil) {
         ${dados.eu ? '' : blocoDaComparacao(dados, foto)}
         ${rodapeDoPerfil(dados)}
       </div>`;
+    if (typeof aplicarEnfeitesNoCartao === 'function') aplicarEnfeitesNoCartao(corpo.querySelector('.perfil-publico'), dados.enfeites);
     const conversar = corpo.querySelector('#perfil-publico-conversar');
     const audio = corpo.querySelector('#perfil-publico-audio');
     [[conversar, false], [audio, true]].forEach(([botao, gravar]) => {
@@ -836,6 +837,17 @@ async function renderizarMeuPerfil() {
         </div>
       </section>` : ''}
       ${perfil ? blocoDasInsignias() : ''}
+      ${perfil ? `
+      <section class="perfil-secao">
+        <h4 class="perfil-secao-titulo">Aparência</h4>
+        <div class="ajustes-lista">
+          <button type="button" class="ajuste" id="meu-perfil-enfeites">
+            <span class="ajuste-icone">${iconeDoCenaculo('estrela')}</span>
+            <span class="ajuste-textos"><strong>Enfeites do perfil</strong><small>Moldura da foto, efeito ao abrir e faixa do nome</small></span>
+            ${iconeDoCenaculo('seta-direita')}
+          </button>
+        </div>
+      </section>` : ''}
       <section class="perfil-secao">
         <h4 class="perfil-secao-titulo">Conversas</h4>
         <div class="ajustes-lista">
@@ -851,6 +863,17 @@ async function renderizarMeuPerfil() {
           </button>
         </div>
       </section>
+      ${!perfil || adulto ? `
+      <section class="perfil-secao">
+        <h4 class="perfil-secao-titulo">Assinatura</h4>
+        <div class="ajustes-lista">
+          <button type="button" class="ajuste" id="meu-perfil-plano">
+            <span class="ajuste-icone">${iconeDoCenaculo('medalha')}</span>
+            <span class="ajuste-textos"><strong id="meu-perfil-plano-nome">Seu plano</strong><small id="meu-perfil-plano-resumo">Carregando...</small></span>
+            ${iconeDoCenaculo('seta-direita')}
+          </button>
+        </div>
+      </section>` : ''}
     </div>`;
 
   const ligar = (id, funcao) => {
@@ -864,6 +887,16 @@ async function renderizarMeuPerfil() {
   ligar('meu-perfil-papel', () => abrirEscolhaDeFundo('meu'));
   ligar('meu-perfil-ranking', () => { if (typeof abrirRanking === 'function') abrirRanking(); });
   ligar('meu-perfil-insignias', () => { if (typeof abrirInsignias === 'function') abrirInsignias(); });
+  ligar('meu-perfil-plano', () => { if (typeof abrirPlanos === 'function') abrirPlanos(); });
+  ligar('meu-perfil-enfeites', () => { if (typeof abrirEnfeitesDoPerfil === 'function') abrirEnfeitesDoPerfil(); });
+  if (lugar.querySelector('#meu-perfil-plano') && typeof carregarAssinaturaSemFalhar === 'function') {
+    carregarAssinaturaSemFalhar().then(() => {
+      const nomeDoPlano = document.getElementById('meu-perfil-plano-nome');
+      const resumo = document.getElementById('meu-perfil-plano-resumo');
+      if (nomeDoPlano) nomeDoPlano.textContent = `Plano ${nomeDoPlanoAtual()}`;
+      if (resumo) resumo.textContent = resumoDoPlanoNoPerfil();
+    });
+  }
 
   if (adulto) {
     try {

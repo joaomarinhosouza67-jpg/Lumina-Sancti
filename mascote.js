@@ -406,7 +406,7 @@ function mudarLumi(palco, estado, rosto, fala) {
   }
 }
 
-const PAGINAS_SO_PARA_ADULTOS = ['view-ia', 'view-planos', 'view-cenaculos', 'view-cenaculo', 'view-equipe'];
+const PAGINAS_SO_PARA_ADULTOS = ['view-ia', 'view-planos', 'view-termos', 'view-cenaculos', 'view-cenaculo', 'view-equipe'];
 
 function paginaSoParaAdultos(idDaPagina) {
   if (!modoInfantilAtivo() || !PAGINAS_SO_PARA_ADULTOS.includes(idDaPagina)) return false;
