@@ -528,6 +528,10 @@ function escolherPerfil(membro) {
   if (destinoAposEscolherPerfil === 'inicio') mudarDeView('view-home');
   else if (destinoAposEscolherPerfil === 'ranking') abrirRanking();
   else if (destinoAposEscolherPerfil === 'cenaculos' && typeof abrirCenaculos === 'function') abrirCenaculos();
+  else if (destinoAposEscolherPerfil === 'comunidade' && typeof abrirComunidade === 'function') {
+    if (membro.tipo === 'adulto') abrirComunidade();
+    else mudarDeView('view-home');
+  }
   else abrirTrilhas(slugPendenteDasTrilhas);
   if (typeof aposEscolherPerfil === 'function') aposEscolherPerfil(membro);
 }
@@ -1062,8 +1066,9 @@ function linhaDoRanking(item) {
   const clicavel = !!(item.membroId || item.publicoId);
   const tag = clicavel ? 'button' : 'div';
   const dados = item.membroId ? ` data-membro="${item.membroId}"` : (item.publicoId ? ` data-publico="${escaparTexto(item.publicoId)}"` : '');
+  const perfil = item.perfilId ? ` data-perfil="${escaparTexto(item.perfilId)}"` : '';
   return `
-    <${tag} class="ranking-linha${item.destaque ? ' destaque' : ''}"${clicavel ? `${dados} type="button"` : ''}>
+    <${tag} class="ranking-linha${item.destaque ? ' destaque' : ''}"${perfil}${clicavel ? `${dados} type="button"` : ''}>
       ${desenharAvatar(item.avatar, item.fotoUrl, 'pequeno')}
       <span class="ranking-nome">${escaparTexto(item.nome)}${item.destaque ? ' <small>você</small>' : ''}</span>
       <span class="ranking-numero ranking-fe">${icone('estrela')}${item.fe}</span>
@@ -1084,12 +1089,13 @@ async function renderizarRanking() {
       const podeAbrirPerfil = typeof abrirPerfilPublico === 'function';
       const linhas = (data || []).map((l) => linhaDoRanking({
         posicao: l.rank, nome: l.display_name, avatar: l.avatar_key, fe: l.faith, destaque: l.is_me,
-        publicoId: podeAbrirPerfil ? l.profile_id : null,
+        publicoId: podeAbrirPerfil ? l.profile_id : null, perfilId: l.profile_id,
       })).join('');
       lista.innerHTML = linhas || '<p class="painel-vazio">Ainda não há ninguém no ranking global.</p>';
       lista.querySelectorAll('.ranking-linha[data-publico]').forEach((linha) => {
         linha.addEventListener('click', () => abrirPerfilPublico(linha.dataset.publico));
       });
+      if (typeof enfeitarLinhasDoRanking === 'function') enfeitarLinhasDoRanking(lista, false);
     } else {
       const [{ data, error }] = await Promise.all([
         supabaseCliente.rpc('leaderboard_family', { _pid: membroAtivo.id, _period: periodoDoRanking }),
@@ -1100,12 +1106,13 @@ async function renderizarRanking() {
         const membro = membrosDaConta.find((m) => m.id === l.profile_id);
         return linhaDoRanking({
           posicao: l.rank, nome: l.name, avatar: l.avatar_key, fotoUrl: membro && membro.fotoUrl, fe: l.faith,
-          ofensiva: membro ? membro.ofensiva : undefined, destaque: l.is_me, membroId: l.profile_id,
+          ofensiva: membro ? membro.ofensiva : undefined, destaque: l.is_me, membroId: l.profile_id, perfilId: l.profile_id,
         });
       }).join('');
       lista.querySelectorAll('.ranking-linha').forEach((linha) => {
         if (linha.dataset.membro) linha.addEventListener('click', () => abrirPainelDoPerfil(linha.dataset.membro));
       });
+      if (typeof enfeitarLinhasDoRanking === 'function') enfeitarLinhasDoRanking(lista, true);
     }
   } catch (e) {
     if (String((e && e.message) || '').includes('recurso_de_assinante')) {

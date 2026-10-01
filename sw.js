@@ -1,4 +1,4 @@
-const CACHE_NOME = 'lumina-sancti-1.28.0';
+const CACHE_NOME = 'lumina-sancti-1.29.0';
 const ARQUIVOS_ESSENCIAIS = [
   './',
   './index.html',
@@ -14,6 +14,8 @@ const ARQUIVOS_ESSENCIAIS = [
   './amigos.js',
   './planos.js',
   './enfeites.js',
+  './comunidade.js',
+  './notificacoes.js',
   './avisos.js',
   './favicon.svg',
   './favicon-48.png',
@@ -57,5 +59,40 @@ self.addEventListener('fetch', (evento) => {
       .catch(() =>
         caches.match(evento.request).then((guardado) => guardado || caches.match('./index.html'))
       )
+  );
+});
+
+self.addEventListener('push', (evento) => {
+  let dados = {};
+  try {
+    dados = evento.data ? evento.data.json() : {};
+  } catch (e) {
+    dados = { texto: evento.data ? evento.data.text() : '' };
+  }
+  const titulo = dados.titulo || 'Lumina Sancti';
+  const endereco = typeof dados.url === 'string' && dados.url.startsWith('/') ? dados.url : '/';
+  evento.waitUntil(
+    self.registration.showNotification(titulo, {
+      body: dados.texto || '',
+      icon: './icon-192.png',
+      badge: './favicon-48.png',
+      tag: dados.tag || 'lumina-sancti',
+      renotify: true,
+      data: { url: endereco },
+    })
+  );
+});
+
+self.addEventListener('notificationclick', (evento) => {
+  evento.notification.close();
+  const destino = new URL((evento.notification.data && evento.notification.data.url) || '/', self.location.origin).href;
+  evento.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((janelas) => {
+      const aberta = janelas.find((j) => new URL(j.url).origin === self.location.origin);
+      if (aberta && 'navigate' in aberta) {
+        return aberta.navigate(destino).then((j) => (j || aberta).focus()).catch(() => self.clients.openWindow(destino));
+      }
+      return self.clients.openWindow(destino);
+    })
   );
 });

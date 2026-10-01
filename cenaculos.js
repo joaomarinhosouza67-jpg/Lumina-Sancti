@@ -1,6 +1,6 @@
 const CHAVE_CONVITE_PENDENTE = 'lumina-sancti-convite-cenaculo';
 const REGEX_LINK_DO_MEET = /^https:\/\/meet\.google\.com\/[a-z]{3}-[a-z]{4}-[a-z]{3}$/;
-const PAGINAS_BLOQUEADAS_NA_SUSPENSAO = ['view-trilhas', 'view-licao', 'view-ranking', 'view-cenaculos', 'view-cenaculo'];
+const PAGINAS_BLOQUEADAS_NA_SUSPENSAO = ['view-trilhas', 'view-licao', 'view-ranking', 'view-cenaculos', 'view-cenaculo', 'view-comunidade'];
 const MOTIVOS_DE_DENUNCIA = ['Ofensa ou xingamento', 'Conteúdo impróprio', 'Spam ou propaganda', 'Mentira ou golpe', 'Outro motivo'];
 const CHAVE_DO_GIPHY = '';
 const PASTA_DOS_AUDIOS = 'cenaculo-audios';
@@ -2077,6 +2077,7 @@ const DESTINOS_DA_BARRA = {
   'view-home': 'inicio', 'view-detail': 'inicio',
   'view-trilhas': 'trilhas', 'view-licao': 'trilhas', 'view-ranking': 'trilhas',
   'view-cenaculos': 'cenaculos', 'view-cenaculo': 'cenaculos',
+  'view-comunidade': 'comunidade',
   'view-oracoes': 'oracoes', 'view-terco': 'oracoes', 'view-padroeiro': 'oracoes', 'view-leitura': 'oracoes',
   'view-perfil': 'conta', 'view-auth': 'conta',
 };
@@ -2098,6 +2099,7 @@ function irPelaBarra(destino) {
   if (destino === 'inicio') mudarDeView('view-home');
   else if (destino === 'trilhas' && typeof abrirTrilhas === 'function') abrirTrilhas();
   else if (destino === 'cenaculos') abrirCenaculos();
+  else if (destino === 'comunidade' && typeof abrirComunidade === 'function') abrirComunidade();
   else if (destino === 'oracoes') mudarDeView('view-oracoes');
   else if (destino === 'conta') {
     if (typeof contaLogada !== 'function' || !contaLogada()) { if (typeof irParaLogin === 'function') irParaLogin(); }

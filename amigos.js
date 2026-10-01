@@ -517,7 +517,7 @@ async function abrirPerfilPublico(idDoPerfil) {
     if (dados.eu) foto = perfil.fotoUrl || '';
     else if (dados.foto) foto = (await enderecosAssinados('avatars', [dados.foto]))[dados.foto] || '';
     const titulo = document.getElementById('cenaculo-janela-titulo');
-    if (titulo) titulo.textContent = dados.eu ? 'Seu perfil' : 'Dados do contato';
+    if (titulo) titulo.textContent = dados.eu ? 'Seu perfil' : (dados.contato ? 'Dados do contato' : 'Perfil');
     const sequencia = Number(dados.sequencia || 0);
     const recorde = Number(dados.melhor_sequencia || 0);
     const licoes = Number(dados.licoes || 0);
@@ -529,6 +529,7 @@ async function abrirPerfilPublico(idDoPerfil) {
         <div class="perfil-publico-topo">
           <strong class="perfil-publico-nome">${escaparTexto(dados.nome)}</strong>
           <small>${desdeQuando(dados.desde)}</small>
+          <div class="perfil-social" id="perfil-publico-social"></div>
           <div class="perfil-selos">
             ${dados.eu ? '<span class="perfil-selo">Você</span>' : ''}
             ${dados.contato ? `<span class="perfil-selo">${iconeDoCenaculo('conversa')} Contato</span>` : ''}
@@ -550,6 +551,7 @@ async function abrirPerfilPublico(idDoPerfil) {
         ${rodapeDoPerfil(dados)}
       </div>`;
     if (typeof aplicarEnfeitesNoCartao === 'function') aplicarEnfeitesNoCartao(corpo.querySelector('.perfil-publico'), dados.enfeites);
+    if (typeof preencherResumoSocial === 'function') preencherResumoSocial(corpo.querySelector('#perfil-publico-social'), dados.perfil_id);
     const conversar = corpo.querySelector('#perfil-publico-conversar');
     const audio = corpo.querySelector('#perfil-publico-audio');
     [[conversar, false], [audio, true]].forEach(([botao, gravar]) => {
@@ -820,6 +822,7 @@ async function renderizarMeuPerfil() {
         <strong class="perfil-publico-nome" id="meu-perfil-nome">${escaparTexto(nome)}</strong>
         <small>${perfil ? `Perfil de ${adulto ? 'adulto' : 'criança'}${nomeDaConta ? ` na conta de ${escaparTexto(nomeDaConta)}` : ''}` : 'Escolha um perfil para ver as suas estatísticas'}</small>
         <small id="meu-perfil-desde"></small>
+        ${adulto ? '<div class="perfil-social" id="meu-perfil-social"></div>' : ''}
       </div>
       <div class="perfil-acoes perfil-acoes-tres">
         ${perfil ? acaoDoMeuPerfil('meu-perfil-editar', 'lapis', 'Editar perfil') : ''}
@@ -844,6 +847,17 @@ async function renderizarMeuPerfil() {
           <button type="button" class="ajuste" id="meu-perfil-enfeites">
             <span class="ajuste-icone">${iconeDoCenaculo('estrela')}</span>
             <span class="ajuste-textos"><strong>Enfeites do perfil</strong><small>Moldura da foto, efeito ao abrir e faixa do nome</small></span>
+            ${iconeDoCenaculo('seta-direita')}
+          </button>
+        </div>
+      </section>` : ''}
+      ${adulto ? `
+      <section class="perfil-secao">
+        <h4 class="perfil-secao-titulo">Lembretes</h4>
+        <div class="ajustes-lista">
+          <button type="button" class="ajuste" id="meu-perfil-lembretes">
+            <span class="ajuste-icone">${iconeDoCenaculo('sino')}</span>
+            <span class="ajuste-textos"><strong>Notificações</strong><small id="meu-perfil-lembretes-resumo">Hora da Misericórdia e ofensiva</small></span>
             ${iconeDoCenaculo('seta-direita')}
           </button>
         </div>
@@ -889,6 +903,10 @@ async function renderizarMeuPerfil() {
   ligar('meu-perfil-insignias', () => { if (typeof abrirInsignias === 'function') abrirInsignias(); });
   ligar('meu-perfil-plano', () => { if (typeof abrirPlanos === 'function') abrirPlanos(); });
   ligar('meu-perfil-enfeites', () => { if (typeof abrirEnfeitesDoPerfil === 'function') abrirEnfeitesDoPerfil(); });
+  if (perfil && typeof enfeitarMeuPerfil === 'function') enfeitarMeuPerfil();
+  if (adulto && typeof preencherResumoSocial === 'function') preencherResumoSocial(lugar.querySelector('#meu-perfil-social'), perfil.id);
+  ligar('meu-perfil-lembretes', () => { if (typeof abrirAjustesDosLembretes === 'function') abrirAjustesDosLembretes(); });
+  if (adulto && typeof atualizarResumoDosLembretes === 'function') atualizarResumoDosLembretes();
   if (lugar.querySelector('#meu-perfil-plano') && typeof carregarAssinaturaSemFalhar === 'function') {
     carregarAssinaturaSemFalhar().then(() => {
       const nomeDoPlano = document.getElementById('meu-perfil-plano-nome');

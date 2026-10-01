@@ -1966,6 +1966,7 @@ async function finalizarLicaoNoServidor() {
   const insigniaNova = !!estado && !jaTinhaInsignia && trilhaConcluida(trilha, estado);
   if (insigniaNova) estado.insignias[trilha.slug] = new Date().toISOString();
   const membro = typeof obterMembroAtivo === 'function' ? obterMembroAtivo() : null;
+  const antesDaMissao = membro ? { fe: membro.fe, ofensiva: membro.ofensiva } : {};
   if (membro) Object.assign(membro, { fe: r.faith_total, ofensiva: r.streak, santidade: r.santidade });
 
   somDaLicao('fim');
@@ -1990,6 +1991,14 @@ async function finalizarLicaoNoServidor() {
   }
   avisarMascote('concluiu', { medalha: insigniaNova });
   prepararRodapeDaLicao(tt('continuar'), true);
+  if (membro && membro.tipo === 'adulto') {
+    (async () => {
+      const mostrouMarco = typeof verificarNovoMarco === 'function'
+        ? await verificarNovoMarco({ resultado: r, antes: antesDaMissao, insigniaNova, trilha })
+        : false;
+      if (!mostrouMarco && Number(r.streak) >= 2 && typeof oferecerLembreteDaOfensiva === 'function') oferecerLembreteDaOfensiva();
+    })();
+  }
 }
 
 function iniciarTrilhas() {

@@ -13,6 +13,11 @@ const ENFEITES = {
     { id: 'vitral', nome: 'Vitral', texto: 'A rosácea da catedral se acende' },
     { id: 'petalas', nome: 'Pétalas de rosa', texto: 'Pétalas caindo devagar', criancas: true },
     { id: 'sinos', nome: 'Sinos da igreja', texto: 'Os sinos tocam de alegria' },
+    { id: 'linguas-de-fogo', nome: 'Línguas de fogo', texto: 'O Espírito Santo desce em chamas' },
+    { id: 'incenso', nome: 'Incenso', texto: 'A fumaça sobe como uma oração' },
+    { id: 'custodia', nome: 'Custódia do Santíssimo', texto: 'A luz da adoração' },
+    { id: 'estrela-de-belem', nome: 'Estrela de Belém', texto: 'A estrela que guiou os Magos', criancas: true },
+    { id: 'penas-de-anjo', nome: 'Penas de anjo', texto: 'Penas brancas caindo do céu', criancas: true },
   ],
   faixa: [
     { id: 'ceu-estrelado', nome: 'Céu estrelado', texto: 'Estrelas e a lua', gratis: true, criancas: true },
@@ -1055,12 +1060,421 @@ function efeitoSinos(w, h) {
   };
 }
 
+function desenharChama(ctx, x, y, tamanho, s, fase, alfa) {
+  if (alfa <= 0) return;
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(tamanho * (1 + Math.sin(s * 13 + fase) * 0.06), tamanho * (1 + Math.sin(s * 19 + fase) * 0.1));
+  ctx.globalAlpha *= alfa;
+  ctx.shadowColor = 'rgba(251, 146, 60, 0.95)';
+  ctx.shadowBlur = 16;
+  const g = ctx.createLinearGradient(0, -17, 0, 8);
+  g.addColorStop(0, 'rgba(220, 38, 38, 0)');
+  g.addColorStop(0.22, '#ea580c');
+  g.addColorStop(0.62, '#fbbf24');
+  g.addColorStop(1, '#fef3c7');
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.moveTo(Math.sin(s * 9 + fase) * 1.6, -17);
+  ctx.bezierCurveTo(4, -10, 8, -4, 7, 1);
+  ctx.bezierCurveTo(6.5, 5.5, 3.5, 8, 0, 8);
+  ctx.bezierCurveTo(-3.5, 8, -6.5, 5.5, -7, 1);
+  ctx.bezierCurveTo(-8, -4, -4, -10, Math.sin(s * 9 + fase) * 1.6, -17);
+  ctx.fill();
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = 'rgba(255, 251, 235, 0.95)';
+  ctx.beginPath();
+  ctx.ellipse(0, 3.4, 2.5, 3.9, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+function efeitoLinguasDeFogo(w, h) {
+  const total = Math.max(7, Math.min(13, Math.round(w / 34)));
+  const linguas = Array.from({ length: total }, (_, i) => ({
+    x: w * (0.08 + 0.84 * ((i + 0.5) / total)) + (Math.random() - 0.5) * 16,
+    alvo: h * (0.16 + Math.random() * 0.46),
+    inicio: 0.12 + Math.random() * 1.1,
+    tam: 1.15 + Math.random() * 0.7,
+    fase: Math.random() * 6,
+  }));
+  const faiscas = [];
+  let anterior = 0;
+  return (ctx, s) => {
+    const passo = Math.min(0.05, s - anterior);
+    anterior = s;
+    const brilho = suave(s / 0.6) * (1 - suave((s - 2.8) / 0.8));
+    if (brilho > 0) {
+      const g = ctx.createLinearGradient(0, 0, 0, h * 0.5);
+      g.addColorStop(0, `rgba(249, 115, 22, ${0.34 * brilho})`);
+      g.addColorStop(1, 'rgba(249, 115, 22, 0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, w, h * 0.5);
+    }
+    linguas.forEach((l) => {
+      const t = s - l.inicio;
+      if (t <= 0) return;
+      const y = -24 + (l.alvo + 24) * suave(t / 0.95);
+      const x = l.x + Math.sin(t * 2.2 + l.fase) * 6;
+      const alfa = Math.min(1, t * 3);
+      desenharLuz(ctx, x, y, 30 * l.tam, '251, 146, 60', 0.32 * alfa);
+      desenharChama(ctx, x, y, l.tam, s, l.fase, alfa);
+      if (Math.random() < 0.16 * (passo / 0.016)) {
+        faiscas.push({ x: x + (Math.random() - 0.5) * 8, y: y - 12 * l.tam, vx: (Math.random() - 0.5) * 34, vy: -45 - Math.random() * 55, idade: 0, vida: 0.5 + Math.random() * 0.5 });
+      }
+    });
+    for (let i = faiscas.length - 1; i >= 0; i -= 1) {
+      const f = faiscas[i];
+      f.idade += passo;
+      if (f.idade > f.vida) { faiscas.splice(i, 1); continue; }
+      f.x += f.vx * passo;
+      f.y += f.vy * passo;
+      desenharFaisca(ctx, f.x, f.y, 2.4, '#fed7aa', 1 - f.idade / f.vida);
+    }
+  };
+}
+
+function desenharTuribulo(ctx, x, y, tamanho) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(tamanho, tamanho);
+  ctx.shadowColor = 'rgba(253, 224, 71, 0.55)';
+  ctx.shadowBlur = 12;
+  const g = ctx.createLinearGradient(-14, 0, 14, 0);
+  g.addColorStop(0, '#78350f');
+  g.addColorStop(0.35, '#d97706');
+  g.addColorStop(0.5, '#fde68a');
+  g.addColorStop(0.7, '#f59e0b');
+  g.addColorStop(1, '#78350f');
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.moveTo(-12, 0);
+  ctx.quadraticCurveTo(-12, -14, 0, -16);
+  ctx.quadraticCurveTo(12, -14, 12, 0);
+  ctx.closePath();
+  ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(-14, 0);
+  ctx.lineTo(14, 0);
+  ctx.quadraticCurveTo(13, 13, 0, 14);
+  ctx.quadraticCurveTo(-13, 13, -14, 0);
+  ctx.fill();
+  ctx.fillRect(-5, 13, 10, 4);
+  ctx.fillRect(-8, 16.5, 16, 3);
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = 'rgba(69, 26, 3, 0.85)';
+  [[-6, -6], [0, -9], [6, -6], [-3, -2.5], [3, -2.5]].forEach(([fx, fy]) => {
+    ctx.beginPath();
+    ctx.arc(fx, fy, 1.3, 0, Math.PI * 2);
+    ctx.fill();
+  });
+  ctx.fillStyle = '#fde68a';
+  ctx.beginPath();
+  ctx.arc(0, -17.5, 2.2, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+function efeitoIncenso(w, h) {
+  const pivo = { x: w / 2, y: -8 };
+  const corda = Math.min(h * 0.5, 300);
+  const tamanho = Math.min(w, 420) / 210;
+  const fumacas = [];
+  const brilhos = Array.from({ length: 18 }, () => ({ x: Math.random() * w, y: Math.random() * h * 0.7, r: 1.6 + Math.random() * 2.6, fase: Math.random() * 6, inicio: 0.6 + Math.random() * 1.6 }));
+  let proxima = 0.25;
+  let anterior = 0;
+  return (ctx, s) => {
+    const passo = Math.min(0.05, s - anterior);
+    anterior = s;
+    const aparece = suave(s / 0.5) * (1 - suave((s - 3.0) / 0.7));
+    const angulo = Math.sin(s * 2.3) * 0.42 * aparece;
+    const tx = pivo.x + Math.sin(angulo) * corda;
+    const ty = pivo.y + Math.cos(angulo) * corda;
+    if (s > proxima && s < 3.0) {
+      proxima += 0.07;
+      fumacas.push({ x: tx + (Math.random() - 0.5) * 10 * tamanho, y: ty - 16 * tamanho, vx: (Math.random() - 0.5) * 14, vy: -38 - Math.random() * 26, idade: 0, vida: 1.6 + Math.random() * 0.9, fase: Math.random() * 6, r: (5 + Math.random() * 5) * tamanho });
+    }
+    for (let i = fumacas.length - 1; i >= 0; i -= 1) {
+      const f = fumacas[i];
+      f.idade += passo;
+      const t = f.idade / f.vida;
+      if (t >= 1) { fumacas.splice(i, 1); continue; }
+      f.x += (f.vx + Math.sin(f.idade * 2.4 + f.fase) * 16) * passo;
+      f.y += f.vy * passo;
+      const raio = f.r * (1 + t * 4.5);
+      const g = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, raio);
+      g.addColorStop(0, `rgba(241, 245, 249, ${0.34 * (1 - t)})`);
+      g.addColorStop(0.6, `rgba(226, 232, 240, ${0.16 * (1 - t)})`);
+      g.addColorStop(1, 'rgba(226, 232, 240, 0)');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, raio, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    brilhos.forEach((b) => {
+      if (s < b.inicio) return;
+      desenharFaisca(ctx, b.x, b.y, b.r, '#fde68a', (0.3 + 0.7 * Math.abs(Math.sin(s * 3 + b.fase))) * Math.min(1, (s - b.inicio) * 2) * aparece);
+    });
+    if (aparece <= 0) return;
+    ctx.save();
+    ctx.globalAlpha *= aparece;
+    ctx.strokeStyle = '#d97706';
+    ctx.lineWidth = 1.4 * tamanho;
+    ctx.setLineDash([3 * tamanho, 2 * tamanho]);
+    [-9, 0, 9].forEach((d) => {
+      ctx.beginPath();
+      ctx.moveTo(pivo.x, pivo.y);
+      ctx.lineTo(tx + Math.cos(angulo) * d * tamanho, ty - 15 * tamanho);
+      ctx.stroke();
+    });
+    ctx.setLineDash([]);
+    ctx.translate(tx, ty);
+    ctx.rotate(-angulo);
+    desenharLuz(ctx, 0, 4 * tamanho, 34 * tamanho, '251, 191, 36', 0.35);
+    desenharTuribulo(ctx, 0, 0, tamanho);
+    ctx.restore();
+  };
+}
+
+function efeitoCustodia(w, h) {
+  const R = Math.min(w * 0.28, h * 0.22, 110);
+  const cx = w / 2;
+  const cy = Math.max(R * 1.35, Math.min(h * 0.3, 190));
+  const RAIOS = 36;
+  const faiscas = Array.from({ length: 28 }, () => ({ a: Math.random() * Math.PI * 2, d: R * (1.05 + Math.random() * 1.1), fase: Math.random() * 6, r: 1.8 + Math.random() * 3 }));
+  return (ctx, s) => {
+    const aparece = suave(s / 0.8) * (1 - suave((s - 3.0) / 0.7));
+    if (aparece <= 0) return;
+    const cresce = 0.8 + 0.2 * suave(s / 1.3);
+    ctx.save();
+    ctx.globalAlpha *= aparece;
+    desenharLuz(ctx, cx, cy, R * 2.6, '254, 243, 199', 0.42 + 0.08 * Math.sin(s * 3));
+    ctx.translate(cx, cy);
+    ctx.save();
+    ctx.rotate(s * 0.18);
+    for (let i = 0; i < RAIOS; i += 1) {
+      const longo = i % 2 === 0;
+      const comprimento = R * (longo ? 1.08 : 0.78) * cresce;
+      const largura = longo ? R * 0.05 : R * 0.03;
+      ctx.save();
+      ctx.rotate((i * Math.PI * 2) / RAIOS);
+      const g = ctx.createLinearGradient(R * 0.3, 0, comprimento, 0);
+      g.addColorStop(0, 'rgba(253, 230, 138, 0.95)');
+      g.addColorStop(0.7, 'rgba(251, 191, 36, 0.65)');
+      g.addColorStop(1, 'rgba(245, 158, 11, 0)');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.moveTo(R * 0.3, -largura);
+      ctx.lineTo(comprimento, 0);
+      ctx.lineTo(R * 0.3, largura);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+    ctx.restore();
+    const ouro = ctx.createLinearGradient(-R * 0.1, 0, R * 0.1, 0);
+    ouro.addColorStop(0, '#b45309');
+    ouro.addColorStop(0.5, '#fde68a');
+    ouro.addColorStop(1, '#b45309');
+    ctx.fillStyle = ouro;
+    ctx.fillRect(-R * 0.045, R * 0.38, R * 0.09, R * 0.72);
+    ctx.beginPath();
+    ctx.ellipse(0, R * 0.74, R * 0.11, R * 0.07, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(-R * 0.08, R * 1.08);
+    ctx.lineTo(R * 0.08, R * 1.08);
+    ctx.lineTo(R * 0.34, R * 1.26);
+    ctx.lineTo(-R * 0.34, R * 1.26);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillRect(-R * 0.03, -R * 1.25, R * 0.06, R * 0.3);
+    ctx.fillRect(-R * 0.11, -R * 1.17, R * 0.22, R * 0.055);
+    ctx.shadowColor = 'rgba(253, 224, 71, 0.95)';
+    ctx.shadowBlur = 20;
+    ctx.strokeStyle = '#fbbf24';
+    ctx.lineWidth = R * 0.075;
+    ctx.beginPath();
+    ctx.arc(0, 0, R * 0.34, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.fillStyle = '#fffbeb';
+    ctx.beginPath();
+    ctx.arc(0, 0, R * 0.27, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.strokeStyle = 'rgba(217, 119, 6, 0.4)';
+    ctx.lineWidth = R * 0.022;
+    ctx.beginPath();
+    ctx.moveTo(0, -R * 0.15);
+    ctx.lineTo(0, R * 0.15);
+    ctx.moveTo(-R * 0.1, -R * 0.04);
+    ctx.lineTo(R * 0.1, -R * 0.04);
+    ctx.stroke();
+    ctx.restore();
+    faiscas.forEach((f) => {
+      const a = f.a + s * 0.25;
+      desenharFaisca(ctx, cx + Math.cos(a) * f.d, cy + Math.sin(a) * f.d, f.r, '#fef3c7', (0.25 + 0.75 * Math.abs(Math.sin(s * 2.6 + f.fase))) * aparece);
+    });
+  };
+}
+
+function desenharEstrelaDeBelem(ctx, x, y, R, alfa) {
+  if (alfa <= 0) return;
+  desenharLuz(ctx, x, y, R * 3, '254, 243, 199', 0.55 * alfa);
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.globalAlpha *= alfa;
+  ctx.shadowColor = 'rgba(253, 230, 138, 1)';
+  ctx.shadowBlur = 22;
+  ctx.fillStyle = '#fffbeb';
+  ctx.beginPath();
+  for (let i = 0; i < 16; i += 1) {
+    const a = (i * Math.PI) / 8 - Math.PI / 2;
+    let raio = R * 0.17;
+    if (i % 2 === 0) {
+      const ponta = i / 2;
+      if (ponta === 4) raio = R * 2.3;
+      else if (ponta % 2 === 0) raio = R * 1.3;
+      else raio = R * 0.62;
+    }
+    const px = Math.cos(a) * raio;
+    const py = Math.sin(a) * raio;
+    if (i === 0) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
+  }
+  ctx.closePath();
+  ctx.fill();
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  ctx.arc(0, 0, R * 0.22, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+function efeitoEstrelaDeBelem(w, h) {
+  const R = Math.max(16, Math.min(w, 420) / 13);
+  const fim = { x: w * 0.5, y: Math.max(R * 2, Math.min(h * 0.17, 110)) };
+  const comeco = { x: -R * 3, y: Math.min(h * 0.5, 260) };
+  const rastro = [];
+  const caindo = [];
+  const ceu = Array.from({ length: 24 }, () => ({ x: Math.random() * w, y: Math.random() * h * 0.75, r: 1.4 + Math.random() * 2.4, fase: Math.random() * 6 }));
+  let anterior = 0;
+  return (ctx, s) => {
+    const passo = Math.min(0.05, s - anterior);
+    anterior = s;
+    const fundo = suave(s / 0.5) * (1 - suave((s - 3.0) / 0.7));
+    ceu.forEach((c) => desenharFaisca(ctx, c.x, c.y, c.r, '#fef3c7', (0.25 + 0.6 * Math.abs(Math.sin(s * 2.4 + c.fase))) * fundo));
+    const viagem = suave(s / 1.6);
+    const x = comeco.x + (fim.x - comeco.x) * viagem;
+    const y = comeco.y + (fim.y - comeco.y) * viagem - Math.sin(viagem * Math.PI) * h * 0.12;
+    if (viagem < 1) {
+      for (let k = 0; k < 3; k += 1) {
+        rastro.push({ x: x + (Math.random() - 0.5) * R * 0.8, y: y + (Math.random() - 0.5) * R * 0.8, idade: 0, vida: 0.6 + Math.random() * 0.6, r: R * (0.08 + Math.random() * 0.14) });
+      }
+    } else if (s < 3.1 && Math.random() < 0.22) {
+      caindo.push({ x: x + (Math.random() - 0.5) * R * 7, y: y + R * 1.2, vy: 40 + Math.random() * 50, idade: 0, vida: 1 + Math.random() * 0.8, r: R * (0.06 + Math.random() * 0.1) });
+    }
+    [rastro, caindo].forEach((lista) => {
+      for (let i = lista.length - 1; i >= 0; i -= 1) {
+        const p = lista[i];
+        p.idade += passo;
+        if (p.idade > p.vida) { lista.splice(i, 1); continue; }
+        if (p.vy) p.y += p.vy * passo;
+        desenharFaisca(ctx, p.x, p.y, p.r * 2, '#fde68a', 1 - p.idade / p.vida);
+      }
+    });
+    const pulso = viagem >= 1 ? 1 + 0.12 * Math.sin(s * 5) : 0.75 + 0.25 * viagem;
+    desenharEstrelaDeBelem(ctx, x, y, R * pulso, fundo);
+  };
+}
+
+function desenharPena(ctx, x, y, tamanho, giro, alfa) {
+  if (alfa <= 0) return;
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(giro);
+  ctx.scale(tamanho, tamanho);
+  ctx.globalAlpha *= alfa;
+  ctx.shadowColor = 'rgba(253, 230, 138, 0.7)';
+  ctx.shadowBlur = 8;
+  const g = ctx.createLinearGradient(-6, 0, 6, 0);
+  g.addColorStop(0, '#dbe4f0');
+  g.addColorStop(0.5, '#ffffff');
+  g.addColorStop(1, '#cbd5e1');
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.moveTo(0, -15);
+  ctx.bezierCurveTo(6.5, -11, 7, 2, 1.4, 10);
+  ctx.lineTo(-1.4, 10);
+  ctx.bezierCurveTo(-7, 2, -6.5, -11, 0, -15);
+  ctx.fill();
+  ctx.shadowBlur = 0;
+  ctx.strokeStyle = 'rgba(148, 163, 184, 0.45)';
+  ctx.lineWidth = 0.5;
+  for (let k = -10; k < 8; k += 3) {
+    ctx.beginPath();
+    ctx.moveTo(0, k);
+    ctx.lineTo(4.8, k - 3.2);
+    ctx.moveTo(0, k);
+    ctx.lineTo(-4.8, k - 3.2);
+    ctx.stroke();
+  }
+  ctx.strokeStyle = 'rgba(203, 213, 225, 1)';
+  ctx.lineWidth = 0.8;
+  ctx.beginPath();
+  ctx.moveTo(0, -14);
+  ctx.lineTo(0, 15);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function efeitoPenasDeAnjo(w, h) {
+  const penas = Array.from({ length: 22 }, () => ({
+    x: Math.random() * w,
+    y: -30 - Math.random() * h * 0.35,
+    v: 45 + Math.random() * 45,
+    balanco: 22 + Math.random() * 30,
+    fase: Math.random() * 6,
+    tam: 1.1 + Math.random() * 0.9,
+    inicio: Math.random() * 1.2,
+  }));
+  const brilhos = Array.from({ length: 20 }, () => ({ x: Math.random() * w, y: Math.random() * h * 0.8, r: 1.6 + Math.random() * 2.4, fase: Math.random() * 6, inicio: 0.4 + Math.random() * 1.8 }));
+  return (ctx, s) => {
+    const luz = suave(s / 0.6) * (1 - suave((s - 2.8) / 0.8));
+    if (luz > 0) {
+      const g = ctx.createLinearGradient(0, 0, 0, h * 0.55);
+      g.addColorStop(0, `rgba(224, 231, 255, ${0.3 * luz})`);
+      g.addColorStop(1, 'rgba(224, 231, 255, 0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, w, h * 0.55);
+    }
+    brilhos.forEach((b) => {
+      if (s < b.inicio) return;
+      desenharFaisca(ctx, b.x, b.y, b.r, '#fde68a', (0.3 + 0.7 * Math.abs(Math.sin(s * 3 + b.fase))) * Math.min(1, (s - b.inicio) * 2));
+    });
+    penas.forEach((p) => {
+      const t = s - p.inicio;
+      if (t <= 0) return;
+      const y = p.y + t * p.v;
+      if (y > h + 30) return;
+      const onda = Math.sin(t * 1.9 + p.fase);
+      desenharPena(ctx, p.x + onda * p.balanco, y, p.tam, onda * 0.7 + 0.3, Math.min(1, t * 2.5));
+    });
+  };
+}
+
 const EFEITOS_DO_PERFIL = {
   'estrelas-cadentes': efeitoEstrelasCadentes,
   pombas: efeitoPombas,
   vitral: efeitoVitral,
   petalas: efeitoPetalas,
   sinos: efeitoSinos,
+  'linguas-de-fogo': efeitoLinguasDeFogo,
+  incenso: efeitoIncenso,
+  custodia: efeitoCustodia,
+  'estrela-de-belem': efeitoEstrelaDeBelem,
+  'penas-de-anjo': efeitoPenasDeAnjo,
 };
 
 function tocarEfeitoDoPerfil(alvo, id) {
@@ -1135,6 +1549,53 @@ const MINIS_DE_EFEITO = {
         <circle cx="3" cy="35" r="3" fill="#78350f"/>
       </g>
       <path d="M11 30Q7 24 11 18M6 33Q0 24 6 15M53 30Q57 24 53 18M58 33Q64 24 58 15" stroke="#fde68a" stroke-width="1.3" fill="none" stroke-linecap="round" opacity=".85"/>`;
+  },
+  'linguas-de-fogo'(g) {
+    const chama = (x, y, e) => `<g transform="translate(${x} ${y}) scale(${e})"><path d="M0 -17C4 -10 8 -4 7 1C6.5 5.5 3.5 8 0 8C-3.5 8 -6.5 5.5 -7 1C-8 -4 -4 -10 0 -17Z" fill="url(#${g}f)"/><ellipse cx="0" cy="3.4" rx="2.5" ry="3.9" fill="#fffbeb"/></g>`;
+    return `<defs><linearGradient id="${g}c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7c2d12"/><stop offset="1" stop-color="#1c0a05"/></linearGradient><linearGradient id="${g}f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dc2626" stop-opacity="0"/><stop offset=".3" stop-color="#ea580c"/><stop offset=".7" stop-color="#fbbf24"/><stop offset="1" stop-color="#fef3c7"/></linearGradient><radialGradient id="${g}l"><stop offset="0" stop-color="#fb923c" stop-opacity=".55"/><stop offset="1" stop-color="#fb923c" stop-opacity="0"/></radialGradient></defs>
+      <rect width="64" height="40" rx="7" fill="url(#${g}c)"/><circle cx="16" cy="14" r="11" fill="url(#${g}l)"/><circle cx="34" cy="24" r="12" fill="url(#${g}l)"/><circle cx="50" cy="13" r="10" fill="url(#${g}l)"/>
+      ${chama(16, 15, 0.75)}${chama(34, 25, 0.85)}${chama(50, 14, 0.7)}`;
+  },
+  incenso(g) {
+    return `<defs><linearGradient id="${g}c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e1b4b"/><stop offset="1" stop-color="#3b2a12"/></linearGradient><linearGradient id="${g}o" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#78350f"/><stop offset=".5" stop-color="#fde68a"/><stop offset="1" stop-color="#78350f"/></linearGradient></defs>
+      <rect width="64" height="40" rx="7" fill="url(#${g}c)"/>
+      <path d="M30 26C24 20 34 16 28 10C24 6 30 3 27 0M36 26C42 21 32 15 38 9C41 6 36 3 39 0" stroke="#e2e8f0" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".55"/>
+      <path d="M32 0V25M27 0L30 25M37 0L34 25" stroke="#d97706" stroke-width=".7" stroke-dasharray="1.6 1"/>
+      <path d="M25 30Q25 24 32 23Q39 24 39 30Z" fill="url(#${g}o)"/><path d="M24 30H40Q39 36 32 37Q25 36 24 30Z" fill="url(#${g}o)"/>`;
+  },
+  custodia(g) {
+    const raios = Array.from({ length: 24 }, (_, k) => {
+      const a = (k * Math.PI * 2) / 24;
+      const r = k % 2 ? 11 : 15;
+      return `<path d="M${n1(32 + Math.cos(a) * 5)} ${n1(17 + Math.sin(a) * 5)}L${n1(32 + Math.cos(a) * r)} ${n1(17 + Math.sin(a) * r)}" stroke="#fde68a" stroke-width="${k % 2 ? 0.8 : 1.3}" stroke-linecap="round"/>`;
+    }).join('');
+    return `<defs><radialGradient id="${g}c"><stop offset="0" stop-color="#78350f"/><stop offset="1" stop-color="#0f172a"/></radialGradient><radialGradient id="${g}l"><stop offset="0" stop-color="#fef3c7" stop-opacity=".8"/><stop offset="1" stop-color="#fef3c7" stop-opacity="0"/></radialGradient></defs>
+      <rect width="64" height="40" rx="7" fill="url(#${g}c)"/><circle cx="32" cy="17" r="17" fill="url(#${g}l)"/>${raios}
+      <circle cx="32" cy="17" r="4.6" fill="#fffbeb" stroke="#fbbf24" stroke-width="1.4"/>
+      <path d="M31.4 22H32.6V33H31.4Z" fill="#fbbf24"/><path d="M28 36L30.6 33H33.4L36 36Z" fill="#fbbf24"/><path d="M31.5 1H32.5V4H31.5ZM30.5 1.8H33.5V2.6H30.5Z" fill="#fbbf24"/>`;
+  },
+  'estrela-de-belem'(g) {
+    let pontos = '';
+    for (let i = 0; i < 16; i += 1) {
+      const a = (i * Math.PI) / 8 - Math.PI / 2;
+      let r = 1.2;
+      if (i % 2 === 0) {
+        const ponta = i / 2;
+        if (ponta === 4) r = 15;
+        else if (ponta % 2 === 0) r = 8.5;
+        else r = 4;
+      }
+      pontos += `${i === 0 ? 'M' : 'L'}${n1(40 + Math.cos(a) * r)} ${n1(12 + Math.sin(a) * r)}`;
+    }
+    return `<defs><linearGradient id="${g}c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#020617"/><stop offset="1" stop-color="#1e3a8a"/></linearGradient><radialGradient id="${g}l"><stop offset="0" stop-color="#fef3c7" stop-opacity=".75"/><stop offset="1" stop-color="#fef3c7" stop-opacity="0"/></radialGradient></defs>
+      <rect width="64" height="40" rx="7" fill="url(#${g}c)"/><circle cx="40" cy="12" r="14" fill="url(#${g}l)"/>
+      <path d="M8 30Q20 18 34 14" stroke="#fde68a" stroke-width="1" fill="none" stroke-dasharray="1 2.4" stroke-linecap="round"/>
+      <path d="${pontos}Z" fill="#fffbeb"/>${faisca(14, 26, 1.6, '#fde68a', 0)}${faisca(24, 19, 1.3, '#fde68a', 0.6)}${faisca(54, 30, 1.4, '#fef3c7', 1.2)}`;
+  },
+  'penas-de-anjo'(g) {
+    const pena = (x, y, a, e) => `<g transform="translate(${x} ${y}) rotate(${a}) scale(${e})"><path d="M0 -15C6.5 -11 7 2 1.4 10L-1.4 10C-7 2 -6.5 -11 0 -15Z" fill="#ffffff"/><path d="M0 -14V15" stroke="#cbd5e1" stroke-width=".9"/></g>`;
+    return `<defs><linearGradient id="${g}c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#312e81"/><stop offset="1" stop-color="#7dd3fc"/></linearGradient></defs>
+      <rect width="64" height="40" rx="7" fill="url(#${g}c)"/>${pena(16, 14, -30, 0.7)}${pena(36, 24, 25, 0.8)}${pena(52, 11, -10, 0.55)}${faisca(26, 9, 1.4, '#fde68a', 0)}${faisca(48, 30, 1.2, '#fde68a', 0.8)}`;
   },
 };
 
@@ -1217,6 +1678,66 @@ async function aplicarEnfeitesNoPainel(conteudo, membroId) {
 function faixaDaLinhaDaConversa(outro) {
   if (!outro || !FAIXAS[outro.faixa]) return '';
   return `<span class="enfeite-faixa enfeite-faixa-linha" aria-hidden="true">${svgDaFaixa(outro.faixa)}</span>`;
+}
+
+function aplicarEnfeitesNoMeuPerfil(tocar) {
+  const cartao = document.querySelector('#meu-perfil-cabecalho .meu-perfil');
+  const perfil = typeof membroAtivo !== 'undefined' ? membroAtivo : null;
+  if (!cartao || !perfil) return;
+  const escolha = enfeitesDaFamilia[perfil.id] || {};
+  colocarFaixa(cartao.querySelector('.perfil-publico-capa'), escolha.faixa, 'enfeite-faixa-capa');
+  colocarMoldura(cartao.querySelector('.perfil-publico-foto'), escolha.moldura);
+  if (tocar && escolha.efeito) tocarEfeitoDoPerfil(cartao, escolha.efeito);
+}
+
+async function enfeitarMeuPerfil() {
+  const perfil = typeof membroAtivo !== 'undefined' ? membroAtivo : null;
+  if (!perfil) return;
+  await carregarEnfeitesDaFamilia();
+  aplicarEnfeitesNoMeuPerfil(true);
+}
+
+async function carregarEnfeitesPublicos(ids) {
+  const perfil = typeof membroAtivo !== 'undefined' ? membroAtivo : null;
+  const lista = Array.from(new Set((ids || []).filter(Boolean))).slice(0, 100);
+  if (!perfil || !lista.length || typeof supabaseCliente === 'undefined' || !supabaseCliente) return {};
+  try {
+    const { data, error } = await supabaseCliente.rpc('enfeites_publicos', { _pid: perfil.id, _ids: lista });
+    if (error || !data || typeof data !== 'object') return {};
+    return data;
+  } catch (e) {
+    return {};
+  }
+}
+
+function enfeitarLinha(linha, escolha) {
+  if (!linha || !escolha) return;
+  if (FAIXAS[escolha.faixa]) colocarFaixa(linha, escolha.faixa, 'enfeite-faixa-linha');
+  const avatar = linha.querySelector(':scope > .avatar');
+  if (avatar && MOLDURAS[escolha.moldura]) {
+    const lugar = document.createElement('span');
+    lugar.className = 'enfeite-lugar-da-foto enfeite-lugar-pequeno';
+    avatar.replaceWith(lugar);
+    lugar.appendChild(avatar);
+    colocarMoldura(lugar, escolha.moldura);
+  }
+}
+
+async function enfeitarLinhasDoRanking(lista, familia) {
+  if (!lista) return;
+  const linhas = Array.from(lista.querySelectorAll('.ranking-linha[data-perfil]'));
+  if (!linhas.length) return;
+  let mapa = {};
+  if (familia) {
+    await carregarEnfeitesDaFamilia();
+    mapa = enfeitesDaFamilia;
+  } else {
+    mapa = await carregarEnfeitesPublicos(linhas.map((l) => l.dataset.perfil));
+  }
+  if (!lista.isConnected) return;
+  linhas.forEach((linha) => {
+    if (linha.isConnected) enfeitarLinha(linha, mapa[linha.dataset.perfil]);
+  });
 }
 
 let escolhaDeEnfeites = null;
@@ -1330,6 +1851,7 @@ async function salvarEnfeitesDoPerfil() {
   }
   botao.disabled = true;
   botao.textContent = 'Salvando...';
+  let salvou = false;
   try {
     const valores = escolhaDeEnfeites.valores;
     const { data, error } = await supabaseCliente.rpc('perfil_mudar_enfeites', {
@@ -1340,8 +1862,9 @@ async function salvarEnfeitesDoPerfil() {
     });
     if (error) throw error;
     enfeitesDaFamilia[perfil.id] = data || {};
+    salvou = true;
     if (aviso) {
-      aviso.textContent = 'Pronto! Os enfeites foram salvos. Quem abrir o seu perfil vai ver.';
+      aviso.textContent = 'Pronto! Os enfeites foram salvos e já aparecem no seu perfil.';
       aviso.classList.add('certo');
     }
   } catch (erro) {
@@ -1352,6 +1875,14 @@ async function salvarEnfeitesDoPerfil() {
   }
   botao.disabled = false;
   atualizarBotaoDosEnfeites();
+  const meuPerfil = document.querySelector('#meu-perfil-cabecalho .meu-perfil');
+  if (salvou && meuPerfil && meuPerfil.offsetParent !== null) {
+    if (typeof fecharJanelaDoCenaculo === 'function') fecharJanelaDoCenaculo();
+    aplicarEnfeitesNoMeuPerfil(true);
+    if (typeof mostrarAvisoTrilhas === 'function') mostrarAvisoTrilhas('Enfeites salvos! Agora é assim que os outros veem o seu perfil.');
+  } else if (salvou) {
+    aplicarEnfeitesNoMeuPerfil(false);
+  }
 }
 
 async function abrirEnfeitesDoPerfil() {
