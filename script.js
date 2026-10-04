@@ -2654,7 +2654,7 @@ async function concluirCadastro(evento) {
 }
 
 async function usarOutraConta() {
-  if (supabaseCliente) await supabaseCliente.auth.signOut();
+  if (supabaseCliente) await supabaseCliente.auth.signOut({ scope: 'local' });
   irParaLogin();
 }
 
@@ -3083,7 +3083,7 @@ function iniciarPaginaDePerfil() {
   const sair = document.getElementById('meu-perfil-sair');
   if (sair) {
     sair.addEventListener('click', async () => {
-      if (supabaseCliente) await supabaseCliente.auth.signOut();
+      if (supabaseCliente) await supabaseCliente.auth.signOut({ scope: 'local' });
       mudarDeView('view-home');
     });
   }
@@ -3186,7 +3186,8 @@ async function enviarPerguntaLumina() {
   criarIndicadorPensando();
 
   try {
-    const token = sessaoAtual.access_token;
+    const { data: sessaoDaPergunta } = await supabaseCliente.auth.getSession();
+    const token = sessaoDaPergunta.session ? sessaoDaPergunta.session.access_token : '';
     const resp = await fetch(AI_FUNCTION_URL(), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
@@ -3198,7 +3199,7 @@ async function enviarPerguntaLumina() {
 
     if (!resp.ok || !dados?.resposta) {
       if (dados?.precisaLogin) {
-        await supabaseCliente.auth.signOut();
+        await supabaseCliente.auth.signOut({ scope: 'local' });
         irParaLogin();
         return;
       }
@@ -3260,7 +3261,7 @@ function iniciarNavegacaoDeContas() {
   if (menuEntrar) menuEntrar.addEventListener('click', irParaLogin);
   if (menuPerfil) menuPerfil.addEventListener('click', () => { mudarDeView('view-perfil'); carregarPaginaDePerfil(); });
   if (menuSair) menuSair.addEventListener('click', async () => {
-    if (supabaseCliente) await supabaseCliente.auth.signOut();
+    if (supabaseCliente) await supabaseCliente.auth.signOut({ scope: 'local' });
     mudarDeView('view-home');
   });
 

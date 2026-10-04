@@ -1281,7 +1281,7 @@ function iniciarPerfis() {
   if (sairDaConta) sairDaConta.addEventListener('click', async () => {
     fecharPortao();
     limparPerfilAtivo();
-    await supabaseCliente.auth.signOut();
+    await supabaseCliente.auth.signOut({ scope: 'local' });
     if (typeof irParaLogin === 'function') irParaLogin();
   });
   const botaoPin = document.getElementById('perfil-pin-botao');
