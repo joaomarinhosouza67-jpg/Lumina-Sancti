@@ -660,4 +660,389 @@ window.TRILHAS_TRADUZIDAS.en = Object.assign(window.TRILHAS_TRADUZIDAS.en || {},
       },
     },
   },
+  'santa-dulce': {
+    santo: "Saint Dulce of the Poor",
+    titulo: "Saint Dulce of the Poor",
+    descricao: "The Good Angel of Bahia, who turned a henhouse into a hospital.",
+    medalha: "Charity",
+    medalhaCompleta: "Medal of Charity",
+    virtude: "Charity",
+    licoes: {
+      'dulce-1': {
+        titulo: "The girl from Salvador",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"In which city was Saint Dulce of the Poor born?","opcoes":["Salvador","Recife","Rio de Janeiro","São Paulo"],"correta":0,"explicacao":"She was born in Salvador, Bahia, on May 26, 1914."},
+          {"tipo":"vf","enunciado":"Sister Dulce's baptismal name was Maria Rita.","correta":true,"explicacao":"Her full name was Maria Rita de Souza Brito Lopes Pontes."},
+          {"tipo":"multipla","enunciado":"Why did she take the name Dulce in religious life?","opcoes":["In honor of her mother","Because of a queen","Because it was the name of a city","By drawing lots"],"correta":0,"explicacao":"Her mother was named Dulce and died when her daughter was 6 years old."},
+          {"tipo":"vf","enunciado":"Maria Rita's family was very poor.","correta":false,"explicacao":"Her father, Augusto, was a dentist and a teacher, and the family lived comfortably. She chose to serve the poor."},
+          {"tipo":"multipla","enunciado":"At what age did Maria Rita start caring for the poor and sick at the door of her home?","opcoes":["13","5","30","50"],"correta":0,"explicacao":"At 13, the door of her family's house became known as the Gatehouse of Saint Francis."},
+          {"tipo":"vf","enunciado":"As a young woman, she cheered for a soccer team from Salvador.","correta":true,"explicacao":"She was a fan of Ypiranga, a team from Bahia."},
+          {"tipo":"multipla","enunciado":"Which congregation did she join?","opcoes":["Missionary Sisters of the Immaculate Conception of the Mother of God","Missionaries of Charity","Discalced Carmelites","Poor Clares"],"correta":0,"explicacao":"She joined in 1933, in São Cristóvão, in the state of Sergipe."},
+          {"tipo":"ordenar","enunciado":"Put Maria Rita's life in order:","blocos":["She was born in Salvador","She cared for the poor at her door","She entered religious life","She received the name Sister Dulce"],"explicacao":"When she entered the convent, she received her mother's name and became Sister Dulce."},
+          {"tipo":"vf","enunciado":"Sister Dulce had fragile health and lung problems.","correta":true,"explicacao":"Even with weak lungs, she worked for the poor all her life."},
+          {"tipo":"multipla","enunciado":"In which Brazilian state is Salvador, Sister Dulce's city?","opcoes":["Bahia","Pernambuco","Minas Gerais","Ceará"],"correta":0,"explicacao":"Salvador is the capital of Bahia."}
+        ],
+      },
+      'dulce-2': {
+        titulo: "The henhouse that became a hospital",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"Where did Sister Dulce shelter the sick before she had a hospital?","opcoes":["In empty houses and a henhouse","In a palace","In a stadium","On a ship"],"correta":0,"explicacao":"She used abandoned houses and, when she had to leave, looked for another place."},
+          {"tipo":"vf","enunciado":"Her superior let Sister Dulce use the convent henhouse to shelter the sick.","correta":true,"explicacao":"In 1949, the henhouse of the Convent of Saint Anthony became a shelter for the sick."},
+          {"tipo":"multipla","enunciado":"Which hospital grew out of the henhouse?","opcoes":["Saint Anthony Hospital","Hospital das Clínicas","Santa Casa of Lisbon","São Paulo Hospital"],"correta":0,"explicacao":"Today Saint Anthony Hospital cares for thousands of people free of charge."},
+          {"tipo":"vf","enunciado":"Sister Dulce helped found a Christian workers' movement in Bahia.","correta":true,"explicacao":"In 1937, with Friar Hildebrando Kruthaup, she founded the Workers' Circle of Bahia."},
+          {"tipo":"multipla","enunciado":"Which work did Sister Dulce found in 1959 to care for the poor?","opcoes":["Sister Dulce Social Works","Children's Pastoral","Caritas Brazil","House of Mercy"],"correta":0,"explicacao":"The Sister Dulce Social Works still exist today."},
+          {"tipo":"vf","enunciado":"Sister Dulce only helped Catholics.","correta":false,"explicacao":"She welcomed anyone who was suffering, without asking where they came from."},
+          {"tipo":"multipla","enunciado":"How did Sister Dulce get resources for the sick?","opcoes":["By asking those who could give","By selling family land","By charging patients a lot","With the lottery"],"correta":0,"explicacao":"It is said that a merchant spat in her hand. She answered: that was for me; now give something for my poor."},
+          {"tipo":"ordenar","enunciado":"Put in order the places where Sister Dulce sheltered the sick:","blocos":["Abandoned houses","The convent henhouse","Saint Anthony Hospital"],"explicacao":"From makeshift shelters grew one of the largest works of charity in Brazil."},
+          {"tipo":"vf","enunciado":"For many years, Sister Dulce slept sitting in a chair.","correta":true,"explicacao":"For about 30 years she slept sitting up, offering this sacrifice to God."},
+          {"tipo":"multipla","enunciado":"What best describes Sister Dulce's work?","opcoes":["Caring for the sick, the poor and abandoned children","Writing theology books","Governing a city","Living alone on a mountain"],"correta":0,"explicacao":"She saw Jesus in every person who suffered."}
+        ],
+      },
+      'dulce-3': {
+        titulo: "The Good Angel of Brazil",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"What loving nickname did Sister Dulce receive?","opcoes":["Good Angel of Bahia","Queen of the Backlands","Iron Lady","Star of the Sea"],"correta":0,"explicacao":"The people called her that because of the good she did."},
+          {"tipo":"vf","enunciado":"Sister Dulce was nominated for the Nobel Peace Prize.","correta":true,"explicacao":"She was nominated in 1988 for her work with the poor."},
+          {"tipo":"multipla","enunciado":"Which pope visited Sister Dulce when she was already ill, in 1991?","opcoes":["Saint John Paul II","Benedict XVI","Francis","Paul VI"],"correta":0,"explicacao":"He met her in Salvador a few months before her death."},
+          {"tipo":"vf","enunciado":"Sister Dulce died in Salvador in 1992.","correta":true,"explicacao":"She died on March 13, 1992, at the age of 77."},
+          {"tipo":"multipla","enunciado":"Who canonized Sister Dulce in 2019?","opcoes":["Pope Francis","Pope Benedict XVI","Saint John Paul II","Pope Pius XII"],"correta":0,"explicacao":"She was declared a saint on October 13, 2019, in Rome."},
+          {"tipo":"vf","enunciado":"Saint Dulce was the first female saint born in Brazil.","correta":true,"explicacao":"She is the first woman born in Brazil to be declared a saint."},
+          {"tipo":"multipla","enunciado":"Which miracle was recognized for Saint Dulce's canonization?","opcoes":["A blind musician regained his sight","A child learned Latin in a day","A building moved","A storm stopped at sea"],"correta":0,"explicacao":"José Maurício Moreira, blind for 14 years, regained his sight after praying to her."},
+          {"tipo":"ordenar","enunciado":"Put Sister Dulce's saying in order:","blocos":["Love overcomes","every obstacle,","every sacrifice."],"explicacao":"For her, love was the strength that moved everything."},
+          {"tipo":"vf","enunciado":"Saint Dulce's feast is celebrated on Christmas Day.","correta":false,"explicacao":"Her memorial is celebrated on August 13."},
+          {"tipo":"multipla","enunciado":"Where is Saint Dulce's shrine?","opcoes":["In Salvador, next to the works she founded","In Rome","In Lisbon","In Aparecida"],"correta":0,"explicacao":"The shrine stands beside the hospital that grew out of the henhouse."}
+        ],
+      },
+    },
+  },
+  'dom-bosco': {
+    santo: "Saint John Bosco",
+    titulo: "Saint John Bosco",
+    descricao: "The father and teacher of young people, who taught with joy.",
+    medalha: "Joy",
+    medalhaCompleta: "Medal of Joy",
+    virtude: "Joy",
+    licoes: {
+      'bosco-1': {
+        titulo: "The boy from Becchi",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"In which country was Saint John Bosco born?","opcoes":["Italy","Spain","France","Portugal"],"correta":0,"explicacao":"He was born on August 16, 1815, at Becchi, near Castelnuovo, in northern Italy."},
+          {"tipo":"vf","enunciado":"John Bosco's father died when he was 2 years old.","correta":true,"explicacao":"He was raised by his mother, Margaret, who is now declared Venerable."},
+          {"tipo":"multipla","enunciado":"What was the name of Saint John Bosco's mother?","opcoes":["Margaret","Monica","Teresa","Rita"],"correta":0,"explicacao":"Mamma Margaret later went to live with him in Turin and helped care for the boys."},
+          {"tipo":"vf","enunciado":"At age 9, John had a dream that shaped his whole life.","correta":true,"explicacao":"He dreamed of fighting boys who turned into lambs, guided by a Lady."},
+          {"tipo":"multipla","enunciado":"In the dream at age 9, how did Jesus say he should win over the boys?","opcoes":["With gentleness and charity","With blows","With money","With punishments"],"correta":0,"explicacao":"Not with blows, but with gentleness and charity, he heard in the dream."},
+          {"tipo":"vf","enunciado":"As a boy, John learned magic tricks and tightrope walking to attract other children.","correta":true,"explicacao":"After the show, he repeated the priest's sermon and prayed with them."},
+          {"tipo":"multipla","enunciado":"Why did John find it hard to study when he was young?","opcoes":["He was poor and had to work","He did not like reading","It was forbidden by law","He lived on an island"],"correta":0,"explicacao":"He worked on farms, as a tailor, a blacksmith and in a café to pay for his studies."},
+          {"tipo":"ordenar","enunciado":"Put John Bosco's youth in order:","blocos":["He was born at Becchi","He had the dream at age 9","He worked to pay for his studies","He was ordained a priest in Turin"],"explicacao":"He was ordained a priest in 1841."},
+          {"tipo":"vf","enunciado":"John Bosco was ordained a priest in Rome.","correta":false,"explicacao":"He was ordained in Turin, on June 5, 1841."},
+          {"tipo":"multipla","enunciado":"Who appeared to John in the dream at age 9 to guide him?","opcoes":["Our Lady","A king","A soldier","A teacher"],"correta":0,"explicacao":"She told him: become humble, strong and sturdy."}
+        ],
+      },
+      'bosco-2': {
+        titulo: "The Oratory of Turin",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"In which city did John Bosco do his great work with young people?","opcoes":["Turin","Milan","Venice","Naples"],"correta":0,"explicacao":"Turin was full of poor young people who came to work in factories and building sites."},
+          {"tipo":"vf","enunciado":"The Oratory began with a boy named Bartholomew Garelli.","correta":true,"explicacao":"On December 8, 1841, John Bosco began teaching him the catechism in a sacristy in Turin."},
+          {"tipo":"multipla","enunciado":"What was John Bosco's Oratory?","opcoes":["A place of prayer, study and play for young people","A closed monastery","A factory","A barracks"],"correta":0,"explicacao":"There young people found a home, a school, a workshop and a church."},
+          {"tipo":"vf","enunciado":"John Bosco visited young people locked up in the prisons of Turin.","correta":true,"explicacao":"Seeing so many young prisoners made him decide to help them before they fell into crime."},
+          {"tipo":"multipla","enunciado":"What is John Bosco's method of education called?","opcoes":["Preventive system","Repressive system","Punishment method","School of silence"],"correta":0,"explicacao":"It rests on three pillars: reason, religion and loving kindness."},
+          {"tipo":"ordenar","enunciado":"Put the three pillars of the preventive system in order:","blocos":["Reason,","religion","and loving kindness"],"explicacao":"John Bosco said that education is a matter of the heart."},
+          {"tipo":"vf","enunciado":"John Bosco educated the boys mainly through punishment.","correta":false,"explicacao":"He preferred to prevent problems with kindness and presence rather than punish."},
+          {"tipo":"multipla","enunciado":"Which congregation did John Bosco found to carry on his work?","opcoes":["The Salesians","The Franciscans","The Jesuits","The Dominicans"],"correta":0,"explicacao":"The name comes from Saint Francis de Sales, the saint of gentleness."},
+          {"tipo":"vf","enunciado":"With Saint Mary Mazzarello, John Bosco founded the Daughters of Mary Help of Christians.","correta":true,"explicacao":"The Salesian Sisters, founded in 1872, care especially for girls."},
+          {"tipo":"multipla","enunciado":"Which of John Bosco's pupils also became a saint?","opcoes":["Saint Dominic Savio","Saint Aloysius Gonzaga","Saint Tarcisius","Saint Francisco Marto"],"correta":0,"explicacao":"Dominic Savio died at 14, and John Bosco wrote his life story."}
+        ],
+      },
+      'bosco-3': {
+        titulo: "Father and teacher of youth",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"To which title of Our Lady did John Bosco have great devotion?","opcoes":["Mary Help of Christians","Our Lady of Fatima","Our Lady of Lourdes","Our Lady of Guadalupe"],"correta":0,"explicacao":"About his work, he used to say: she did everything."},
+          {"tipo":"vf","enunciado":"John Bosco built the Basilica of Mary Help of Christians in Turin.","correta":true,"explicacao":"The basilica was consecrated in 1868."},
+          {"tipo":"multipla","enunciado":"Of which Brazilian city is John Bosco the patron, because of a dream?","opcoes":["Brasília","Salvador","Manaus","Curitiba"],"correta":0,"explicacao":"In 1883 he dreamed of a rich land between the 15th and 20th parallels, where Brasília was later built."},
+          {"tipo":"vf","enunciado":"It is said that a mysterious gray dog, Grigio, protected John Bosco from attacks.","correta":true,"explicacao":"He appeared in moments of danger and then disappeared."},
+          {"tipo":"multipla","enunciado":"In what year did John Bosco die?","opcoes":["1888","1815","1934","1900"],"correta":0,"explicacao":"He died in Turin on January 31, 1888."},
+          {"tipo":"vf","enunciado":"John Bosco's feast day is August 16.","correta":false,"explicacao":"He was born on August 16, but his feast is on January 31, the day he died."},
+          {"tipo":"multipla","enunciado":"Which pope canonized John Bosco?","opcoes":["Pius XI","Pius IX","Leo XIII","John XXIII"],"correta":0,"explicacao":"He was canonized on Easter Sunday, 1934."},
+          {"tipo":"ordenar","enunciado":"Put John Bosco's saying in order:","blocos":["It is enough that you are young","for me","to love you very much."],"explicacao":"He loved young people like a father."},
+          {"tipo":"vf","enunciado":"Saint John Paul II proclaimed John Bosco Father and Teacher of Youth.","correta":true,"explicacao":"It was in 1988, on the hundredth anniversary of his death."},
+          {"tipo":"multipla","enunciado":"What sums up John Bosco's spirit?","opcoes":["Joy, study and prayer","Sadness and fear","Wealth and fame","Silence and solitude"],"correta":0,"explicacao":"For him, holiness goes hand in hand with joy."}
+        ],
+      },
+    },
+  },
+  'madre-teresa': {
+    santo: "Saint Teresa of Calcutta",
+    titulo: "Mother Teresa of Calcutta",
+    descricao: "The mother of the poorest of the poor.",
+    medalha: "Compassion",
+    medalhaCompleta: "Medal of Compassion",
+    virtude: "Compassion",
+    licoes: {
+      'calcuta-1': {
+        titulo: "Agnes from Skopje",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"What was Mother Teresa's baptismal name?","opcoes":["Agnes Gonxha Bojaxhiu","Maria Goretti","Teresa Sánchez","Anna Maria Taigi"],"correta":0,"explicacao":"She was born on August 26, 1910, into an Albanian family."},
+          {"tipo":"multipla","enunciado":"In which city was she born?","opcoes":["Skopje","Calcutta","Rome","Dublin"],"correta":0,"explicacao":"Skopje is today the capital of North Macedonia."},
+          {"tipo":"vf","enunciado":"Agnes's father died when she was 8 years old.","correta":true,"explicacao":"Her mother raised the children in the faith and often welcomed the poor to her table."},
+          {"tipo":"vf","enunciado":"Agnes entered religious life as an old woman.","correta":false,"explicacao":"She entered at 18, in 1928."},
+          {"tipo":"multipla","enunciado":"Which congregation did Agnes join first?","opcoes":["The Sisters of Loreto","The Missionaries of Charity","The Carmelites","The Salesian Sisters"],"correta":0,"explicacao":"She went to Ireland to learn English with the Sisters of Loreto and then went on to India."},
+          {"tipo":"multipla","enunciado":"Why did she choose the name Teresa?","opcoes":["Because of Saint Thérèse of the Child Jesus","Because of a queen","Because of an aunt","Because it was fashionable"],"correta":0,"explicacao":"She chose the name of the patron saint of the missions."},
+          {"tipo":"vf","enunciado":"For almost 20 years, she taught at a girls' school in Calcutta.","correta":true,"explicacao":"She taught at Saint Mary's School and became its principal."},
+          {"tipo":"ordenar","enunciado":"Put Agnes's youth in order:","blocos":["She was born in Skopje","She joined the Sisters of Loreto","She traveled to India","She taught in Calcutta"],"explicacao":"She arrived in India in 1929."},
+          {"tipo":"vf","enunciado":"She considered the day of her baptism to be her true birthday.","correta":true,"explicacao":"She was baptized on August 27, 1910, the day after she was born."},
+          {"tipo":"multipla","enunciado":"In which country did Mother Teresa live and work most of her life?","opcoes":["India","Brazil","United States","Italy"],"correta":0,"explicacao":"She even became an Indian citizen."}
+        ],
+      },
+      'calcuta-2': {
+        titulo: "The call within a call",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"On September 10, 1946, where did Mother Teresa feel the call to serve the poorest?","opcoes":["On a train to Darjeeling","On a beach","In a hospital in Rome","On a boat on the Ganges"],"correta":0,"explicacao":"She called this experience a call within a call."},
+          {"tipo":"vf","enunciado":"When she left the Sisters of Loreto, she began to wear a white sari with blue stripes.","correta":true,"explicacao":"It was the simple dress of the poor women of India."},
+          {"tipo":"multipla","enunciado":"Which congregation did Mother Teresa found in 1950?","opcoes":["The Missionaries of Charity","The Sisters of Loreto","The Daughters of Mary Help of Christians","The Poor Clares"],"correta":0,"explicacao":"It was approved on October 7, 1950, in Calcutta."},
+          {"tipo":"vf","enunciado":"The Missionaries of Charity take a fourth vow, besides poverty, chastity and obedience.","correta":true,"explicacao":"They promise wholehearted and free service to the poorest of the poor."},
+          {"tipo":"multipla","enunciado":"What was Nirmal Hriday, opened in 1952?","opcoes":["A home for the dying","A music school","A market","A university"],"correta":0,"explicacao":"There, people dying on the street were taken in to die with dignity and love."},
+          {"tipo":"vf","enunciado":"Mother Teresa only cared for Christians.","correta":false,"explicacao":"She served Hindus, Muslims and everyone who was suffering."},
+          {"tipo":"multipla","enunciado":"Which words of Jesus on the cross are written in the chapels of the Missionaries of Charity?","opcoes":["I thirst","It is finished","Father, forgive them","Woman, behold your son"],"correta":0,"explicacao":"For her, Jesus' thirst was a thirst for love and for souls."},
+          {"tipo":"ordenar","enunciado":"Put Mother Teresa's saying in order:","blocos":["The fruit of silence is prayer,","the fruit of prayer is faith,","the fruit of faith is love,","the fruit of love is service,","the fruit of service is peace."],"explicacao":"Everything begins in silence before God."},
+          {"tipo":"vf","enunciado":"Mother Teresa studied nursing before she began working on the streets.","correta":true,"explicacao":"She took a course with medical missionary sisters in Patna."},
+          {"tipo":"multipla","enunciado":"Whom did Mother Teresa call the poorest of the poor?","opcoes":["The sick, the abandoned and the forgotten","Merchants","Soldiers","Artists"],"correta":0,"explicacao":"She said that the worst poverty is being unloved."}
+        ],
+      },
+      'calcuta-3': {
+        titulo: "Small things with great love",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"Which prize did Mother Teresa receive in 1979?","opcoes":["The Nobel Peace Prize","An Oscar","The Nobel Prize in Literature","The World Cup"],"correta":0,"explicacao":"She accepted the prize in the name of the poor."},
+          {"tipo":"vf","enunciado":"When she received the Nobel Prize, she asked for the banquet to be canceled.","correta":true,"explicacao":"The money for the dinner went to the poor of Calcutta."},
+          {"tipo":"multipla","enunciado":"Which of these sayings is Mother Teresa's?","opcoes":["We cannot do great things, only small things with great love","I think, therefore I am","Man is the measure of all things","Know thyself"],"correta":0,"explicacao":"For her, the value lies in the love we put into what we do."},
+          {"tipo":"vf","enunciado":"For many years, Mother Teresa felt a deep inner darkness, yet she kept praying and serving.","correta":true,"explicacao":"This became known through her letters, published after her death."},
+          {"tipo":"multipla","enunciado":"In what year did Mother Teresa die?","opcoes":["1997","1979","2003","1950"],"correta":0,"explicacao":"She died in Calcutta on September 5, 1997."},
+          {"tipo":"vf","enunciado":"Mother Teresa was canonized by Saint John Paul II.","correta":false,"explicacao":"John Paul II beatified her in 2003; Pope Francis canonized her in 2016."},
+          {"tipo":"multipla","enunciado":"On what day is the feast of Saint Teresa of Calcutta celebrated?","opcoes":["September 5","October 1","October 15","August 26"],"correta":0,"explicacao":"It is the day she died. The other dates belong to Saint Thérèse, Saint Teresa of Ávila and Mother Teresa's birth."},
+          {"tipo":"ordenar","enunciado":"Put Mother Teresa's life in order:","blocos":["Teacher in Calcutta","The call on the train","She founded the Missionaries of Charity","She received the Nobel Peace Prize"],"explicacao":"A whole life given to the poorest."},
+          {"tipo":"vf","enunciado":"Today the Missionaries of Charity are in many countries.","correta":true,"explicacao":"They care for the sick, the poor and the abandoned in more than a hundred countries."},
+          {"tipo":"multipla","enunciado":"Whom did Mother Teresa see in every poor person?","opcoes":["Jesus","A problem","A stranger","A number"],"correta":0,"explicacao":"She said she served Jesus in the distressing disguise of the poor."}
+        ],
+      },
+    },
+  },
+  'sao-maximiliano': {
+    santo: "Saint Maximilian Kolbe",
+    titulo: "Saint Maximilian Kolbe",
+    descricao: "The martyr of charity, who gave his life for a father of a family.",
+    medalha: "Self-Giving",
+    medalhaCompleta: "Medal of Self-Giving",
+    virtude: "Self-Giving",
+    licoes: {
+      'kolbe-1': {
+        titulo: "The two crowns",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"In which country was Saint Maximilian Kolbe born?","opcoes":["Poland","Germany","Italy","Hungary"],"correta":0,"explicacao":"He was born on January 8, 1894, in Zduńska Wola."},
+          {"tipo":"vf","enunciado":"Maximilian's baptismal name was Raymond.","correta":true,"explicacao":"His name was Rajmund Kolbe, and he received the name Maximilian when he joined the Franciscans."},
+          {"tipo":"multipla","enunciado":"As a boy, which two crowns did Our Lady offer him in a vision?","opcoes":["A white one and a red one","A gold one and a silver one","A blue one and a green one","One of flowers and one of thorns"],"correta":0,"explicacao":"The white one was purity; the red one, martyrdom."},
+          {"tipo":"vf","enunciado":"In the vision, he chose only the white crown.","correta":false,"explicacao":"He accepted both: the crown of purity and the crown of martyrdom."},
+          {"tipo":"multipla","enunciado":"Which religious order did Raymond join?","opcoes":["The Conventual Franciscans","The Jesuits","The Dominicans","The Benedictines"],"correta":0,"explicacao":"He joined in 1910 and received the name Maximilian."},
+          {"tipo":"vf","enunciado":"Maximilian studied in Rome and earned doctorates in philosophy and theology.","correta":true,"explicacao":"Then he returned to Poland to serve the Church."},
+          {"tipo":"multipla","enunciado":"Which illness weakened Maximilian's lungs?","opcoes":["Tuberculosis","Malaria","Smallpox","Spanish flu"],"correta":0,"explicacao":"Even while sick, he worked tirelessly for the Immaculata."},
+          {"tipo":"ordenar","enunciado":"Put Maximilian's youth in order:","blocos":["He was born in Poland","He had the vision of the two crowns","He joined the Franciscans","He was ordained a priest in Rome"],"explicacao":"He was ordained a priest in 1918."},
+          {"tipo":"vf","enunciado":"The vision of the two crowns came after his mother asked what would become of him.","correta":true,"explicacao":"He went to pray to Our Lady with that question, and she appeared with the crowns."},
+          {"tipo":"multipla","enunciado":"What did the red crown mean?","opcoes":["Martyrdom","Wealth","Royalty","Fame"],"correta":0,"explicacao":"Years later, he would give his life for another man."}
+        ],
+      },
+      'kolbe-2': {
+        titulo: "Knight of the Immaculata",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"Which movement did Maximilian found in Rome in 1917?","opcoes":["The Militia of the Immaculata","Catholic Action","The Legion of Mary","The Charismatic Renewal"],"correta":0,"explicacao":"He wanted to bring the whole world to Jesus through Mary."},
+          {"tipo":"vf","enunciado":"Maximilian was ordained a priest in Rome in 1918.","correta":true,"explicacao":"Then he returned to Poland with many plans for the Immaculata."},
+          {"tipo":"multipla","enunciado":"What was the name of the friary-city he founded near Warsaw?","opcoes":["Niepokalanów","Częstochowa","Kraków","Wadowice"],"correta":0,"explicacao":"The name means City of the Immaculata."},
+          {"tipo":"vf","enunciado":"Niepokalanów became one of the largest friaries in the world.","correta":true,"explicacao":"Hundreds of friars lived there, praying and working in the press."},
+          {"tipo":"multipla","enunciado":"What was the name of the magazine he published?","opcoes":["The Knight of the Immaculata","The Messenger","The Voice of Poland","The Pilgrim"],"correta":0,"explicacao":"It reached hundreds of thousands of copies a month."},
+          {"tipo":"vf","enunciado":"Maximilian also used radio to spread the Gospel.","correta":true,"explicacao":"In 1938 the Niepokalanów radio station began broadcasting."},
+          {"tipo":"multipla","enunciado":"To which country did Maximilian go as a missionary in 1930?","opcoes":["Japan","China","Brazil","India"],"correta":0,"explicacao":"He founded a friary in Nagasaki."},
+          {"tipo":"vf","enunciado":"The friary he founded in Nagasaki was not destroyed by the atomic bomb in 1945.","correta":true,"explicacao":"It stood behind a mountain, which protected it from the blast."},
+          {"tipo":"ordenar","enunciado":"Put Maximilian's works in order:","blocos":["He founded the Militia of the Immaculata","He founded Niepokalanów","He was a missionary in Japan"],"explicacao":"First in Rome, then in Poland and in Japan."},
+          {"tipo":"multipla","enunciado":"What means did Maximilian use to spread the faith?","opcoes":["Magazines, newspapers and radio","Only handwritten letters","Cave paintings","Secret telegrams"],"correta":0,"explicacao":"He used the most modern tools of his time."}
+        ],
+      },
+      'kolbe-3': {
+        titulo: "Martyr of charity",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"In which concentration camp was Maximilian imprisoned in 1941?","opcoes":["Auschwitz","Dachau","Treblinka","Buchenwald"],"correta":0,"explicacao":"There he was given the number 16670."},
+          {"tipo":"vf","enunciado":"Maximilian offered to die in place of a father of a family.","correta":true,"explicacao":"The man had been chosen to die of starvation after an escape from the camp."},
+          {"tipo":"multipla","enunciado":"What was the name of the man Maximilian saved?","opcoes":["Franciszek Gajowniczek","Karol Wojtyła","Jan Kowalski","Lech Wałęsa"],"correta":0,"explicacao":"He survived the war and was present at Saint Maximilian's canonization."},
+          {"tipo":"vf","enunciado":"In the starvation cell, Maximilian prayed and sang with the other prisoners.","correta":true,"explicacao":"The guards were astonished at the peace there."},
+          {"tipo":"multipla","enunciado":"How did Maximilian introduce himself to the officer?","opcoes":["I am a Catholic priest","I am a soldier","I am a doctor","I am a teacher"],"correta":0,"explicacao":"He asked to take the place of the other man, who had a wife and children."},
+          {"tipo":"vf","enunciado":"Maximilian died of starvation after three days.","correta":false,"explicacao":"After two weeks he was still alive and was killed with an injection on August 14, 1941."},
+          {"tipo":"multipla","enunciado":"Which pope canonized Saint Maximilian in 1982?","opcoes":["Saint John Paul II","Paul VI","Benedict XVI","Pius XII"],"correta":0,"explicacao":"He was canonized as a martyr of charity. Paul VI had beatified him in 1971."},
+          {"tipo":"ordenar","enunciado":"Put Maximilian's last days in order:","blocos":["He was imprisoned in Auschwitz","He offered his life for a father of a family","He prayed with the prisoners in the starvation cell","He died on the eve of the Assumption"],"explicacao":"He died on August 14, the eve of the feast of the Assumption of Our Lady."},
+          {"tipo":"vf","enunciado":"Saint Maximilian's feast day is August 14.","correta":true,"explicacao":"It is the day he died."},
+          {"tipo":"multipla","enunciado":"Saint John Paul II called Saint Maximilian the patron of what?","opcoes":["Our difficult century","Sailors","Cooks","Athletes"],"correta":0,"explicacao":"He showed that love wins even where hatred reigns."}
+        ],
+      },
+    },
+  },
+  'santa-faustina': {
+    santo: "Saint Faustina Kowalska",
+    titulo: "Saint Faustina",
+    descricao: "The apostle of Divine Mercy: Jesus, I trust in You.",
+    medalha: "Mercy",
+    medalhaCompleta: "Medal of Mercy",
+    virtude: "Mercy",
+    licoes: {
+      'faustina-1': {
+        titulo: "Helena, the country girl",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"What was Saint Faustina's baptismal name?","opcoes":["Helena Kowalska","Maria Goretti","Anna Kolbe","Teresa Wojtyła"],"correta":0,"explicacao":"She was born on August 25, 1905, in Głogowiec, Poland."},
+          {"tipo":"vf","enunciado":"Helena was the third of ten children in a poor farming family.","correta":true,"explicacao":"Her parents were simple, very devout peasants."},
+          {"tipo":"multipla","enunciado":"At what age did Helena first feel the call to religious life?","opcoes":["7","15","25","30"],"correta":0,"explicacao":"She writes in her diary that she felt the call at age 7, before the Blessed Sacrament."},
+          {"tipo":"vf","enunciado":"Before entering the convent, Helena worked as a housemaid.","correta":true,"explicacao":"She worked in family homes to help her parents."},
+          {"tipo":"multipla","enunciado":"Where did Helena see the suffering Jesus, which made her decide to enter the convent?","opcoes":["At a dance","At a fair","In a hospital","At a school"],"correta":0,"explicacao":"Jesus asked her how long she would keep putting off His call."},
+          {"tipo":"vf","enunciado":"Helena's parents supported her becoming a nun from the start.","correta":false,"explicacao":"At first they would not allow it, and she had to wait and insist."},
+          {"tipo":"multipla","enunciado":"Which congregation did she join in 1925?","opcoes":["The Sisters of Our Lady of Mercy","The Missionaries of Charity","The Discalced Carmelites","The Sisters of Loreto"],"correta":0,"explicacao":"She entered in Warsaw on August 1, 1925."},
+          {"tipo":"ordenar","enunciado":"Put Helena's youth in order:","blocos":["She felt the call at age 7","She worked as a housemaid","She saw the suffering Jesus at a dance","She entered the convent in Warsaw"],"explicacao":"After a long wait, she finally answered the call."},
+          {"tipo":"vf","enunciado":"In the convent, Faustina worked as a cook, a gardener and a doorkeeper.","correta":true,"explicacao":"She did simple tasks with great love."},
+          {"tipo":"multipla","enunciado":"What name did she receive in the convent?","opcoes":["Sister Maria Faustina","Sister Teresa","Sister Clare","Sister Dulce"],"correta":0,"explicacao":"Her full name was Maria Faustina of the Most Blessed Sacrament."}
+        ],
+      },
+      'faustina-2': {
+        titulo: "Jesus, I trust in You",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"In which city did Jesus appear to Faustina in 1931, asking her to have His image painted?","opcoes":["Płock","Rome","Fatima","Lourdes"],"correta":0,"explicacao":"It was on February 22, 1931."},
+          {"tipo":"vf","enunciado":"In the Divine Mercy image, two rays come out of Jesus' heart.","correta":true,"explicacao":"One ray is pale and the other is red."},
+          {"tipo":"multipla","enunciado":"According to Jesus, what do the rays in the image mean?","opcoes":["The Water and the Blood that gushed from His Heart","The sun and the moon","The Church and the world","Heaven and Earth"],"correta":0,"explicacao":"The pale one is the Water that purifies; the red one, the Blood that is the life of souls."},
+          {"tipo":"ordenar","enunciado":"Put the words written on the image in order:","blocos":["Jesus,","I trust","in You"],"explicacao":"Jesus asked for these words to be on the image."},
+          {"tipo":"vf","enunciado":"The first Divine Mercy painting was made in Vilnius.","correta":true,"explicacao":"It was painted in 1934 by Eugeniusz Kazimirowski."},
+          {"tipo":"multipla","enunciado":"Which confessor helped Faustina carry out Jesus' requests?","opcoes":["Blessed Michael Sopoćko","Saint Padre Pio","Saint John Bosco","Saint Maximilian Kolbe"],"correta":0,"explicacao":"He asked her to write everything down in a diary."},
+          {"tipo":"vf","enunciado":"Faustina never wrote anything about her experiences.","correta":false,"explicacao":"She wrote a diary with everything Jesus told her."},
+          {"tipo":"multipla","enunciado":"What is the title of Saint Faustina's diary?","opcoes":["Divine Mercy in My Soul","Story of a Soul","The Interior Castle","Confessions"],"correta":0,"explicacao":"The other books are by Saint Thérèse, Saint Teresa of Ávila and Saint Augustine."},
+          {"tipo":"vf","enunciado":"Jesus asked for the image to be venerated throughout the world.","correta":true,"explicacao":"Today it is found in churches and homes all over the world."},
+          {"tipo":"multipla","enunciado":"Which prayer did Jesus teach Faustina in 1935?","opcoes":["The Chaplet of Divine Mercy","The Angelus","The Hail Holy Queen","The Our Father"],"correta":0,"explicacao":"It was in Vilnius, and she wrote it down in her diary."}
+        ],
+      },
+      'faustina-3': {
+        titulo: "The Hour of Mercy",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"At what time is the Hour of Mercy?","opcoes":["3 p.m.","6 a.m.","12 noon","6 p.m."],"correta":0,"explicacao":"It is the hour when Jesus died on the cross."},
+          {"tipo":"vf","enunciado":"Jesus asked Faustina that His Passion be meditated on at three in the afternoon.","correta":true,"explicacao":"At that hour, He promised to refuse nothing to those who ask through His Passion."},
+          {"tipo":"multipla","enunciado":"Which feast did Jesus ask Faustina for?","opcoes":["The Feast of Divine Mercy","The Feast of Flowers","The Harvest Feast","The Feast of Corpus Christi"],"correta":0,"explicacao":"Saint John Paul II established it for the whole Church."},
+          {"tipo":"vf","enunciado":"The Feast of Divine Mercy is celebrated on the Second Sunday of Easter.","correta":true,"explicacao":"It is the Sunday right after Easter Sunday."},
+          {"tipo":"ordenar","enunciado":"Put the prayer of the Chaplet of Mercy in order:","blocos":["For the sake of His sorrowful Passion,","have mercy on us","and on the whole world."],"explicacao":"It is prayed on the small beads of the rosary."},
+          {"tipo":"multipla","enunciado":"In what year did Saint Faustina die?","opcoes":["1938","1905","1931","2000"],"correta":0,"explicacao":"She died on October 5, 1938, in Kraków, at the age of 33."},
+          {"tipo":"vf","enunciado":"Faustina died at an old age.","correta":false,"explicacao":"She died at 33, of tuberculosis."},
+          {"tipo":"multipla","enunciado":"Who canonized Saint Faustina?","opcoes":["Saint John Paul II","Benedict XVI","Pius XII","Francis"],"correta":0,"explicacao":"She was canonized on April 30, 2000, the first saint of the new millennium."},
+          {"tipo":"vf","enunciado":"Saint Faustina's feast day is October 5.","correta":true,"explicacao":"It is the day she died."},
+          {"tipo":"multipla","enunciado":"Why is Faustina called the apostle of Divine Mercy?","opcoes":["Because she spread the message of Jesus' mercy","Because she was pope","Because she founded a country","Because she wrote the Bible"],"correta":0,"explicacao":"Her message reached the whole world."}
+        ],
+      },
+    },
+  },
+  'sao-sebastiao': {
+    santo: "Saint Sebastian",
+    titulo: "Saint Sebastian",
+    descricao: "The soldier of Christ who did not fear the arrows.",
+    medalha: "Fortitude",
+    medalhaCompleta: "Medal of Fortitude",
+    virtude: "Fortitude",
+    licoes: {
+      'sebastiao-1': {
+        titulo: "Soldier of Rome",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"What was Saint Sebastian's profession?","opcoes":["A soldier in the Roman army","A fisherman","A merchant","A priest"],"correta":0,"explicacao":"According to tradition, he was an officer of the emperor's guard."},
+          {"tipo":"vf","enunciado":"Sebastian lived at a time when Christians were persecuted by the Roman Empire.","correta":true,"explicacao":"He lived in the 3rd century, in the time of Emperor Diocletian."},
+          {"tipo":"multipla","enunciado":"Which emperor persecuted Christians in Saint Sebastian's time?","opcoes":["Diocletian","Constantine","Augustus","Charlemagne"],"correta":0,"explicacao":"Years later, Constantine gave Christians their freedom."},
+          {"tipo":"vf","enunciado":"Sebastian used his position in the army to encourage imprisoned Christians.","correta":true,"explicacao":"He visited the prisoners and urged them not to deny their faith."},
+          {"tipo":"multipla","enunciado":"According to tradition, where was Sebastian born?","opcoes":["In Narbonne, in Gaul","In Jerusalem","In Athens","In Lisbon"],"correta":0,"explicacao":"Narbonne is in what is now southern France. He was raised in Milan."},
+          {"tipo":"vf","enunciado":"Sebastian left the army as soon as he became a Christian.","correta":false,"explicacao":"He remained a soldier and used his post to help Christians."},
+          {"tipo":"multipla","enunciado":"According to tradition, what miracle did Sebastian work for Zoe, an official's wife?","opcoes":["She spoke again","She learned to fly","She became rich","She became a queen"],"correta":0,"explicacao":"Zoe had not spoken for years and spoke again when Sebastian made the sign of the cross over her."},
+          {"tipo":"ordenar","enunciado":"Put Sebastian's story in order:","blocos":["He was born in Gaul","He became a soldier in Rome","He encouraged imprisoned Christians","He was denounced to the emperor"],"explicacao":"When they found out he was a Christian, he was brought before the emperor."},
+          {"tipo":"vf","enunciado":"Many people converted because of Sebastian's witness.","correta":true,"explicacao":"His courage led others to believe in Jesus."},
+          {"tipo":"multipla","enunciado":"In which city did Sebastian serve as a soldier?","opcoes":["Rome","Athens","Carthage","Alexandria"],"correta":0,"explicacao":"Rome was the capital of the empire."}
+        ],
+      },
+      'sebastiao-2': {
+        titulo: "The arrows",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"What did the emperor order when he found out Sebastian was a Christian?","opcoes":["To tie him up and shoot him with arrows","To exile him to an island","To make him a general","To send him home"],"correta":0,"explicacao":"The archers left him full of arrows, thinking he was dead."},
+          {"tipo":"vf","enunciado":"According to tradition, Sebastian survived the arrows.","correta":true,"explicacao":"The soldiers left him for dead, but he was still alive."},
+          {"tipo":"multipla","enunciado":"Who took care of Sebastian after the arrows?","opcoes":["Saint Irene","Saint Helena","Saint Monica","Saint Clare"],"correta":0,"explicacao":"Irene, a Christian widow, went to take his body for burial and found him alive."},
+          {"tipo":"vf","enunciado":"After he recovered, Sebastian fled Rome to hide.","correta":false,"explicacao":"He went back and spoke to the emperor, defending the Christians."},
+          {"tipo":"multipla","enunciado":"How did Sebastian finally die?","opcoes":["He was beaten with clubs","He drowned at sea","Of old age","In a fire"],"correta":0,"explicacao":"The emperor had him beaten to death with clubs."},
+          {"tipo":"vf","enunciado":"Saint Sebastian is called a twice-martyred saint.","correta":true,"explicacao":"First he survived the arrows; then he gave his life for the faith."},
+          {"tipo":"multipla","enunciado":"How is Saint Sebastian usually shown in images?","opcoes":["Young, tied to a tree and wounded by arrows","Old, holding a book","Riding a white horse","Holding a key"],"correta":0,"explicacao":"The other descriptions recall other saints, such as Saint George and Saint Peter."},
+          {"tipo":"ordenar","enunciado":"Put Sebastian's martyrdom in order:","blocos":["He was struck by arrows","He was cared for by Irene","He went back to speak to the emperor","He gave his life for the faith"],"explicacao":"Not even the arrows put out his courage."},
+          {"tipo":"vf","enunciado":"Saint Sebastian was buried in the catacombs on the Appian Way, in Rome.","correta":true,"explicacao":"The Basilica of Saint Sebastian stands there today."},
+          {"tipo":"multipla","enunciado":"What do the arrows in Saint Sebastian's image recall?","opcoes":["The suffering he accepted for Christ","A sport","A hunt","A war he won"],"correta":0,"explicacao":"He preferred to suffer rather than deny his faith."}
+        ],
+      },
+      'sebastiao-3': {
+        titulo: "Patron of Rio de Janeiro",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"On what day is Saint Sebastian celebrated?","opcoes":["January 20","June 13","June 24","June 29"],"correta":0,"explicacao":"The other dates belong to Saint Anthony, Saint John and Saint Peter."},
+          {"tipo":"vf","enunciado":"Saint Sebastian is the patron saint of the city of Rio de Janeiro.","correta":true,"explicacao":"The city's full name is São Sebastião do Rio de Janeiro."},
+          {"tipo":"multipla","enunciado":"Who founded the city of São Sebastião do Rio de Janeiro in 1565?","opcoes":["Estácio de Sá","Pedro Álvares Cabral","Tiradentes","Emperor Pedro I"],"correta":0,"explicacao":"The city was founded on March 1, 1565."},
+          {"tipo":"vf","enunciado":"The city's name also honored the king of Portugal at the time, King Sebastian.","correta":true,"explicacao":"The saint and the king had the same name."},
+          {"tipo":"multipla","enunciado":"Whom is Saint Sebastian the patron of?","opcoes":["Soldiers and athletes","Bakers","Sailors","Musicians"],"correta":0,"explicacao":"His strength and courage inspire soldiers and athletes."},
+          {"tipo":"vf","enunciado":"Early Christians prayed to Saint Sebastian for protection against the plague.","correta":true,"explicacao":"He is invoked against epidemics and contagious diseases."},
+          {"tipo":"multipla","enunciado":"According to tradition, in which battle did Saint Sebastian appear to help the Portuguese in Rio?","opcoes":["Uruçumirim","Guararapes","Riachuelo","Tuiuti"],"correta":0,"explicacao":"The battle took place on January 20, 1567, the saint's very feast day."},
+          {"tipo":"ordenar","enunciado":"Put the story in order:","blocos":["Sebastian dies a martyr in Rome","Estácio de Sá founds Rio de Janeiro","The city celebrates its patron on January 20"],"explicacao":"More than a thousand years separate his martyrdom and the founding of Rio."},
+          {"tipo":"vf","enunciado":"Saint Sebastian is venerated only in Brazil.","correta":false,"explicacao":"He has been venerated all over the world since the early centuries."},
+          {"tipo":"multipla","enunciado":"Which virtue does Saint Sebastian teach us most?","opcoes":["Fortitude","Vanity","Laziness","Greed"],"correta":0,"explicacao":"Fortitude is the courage to do good even in hardship."}
+        ],
+      },
+    },
+  },
+  'santa-monica': {
+    santo: "Saint Monica",
+    titulo: "Saint Monica",
+    descricao: "The mother who prayed with tears until her son returned to God.",
+    medalha: "Patience",
+    medalhaCompleta: "Medal of Patience",
+    virtude: "Patience",
+    licoes: {
+      'monica-1': {
+        titulo: "The girl from Thagaste",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"In which city was Saint Monica born?","opcoes":["Thagaste, in North Africa","Rome","Jerusalem","Milan"],"correta":0,"explicacao":"She was born around 331, in what is now Algeria."},
+          {"tipo":"vf","enunciado":"Saint Monica was born into a Christian family.","correta":true,"explicacao":"She was also brought up in the faith by a wise old maidservant."},
+          {"tipo":"multipla","enunciado":"Who tells Saint Monica's story in the book Confessions?","opcoes":["Her son, Saint Augustine","Saint Ambrose","Saint Jerome","Saint Patrick"],"correta":0,"explicacao":"Augustine wrote about his mother with great love and gratitude."},
+          {"tipo":"vf","enunciado":"As a girl, Monica secretly drank small sips of wine in the cellar.","correta":true,"explicacao":"A servant called her a little drunkard, and she gave up the habit."},
+          {"tipo":"multipla","enunciado":"On which continent is Thagaste, Monica's city?","opcoes":["Africa","Europe","Asia","America"],"correta":0,"explicacao":"At that time, North Africa was part of the Roman Empire."},
+          {"tipo":"vf","enunciado":"Monica married a very calm Christian man.","correta":false,"explicacao":"Patricius was not a Christian and had a very hot temper."},
+          {"tipo":"multipla","enunciado":"What was the name of Saint Monica's husband?","opcoes":["Patricius","Ambrose","Paulinus","Valerius"],"correta":0,"explicacao":"Patricius was a pagan official in Thagaste."},
+          {"tipo":"ordenar","enunciado":"Put Monica's life in order:","blocos":["She was born in Thagaste","She was brought up in the faith","She married Patricius","She had three children"],"explicacao":"A simple life, full of faith and prayer."},
+          {"tipo":"vf","enunciado":"Monica had three children: Augustine, Navigius and Perpetua.","correta":true,"explicacao":"Augustine was the eldest."},
+          {"tipo":"multipla","enunciado":"Which of Monica's children became a great saint and Doctor of the Church?","opcoes":["Augustine","Navigius","Perpetua","Patricius"],"correta":0,"explicacao":"Saint Augustine is one of the greatest thinkers in the history of the Church."}
+        ],
+      },
+      'monica-2': {
+        titulo: "A patient wife",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"What was Patricius, Monica's husband, like?","opcoes":["Hot-tempered and difficult","Calm and devout","Shy and quiet","Cheerful and generous"],"correta":0,"explicacao":"Even so, he respected his wife."},
+          {"tipo":"vf","enunciado":"Monica did not talk back to her husband when he was angry.","correta":true,"explicacao":"She waited for him to calm down before talking gently with him."},
+          {"tipo":"multipla","enunciado":"What advice did Monica give other wives?","opcoes":["Not to answer in a moment of anger and to speak at the right time","To fight back","To tell the whole neighborhood","To never speak to their husband again"],"correta":0,"explicacao":"She taught them to win with kindness, not with quarrels."},
+          {"tipo":"vf","enunciado":"Monica's mother-in-law, who disliked her at first, was won over by her kindness.","correta":true,"explicacao":"In time, the two of them lived in peace."},
+          {"tipo":"multipla","enunciado":"What happened to Patricius at the end of his life?","opcoes":["He converted and was baptized","He ran away to Rome","He became a bishop","He became a soldier"],"correta":0,"explicacao":"He was baptized shortly before he died, around 371."},
+          {"tipo":"vf","enunciado":"Monica gave up praying for her husband because he took a long time to change.","correta":false,"explicacao":"She prayed perseveringly until she saw his conversion."},
+          {"tipo":"multipla","enunciado":"Which virtue marked Saint Monica's marriage?","opcoes":["Patience","Impatience","Vanity","Resentment"],"correta":0,"explicacao":"Her patience was a form of love."},
+          {"tipo":"ordenar","enunciado":"Put the story of Monica's marriage in order:","blocos":["She married Patricius","She patiently bore his temper","She prayed for his conversion","Patricius was baptized"],"explicacao":"Monica's patient prayer bore fruit."},
+          {"tipo":"vf","enunciado":"Saint Monica is the patron saint of mothers and wives.","correta":true,"explicacao":"Many mothers ask her to pray for their children."},
+          {"tipo":"multipla","enunciado":"How did Monica win her husband for God?","opcoes":["With patience, kindness and prayer","With shouting","With threats","With money"],"correta":0,"explicacao":"More than with words, she showed her faith with her life."}
+        ],
+      },
+      'monica-3': {
+        titulo: "The son of so many tears",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"What did Monica do for her son who was far from God?","opcoes":["She prayed and wept for him","She argued with him every day","She forgot about him","She sent him threatening letters"],"correta":0,"explicacao":"For years, she did not stop praying for a single day."},
+          {"tipo":"vf","enunciado":"As a young man, Augustine drifted from the faith and followed the Manichaeans.","correta":true,"explicacao":"Monica wept and prayed for him every day."},
+          {"tipo":"multipla","enunciado":"To which city did Monica follow Augustine, where he met Saint Ambrose?","opcoes":["Milan","Athens","Jerusalem","Carthage"],"correta":0,"explicacao":"Ambrose was the bishop of Milan."},
+          {"tipo":"vf","enunciado":"Augustine was baptized by Saint Ambrose at Easter in 387.","correta":true,"explicacao":"Monica saw with her own eyes the answer to her prayers."},
+          {"tipo":"multipla","enunciado":"Where did Monica die?","opcoes":["In Ostia, near Rome","In Thagaste","In Jerusalem","In Carthage"],"correta":0,"explicacao":"She died in 387, while waiting for the ship back to Africa."},
+          {"tipo":"vf","enunciado":"Before she died, Monica and Augustine talked about Heaven at a window in Ostia.","correta":true,"explicacao":"Augustine tells of this conversation in the Confessions."},
+          {"tipo":"multipla","enunciado":"What did Monica ask her sons before she died?","opcoes":["To remember her at the altar of the Lord","To bury her in Thagaste","To build a church","To sell the house"],"correta":0,"explicacao":"She told them not to worry about where she would be buried."},
+          {"tipo":"ordenar","enunciado":"Put the bishop's words to Monica in order:","blocos":["It is impossible","that the son","of so many tears should perish."],"explicacao":"Monica received these words as if they came from Heaven."},
+          {"tipo":"vf","enunciado":"Saint Monica's feast is on the same day as Saint Augustine's.","correta":false,"explicacao":"Monica is celebrated on August 27, and Augustine the next day, the 28th."},
+          {"tipo":"multipla","enunciado":"Where are Saint Monica's relics today?","opcoes":["In Rome, in the Basilica of Saint Augustine","In Thagaste","In Milan","In Hippo"],"correta":0,"explicacao":"They were moved from Ostia to Rome."}
+        ],
+      },
+    },
+  },
 });

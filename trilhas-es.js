@@ -660,4 +660,389 @@ window.TRILHAS_TRADUZIDAS.es = Object.assign(window.TRILHAS_TRADUZIDAS.es || {},
       },
     },
   },
+  'santa-dulce': {
+    santo: "Santa Dulce de los Pobres",
+    titulo: "Santa Dulce de los Pobres",
+    descricao: "El Ángel Bueno de Bahía, que convirtió un gallinero en hospital.",
+    medalha: "Caridad",
+    medalhaCompleta: "Medalla de la Caridad",
+    virtude: "Caridad",
+    licoes: {
+      'dulce-1': {
+        titulo: "La niña de Salvador",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"¿En qué ciudad nació Santa Dulce de los Pobres?","opcoes":["Salvador","Recife","Río de Janeiro","São Paulo"],"correta":0,"explicacao":"Nació en Salvador, Bahía, el 26 de mayo de 1914."},
+          {"tipo":"vf","enunciado":"El nombre de bautismo de la Hermana Dulce era María Rita.","correta":true,"explicacao":"Se llamaba Maria Rita de Souza Brito Lopes Pontes."},
+          {"tipo":"multipla","enunciado":"¿Por qué pasó a llamarse Dulce en la vida religiosa?","opcoes":["En homenaje a su madre","Por una reina","Por ser el nombre de una ciudad","Por sorteo"],"correta":0,"explicacao":"Su madre se llamaba Dulce y murió cuando la hija tenía 6 años."},
+          {"tipo":"vf","enunciado":"La familia de María Rita era muy pobre.","correta":false,"explicacao":"Su padre, Augusto, era dentista y profesor, y la familia vivía bien. Ella eligió servir a los pobres."},
+          {"tipo":"multipla","enunciado":"¿A qué edad empezó María Rita a cuidar de pobres y enfermos en la puerta de su casa?","opcoes":["A los 13 años","A los 5 años","A los 30 años","A los 50 años"],"correta":0,"explicacao":"A los 13 años, la puerta de la casa familiar se conoció como la Portería de San Francisco."},
+          {"tipo":"vf","enunciado":"De joven, era hincha de un equipo de fútbol de Salvador.","correta":true,"explicacao":"Era hincha del Ypiranga, un equipo de Bahía."},
+          {"tipo":"multipla","enunciado":"¿En qué congregación entró?","opcoes":["Hermanas Misioneras de la Inmaculada Concepción de la Madre de Dios","Misioneras de la Caridad","Carmelitas Descalzas","Clarisas"],"correta":0,"explicacao":"Entró en 1933, en São Cristóvão, en el estado de Sergipe."},
+          {"tipo":"ordenar","enunciado":"Ordena la vida de María Rita:","blocos":["Nació en Salvador","Cuidó de los pobres en la puerta de casa","Entró en la vida religiosa","Recibió el nombre de Hermana Dulce"],"explicacao":"Al entrar en el convento, recibió el nombre de su madre y se convirtió en la Hermana Dulce."},
+          {"tipo":"vf","enunciado":"La Hermana Dulce tenía una salud frágil y problemas en los pulmones.","correta":true,"explicacao":"Aun con los pulmones débiles, trabajó por los pobres toda su vida."},
+          {"tipo":"multipla","enunciado":"¿En qué estado de Brasil está Salvador, la ciudad de la Hermana Dulce?","opcoes":["Bahía","Pernambuco","Minas Gerais","Ceará"],"correta":0,"explicacao":"Salvador es la capital de Bahía."}
+        ],
+      },
+      'dulce-2': {
+        titulo: "El gallinero que se volvió hospital",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"¿Dónde albergó la Hermana Dulce a los enfermos antes de tener un hospital?","opcoes":["En casas vacías y en un gallinero","En un palacio","En un estadio","En un barco"],"correta":0,"explicacao":"Ocupaba casas abandonadas y, cuando tenía que salir, buscaba otro lugar."},
+          {"tipo":"vf","enunciado":"La superiora dejó que la Hermana Dulce usara el gallinero del convento para albergar enfermos.","correta":true,"explicacao":"En 1949, el gallinero del Convento San Antonio se convirtió en refugio para los enfermos."},
+          {"tipo":"multipla","enunciado":"¿Qué hospital nació del gallinero?","opcoes":["Hospital San Antonio","Hospital de Clínicas","Santa Casa de Lisboa","Hospital São Paulo"],"correta":0,"explicacao":"Hoy el Hospital San Antonio atiende gratis a miles de personas."},
+          {"tipo":"vf","enunciado":"La Hermana Dulce ayudó a fundar un movimiento de obreros cristianos en Bahía.","correta":true,"explicacao":"En 1937, con fray Hildebrando Kruthaup, fundó el Círculo Obrero de Bahía."},
+          {"tipo":"multipla","enunciado":"¿Qué obra fundó la Hermana Dulce en 1959 para cuidar de los pobres?","opcoes":["Obras Sociales Hermana Dulce","Pastoral del Niño","Cáritas Brasileña","Casa de Misericordia"],"correta":0,"explicacao":"Las Obras Sociales Hermana Dulce siguen hasta hoy."},
+          {"tipo":"vf","enunciado":"La Hermana Dulce solo atendía a católicos.","correta":false,"explicacao":"Acogía a cualquier persona que sufría, sin preguntar de dónde venía."},
+          {"tipo":"multipla","enunciado":"¿Cómo conseguía la Hermana Dulce recursos para los enfermos?","opcoes":["Pidiendo ayuda a quien podía dar","Vendiendo tierras de la familia","Cobrando caro a los pacientes","Con la lotería"],"correta":0,"explicacao":"Se cuenta que un comerciante le escupió en la mano. Ella respondió: eso fue para mí; ahora dé algo para mis pobres."},
+          {"tipo":"ordenar","enunciado":"Ordena los lugares donde la Hermana Dulce albergó a los enfermos:","blocos":["Casas abandonadas","El gallinero del convento","El Hospital San Antonio"],"explicacao":"De la improvisación nació una de las mayores obras de caridad de Brasil."},
+          {"tipo":"vf","enunciado":"Durante muchos años, la Hermana Dulce durmió sentada en una silla.","correta":true,"explicacao":"Durante unos 30 años durmió sentada, ofreciendo ese sacrificio a Dios."},
+          {"tipo":"multipla","enunciado":"¿Qué describe mejor el trabajo de la Hermana Dulce?","opcoes":["Cuidar de enfermos, pobres y niños abandonados","Escribir libros de teología","Gobernar una ciudad","Vivir aislada en una montaña"],"correta":0,"explicacao":"Veía a Jesús en cada persona que sufría."}
+        ],
+      },
+      'dulce-3': {
+        titulo: "El Ángel Bueno de Brasil",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"¿Qué apodo cariñoso recibió la Hermana Dulce?","opcoes":["Ángel Bueno de Bahía","Reina del Sertón","Dama de Hierro","Estrella del Mar"],"correta":0,"explicacao":"El pueblo la llamaba así por el bien que hacía."},
+          {"tipo":"vf","enunciado":"La Hermana Dulce fue nominada al Premio Nobel de la Paz.","correta":true,"explicacao":"Fue nominada en 1988 por su trabajo con los pobres."},
+          {"tipo":"multipla","enunciado":"¿Qué papa visitó a la Hermana Dulce cuando ya estaba enferma, en 1991?","opcoes":["San Juan Pablo II","Benedicto XVI","Francisco","Pablo VI"],"correta":0,"explicacao":"La encontró en Salvador pocos meses antes de su muerte."},
+          {"tipo":"vf","enunciado":"La Hermana Dulce murió en Salvador en 1992.","correta":true,"explicacao":"Murió el 13 de marzo de 1992, a los 77 años."},
+          {"tipo":"multipla","enunciado":"¿Quién canonizó a la Hermana Dulce en 2019?","opcoes":["El papa Francisco","El papa Benedicto XVI","San Juan Pablo II","El papa Pío XII"],"correta":0,"explicacao":"Fue declarada santa el 13 de octubre de 2019, en Roma."},
+          {"tipo":"vf","enunciado":"Santa Dulce fue la primera santa nacida en Brasil.","correta":true,"explicacao":"Es la primera mujer nacida en Brasil declarada santa."},
+          {"tipo":"multipla","enunciado":"¿Qué milagro se reconoció para la canonización de Santa Dulce?","opcoes":["Un músico ciego recuperó la vista","Un niño aprendió latín en un día","Un edificio cambió de lugar","Una tormenta se detuvo en el mar"],"correta":0,"explicacao":"José Maurício Moreira, ciego desde hacía 14 años, recuperó la vista después de rezarle."},
+          {"tipo":"ordenar","enunciado":"Ordena la frase de la Hermana Dulce:","blocos":["El amor supera","todos los obstáculos,","todos los sacrificios."],"explicacao":"Para ella, el amor era la fuerza que lo movía todo."},
+          {"tipo":"vf","enunciado":"La fiesta de Santa Dulce se celebra el día de Navidad.","correta":false,"explicacao":"Su memoria se celebra el 13 de agosto."},
+          {"tipo":"multipla","enunciado":"¿Dónde está el santuario de Santa Dulce?","opcoes":["En Salvador, junto a las obras que fundó","En Roma","En Lisboa","En Aparecida"],"correta":0,"explicacao":"El santuario está junto al hospital que nació del gallinero."}
+        ],
+      },
+    },
+  },
+  'dom-bosco': {
+    santo: "San Juan Bosco",
+    titulo: "Don Bosco",
+    descricao: "El padre y maestro de los jóvenes, que educaba con alegría.",
+    medalha: "Alegría",
+    medalhaCompleta: "Medalla de la Alegría",
+    virtude: "Alegría",
+    licoes: {
+      'bosco-1': {
+        titulo: "El niño de I Becchi",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"¿En qué país nació Don Bosco?","opcoes":["Italia","España","Francia","Portugal"],"correta":0,"explicacao":"Nació el 16 de agosto de 1815 en I Becchi, cerca de Castelnuovo, en el norte de Italia."},
+          {"tipo":"vf","enunciado":"El padre de Juan Bosco murió cuando él tenía 2 años.","correta":true,"explicacao":"Lo crió su madre, Margarita, que hoy es venerable."},
+          {"tipo":"multipla","enunciado":"¿Cómo se llamaba la madre de Don Bosco?","opcoes":["Margarita","Mónica","Teresa","Rita"],"correta":0,"explicacao":"Mamá Margarita fue después a vivir con él a Turín y ayudó a cuidar a los muchachos."},
+          {"tipo":"vf","enunciado":"A los 9 años, Juan tuvo un sueño que marcó toda su vida.","correta":true,"explicacao":"Soñó con muchachos peleando que se convertían en corderos, guiados por una Señora."},
+          {"tipo":"multipla","enunciado":"En el sueño de los 9 años, ¿cómo le dijo Jesús que debía ganarse a los muchachos?","opcoes":["Con mansedumbre y caridad","A golpes","Con dinero","Con castigos"],"correta":0,"explicacao":"No con golpes, sino con mansedumbre y caridad, oyó en el sueño."},
+          {"tipo":"vf","enunciado":"De niño, Juan aprendió trucos de magia y equilibrismo para atraer a otros niños.","correta":true,"explicacao":"Después del espectáculo, repetía el sermón del sacerdote y rezaba con ellos."},
+          {"tipo":"multipla","enunciado":"¿Por qué a Juan le costó estudiar de joven?","opcoes":["Era pobre y tenía que trabajar","No le gustaba leer","Estaba prohibido por la ley","Vivía en una isla"],"correta":0,"explicacao":"Trabajó en el campo, de sastre, de herrero y en un café para pagar sus estudios."},
+          {"tipo":"ordenar","enunciado":"Ordena la juventud de Juan Bosco:","blocos":["Nació en I Becchi","Tuvo el sueño de los 9 años","Trabajó para pagar sus estudios","Fue ordenado sacerdote en Turín"],"explicacao":"Fue ordenado sacerdote en 1841."},
+          {"tipo":"vf","enunciado":"Don Bosco fue ordenado sacerdote en Roma.","correta":false,"explicacao":"Fue ordenado en Turín, el 5 de junio de 1841."},
+          {"tipo":"multipla","enunciado":"¿Quién se le apareció a Juan en el sueño de los 9 años para guiarlo?","opcoes":["La Virgen María","Un rey","Un soldado","Un maestro"],"correta":0,"explicacao":"Ella le dijo: hazte humilde, fuerte y robusto."}
+        ],
+      },
+      'bosco-2': {
+        titulo: "El Oratorio de Turín",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"¿En qué ciudad hizo Don Bosco su gran obra con los jóvenes?","opcoes":["Turín","Milán","Venecia","Nápoles"],"correta":0,"explicacao":"Turín estaba llena de jóvenes pobres que llegaban a trabajar en fábricas y obras."},
+          {"tipo":"vf","enunciado":"El Oratorio empezó con un muchacho llamado Bartolomé Garelli.","correta":true,"explicacao":"El 8 de diciembre de 1841, Don Bosco empezó a enseñarle el catecismo en una sacristía de Turín."},
+          {"tipo":"multipla","enunciado":"¿Qué era el Oratorio de Don Bosco?","opcoes":["Un lugar de oración, estudio y juego para jóvenes","Un monasterio cerrado","Una fábrica","Un cuartel"],"correta":0,"explicacao":"Allí los jóvenes encontraban casa, escuela, taller e iglesia."},
+          {"tipo":"vf","enunciado":"Don Bosco visitaba a jóvenes presos en las cárceles de Turín.","correta":true,"explicacao":"Ver a tantos jóvenes presos lo llevó a ayudarlos antes de que cayeran en el delito."},
+          {"tipo":"multipla","enunciado":"¿Cómo se llama el método educativo de Don Bosco?","opcoes":["Sistema preventivo","Sistema represivo","Método del castigo","Escuela del silencio"],"correta":0,"explicacao":"Se apoya en tres pilares: razón, religión y amor."},
+          {"tipo":"ordenar","enunciado":"Ordena los tres pilares del sistema preventivo:","blocos":["Razón,","religión","y amor"],"explicacao":"Don Bosco decía que la educación es cosa del corazón."},
+          {"tipo":"vf","enunciado":"Don Bosco educaba a los muchachos sobre todo con castigos.","correta":false,"explicacao":"Prefería prevenir con cariño y presencia, y no castigar."},
+          {"tipo":"multipla","enunciado":"¿Qué congregación fundó Don Bosco para continuar su obra?","opcoes":["Los Salesianos","Los Franciscanos","Los Jesuitas","Los Dominicos"],"correta":0,"explicacao":"El nombre viene de San Francisco de Sales, el santo de la dulzura."},
+          {"tipo":"vf","enunciado":"Don Bosco fundó, con Santa María Mazzarello, las Hijas de María Auxiliadora.","correta":true,"explicacao":"Las Salesianas, fundadas en 1872, cuidan especialmente de las niñas."},
+          {"tipo":"multipla","enunciado":"¿Qué alumno de Don Bosco también llegó a ser santo?","opcoes":["Santo Domingo Savio","San Luis Gonzaga","San Tarsicio","San Francisco Marto"],"correta":0,"explicacao":"Domingo Savio murió a los 14 años, y Don Bosco escribió su vida."}
+        ],
+      },
+      'bosco-3': {
+        titulo: "Padre y maestro de la juventud",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"¿A qué advocación de la Virgen tenía gran devoción Don Bosco?","opcoes":["María Auxiliadora","Nuestra Señora de Fátima","Nuestra Señora de Lourdes","Nuestra Señora de Guadalupe"],"correta":0,"explicacao":"Sobre su obra decía: ella lo ha hecho todo."},
+          {"tipo":"vf","enunciado":"Don Bosco construyó la Basílica de María Auxiliadora, en Turín.","correta":true,"explicacao":"La basílica fue consagrada en 1868."},
+          {"tipo":"multipla","enunciado":"¿De qué ciudad brasileña es patrono Don Bosco, a causa de un sueño?","opcoes":["Brasilia","Salvador","Manaos","Curitiba"],"correta":0,"explicacao":"En 1883 soñó con una tierra rica entre los paralelos 15 y 20, donde después nació Brasilia."},
+          {"tipo":"vf","enunciado":"Se cuenta que un misterioso perro gris, el Gris, protegía a Don Bosco de ataques.","correta":true,"explicacao":"Aparecía en los momentos de peligro y después desaparecía."},
+          {"tipo":"multipla","enunciado":"¿En qué año murió Don Bosco?","opcoes":["1888","1815","1934","1900"],"correta":0,"explicacao":"Murió en Turín el 31 de enero de 1888."},
+          {"tipo":"vf","enunciado":"La fiesta de Don Bosco es el 16 de agosto.","correta":false,"explicacao":"Nació el 16 de agosto, pero su fiesta es el 31 de enero, día de su muerte."},
+          {"tipo":"multipla","enunciado":"¿Qué papa canonizó a Don Bosco?","opcoes":["Pío XI","Pío IX","León XIII","Juan XXIII"],"correta":0,"explicacao":"Fue canonizado el domingo de Pascua de 1934."},
+          {"tipo":"ordenar","enunciado":"Ordena la frase de Don Bosco:","blocos":["Basta que seáis jóvenes","para que yo","os ame mucho."],"explicacao":"Amaba a los jóvenes como un padre."},
+          {"tipo":"vf","enunciado":"San Juan Pablo II proclamó a Don Bosco Padre y Maestro de la Juventud.","correta":true,"explicacao":"Fue en 1988, en el centenario de su muerte."},
+          {"tipo":"multipla","enunciado":"¿Qué resume el espíritu de Don Bosco?","opcoes":["Alegría, estudio y oración","Tristeza y miedo","Riqueza y fama","Silencio y soledad"],"correta":0,"explicacao":"Para él, la santidad va de la mano con la alegría."}
+        ],
+      },
+    },
+  },
+  'madre-teresa': {
+    santo: "Santa Teresa de Calcuta",
+    titulo: "Madre Teresa de Calcuta",
+    descricao: "La madre de los más pobres entre los pobres.",
+    medalha: "Compasión",
+    medalhaCompleta: "Medalla de la Compasión",
+    virtude: "Compasión",
+    licoes: {
+      'calcuta-1': {
+        titulo: "Agnes de Skopie",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"¿Cuál era el nombre de bautismo de la Madre Teresa?","opcoes":["Agnes Gonxha Bojaxhiu","María Goretti","Teresa Sánchez","Ana María Taigi"],"correta":0,"explicacao":"Nació el 26 de agosto de 1910, en una familia albanesa."},
+          {"tipo":"multipla","enunciado":"¿En qué ciudad nació?","opcoes":["Skopie","Calcuta","Roma","Dublín"],"correta":0,"explicacao":"Skopie es hoy la capital de Macedonia del Norte."},
+          {"tipo":"vf","enunciado":"El padre de Agnes murió cuando ella tenía 8 años.","correta":true,"explicacao":"Su madre crió a los hijos en la fe y muchas veces recibía a los pobres a su mesa."},
+          {"tipo":"vf","enunciado":"Agnes entró en la vida religiosa ya anciana.","correta":false,"explicacao":"Entró a los 18 años, en 1928."},
+          {"tipo":"multipla","enunciado":"¿En qué congregación entró Agnes primero?","opcoes":["Hermanas de Loreto","Misioneras de la Caridad","Carmelitas","Salesianas"],"correta":0,"explicacao":"Fue a Irlanda a aprender inglés con las Hermanas de Loreto y después siguió a la India."},
+          {"tipo":"multipla","enunciado":"¿Por qué eligió el nombre Teresa?","opcoes":["Por Santa Teresita del Niño Jesús","Por una reina","Por una tía","Porque estaba de moda"],"correta":0,"explicacao":"Eligió el nombre de la patrona de las misiones."},
+          {"tipo":"vf","enunciado":"Durante casi 20 años fue profesora en una escuela de niñas en Calcuta.","correta":true,"explicacao":"Enseñó en la escuela Santa María y llegó a ser directora."},
+          {"tipo":"ordenar","enunciado":"Ordena la juventud de Agnes:","blocos":["Nació en Skopie","Entró en las Hermanas de Loreto","Viajó a la India","Enseñó en Calcuta"],"explicacao":"Llegó a la India en 1929."},
+          {"tipo":"vf","enunciado":"Consideraba el día de su bautismo como su verdadero cumpleaños.","correta":true,"explicacao":"Fue bautizada el 27 de agosto de 1910, un día después de nacer."},
+          {"tipo":"multipla","enunciado":"¿En qué país vivió y trabajó la Madre Teresa la mayor parte de su vida?","opcoes":["India","Brasil","Estados Unidos","Italia"],"correta":0,"explicacao":"Incluso se hizo ciudadana india."}
+        ],
+      },
+      'calcuta-2': {
+        titulo: "La llamada dentro de la llamada",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"El 10 de septiembre de 1946, ¿dónde sintió la Madre Teresa la llamada a servir a los más pobres?","opcoes":["En un tren hacia Darjeeling","En una playa","En un hospital de Roma","En un barco por el Ganges"],"correta":0,"explicacao":"Llamó a esa experiencia la llamada dentro de la llamada."},
+          {"tipo":"vf","enunciado":"Al dejar a las Hermanas de Loreto, empezó a usar un sari blanco con rayas azules.","correta":true,"explicacao":"Era la ropa sencilla de las mujeres pobres de la India."},
+          {"tipo":"multipla","enunciado":"¿Qué congregación fundó la Madre Teresa en 1950?","opcoes":["Misioneras de la Caridad","Hermanas de Loreto","Hijas de María Auxiliadora","Clarisas"],"correta":0,"explicacao":"Fue aprobada el 7 de octubre de 1950, en Calcuta."},
+          {"tipo":"vf","enunciado":"Las Misioneras de la Caridad hacen un cuarto voto, además de pobreza, castidad y obediencia.","correta":true,"explicacao":"Prometen servir de todo corazón y gratis a los más pobres entre los pobres."},
+          {"tipo":"multipla","enunciado":"¿Qué era Nirmal Hriday, abierta en 1952?","opcoes":["Una casa para moribundos","Una escuela de música","Un mercado","Una universidad"],"correta":0,"explicacao":"Allí, quien se moría en la calle era acogido para morir con dignidad y amor."},
+          {"tipo":"vf","enunciado":"La Madre Teresa solo cuidaba de cristianos.","correta":false,"explicacao":"Servía a hindúes, musulmanes y a todos los que sufrían."},
+          {"tipo":"multipla","enunciado":"¿Qué palabras de Jesús en la cruz están escritas en las capillas de las Misioneras de la Caridad?","opcoes":["Tengo sed","Todo está cumplido","Padre, perdónalos","Mujer, ahí tienes a tu hijo"],"correta":0,"explicacao":"Para ella, la sed de Jesús era sed de amor y de almas."},
+          {"tipo":"ordenar","enunciado":"Ordena la frase de la Madre Teresa:","blocos":["El fruto del silencio es la oración,","el fruto de la oración es la fe,","el fruto de la fe es el amor,","el fruto del amor es el servicio,","el fruto del servicio es la paz."],"explicacao":"Todo empieza en el silencio ante Dios."},
+          {"tipo":"vf","enunciado":"La Madre Teresa estudió enfermería antes de empezar a trabajar en las calles.","correta":true,"explicacao":"Hizo un curso con religiosas misioneras médicas en Patna."},
+          {"tipo":"multipla","enunciado":"¿A quiénes llamaba la Madre Teresa los más pobres entre los pobres?","opcoes":["A los enfermos, abandonados y olvidados","A los comerciantes","A los soldados","A los artistas"],"correta":0,"explicacao":"Decía que la peor pobreza es no ser amado."}
+        ],
+      },
+      'calcuta-3': {
+        titulo: "Cosas pequeñas con gran amor",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"¿Qué premio recibió la Madre Teresa en 1979?","opcoes":["El Nobel de la Paz","Un Óscar","El Nobel de Literatura","La Copa del Mundo"],"correta":0,"explicacao":"Recibió el premio en nombre de los pobres."},
+          {"tipo":"vf","enunciado":"Al recibir el Nobel, pidió que se cancelara el banquete.","correta":true,"explicacao":"El dinero de la cena fue para los pobres de Calcuta."},
+          {"tipo":"multipla","enunciado":"¿Cuál de estas frases es de la Madre Teresa?","opcoes":["No podemos hacer grandes cosas, solo cosas pequeñas con gran amor","Pienso, luego existo","El hombre es la medida de todas las cosas","Conócete a ti mismo"],"correta":0,"explicacao":"Para ella, el valor está en el amor que ponemos en lo que hacemos."},
+          {"tipo":"vf","enunciado":"Durante muchos años, la Madre Teresa sintió una gran oscuridad interior, pero siguió rezando y sirviendo.","correta":true,"explicacao":"Se supo por sus cartas, publicadas después de su muerte."},
+          {"tipo":"multipla","enunciado":"¿En qué año murió la Madre Teresa?","opcoes":["1997","1979","2003","1950"],"correta":0,"explicacao":"Murió en Calcuta el 5 de septiembre de 1997."},
+          {"tipo":"vf","enunciado":"La Madre Teresa fue canonizada por San Juan Pablo II.","correta":false,"explicacao":"Juan Pablo II la beatificó en 2003; el papa Francisco la canonizó en 2016."},
+          {"tipo":"multipla","enunciado":"¿Qué día se celebra la fiesta de Santa Teresa de Calcuta?","opcoes":["5 de septiembre","1 de octubre","15 de octubre","26 de agosto"],"correta":0,"explicacao":"Es el día de su muerte. Las otras fechas son de Santa Teresita, de Santa Teresa de Ávila y del nacimiento de la Madre Teresa."},
+          {"tipo":"ordenar","enunciado":"Ordena la vida de la Madre Teresa:","blocos":["Profesora en Calcuta","La llamada en el tren","Fundó las Misioneras de la Caridad","Recibió el Nobel de la Paz"],"explicacao":"Toda una vida entregada a los más pobres."},
+          {"tipo":"vf","enunciado":"Hoy las Misioneras de la Caridad están en muchos países.","correta":true,"explicacao":"Cuidan de enfermos, pobres y abandonados en más de cien países."},
+          {"tipo":"multipla","enunciado":"¿A quién veía la Madre Teresa en cada pobre?","opcoes":["A Jesús","Un problema","Un extraño","Un número"],"correta":0,"explicacao":"Decía que servía a Jesús disfrazado de pobre."}
+        ],
+      },
+    },
+  },
+  'sao-maximiliano': {
+    santo: "San Maximiliano Kolbe",
+    titulo: "San Maximiliano Kolbe",
+    descricao: "El mártir de la caridad, que dio la vida por un padre de familia.",
+    medalha: "Entrega",
+    medalhaCompleta: "Medalla de la Entrega",
+    virtude: "Entrega",
+    licoes: {
+      'kolbe-1': {
+        titulo: "Las dos coronas",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"¿En qué país nació San Maximiliano Kolbe?","opcoes":["Polonia","Alemania","Italia","Hungría"],"correta":0,"explicacao":"Nació el 8 de enero de 1894, en Zduńska Wola."},
+          {"tipo":"vf","enunciado":"El nombre de bautismo de Maximiliano era Raimundo.","correta":true,"explicacao":"Se llamaba Rajmund Kolbe y recibió el nombre de Maximiliano al entrar en los franciscanos."},
+          {"tipo":"multipla","enunciado":"De niño, ¿qué dos coronas le ofreció la Virgen en una visión?","opcoes":["Una blanca y una roja","Una de oro y una de plata","Una azul y una verde","Una de flores y una de espinas"],"correta":0,"explicacao":"La blanca era la pureza; la roja, el martirio."},
+          {"tipo":"vf","enunciado":"En la visión, eligió solo la corona blanca.","correta":false,"explicacao":"Aceptó las dos: la de la pureza y la del martirio."},
+          {"tipo":"multipla","enunciado":"¿En qué orden religiosa entró Raimundo?","opcoes":["Franciscanos Conventuales","Jesuitas","Dominicos","Benedictinos"],"correta":0,"explicacao":"Entró en 1910 y recibió el nombre de Maximiliano."},
+          {"tipo":"vf","enunciado":"Maximiliano estudió en Roma y se doctoró en filosofía y en teología.","correta":true,"explicacao":"Después volvió a Polonia para servir a la Iglesia."},
+          {"tipo":"multipla","enunciado":"¿Qué enfermedad debilitó los pulmones de Maximiliano?","opcoes":["Tuberculosis","Malaria","Viruela","Gripe española"],"correta":0,"explicacao":"Aun enfermo, trabajó sin descanso por la Inmaculada."},
+          {"tipo":"ordenar","enunciado":"Ordena la juventud de Maximiliano:","blocos":["Nació en Polonia","Tuvo la visión de las dos coronas","Entró en los franciscanos","Fue ordenado sacerdote en Roma"],"explicacao":"Fue ordenado sacerdote en 1918."},
+          {"tipo":"vf","enunciado":"La visión de las dos coronas llegó después de que su madre le preguntara qué sería de él.","correta":true,"explicacao":"Fue a rezar a la Virgen con esa pregunta, y ella apareció con las coronas."},
+          {"tipo":"multipla","enunciado":"¿Qué significaba la corona roja?","opcoes":["Martirio","Riqueza","Realeza","Fama"],"correta":0,"explicacao":"Años después, daría la vida por otro hombre."}
+        ],
+      },
+      'kolbe-2': {
+        titulo: "Caballero de la Inmaculada",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"¿Qué movimiento fundó Maximiliano en Roma en 1917?","opcoes":["La Milicia de la Inmaculada","La Acción Católica","La Legión de María","La Renovación Carismática"],"correta":0,"explicacao":"Quería llevar el mundo entero a Jesús por medio de María."},
+          {"tipo":"vf","enunciado":"Maximiliano fue ordenado sacerdote en Roma en 1918.","correta":true,"explicacao":"Después volvió a Polonia con muchos planes para la Inmaculada."},
+          {"tipo":"multipla","enunciado":"¿Cómo se llamaba la ciudad-convento que fundó cerca de Varsovia?","opcoes":["Niepokalanów","Częstochowa","Cracovia","Wadowice"],"correta":0,"explicacao":"El nombre quiere decir Ciudad de la Inmaculada."},
+          {"tipo":"vf","enunciado":"Niepokalanów llegó a ser uno de los mayores conventos del mundo.","correta":true,"explicacao":"Cientos de frailes vivían allí, rezando y trabajando en la imprenta."},
+          {"tipo":"multipla","enunciado":"¿Cómo se llamaba la revista que publicaba?","opcoes":["El Caballero de la Inmaculada","El Mensajero","La Voz de Polonia","El Peregrino"],"correta":0,"explicacao":"Llegó a tener cientos de miles de ejemplares al mes."},
+          {"tipo":"vf","enunciado":"Maximiliano también usaba la radio para evangelizar.","correta":true,"explicacao":"En 1938 empezó a funcionar la radio de Niepokalanów."},
+          {"tipo":"multipla","enunciado":"¿A qué país fue Maximiliano como misionero en 1930?","opcoes":["Japón","China","Brasil","India"],"correta":0,"explicacao":"Fundó un convento en Nagasaki."},
+          {"tipo":"vf","enunciado":"El convento que fundó en Nagasaki no fue destruido por la bomba atómica de 1945.","correta":true,"explicacao":"Estaba detrás de una montaña, que lo protegió de la explosión."},
+          {"tipo":"ordenar","enunciado":"Ordena las obras de Maximiliano:","blocos":["Fundó la Milicia de la Inmaculada","Fundó Niepokalanów","Fue misionero en Japón"],"explicacao":"Primero en Roma, después en Polonia y en Japón."},
+          {"tipo":"multipla","enunciado":"¿Qué medios usó Maximiliano para difundir la fe?","opcoes":["Revistas, periódicos y radio","Solo cartas a mano","Pinturas en cuevas","Telegramas secretos"],"correta":0,"explicacao":"Usaba lo más moderno de su tiempo."}
+        ],
+      },
+      'kolbe-3': {
+        titulo: "Mártir de la caridad",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"¿En qué campo de concentración fue encerrado Maximiliano en 1941?","opcoes":["Auschwitz","Dachau","Treblinka","Buchenwald"],"correta":0,"explicacao":"Allí recibió el número 16670."},
+          {"tipo":"vf","enunciado":"Maximiliano se ofreció a morir en lugar de un padre de familia.","correta":true,"explicacao":"El hombre había sido elegido para morir de hambre después de una fuga del campo."},
+          {"tipo":"multipla","enunciado":"¿Cómo se llamaba el hombre que Maximiliano salvó?","opcoes":["Franciszek Gajowniczek","Karol Wojtyła","Jan Kowalski","Lech Wałęsa"],"correta":0,"explicacao":"Sobrevivió a la guerra y estuvo en la canonización de San Maximiliano."},
+          {"tipo":"vf","enunciado":"En la celda del hambre, Maximiliano rezaba y cantaba con los otros presos.","correta":true,"explicacao":"Los guardias se asombraban de la paz que había allí."},
+          {"tipo":"multipla","enunciado":"¿Cómo se presentó Maximiliano al oficial?","opcoes":["Soy un sacerdote católico","Soy un soldado","Soy un médico","Soy un profesor"],"correta":0,"explicacao":"Pidió ocupar el lugar del otro, que tenía esposa e hijos."},
+          {"tipo":"vf","enunciado":"Maximiliano murió de hambre a los tres días.","correta":false,"explicacao":"Después de dos semanas seguía vivo y fue asesinado con una inyección el 14 de agosto de 1941."},
+          {"tipo":"multipla","enunciado":"¿Qué papa canonizó a San Maximiliano en 1982?","opcoes":["San Juan Pablo II","Pablo VI","Benedicto XVI","Pío XII"],"correta":0,"explicacao":"Fue canonizado como mártir de la caridad. Pablo VI lo había beatificado en 1971."},
+          {"tipo":"ordenar","enunciado":"Ordena los últimos días de Maximiliano:","blocos":["Fue encerrado en Auschwitz","Ofreció su vida por un padre de familia","Rezó con los presos en la celda del hambre","Murió en la víspera de la Asunción"],"explicacao":"Murió el 14 de agosto, víspera de la fiesta de la Asunción de la Virgen."},
+          {"tipo":"vf","enunciado":"La fiesta de San Maximiliano es el 14 de agosto.","correta":true,"explicacao":"Es el día en que murió."},
+          {"tipo":"multipla","enunciado":"¿De qué llamó San Juan Pablo II patrono a San Maximiliano?","opcoes":["De nuestro difícil siglo","De los navegantes","De los cocineros","De los atletas"],"correta":0,"explicacao":"Mostró que el amor vence incluso donde reina el odio."}
+        ],
+      },
+    },
+  },
+  'santa-faustina': {
+    santo: "Santa Faustina Kowalska",
+    titulo: "Santa Faustina",
+    descricao: "La apóstol de la Divina Misericordia: Jesús, en ti confío.",
+    medalha: "Misericordia",
+    medalhaCompleta: "Medalla de la Misericordia",
+    virtude: "Misericordia",
+    licoes: {
+      'faustina-1': {
+        titulo: "Helena, la niña del campo",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"¿Cuál era el nombre de bautismo de Santa Faustina?","opcoes":["Helena Kowalska","María Goretti","Ana Kolbe","Teresa Wojtyła"],"correta":0,"explicacao":"Nació el 25 de agosto de 1905, en Głogowiec, Polonia."},
+          {"tipo":"vf","enunciado":"Helena era la tercera de diez hijos de una familia pobre del campo.","correta":true,"explicacao":"Sus padres eran campesinos sencillos y muy religiosos."},
+          {"tipo":"multipla","enunciado":"¿A qué edad sintió Helena por primera vez la llamada a la vida religiosa?","opcoes":["A los 7 años","A los 15 años","A los 25 años","A los 30 años"],"correta":0,"explicacao":"Cuenta en su diario que sintió la llamada a los 7 años, ante el Santísimo."},
+          {"tipo":"vf","enunciado":"Antes de entrar en el convento, Helena trabajó como empleada doméstica.","correta":true,"explicacao":"Trabajó en casas de familia para ayudar a sus padres."},
+          {"tipo":"multipla","enunciado":"¿Dónde vio Helena a Jesús sufriendo, lo que la llevó a decidir entrar en el convento?","opcoes":["En un baile","En una feria","En un hospital","En una escuela"],"correta":0,"explicacao":"Jesús le preguntó hasta cuándo iba a seguir aplazando su llamada."},
+          {"tipo":"vf","enunciado":"Los padres de Helena apoyaron desde el principio que fuera monja.","correta":false,"explicacao":"Al principio no la dejaron, y tuvo que esperar e insistir."},
+          {"tipo":"multipla","enunciado":"¿En qué congregación entró en 1925?","opcoes":["Hermanas de Nuestra Señora de la Misericordia","Misioneras de la Caridad","Carmelitas Descalzas","Hermanas de Loreto"],"correta":0,"explicacao":"Entró en Varsovia el 1 de agosto de 1925."},
+          {"tipo":"ordenar","enunciado":"Ordena la juventud de Helena:","blocos":["Sintió la llamada a los 7 años","Trabajó como empleada","Vio a Jesús sufriendo en un baile","Entró en el convento en Varsovia"],"explicacao":"Después de mucha espera, por fin respondió a la llamada."},
+          {"tipo":"vf","enunciado":"En el convento, Faustina trabajó de cocinera, jardinera y portera.","correta":true,"explicacao":"Hacía tareas sencillas con mucho amor."},
+          {"tipo":"multipla","enunciado":"¿Qué nombre recibió en el convento?","opcoes":["Hermana María Faustina","Hermana Teresa","Hermana Clara","Hermana Dulce"],"correta":0,"explicacao":"Su nombre completo era María Faustina del Santísimo Sacramento."}
+        ],
+      },
+      'faustina-2': {
+        titulo: "Jesús, en ti confío",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"¿En qué ciudad se le apareció Jesús a Faustina en 1931, pidiendo que pintara su imagen?","opcoes":["Płock","Roma","Fátima","Lourdes"],"correta":0,"explicacao":"Fue el 22 de febrero de 1931."},
+          {"tipo":"vf","enunciado":"En la imagen de la Divina Misericordia, salen dos rayos del corazón de Jesús.","correta":true,"explicacao":"Un rayo es pálido y el otro rojo."},
+          {"tipo":"multipla","enunciado":"Según Jesús, ¿qué significan los rayos de la imagen?","opcoes":["El Agua y la Sangre que brotaron de su Corazón","El sol y la luna","La Iglesia y el mundo","El Cielo y la Tierra"],"correta":0,"explicacao":"El pálido es el Agua que purifica; el rojo, la Sangre que es vida de las almas."},
+          {"tipo":"ordenar","enunciado":"Ordena la frase escrita en la imagen:","blocos":["Jesús,","en ti","confío"],"explicacao":"Jesús pidió que estas palabras estuvieran en la imagen."},
+          {"tipo":"vf","enunciado":"El primer cuadro de la Divina Misericordia se pintó en Vilna.","correta":true,"explicacao":"Lo pintó Eugeniusz Kazimirowski en 1934."},
+          {"tipo":"multipla","enunciado":"¿Qué confesor ayudó a Faustina a cumplir los pedidos de Jesús?","opcoes":["Beato Miguel Sopoćko","San Padre Pío","San Juan Bosco","San Maximiliano Kolbe"],"correta":0,"explicacao":"Le pidió que lo escribiera todo en un diario."},
+          {"tipo":"vf","enunciado":"Faustina nunca escribió nada sobre sus experiencias.","correta":false,"explicacao":"Escribió un diario con todo lo que Jesús le dijo."},
+          {"tipo":"multipla","enunciado":"¿Cómo se llama el diario de Santa Faustina?","opcoes":["La Divina Misericordia en mi alma","Historia de un alma","Castillo interior","Confesiones"],"correta":0,"explicacao":"Los otros libros son de Santa Teresita, Santa Teresa de Ávila y San Agustín."},
+          {"tipo":"vf","enunciado":"Jesús pidió que la imagen fuera venerada en el mundo entero.","correta":true,"explicacao":"Hoy está en iglesias y casas de todos los rincones del mundo."},
+          {"tipo":"multipla","enunciado":"¿Qué oración le enseñó Jesús a Faustina en 1935?","opcoes":["La Coronilla de la Divina Misericordia","El Ángelus","La Salve","El Padrenuestro"],"correta":0,"explicacao":"Fue en Vilna, y ella la anotó en su diario."}
+        ],
+      },
+      'faustina-3': {
+        titulo: "La Hora de la Misericordia",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"¿A qué hora es la Hora de la Misericordia?","opcoes":["15 h","6 h","12 h","18 h"],"correta":0,"explicacao":"Es la hora en que Jesús murió en la cruz."},
+          {"tipo":"vf","enunciado":"Jesús le pidió a Faustina que a las tres de la tarde se meditara su Pasión.","correta":true,"explicacao":"A esa hora, prometió no negar nada a quien pida por su Pasión."},
+          {"tipo":"multipla","enunciado":"¿Qué fiesta le pidió Jesús a Faustina?","opcoes":["La Fiesta de la Divina Misericordia","La Fiesta de las Flores","La Fiesta de la Cosecha","La Fiesta de Corpus Christi"],"correta":0,"explicacao":"San Juan Pablo II la instituyó para toda la Iglesia."},
+          {"tipo":"vf","enunciado":"La Fiesta de la Divina Misericordia se celebra el segundo domingo de Pascua.","correta":true,"explicacao":"Es el domingo justo después del Domingo de Pascua."},
+          {"tipo":"ordenar","enunciado":"Ordena la oración de la Coronilla de la Misericordia:","blocos":["Por su dolorosa Pasión,","ten misericordia de nosotros","y del mundo entero."],"explicacao":"Se reza en las cuentas pequeñas del rosario."},
+          {"tipo":"multipla","enunciado":"¿En qué año murió Santa Faustina?","opcoes":["1938","1905","1931","2000"],"correta":0,"explicacao":"Murió el 5 de octubre de 1938, en Cracovia, a los 33 años."},
+          {"tipo":"vf","enunciado":"Faustina murió anciana.","correta":false,"explicacao":"Murió a los 33 años, de tuberculosis."},
+          {"tipo":"multipla","enunciado":"¿Quién canonizó a Santa Faustina?","opcoes":["San Juan Pablo II","Benedicto XVI","Pío XII","Francisco"],"correta":0,"explicacao":"Fue canonizada el 30 de abril de 2000, la primera santa del nuevo milenio."},
+          {"tipo":"vf","enunciado":"La fiesta de Santa Faustina es el 5 de octubre.","correta":true,"explicacao":"Es el día en que murió."},
+          {"tipo":"multipla","enunciado":"¿Por qué llaman a Faustina apóstol de la Divina Misericordia?","opcoes":["Porque difundió el mensaje de la misericordia de Jesús","Porque fue papa","Porque fundó un país","Porque escribió la Biblia"],"correta":0,"explicacao":"Su mensaje llegó al mundo entero."}
+        ],
+      },
+    },
+  },
+  'sao-sebastiao': {
+    santo: "San Sebastián",
+    titulo: "San Sebastián",
+    descricao: "El soldado de Cristo que no temió las flechas.",
+    medalha: "Fortaleza",
+    medalhaCompleta: "Medalla de la Fortaleza",
+    virtude: "Fortaleza",
+    licoes: {
+      'sebastiao-1': {
+        titulo: "Soldado de Roma",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"¿Cuál era la profesión de San Sebastián?","opcoes":["Soldado del ejército romano","Pescador","Comerciante","Sacerdote"],"correta":0,"explicacao":"Según la tradición, era oficial de la guardia del emperador."},
+          {"tipo":"vf","enunciado":"Sebastián vivió en la época en que los cristianos eran perseguidos por el Imperio romano.","correta":true,"explicacao":"Vivió en el siglo III, en tiempos del emperador Diocleciano."},
+          {"tipo":"multipla","enunciado":"¿Qué emperador perseguía a los cristianos en tiempos de San Sebastián?","opcoes":["Diocleciano","Constantino","Augusto","Carlomagno"],"correta":0,"explicacao":"Años después, Constantino dio libertad a los cristianos."},
+          {"tipo":"vf","enunciado":"Sebastián usaba su puesto en el ejército para animar a los cristianos presos.","correta":true,"explicacao":"Visitaba a los presos y los animaba a no negar la fe."},
+          {"tipo":"multipla","enunciado":"Según la tradición, ¿dónde nació Sebastián?","opcoes":["En Narbona, en la Galia","En Jerusalén","En Atenas","En Lisboa"],"correta":0,"explicacao":"Narbona está en el sur de la actual Francia. Se crió en Milán."},
+          {"tipo":"vf","enunciado":"Sebastián dejó el ejército en cuanto se hizo cristiano.","correta":false,"explicacao":"Siguió siendo soldado y aprovechaba su cargo para ayudar a los cristianos."},
+          {"tipo":"multipla","enunciado":"Según la tradición, ¿qué milagro hizo Sebastián con Zoé, esposa de un funcionario?","opcoes":["Volvió a hablar","Aprendió a volar","Se hizo rica","Se hizo reina"],"correta":0,"explicacao":"Zoé no hablaba desde hacía años y volvió a hablar cuando Sebastián hizo la señal de la cruz sobre ella."},
+          {"tipo":"ordenar","enunciado":"Ordena la historia de Sebastián:","blocos":["Nació en la Galia","Se hizo soldado en Roma","Animó a los cristianos presos","Fue denunciado al emperador"],"explicacao":"Cuando descubrieron que era cristiano, lo llevaron ante el emperador."},
+          {"tipo":"vf","enunciado":"Muchas personas se convirtieron por el testimonio de Sebastián.","correta":true,"explicacao":"Su valentía llevó a otros a creer en Jesús."},
+          {"tipo":"multipla","enunciado":"¿En qué ciudad sirvió Sebastián como soldado?","opcoes":["Roma","Atenas","Cartago","Alejandría"],"correta":0,"explicacao":"Roma era la capital del imperio."}
+        ],
+      },
+      'sebastiao-2': {
+        titulo: "Las flechas",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"¿Qué mandó hacer el emperador al descubrir que Sebastián era cristiano?","opcoes":["Atarlo y dispararle flechas","Desterrarlo a una isla","Hacerlo general","Mandarlo a casa"],"correta":0,"explicacao":"Los arqueros lo dejaron lleno de flechas, creyendo que estaba muerto."},
+          {"tipo":"vf","enunciado":"Según la tradición, Sebastián sobrevivió a las flechas.","correta":true,"explicacao":"Los soldados lo dieron por muerto, pero seguía vivo."},
+          {"tipo":"multipla","enunciado":"¿Quién cuidó de Sebastián después de las flechas?","opcoes":["Santa Irene","Santa Elena","Santa Mónica","Santa Clara"],"correta":0,"explicacao":"Irene, una viuda cristiana, fue a buscar el cuerpo para sepultarlo y lo encontró vivo."},
+          {"tipo":"vf","enunciado":"Una vez curado, Sebastián huyó de Roma para esconderse.","correta":false,"explicacao":"Volvió y fue a hablar con el emperador, defendiendo a los cristianos."},
+          {"tipo":"multipla","enunciado":"¿Cómo murió finalmente Sebastián?","opcoes":["Golpeado con palos","Ahogado en el mar","De viejo","En un incendio"],"correta":0,"explicacao":"El emperador mandó matarlo a palos."},
+          {"tipo":"vf","enunciado":"A San Sebastián lo llaman dos veces mártir.","correta":true,"explicacao":"Primero sobrevivió a las flechas; después dio la vida por la fe."},
+          {"tipo":"multipla","enunciado":"¿Cómo suele aparecer San Sebastián en las imágenes?","opcoes":["Joven, atado a un árbol y herido por flechas","Anciano, con un libro","Montado en un caballo blanco","Con una llave en la mano"],"correta":0,"explicacao":"Las otras descripciones recuerdan a otros santos, como San Jorge y San Pedro."},
+          {"tipo":"ordenar","enunciado":"Ordena el martirio de Sebastián:","blocos":["Fue alcanzado por flechas","Lo cuidó Irene","Volvió a hablar con el emperador","Dio la vida por la fe"],"explicacao":"Ni las flechas apagaron su valentía."},
+          {"tipo":"vf","enunciado":"San Sebastián fue sepultado en las catacumbas de la Vía Apia, en Roma.","correta":true,"explicacao":"Allí está hoy la Basílica de San Sebastián."},
+          {"tipo":"multipla","enunciado":"¿Qué recuerdan las flechas en la imagen de San Sebastián?","opcoes":["El sufrimiento que aceptó por Cristo","Un deporte","Una cacería","Una guerra que ganó"],"correta":0,"explicacao":"Prefirió sufrir antes que negar su fe."}
+        ],
+      },
+      'sebastiao-3': {
+        titulo: "Patrono de Río de Janeiro",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"¿Qué día se celebra San Sebastián?","opcoes":["20 de enero","13 de junio","24 de junio","29 de junio"],"correta":0,"explicacao":"Las otras fechas son de San Antonio, San Juan y San Pedro."},
+          {"tipo":"vf","enunciado":"San Sebastián es el patrono de la ciudad de Río de Janeiro.","correta":true,"explicacao":"El nombre completo de la ciudad es São Sebastião do Rio de Janeiro."},
+          {"tipo":"multipla","enunciado":"¿Quién fundó la ciudad de São Sebastião do Rio de Janeiro en 1565?","opcoes":["Estácio de Sá","Pedro Álvares Cabral","Tiradentes","Don Pedro I"],"correta":0,"explicacao":"La ciudad fue fundada el 1 de marzo de 1565."},
+          {"tipo":"vf","enunciado":"El nombre de la ciudad también homenajeaba al rey de Portugal de la época, don Sebastián.","correta":true,"explicacao":"El santo y el rey tenían el mismo nombre."},
+          {"tipo":"multipla","enunciado":"¿De quién es patrono San Sebastián?","opcoes":["De los soldados y atletas","De los panaderos","De los marineros","De los músicos"],"correta":0,"explicacao":"Su fuerza y valentía inspiran a soldados y atletas."},
+          {"tipo":"vf","enunciado":"Los antiguos cristianos rezaban a San Sebastián pidiendo protección contra la peste.","correta":true,"explicacao":"Se le invoca contra las epidemias y las enfermedades contagiosas."},
+          {"tipo":"multipla","enunciado":"Según la tradición, ¿en qué batalla se habría aparecido San Sebastián para ayudar a los portugueses en Río?","opcoes":["Uruçumirim","Guararapes","Riachuelo","Tuiuti"],"correta":0,"explicacao":"La batalla fue el 20 de enero de 1567, justo el día del santo."},
+          {"tipo":"ordenar","enunciado":"Ordena la historia:","blocos":["Sebastián muere mártir en Roma","Estácio de Sá funda Río de Janeiro","La ciudad celebra a su patrono el 20 de enero"],"explicacao":"Más de mil años separan el martirio y la fundación de Río."},
+          {"tipo":"vf","enunciado":"San Sebastián solo es venerado en Brasil.","correta":false,"explicacao":"Es venerado en el mundo entero desde los primeros siglos."},
+          {"tipo":"multipla","enunciado":"¿Qué virtud nos enseña más San Sebastián?","opcoes":["Fortaleza","Vanidad","Pereza","Avaricia"],"correta":0,"explicacao":"La fortaleza es el valor de hacer el bien incluso en las dificultades."}
+        ],
+      },
+    },
+  },
+  'santa-monica': {
+    santo: "Santa Mónica",
+    titulo: "Santa Mónica",
+    descricao: "La madre que rezó con lágrimas hasta que su hijo volvió a Dios.",
+    medalha: "Paciencia",
+    medalhaCompleta: "Medalla de la Paciencia",
+    virtude: "Paciencia",
+    licoes: {
+      'monica-1': {
+        titulo: "La niña de Tagaste",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"¿En qué ciudad nació Santa Mónica?","opcoes":["Tagaste, en el norte de África","Roma","Jerusalén","Milán"],"correta":0,"explicacao":"Nació hacia el año 331, en la actual Argelia."},
+          {"tipo":"vf","enunciado":"Santa Mónica nació en una familia cristiana.","correta":true,"explicacao":"También la educó en la fe una criada anciana y muy sabia."},
+          {"tipo":"multipla","enunciado":"¿Quién cuenta la historia de Santa Mónica en el libro Confesiones?","opcoes":["Su hijo, San Agustín","San Ambrosio","San Jerónimo","San Patricio"],"correta":0,"explicacao":"Agustín escribió sobre su madre con mucho amor y gratitud."},
+          {"tipo":"vf","enunciado":"De niña, Mónica bebía a escondidas pequeños sorbos de vino en la bodega.","correta":true,"explicacao":"Una criada la llamó borrachina, y ella abandonó la costumbre."},
+          {"tipo":"multipla","enunciado":"¿En qué continente está Tagaste, la ciudad de Mónica?","opcoes":["África","Europa","Asia","América"],"correta":0,"explicacao":"En aquel tiempo, el norte de África formaba parte del Imperio romano."},
+          {"tipo":"vf","enunciado":"Mónica se casó con un hombre cristiano y muy tranquilo.","correta":false,"explicacao":"Patricio no era cristiano y tenía un genio muy fuerte."},
+          {"tipo":"multipla","enunciado":"¿Cómo se llamaba el marido de Santa Mónica?","opcoes":["Patricio","Ambrosio","Paulino","Valerio"],"correta":0,"explicacao":"Patricio era un funcionario pagano de Tagaste."},
+          {"tipo":"ordenar","enunciado":"Ordena la vida de Mónica:","blocos":["Nació en Tagaste","Fue educada en la fe","Se casó con Patricio","Tuvo tres hijos"],"explicacao":"Una vida sencilla, llena de fe y de oración."},
+          {"tipo":"vf","enunciado":"Mónica tuvo tres hijos: Agustín, Navigio y Perpetua.","correta":true,"explicacao":"Agustín era el mayor."},
+          {"tipo":"multipla","enunciado":"¿Cuál de los hijos de Mónica llegó a ser un gran santo y Doctor de la Iglesia?","opcoes":["Agustín","Navigio","Perpetua","Patricio"],"correta":0,"explicacao":"San Agustín es uno de los mayores pensadores de la historia de la Iglesia."}
+        ],
+      },
+      'monica-2': {
+        titulo: "Esposa paciente",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"¿Cómo era el carácter de Patricio, el marido de Mónica?","opcoes":["Explosivo y difícil","Tranquilo y piadoso","Tímido y callado","Alegre y generoso"],"correta":0,"explicacao":"Aun así, respetaba a su esposa."},
+          {"tipo":"vf","enunciado":"Mónica no le contestaba a su marido cuando estaba enojado.","correta":true,"explicacao":"Esperaba a que se calmara para hablar con mansedumbre."},
+          {"tipo":"multipla","enunciado":"¿Qué consejo daba Mónica a otras esposas?","opcoes":["No contestar en el momento de la ira y hablar a su debido tiempo","Pelear también","Contárselo a todo el vecindario","No volver a hablar con el marido"],"correta":0,"explicacao":"Enseñaba a vencer con bondad, y no con peleas."},
+          {"tipo":"vf","enunciado":"La suegra de Mónica, que al principio no la quería, fue conquistada por su bondad.","correta":true,"explicacao":"Con el tiempo, las dos vivieron en paz."},
+          {"tipo":"multipla","enunciado":"¿Qué le pasó a Patricio al final de su vida?","opcoes":["Se convirtió y fue bautizado","Huyó a Roma","Se hizo obispo","Se hizo soldado"],"correta":0,"explicacao":"Fue bautizado poco antes de morir, hacia el año 371."},
+          {"tipo":"vf","enunciado":"Mónica dejó de rezar por su marido porque tardaba en cambiar.","correta":false,"explicacao":"Rezó con perseverancia hasta ver su conversión."},
+          {"tipo":"multipla","enunciado":"¿Qué virtud marcó el matrimonio de Santa Mónica?","opcoes":["Paciencia","Impaciencia","Vanidad","Rencor"],"correta":0,"explicacao":"Su paciencia fue una forma de amor."},
+          {"tipo":"ordenar","enunciado":"Ordena la historia del matrimonio de Mónica:","blocos":["Se casó con Patricio","Soportó con paciencia su genio","Rezó por su conversión","Patricio fue bautizado"],"explicacao":"La oración paciente de Mónica dio fruto."},
+          {"tipo":"vf","enunciado":"Santa Mónica es patrona de las madres y de las esposas.","correta":true,"explicacao":"Muchas madres le piden que rece por sus hijos."},
+          {"tipo":"multipla","enunciado":"¿Cómo ganó Mónica a su marido para Dios?","opcoes":["Con paciencia, bondad y oración","A gritos","Con amenazas","Con dinero"],"correta":0,"explicacao":"Más que con palabras, mostró la fe con su vida."}
+        ],
+      },
+      'monica-3': {
+        titulo: "El hijo de tantas lágrimas",
+        conteudo: [
+          {"tipo":"multipla","enunciado":"¿Qué hacía Mónica por su hijo que estaba lejos de Dios?","opcoes":["Rezaba y lloraba por él","Discutía con él todos los días","Se olvidaba de él","Le mandaba cartas con amenazas"],"correta":0,"explicacao":"Durante años, no dejó de rezar ni un solo día."},
+          {"tipo":"vf","enunciado":"De joven, Agustín se apartó de la fe y siguió a los maniqueos.","correta":true,"explicacao":"Mónica lloraba y rezaba por él todos los días."},
+          {"tipo":"multipla","enunciado":"¿A qué ciudad siguió Mónica a Agustín, donde él conoció a San Ambrosio?","opcoes":["Milán","Atenas","Jerusalén","Cartago"],"correta":0,"explicacao":"Ambrosio era el obispo de Milán."},
+          {"tipo":"vf","enunciado":"Agustín fue bautizado por San Ambrosio en la Pascua del año 387.","correta":true,"explicacao":"Mónica vio con sus propios ojos la respuesta a sus oraciones."},
+          {"tipo":"multipla","enunciado":"¿Dónde murió Mónica?","opcoes":["En Ostia, cerca de Roma","En Tagaste","En Jerusalén","En Cartago"],"correta":0,"explicacao":"Murió en el año 387, mientras esperaba el barco para volver a África."},
+          {"tipo":"vf","enunciado":"Antes de morir, Mónica y Agustín hablaron del Cielo junto a una ventana en Ostia.","correta":true,"explicacao":"Agustín cuenta esa conversación en las Confesiones."},
+          {"tipo":"multipla","enunciado":"¿Qué les pidió Mónica a sus hijos antes de morir?","opcoes":["Que se acordaran de ella en el altar del Señor","Que la sepultaran en Tagaste","Que construyeran una iglesia","Que vendieran la casa"],"correta":0,"explicacao":"Les dijo que no se preocuparan por el lugar donde la sepultarían."},
+          {"tipo":"ordenar","enunciado":"Ordena las palabras del obispo a Mónica:","blocos":["Es imposible","que se pierda","el hijo de tantas lágrimas."],"explicacao":"Mónica recibió esas palabras como venidas del Cielo."},
+          {"tipo":"vf","enunciado":"La fiesta de Santa Mónica es el mismo día que la de San Agustín.","correta":false,"explicacao":"Mónica se celebra el 27 de agosto, y Agustín al día siguiente, el 28."},
+          {"tipo":"multipla","enunciado":"¿Dónde están hoy las reliquias de Santa Mónica?","opcoes":["En Roma, en la Basílica de San Agustín","En Tagaste","En Milán","En Hipona"],"correta":0,"explicacao":"Fueron trasladadas de Ostia a Roma."}
+        ],
+      },
+    },
+  },
 });
