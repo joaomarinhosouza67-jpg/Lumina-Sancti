@@ -102,10 +102,13 @@ function avisoDoCenaculo(texto) {
   if (typeof mostrarAvisoTrilhas === 'function') mostrarAvisoTrilhas(texto);
 }
 
+let ultimaConferenciaDeSuspensao = 0;
+
 async function chamarCenaculo(nome, argumentos) {
   const { data, error } = await supabaseCliente.rpc(nome, argumentos || {});
   if (error) {
-    if (String(error.message || '').includes('account_suspended')) {
+    if (String(error.message || '').includes('account_suspended') && Date.now() - ultimaConferenciaDeSuspensao > 5000) {
+      ultimaConferenciaDeSuspensao = Date.now();
       atualizarSituacaoDaConta();
     }
     throw error;
@@ -198,6 +201,14 @@ async function atualizarSituacaoDaConta() {
     suspensaoAtual = suspensao && !suspensao.error && suspensao.data ? suspensao.data : null;
     contaEhDaEquipe = !!(equipe && !equipe.error && equipe.data === true);
   } catch (e) {
+  }
+  if (suspensaoAtual) {
+    if (typeof pedidosRecebidos !== 'undefined') pedidosRecebidos = [];
+    if (typeof atualizarSelosDePedidos === 'function') atualizarSelosDePedidos();
+    return;
+  }
+  if (perfilAdultoAtivo() && typeof carregarPedidosRecebidos === 'function') {
+    carregarPedidosRecebidos().then(() => { if (typeof atualizarSelosDePedidos === 'function') atualizarSelosDePedidos(); });
   }
 }
 
@@ -337,6 +348,7 @@ function mostrarListaDeCenaculos() {
     mudarDeView('view-cenaculos');
   }
   carregarListaDeCenaculos();
+  if (typeof mostrarPedidosNosCenaculos === 'function') mostrarPedidosNosCenaculos();
 }
 
 function aoMudarTamanhoDaTela() {

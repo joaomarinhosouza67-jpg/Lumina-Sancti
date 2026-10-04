@@ -1062,18 +1062,62 @@ function marcarAbaDoRanking() {
   document.querySelectorAll('.ranking-periodo').forEach((b) => b.classList.toggle('active', b.dataset.periodo === periodoDoRanking));
 }
 
-function linhaDoRanking(item) {
+function estrelaDaFeNoRanking() {
+  return typeof estrelaDaFe === 'function' ? estrelaDaFe() : icone('estrela');
+}
+
+function atributosDoRanking(item) {
   const clicavel = !!(item.membroId || item.publicoId);
-  const tag = clicavel ? 'button' : 'div';
   const dados = item.membroId ? ` data-membro="${item.membroId}"` : (item.publicoId ? ` data-publico="${escaparTexto(item.publicoId)}"` : '');
   const perfil = item.perfilId ? ` data-perfil="${escaparTexto(item.perfilId)}"` : '';
+  return { tag: clicavel ? 'button' : 'div', atributos: `${perfil}${clicavel ? `${dados} type="button"` : ''}` };
+}
+
+function linhaDoRanking(item, ordem) {
+  const { tag, atributos } = atributosDoRanking(item);
   return `
-    <${tag} class="ranking-linha${item.destaque ? ' destaque' : ''}"${perfil}${clicavel ? `${dados} type="button"` : ''}>
+    <${tag} class="ranking-linha${item.destaque ? ' destaque' : ''}"${atributos} style="--i:${ordem || 0}">
+      <span class="ranking-posicao">${item.posicao}</span>
       ${desenharAvatar(item.avatar, item.fotoUrl, 'pequeno')}
       <span class="ranking-nome">${escaparTexto(item.nome)}${item.destaque ? ' <small>você</small>' : ''}</span>
-      <span class="ranking-numero ranking-fe">${icone('estrela')}${item.fe}</span>
       ${typeof item.ofensiva === 'number' ? `<span class="ranking-numero ranking-ofensiva">${icone('chama')}${item.ofensiva}</span>` : ''}
+      <span class="ranking-numero ranking-fe">${estrelaDaFeNoRanking()}${item.fe}</span>
     </${tag}>`;
+}
+
+function lugarNoPodio(item) {
+  const { tag, atributos } = atributosDoRanking(item);
+  const lugar = item.lugar;
+  const coroa = `<svg class="podio-coroa-svg" viewBox="0 0 48 32" aria-hidden="true"><path d="M4 28L2 8L14 17L24 3L34 17L46 8L44 28Z" fill="currentColor"/><circle cx="2" cy="8" r="3" fill="currentColor"/><circle cx="24" cy="3" r="3" fill="currentColor"/><circle cx="46" cy="8" r="3" fill="currentColor"/><rect x="4" y="25" width="40" height="5" rx="1.5" fill="currentColor" opacity=".8"/></svg>`;
+  return `
+    <${tag} class="podio-lugar podio-${lugar}${item.destaque ? ' destaque' : ''}"${atributos}>
+      <span class="podio-topo">${lugar === 1 ? coroa : `<span class="podio-medalha">${lugar}</span>`}</span>
+      <span class="podio-foto">${desenharAvatar(item.avatar, item.fotoUrl, lugar === 1 ? 'grande' : 'medio')}</span>
+      <strong class="podio-nome">${escaparTexto(item.nome)}</strong>
+      ${item.destaque ? '<small class="podio-voce">você</small>' : ''}
+      <span class="podio-fe">${estrelaDaFeNoRanking()}${item.fe}</span>
+      <span class="podio-degrau"><b>${item.posicao}</b></span>
+    </${tag}>`;
+}
+
+function htmlDoRanking(itens, vazio) {
+  if (!itens.length) return `<p class="painel-vazio">${vazio}</p>`;
+  itens.forEach((item, i) => { item.lugar = i + 1; });
+  const podio = itens.slice(0, Math.min(3, itens.length));
+  const resto = itens.slice(podio.length);
+  const ordemNoPodio = [podio[1], podio[0], podio[2]].filter(Boolean);
+  return `
+    <div class="ranking-podio com-${podio.length}">${ordemNoPodio.map(lugarNoPodio).join('')}</div>
+    ${resto.length ? `<div class="ranking-resto">${resto.map((item, i) => linhaDoRanking(item, i)).join('')}</div>` : ''}`;
+}
+
+function ligarCliquesDoRanking(lista) {
+  lista.querySelectorAll('[data-publico]').forEach((linha) => {
+    linha.addEventListener('click', () => { if (typeof abrirPerfilPublico === 'function') abrirPerfilPublico(linha.dataset.publico); });
+  });
+  lista.querySelectorAll('[data-membro]').forEach((linha) => {
+    linha.addEventListener('click', () => abrirPainelDoPerfil(linha.dataset.membro));
+  });
 }
 
 async function renderizarRanking() {
@@ -1087,14 +1131,16 @@ async function renderizarRanking() {
       });
       if (error) throw error;
       const podeAbrirPerfil = typeof abrirPerfilPublico === 'function';
-      const linhas = (data || []).map((l) => linhaDoRanking({
+      const fotos = typeof enderecosAssinados === 'function'
+        ? await enderecosAssinados('avatars', (data || []).filter((l) => !l.is_me).map((l) => l.avatar_path))
+        : {};
+      const itens = (data || []).map((l) => ({
         posicao: l.rank, nome: l.display_name, avatar: l.avatar_key, fe: l.faith, destaque: l.is_me,
+        fotoUrl: l.is_me ? membroAtivo.fotoUrl : (fotos[l.avatar_path] || ''),
         publicoId: podeAbrirPerfil ? l.profile_id : null, perfilId: l.profile_id,
-      })).join('');
-      lista.innerHTML = linhas || '<p class="painel-vazio">Ainda não há ninguém no ranking global.</p>';
-      lista.querySelectorAll('.ranking-linha[data-publico]').forEach((linha) => {
-        linha.addEventListener('click', () => abrirPerfilPublico(linha.dataset.publico));
-      });
+      }));
+      lista.innerHTML = htmlDoRanking(itens, 'Ainda não há ninguém no ranking global.');
+      ligarCliquesDoRanking(lista);
       if (typeof enfeitarLinhasDoRanking === 'function') enfeitarLinhasDoRanking(lista, false);
     } else {
       const [{ data, error }] = await Promise.all([
@@ -1102,16 +1148,15 @@ async function renderizarRanking() {
         carregarMembrosDaConta(),
       ]);
       if (error) throw error;
-      lista.innerHTML = (data || []).map((l) => {
+      const itens = (data || []).map((l) => {
         const membro = membrosDaConta.find((m) => m.id === l.profile_id);
-        return linhaDoRanking({
+        return {
           posicao: l.rank, nome: l.name, avatar: l.avatar_key, fotoUrl: membro && membro.fotoUrl, fe: l.faith,
           ofensiva: membro ? membro.ofensiva : undefined, destaque: l.is_me, membroId: l.profile_id, perfilId: l.profile_id,
-        });
-      }).join('');
-      lista.querySelectorAll('.ranking-linha').forEach((linha) => {
-        if (linha.dataset.membro) linha.addEventListener('click', () => abrirPainelDoPerfil(linha.dataset.membro));
+        };
       });
+      lista.innerHTML = htmlDoRanking(itens, 'Ainda não há ninguém da família no ranking.');
+      ligarCliquesDoRanking(lista);
       if (typeof enfeitarLinhasDoRanking === 'function') enfeitarLinhasDoRanking(lista, true);
     }
   } catch (e) {

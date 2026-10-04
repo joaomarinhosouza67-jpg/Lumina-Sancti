@@ -572,6 +572,148 @@ function convidarParaPostar(m) {
   });
 }
 
+function mensagemDoPedido(erro) {
+  const texto = String((erro && erro.message) || erro || '');
+  if (texto.includes('muitos_pedidos')) return 'Você já fez muitos pedidos hoje. Tente de novo amanhã.';
+  if (texto.includes('pedido_recusado_recente')) return 'Essa pessoa recusou o seu pedido há pouco tempo. Tente de novo daqui a alguns dias.';
+  if (texto.includes('pedido_nao_encontrado')) return 'Esse pedido não existe mais.';
+  return mensagemDaComunidade(erro);
+}
+
+async function preencherAcoesDeConversa(lugar, alvoId, resumo, aoMudar) {
+  const perfil = perfilAdultoAtivo();
+  if (!lugar || !perfil || !resumo || resumo.eu || resumo.contato || resumo.familia || resumo.bloqueado) {
+    if (lugar) lugar.innerHTML = '';
+    return;
+  }
+  const nome = escaparTexto(lugar.dataset.nome || 'essa pessoa');
+  if (resumo.pedido_recebido) {
+    lugar.innerHTML = `
+      <p class="pedido-aviso">${nome} pediu para conversar com você.</p>
+      <div class="pedido-botoes">
+        <button type="button" class="perfil-social-seguir" data-pedido="aceitar">${iconeDaComunidade('check')}Aceitar</button>
+        <button type="button" class="pedido-recusar" data-pedido="recusar">Recusar</button>
+      </div>`;
+  } else if (resumo.pedido_enviado) {
+    lugar.innerHTML = `
+      <p class="pedido-aviso">Pedido enviado. Quando ${nome} aceitar, a conversa aparece nos seus Cenáculos.</p>
+      <div class="pedido-botoes"><button type="button" class="pedido-recusar" data-pedido="cancelar">Cancelar pedido</button></div>`;
+  } else {
+    lugar.innerHTML = `
+      <div class="pedido-botoes"><button type="button" class="perfil-acao pedido-pedir" data-pedido="pedir">${iconeDaComunidade('conversa')}<span>Pedir para conversar</span></button></div>
+      <p class="pedido-explica">${nome} recebe o seu pedido e escolhe se aceita. Se vocês já se conhecem, também dá para usar o código pessoal.</p>`;
+  }
+  lugar.querySelectorAll('[data-pedido]').forEach((botao) => {
+    botao.addEventListener('click', async () => {
+      const acao = botao.dataset.pedido;
+      botao.disabled = true;
+      try {
+        if (acao === 'pedir') {
+          if (typeof garantirAceite === 'function' && !(await garantirAceite())) { botao.disabled = false; return; }
+          const r = await chamarComunidade('pedir_conversa', { _pid: perfil.id, _alvo: alvoId });
+          avisoDaComunidade(r && r.estado === 'contato' ? 'Vocês agora podem conversar!' : 'Pedido enviado.');
+        } else if (acao === 'cancelar') {
+          await chamarComunidade('cancelar_pedido_conversa', { _pid: perfil.id, _alvo: alvoId });
+          avisoDaComunidade('Pedido cancelado.');
+        } else {
+          await chamarComunidade('responder_pedido_conversa', { _pid: perfil.id, _id: resumo.pedido_recebido, _aceitar: acao === 'aceitar' });
+          avisoDaComunidade(acao === 'aceitar' ? 'Pedido aceito. Agora vocês podem conversar!' : 'Pedido recusado.');
+          atualizarSelosDePedidos();
+        }
+        if (aoMudar) aoMudar();
+      } catch (erro) {
+        botao.disabled = false;
+        avisoDaComunidade(mensagemDoPedido(erro));
+      }
+    });
+  });
+}
+
+let pedidosRecebidos = [];
+
+async function carregarPedidosRecebidos() {
+  const perfil = perfilAdultoAtivo();
+  if (!perfil || typeof contaLogada !== 'function' || !contaLogada()) {
+    pedidosRecebidos = [];
+    return pedidosRecebidos;
+  }
+  try {
+    pedidosRecebidos = (await chamarComunidade('pedidos_recebidos', { _pid: perfil.id })) || [];
+  } catch (e) {
+    pedidosRecebidos = [];
+  }
+  return pedidosRecebidos;
+}
+
+function atualizarSelosDePedidos() {
+  const total = pedidosRecebidos.length;
+  document.querySelectorAll('#barra-app [data-destino="cenaculos"], #nav-cenaculos').forEach((botao) => {
+    let selo = botao.querySelector('.selo-de-pedidos');
+    if (!total) {
+      if (selo) selo.remove();
+      return;
+    }
+    if (!selo) {
+      selo = document.createElement('span');
+      selo.className = 'selo-de-pedidos';
+      botao.appendChild(selo);
+    }
+    selo.textContent = total > 9 ? '9+' : String(total);
+  });
+}
+
+async function mostrarPedidosNosCenaculos() {
+  const lugar = document.getElementById('cenaculos-pedidos');
+  await carregarPedidosRecebidos();
+  atualizarSelosDePedidos();
+  if (!lugar) return;
+  if (!pedidosRecebidos.length) {
+    lugar.innerHTML = '';
+    lugar.hidden = true;
+    return;
+  }
+  await carregarFotosDosAutores(pedidosRecebidos.map((autor) => ({ autor })));
+  lugar.hidden = false;
+  lugar.innerHTML = `
+    <p class="pedidos-titulo">${iconeDaComunidade('seguir')}Pedidos para conversar <small>${pedidosRecebidos.length}</small></p>
+    ${pedidosRecebidos.map((p) => `
+      <div class="pedido-linha" data-pedido-id="${escaparTexto(p.pedido_id)}">
+        <button type="button" class="marco-autor" data-perfil="${escaparTexto(p.perfil_id)}">
+          ${avatarDoAutor(p)}
+          <span class="marco-autor-textos"><strong>${escaparTexto(p.nome)}</strong><small>quer conversar com você · ${haQuantoTempo(p.criado_em)}</small></span>
+        </button>
+        <span class="pedido-botoes">
+          <button type="button" class="perfil-social-seguir" data-resposta="sim">Aceitar</button>
+          <button type="button" class="pedido-recusar" data-resposta="nao">Recusar</button>
+        </span>
+      </div>`).join('')}`;
+  colocarMoldurasDaComunidade(lugar);
+  lugar.querySelectorAll('.marco-autor').forEach((botao) => {
+    botao.addEventListener('click', () => { if (typeof abrirPerfilPublico === 'function') abrirPerfilPublico(botao.dataset.perfil); });
+  });
+  lugar.querySelectorAll('[data-resposta]').forEach((botao) => {
+    botao.addEventListener('click', async () => {
+      const linha = botao.closest('.pedido-linha');
+      const perfil = perfilAdultoAtivo();
+      const aceitar = botao.dataset.resposta === 'sim';
+      linha.querySelectorAll('button').forEach((b) => { b.disabled = true; });
+      try {
+        if (aceitar && typeof garantirAceite === 'function' && !(await garantirAceite())) {
+          linha.querySelectorAll('button').forEach((b) => { b.disabled = false; });
+          return;
+        }
+        await chamarComunidade('responder_pedido_conversa', { _pid: perfil.id, _id: Number(linha.dataset.pedidoId), _aceitar: aceitar });
+        avisoDaComunidade(aceitar ? 'Pedido aceito. A conversa já está na sua lista.' : 'Pedido recusado.');
+        await mostrarPedidosNosCenaculos();
+        if (aceitar && typeof carregarListaDeCenaculos === 'function') carregarListaDeCenaculos();
+      } catch (erro) {
+        linha.querySelectorAll('button').forEach((b) => { b.disabled = false; });
+        avisoDaComunidade(mensagemDoPedido(erro));
+      }
+    });
+  });
+}
+
 function iniciarComunidade() {
   document.querySelectorAll('.comunidade-aba').forEach((aba) => {
     aba.addEventListener('click', () => trocarAbaDaComunidade(aba.dataset.aba));

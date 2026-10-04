@@ -434,7 +434,7 @@ function desdeQuando(iso) {
 function cartaoDeEstatistica(icone, cor, valor, rotulo, detalhe) {
   return `
     <div class="perfil-estatistica" style="--cor-da-estatistica:${cor}">
-      <span class="perfil-estatistica-icone">${iconeDoCenaculo(icone)}</span>
+      <span class="perfil-estatistica-icone">${icone === 'estrela' && typeof estrelaDaFe === 'function' ? estrelaDaFe() : iconeDoCenaculo(icone)}</span>
       <span class="perfil-estatistica-textos">
         <strong>${valor}</strong>
         <small>${rotulo}</small>
@@ -486,7 +486,7 @@ function acoesDoPerfil(dados) {
         <button type="button" class="perfil-acao" id="perfil-publico-audio">${iconeDoCenaculo('microfone')}<span>Áudio</span></button>
       </div>`;
   }
-  return `<p class="cenaculo-explica perfil-publico-nota">Para conversar com ${nome}, peça o código pessoal a essa pessoa, ou escaneie o QR Code dela em "Nova conversa".</p>`;
+  return `<div class="perfil-pedido" id="perfil-publico-pedido" data-nome="${nome}"></div>`;
 }
 
 function rodapeDoPerfil(dados) {
@@ -551,7 +551,14 @@ async function abrirPerfilPublico(idDoPerfil) {
         ${rodapeDoPerfil(dados)}
       </div>`;
     if (typeof aplicarEnfeitesNoCartao === 'function') aplicarEnfeitesNoCartao(corpo.querySelector('.perfil-publico'), dados.enfeites);
-    if (typeof preencherResumoSocial === 'function') preencherResumoSocial(corpo.querySelector('#perfil-publico-social'), dados.perfil_id);
+    if (typeof preencherResumoSocial === 'function') {
+      preencherResumoSocial(corpo.querySelector('#perfil-publico-social'), dados.perfil_id).then((resumo) => {
+        const lugarDoPedido = corpo.querySelector('#perfil-publico-pedido');
+        if (lugarDoPedido && typeof preencherAcoesDeConversa === 'function') {
+          preencherAcoesDeConversa(lugarDoPedido, dados.perfil_id, resumo, () => abrirPerfilPublico(dados.perfil_id));
+        }
+      });
+    }
     const conversar = corpo.querySelector('#perfil-publico-conversar');
     const audio = corpo.querySelector('#perfil-publico-audio');
     [[conversar, false], [audio, true]].forEach(([botao, gravar]) => {

@@ -513,6 +513,7 @@
           <li>Um código do aparelho, usado para permitir uma conta por aparelho.</li>
           <li>Quantas perguntas você fez à Lumina, nossa assistente, para controlar o limite diário. O texto das perguntas não fica guardado conosco.</li>
           <li>Se você usar a Comunidade: quem você segue, quem segue você, os marcos que postou e as reações que deu.</li>
+          <li>Os pedidos para conversar que você enviou ou recebeu, com a data e a resposta (aceito ou recusado).</li>
           <li>Se você ligar os lembretes: o endereço de notificação do seu aparelho, criado pelo navegador, e quais lembretes você quer receber.</li>
           <li>Se você usar os Cenáculos: os grupos de que participa, as conversas com amigos, as mensagens, GIFs, figurinhas e áudios que envia, a foto e o fundo dos grupos, os encontros marcados, o seu código pessoal, as pessoas que você adicionou e as denúncias e bloqueios que fizer.</li>
         </ul>
@@ -520,12 +521,13 @@
         <h3>Cenáculos (grupos)</h3>
         <p>Os Cenáculos são só para adultos, e para entrar é preciso aceitar as Regras dos Cenáculos. As conversas não são secretas: a equipe do Lumina Sancti pode ler as mensagens e ouvir os áudios para proteger os participantes e investigar denúncias. Uma mensagem apagada some para o grupo, mas a equipe guarda uma cópia para poder investigar denúncias. Os áudios ficam guardados por até 90 dias. O microfone só é usado enquanto você grava um áudio, e a câmera só enquanto você escaneia o QR Code de alguém, sempre com a sua permissão. A imagem da câmera é lida no seu próprio aparelho: não é gravada nem enviada para ninguém. Se você usar uma foto sua como papel de parede, ela fica guardada na sua conta e só você a vê. Nos cenáculos, os outros participantes veem o nome e a foto do seu perfil.</p>
         <p>Cada perfil de adulto tem um código pessoal, com QR Code. Quem recebe o seu código pode adicionar você e conversar com você; se ele cair em mãos erradas, gere um código novo, e o antigo para de funcionar. Você também pode bloquear e denunciar.</p>
-        <p>Quem conversa com você, participa de um cenáculo com você ou é da sua família vê o seu perfil com nome, foto, Fé, sequência de dias e lições concluídas. No ranking geral, os outros adultos veem só o seu primeiro nome, o seu avatar e esses números, sem a sua foto. Perfis infantis não aparecem para ninguém de fora da família.</p>
+        <p>Outro adulto que encontrar você no ranking geral ou na Comunidade pode tocar em "Pedir para conversar". Ninguém consegue conversar com você sem que você aceite: o pedido aparece em Cenáculos, e você escolhe aceitar ou recusar. Se você recusar, a mesma pessoa só pode pedir de novo depois de 7 dias. Cada pessoa pode enviar no máximo 20 pedidos por dia, e quem você bloquear não consegue enviar pedidos para você.</p>
+        <p>Quem conversa com você, participa de um cenáculo com você ou é da sua família vê o seu perfil com nome, foto, Fé, sequência de dias e lições concluídas. No ranking geral e na Comunidade, os outros adultos veem o seu primeiro nome, a sua foto ou avatar e esses números. Perfis infantis não aparecem para ninguém de fora da família.</p>
         <p>Se as regras forem desrespeitadas, a equipe pode apagar mensagens, enviar uma advertência e suspender a conta, por um tempo ou por tempo indeterminado. Nada da conta suspensa é apagado.</p>
         <p>As reuniões por vídeo acontecem no Google Meet, fora do Lumina Sancti. Não gravamos nem guardamos nada dessas chamadas, e o uso do Meet segue as regras do Google.</p>
 
         <h3>Comunidade</h3>
-        <p>Na Comunidade, os perfis de adulto podem seguir uns aos outros e compartilhar marcos das trilhas, como dias seguidos de ofensiva, missões perfeitas, Fé juntada e trilhas concluídas. Só é postado o que você escolher postar, e não existe texto livre. Guardamos quem você segue, quem segue você, os marcos que você postou e as reações (Amém e Parabéns) que você deu. Quem não é da sua família, seu contato ou do mesmo cenáculo vê só o seu primeiro nome e o seu avatar, sem a sua foto. Você pode apagar um marco postado quando quiser e deixar de seguir alguém a qualquer momento. Quando você bloqueia uma pessoa, ela deixa de seguir você e você deixa de seguir ela. Perfis infantis não participam da Comunidade.</p>
+        <p>Na Comunidade, os perfis de adulto podem seguir uns aos outros e compartilhar marcos das trilhas, como dias seguidos de ofensiva, missões perfeitas, Fé juntada e trilhas concluídas. Só é postado o que você escolher postar, e não existe texto livre. Guardamos quem você segue, quem segue você, os marcos que você postou e as reações (Amém e Parabéns) que você deu. Quem não é da sua família, seu contato ou do mesmo cenáculo vê só o seu primeiro nome, a sua foto ou avatar e os seus números das trilhas, e só pode conversar com você se você aceitar o pedido. Você pode apagar um marco postado quando quiser e deixar de seguir alguém a qualquer momento. Quando você bloqueia uma pessoa, ela deixa de seguir você e você deixa de seguir ela. Perfis infantis não participam da Comunidade.</p>
 
         <h3>Lembretes</h3>
         <p>Os lembretes são opcionais e só chegam se você ligar e permitir as notificações no aparelho: o da Hora da Misericórdia, às 15h, e o da ofensiva, às 20h, só nos dias em que você ainda não fez a missão. O texto do lembrete pode trazer o seu primeiro nome e quantos dias seguidos você tem. Você desliga quando quiser em Meu perfil, na opção "Notificações", ou nas configurações do aparelho. Os avisos passam pelo serviço de notificações do próprio navegador ou do celular (Google, Apple ou Mozilla).</p>
@@ -879,6 +881,7 @@
             <button type="button" class="cenaculos-filtro" data-filtro="conversas" role="tab">Conversas</button>
             <button type="button" class="cenaculos-filtro" data-filtro="grupos" role="tab">Cenáculos</button>
           </div>
+          <div id="cenaculos-pedidos" class="cenaculos-pedidos" hidden></div>
           <div id="cenaculos-lista" class="cenaculos-lista"></div>
           <button type="button" class="cenaculos-fab" id="cenaculo-conversa-btn" aria-label="Nova conversa"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-conversa-mais"></use></svg></button>
         </div>

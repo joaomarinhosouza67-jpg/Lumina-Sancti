@@ -6,6 +6,10 @@ const ENFEITES = {
     { id: 'pentecostes', nome: 'Chamas de Pentecostes', texto: 'O fogo do Espírito Santo' },
     { id: 'rosas', nome: 'Rosas de Santa Teresinha', texto: 'Uma chuva de rosas' },
     { id: 'lirios', nome: 'Lírios de São José', texto: 'A pureza do guarda da Sagrada Família' },
+    { id: 'asas-de-anjo', nome: 'Asas de anjo', texto: 'O anjo da guarda abre as asas', criancas: true },
+    { id: 'sagrado-coracao', nome: 'Sagrado Coração', texto: 'O Coração de Jesus em chamas de amor' },
+    { id: 'ramos-de-oliveira', nome: 'Ramos de oliveira', texto: 'A paz que vem de Deus', criancas: true },
+    { id: 'rosacea', nome: 'Rosácea de vitral', texto: 'Os vidros coloridos da catedral' },
   ],
   efeito: [
     { id: 'estrelas-cadentes', nome: 'Estrelas cadentes', texto: 'Uma chuva de estrelas douradas', gratis: true, criancas: true },
@@ -18,6 +22,9 @@ const ENFEITES = {
     { id: 'custodia', nome: 'Custódia do Santíssimo', texto: 'A luz da adoração' },
     { id: 'estrela-de-belem', nome: 'Estrela de Belém', texto: 'A estrela que guiou os Magos', criancas: true },
     { id: 'penas-de-anjo', nome: 'Penas de anjo', texto: 'Penas brancas caindo do céu', criancas: true },
+    { id: 'arco-iris', nome: 'Arco-íris da Aliança', texto: 'A promessa de Deus a Noé', criancas: true },
+    { id: 'coracoes', nome: 'Corações subindo', texto: 'Muito amor para o céu', criancas: true },
+    { id: 'luz-do-ceu', nome: 'Luz do céu', texto: 'Raios de luz descem do alto' },
   ],
   faixa: [
     { id: 'ceu-estrelado', nome: 'Céu estrelado', texto: 'Estrelas e a lua', gratis: true, criancas: true },
@@ -25,6 +32,10 @@ const ENFEITES = {
     { id: 'pombas-passando', nome: 'Pombas passando', texto: 'Pombas brancas no céu da manhã', criancas: true },
     { id: 'velas', nome: 'Velas acesas', texto: 'A luz das velas da igreja' },
     { id: 'raios-de-gloria', nome: 'Raios de glória', texto: 'A cruz entre nuvens e luz' },
+    { id: 'catedral', nome: 'Catedral à noite', texto: 'A rosácea acesa sob as estrelas' },
+    { id: 'mar-da-galileia', nome: 'Mar da Galileia', texto: 'O barco dos apóstolos ao nascer do sol' },
+    { id: 'campo-de-lirios', nome: 'Campo de lírios', texto: 'Olhai os lírios do campo', criancas: true },
+    { id: 'chuva-de-rosas', nome: 'Chuva de rosas', texto: 'A promessa de Santa Teresinha', criancas: true },
   ],
 };
 const TIPOS_DE_ENFEITE = [
@@ -88,6 +99,129 @@ function caminhoDeEstrela(cx, cy, externo, interno, pontas) {
   }
   return `${d}Z`;
 }
+
+function penaDaAsa(comprimento, angulo, cor) {
+  const L = comprimento;
+  return `<path transform="rotate(${angulo})" d="M0 0C${n1(-L * 0.25)} ${n1(-L * 0.13)} ${n1(-L * 0.7)} ${n1(-L * 0.17)} ${n1(-L)} ${n1(-L * 0.04)}C${n1(-L * 0.72)} ${n1(L * 0.07)} ${n1(-L * 0.28)} ${n1(L * 0.1)} 0 0Z" fill="url(#${cor})" stroke="#cbd5e1" stroke-width=".5"/>`;
+}
+
+function asaDeAnjo(cor) {
+  const penas = [[30, 52], [44, 47], [33, 36], [20, 30], [6, 24], [-8, 18]].map(([L, a]) => penaDaAsa(L, a, cor)).join('');
+  const cobertas = [[22, 40], [20, 25], [16, 10], [12, -4]].map(([L, a]) => penaDaAsa(L, a, cor)).join('');
+  return `${penas}<g opacity=".95">${cobertas}</g>`;
+}
+
+const MOLDURAS_NOVAS = {
+  'asas-de-anjo'() {
+    const pena = idDoEnfeite('pena');
+    const ouro = idDoEnfeite('ouro');
+    const brilho = idDoEnfeite('brilho');
+    return `<defs>
+      <linearGradient id="${pena}" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#ffffff"/><stop offset=".65" stop-color="#f1f5f9"/><stop offset="1" stop-color="#bfdbfe"/></linearGradient>
+      <linearGradient id="${ouro}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fffbeb"/><stop offset=".5" stop-color="#f5c542"/><stop offset="1" stop-color="#b8860b"/></linearGradient>
+      ${filtroDeBrilho(brilho, 1.8)}
+    </defs>
+    <g transform="translate(22 72) scale(1.5)"><g class="enf-asa-anjo-e" filter="url(#${brilho})">${asaDeAnjo(pena)}</g></g>
+    <g transform="translate(114 72) scale(-1.5 1.5)"><g class="enf-asa-anjo-e" filter="url(#${brilho})">${asaDeAnjo(pena)}</g></g>
+    <circle cx="68" cy="68" r="52.5" fill="none" stroke="url(#${ouro})" stroke-width="3" filter="url(#${brilho})"/>
+    <g class="enf-flutua"><ellipse cx="68" cy="5" rx="25" ry="6.5" fill="none" stroke="url(#${ouro})" stroke-width="3.2" filter="url(#${brilho})"/>
+    <ellipse cx="68" cy="5" rx="25" ry="6.5" fill="none" stroke="#fffbeb" stroke-width="1" stroke-dasharray="1.5 9" class="enf-gira" style="--d:9s"/></g>
+    ${faisca(14, 30, 4, '#fffbeb', 0.2)}${faisca(122, 34, 3.6, '#fffbeb', 1.1)}${faisca(68, 126, 3.2, '#fde68a', 1.8)}`;
+  },
+
+  'sagrado-coracao'() {
+    const anel = idDoEnfeite('anel');
+    const coracao = idDoEnfeite('coracao');
+    const fogo = idDoEnfeite('fogo');
+    const brilho = idDoEnfeite('brilho');
+    const luz = idDoEnfeite('luz');
+    let raios = '';
+    for (let i = 0; i < 16; i += 1) {
+      const [x1, y1] = pontoNoCirculo(9, i * 22.5 - 4, 68, 12);
+      const [x2, y2] = pontoNoCirculo(9, i * 22.5 + 4, 68, 12);
+      const [x3, y3] = pontoNoCirculo(i % 2 ? 19 : 25, i * 22.5, 68, 12);
+      raios += `<path d="M${n1(x1)} ${n1(y1)}L${n1(x3)} ${n1(y3)}L${n1(x2)} ${n1(y2)}Z"/>`;
+    }
+    return `<defs>
+      <linearGradient id="${anel}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fde68a"/><stop offset=".35" stop-color="#dc2626"/><stop offset=".7" stop-color="#7f1d1d"/><stop offset="1" stop-color="#fbbf24"/></linearGradient>
+      <radialGradient id="${coracao}" cx="40%" cy="35%" r="75%"><stop offset="0" stop-color="#fecaca"/><stop offset=".45" stop-color="#dc2626"/><stop offset="1" stop-color="#7f1d1d"/></radialGradient>
+      <linearGradient id="${fogo}" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#f97316"/><stop offset="1" stop-color="#fde047"/></linearGradient>
+      <radialGradient id="${luz}" gradientUnits="userSpaceOnUse" cx="68" cy="12" r="26"><stop offset="0" stop-color="#fff7d6" stop-opacity=".9"/><stop offset="1" stop-color="#fde68a" stop-opacity="0"/></radialGradient>
+      ${filtroDeBrilho(brilho, 1.7)}
+    </defs>
+    <circle cx="68" cy="68" r="54" fill="none" stroke="url(#${anel})" stroke-width="4.4" filter="url(#${brilho})"/>
+    <circle cx="68" cy="68" r="50.6" fill="none" stroke="#fde68a" stroke-width="1" opacity=".8"/>
+    <circle cx="68" cy="68" r="57.6" fill="none" stroke="#fca5a5" stroke-width=".8" stroke-dasharray="2 6" class="enf-gira" style="--d:30s"/>
+    <g class="enf-gira" style="--d:24s;transform-origin:68px 12px" fill="url(#${luz})">${raios}</g>
+    <g class="enf-respira-local" style="transform-origin:68px 14px" filter="url(#${brilho})">
+      <g transform="translate(68 4)"><g class="enf-chama" style="--d:.5s"><path d="M0 0C-4 -2 -4 -6 0 -11C4 -6 4 -2 0 0Z" fill="url(#${fogo})"/></g></g>
+      <path d="M68 25C58 18 54 13 54 9C54 5 57 3 60.5 3C63.6 3 66 5 68 7.5C70 5 72.4 3 75.5 3C79 3 82 5 82 9C82 13 78 18 68 25Z" fill="url(#${coracao})" stroke="#fde68a" stroke-width=".8"/>
+      <path d="M57 10.5C62 13 74 13 79 10.5" stroke="#4d7c0f" stroke-width="1.2" fill="none" stroke-dasharray="1.6 1.2"/>
+      <path d="M68 -9V-1M65 -6H71" stroke="#fde68a" stroke-width="1.4"/>
+    </g>
+    ${faisca(20, 46, 3.6, '#fecaca', 0.3)}${faisca(118, 50, 3.2, '#fde68a', 1.2)}${faisca(40, 118, 3, '#fecaca', 2)}${faisca(98, 120, 3.4, '#fde68a', 0.8)}`;
+  },
+
+  'ramos-de-oliveira'() {
+    const folha = idDoEnfeite('folha');
+    const fita = idDoEnfeite('fita');
+    const brilho = idDoEnfeite('brilho');
+    const ramo = (lado) => {
+      let folhas = '';
+      for (let i = 0; i < 10; i += 1) {
+        const a = lado === 'e' ? 100 + i * 15 : 80 - i * 15;
+        const [x, y] = pontoNoCirculo(56, a);
+        const rot = lado === 'e' ? a + 90 + (i % 2 ? 35 : -35) : a - 90 + (i % 2 ? -35 : 35);
+        folhas += `<ellipse cx="${n1(x)}" cy="${n1(y)}" rx="7.2" ry="2.6" transform="rotate(${n1(rot)} ${n1(x)} ${n1(y)})" fill="url(#${folha})"/>`;
+        if (i % 3 === 1) {
+          const [ox, oy] = pontoNoCirculo(61, a + (lado === 'e' ? 6 : -6));
+          folhas += `<circle cx="${n1(ox)}" cy="${n1(oy)}" r="2.1" fill="#3f6212" stroke="#a3e635" stroke-width=".4"/>`;
+        }
+      }
+      const inicio = lado === 'e' ? 100 : 80;
+      const fim = lado === 'e' ? 245 : -65;
+      const [xi, yi] = pontoNoCirculo(56, inicio);
+      const [xf, yf] = pontoNoCirculo(56, fim);
+      const caule = `<path d="M${n1(xi)} ${n1(yi)}A56 56 0 0 ${lado === 'e' ? 1 : 0} ${n1(xf)} ${n1(yf)}" fill="none" stroke="#65a30d" stroke-width="1.4"/>`;
+      return `<g class="enf-balanca-suave" style="transform-origin:68px 124px">${caule}${folhas}</g>`;
+    };
+    return `<defs>
+      <linearGradient id="${folha}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d9f99d"/><stop offset=".5" stop-color="#65a30d"/><stop offset="1" stop-color="#365314"/></linearGradient>
+      <linearGradient id="${fita}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#b8860b"/><stop offset=".5" stop-color="#fde68a"/><stop offset="1" stop-color="#b8860b"/></linearGradient>
+      ${filtroDeBrilho(brilho, 1.2)}
+    </defs>
+    <circle cx="68" cy="68" r="51.5" fill="none" stroke="#fde68a" stroke-width="1.4" opacity=".7"/>
+    <g filter="url(#${brilho})">${ramo('e')}${ramo('d')}</g>
+    <g filter="url(#${brilho})"><path d="M60 122L52 134L58 132L60 138L66 125Z" fill="url(#${fita})"/><path d="M76 122L84 134L78 132L76 138L70 125Z" fill="url(#${fita})"/><circle cx="68" cy="123" r="5" fill="url(#${fita})" stroke="#fffbeb" stroke-width=".5"/></g>
+    ${faisca(34, 18, 3.4, '#fef9c3', 0.4)}${faisca(104, 16, 3, '#fef9c3', 1.5)}`;
+  },
+
+  rosacea() {
+    const brilho = idDoEnfeite('brilho');
+    const luz = idDoEnfeite('luz');
+    const cores = ['#2563eb', '#dc2626', '#f59e0b', '#16a34a', '#7c3aed', '#0ea5e9'];
+    let vidros = '';
+    for (let i = 0; i < 24; i += 1) {
+      const a1 = i * 15 + 1;
+      const a2 = (i + 1) * 15 - 1;
+      const [x1, y1] = pontoNoCirculo(53, a1);
+      const [x2, y2] = pontoNoCirculo(53, a2);
+      const [x3, y3] = pontoNoCirculo(65, a2);
+      const [x4, y4] = pontoNoCirculo(65, a1);
+      vidros += `<path d="M${n1(x1)} ${n1(y1)}A53 53 0 0 1 ${n1(x2)} ${n1(y2)}L${n1(x3)} ${n1(y3)}A65 65 0 0 0 ${n1(x4)} ${n1(y4)}Z" fill="${cores[i % cores.length]}" opacity=".88"/>`;
+    }
+    return `<defs>
+      <linearGradient id="${luz}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffffff" stop-opacity="0"/><stop offset=".5" stop-color="#ffffff" stop-opacity=".75"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+      ${filtroDeBrilho(brilho, 1.5)}
+    </defs>
+    <g class="enf-gira" style="--d:70s" filter="url(#${brilho})">${vidros}</g>
+    <circle cx="68" cy="68" r="65.5" fill="none" stroke="#1c1917" stroke-width="1.6"/>
+    <circle cx="68" cy="68" r="52.5" fill="none" stroke="#1c1917" stroke-width="1.6"/>
+    <circle cx="68" cy="68" r="66.8" fill="none" stroke="#e2b53a" stroke-width="1.4"/>
+    <g class="enf-gira" style="--d:7s"><path d="M68 3A65 65 0 0 1 120 30" stroke="url(#${luz})" stroke-width="12" fill="none" opacity=".55"/></g>
+    ${faisca(68, 2, 3.6, '#fffbeb', 0)}${faisca(132, 70, 3, '#fffbeb', 1)}${faisca(68, 134, 3, '#fffbeb', 2)}${faisca(4, 66, 3.4, '#fffbeb', 1.5)}`;
+  },
+};
 
 const MOLDURAS = {
   aureola() {
@@ -481,6 +615,146 @@ const FAIXAS = {
     ${faisca(212, 18, 2.6, '#fffbeb', 0.3)}${faisca(300, 14, 3.2, '#fffbeb', 1.2)}${faisca(236, 58, 2.2, '#fffbeb', 2)}${faisca(170, 34, 2, '#fffbeb', 2.8)}`;
   },
 };
+
+function liriosDoCampo(sorteio) {
+  let lirios = '';
+  [176, 196, 214, 236, 256, 276, 300].forEach((x, i) => {
+    const altura = n1(22 + sorteio() * 18);
+    const topo = n1(80 - altura);
+    lirios += `<g class="enf-balanca-suave" style="transform-origin:${x}px 80px;animation-delay:${n1(-sorteio() * 4)}s">
+      <path d="M${x} 80Q${x - 2} ${n1(80 - altura / 2)} ${x} ${topo}" stroke="#4d7c0f" stroke-width="1.3" fill="none"/>
+      <path d="M${x} ${n1(80 - altura * 0.45)}q-6 -2 -8 -8q5 1 8 8" fill="#65a30d"/>
+      <g transform="translate(${x} ${topo})">
+        <path d="M0 0C-5 -2 -8 -7 -7 -11C-4 -8 -2 -6 0 -5C2 -6 4 -8 7 -11C8 -7 5 -2 0 0Z" fill="#ffffff" stroke="#e2e8f0" stroke-width=".4"/>
+        <path d="M0 -1C-1.5 -5 -1.2 -10 0 -13C1.2 -10 1.5 -5 0 -1Z" fill="#f8fafc"/>
+        <circle cx="-1.2" cy="-6" r=".8" fill="#f59e0b"/><circle cx="1.2" cy="-6.6" r=".8" fill="#f59e0b"/>
+      </g>
+    </g>`;
+    if (i % 2) lirios += faisca(x + 6, n1(topo - 10), 1.8, '#fffbeb', n1(sorteio() * 3));
+  });
+  return lirios;
+}
+
+function borboleta(x, y, cor, duracao, atraso) {
+  return `<g transform="translate(330 ${y})"><g class="enf-voa" style="--d:${duracao}s;--a:${atraso}s"><g class="enf-borboleta" style="--a:${atraso}s">
+    <g transform="translate(${x - 330} 0)"><g class="enf-asa-v" style="--d:.28s"><path d="M0 0C-4 -6 -9 -5 -8 -1C-7 2 -3 2 0 0ZM0 0C-3 4 -7 5 -7 2C-7 0 -3 0 0 0Z" fill="${cor}"/><path d="M0 0C4 -6 9 -5 8 -1C7 2 3 2 0 0ZM0 0C3 4 7 5 7 2C7 0 3 0 0 0Z" fill="${cor}"/></g><path d="M0 -3V3" stroke="#1f2937" stroke-width="1"/></g>
+  </g></g></g>`;
+}
+
+const FAIXAS_NOVAS = {
+  catedral() {
+    const ceu = idDoEnfeite('ceu');
+    const pedra = idDoEnfeite('pedra');
+    const vitral = idDoEnfeite('vitral');
+    const brilho = idDoEnfeite('brilho');
+    const lua = idDoEnfeite('lua');
+    const sorteio = sorteioFixo(17);
+    let estrelas = '';
+    for (let i = 0; i < 34; i += 1) {
+      const pisca = i % 3 === 0 ? ` class="enf-pisca" style="--a:${n1(sorteio() * 3)}s"` : '';
+      estrelas += `<circle cx="${n1(130 + sorteio() * 190)}" cy="${n1(3 + sorteio() * 40)}" r="${n1(0.3 + sorteio() * 0.8)}" fill="#fff"${pisca}/>`;
+    }
+    let janelas = '';
+    [[214, 52], [226, 52], [284, 52], [296, 52], [214, 38], [296, 38]].forEach(([x, y], i) => {
+      janelas += `<path d="M${x} ${y}v-7a2.5 2.5 0 0 1 5 0v7z" fill="#fcd34d" class="enf-respira" style="--a:${n1(i * 0.4)}s;--d:${n1(2.4 + (i % 3) * 0.7)}s"/>`;
+    });
+    return `<defs>
+      <linearGradient id="${ceu}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#020617"/><stop offset=".6" stop-color="#1e1b4b"/><stop offset="1" stop-color="#4c1d95"/></linearGradient>
+      <linearGradient id="${pedra}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e1b2e"/><stop offset="1" stop-color="#0b0712"/></linearGradient>
+      <radialGradient id="${vitral}"><stop offset="0" stop-color="#fef3c7"/><stop offset=".4" stop-color="#f59e0b"/><stop offset=".75" stop-color="#be123c"/><stop offset="1" stop-color="#1e3a8a"/></radialGradient>
+      <radialGradient id="${lua}"><stop offset="0" stop-color="#fefce8" stop-opacity=".5"/><stop offset="1" stop-color="#fefce8" stop-opacity="0"/></radialGradient>
+      ${filtroDeBrilho(brilho, 1.6)}
+    </defs>
+    <rect width="320" height="80" fill="url(#${ceu})"/>
+    ${estrelas}
+    <circle cx="160" cy="18" r="16" fill="url(#${lua})"/><circle cx="160" cy="18" r="6" fill="#fefce8" filter="url(#${brilho})"/>
+    <g opacity=".16"><ellipse cx="255" cy="62" rx="70" ry="22" fill="#f59e0b" class="enf-respira"/></g>
+    <g fill="url(#${pedra})">
+      <path d="M200 80V40l6-12 6 12v40z"/><path d="M298 80V40l6-12 6 12v40z"/>
+      <rect x="208" y="44" width="96" height="36"/>
+      <path d="M236 44V22l20-16 20 16v22z"/><path d="M252 7l4-15 4 15z"/>
+    </g>
+    <path d="M254.6 -12v8M252 -9h6" stroke="#fde68a" stroke-width="1.2"/>
+    <circle cx="256" cy="30" r="9" fill="url(#${vitral})" filter="url(#${brilho})" class="enf-respira"/>
+    <g stroke="#0b0712" stroke-width=".8" opacity=".8"><path d="M256 21v18M247 30h18M249.6 23.6l12.8 12.8M262.4 23.6l-12.8 12.8"/></g>
+    <path d="M249 80V64a7 7 0 0 1 14 0v16z" fill="#fbbf24" opacity=".85" class="enf-respira" style="--d:3s"/>
+    ${janelas}`;
+  },
+
+  'mar-da-galileia'() {
+    const ceu = idDoEnfeite('ceu');
+    const sol = idDoEnfeite('sol');
+    const mar = idDoEnfeite('mar');
+    const vela = idDoEnfeite('vela');
+    const brilho = idDoEnfeite('brilho');
+    const onda = (y, cor, opacidade, dur, atraso) => `<g class="enf-onda" style="--d:${dur}s;--a:${atraso}s"><path d="M0 ${y}${Array.from({ length: 14 }, (_, i) => `q15 ${i % 2 ? 3 : -3} 30 0`).join('')}V80H0Z" fill="${cor}" opacity="${opacidade}"/></g>`;
+    return `<defs>
+      <linearGradient id="${ceu}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e3a8a"/><stop offset=".45" stop-color="#c2410c"/><stop offset=".75" stop-color="#fb923c"/><stop offset="1" stop-color="#fde68a"/></linearGradient>
+      <radialGradient id="${sol}" gradientUnits="userSpaceOnUse" cx="250" cy="50" r="50"><stop offset="0" stop-color="#fffbeb"/><stop offset=".25" stop-color="#fde68a"/><stop offset="1" stop-color="#fb923c" stop-opacity="0"/></radialGradient>
+      <linearGradient id="${mar}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0e7490"/><stop offset="1" stop-color="#082f49"/></linearGradient>
+      <linearGradient id="${vela}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fffbeb"/><stop offset="1" stop-color="#fcd34d"/></linearGradient>
+      ${filtroDeBrilho(brilho, 1.5)}
+    </defs>
+    <rect width="320" height="80" fill="url(#${ceu})"/>
+    <circle cx="250" cy="50" r="50" fill="url(#${sol})" class="enf-respira"/>
+    <circle cx="250" cy="52" r="11" fill="#fffbeb" filter="url(#${brilho})"/>
+    <g class="enf-nuvem" style="--d:30s">${nuvem(180, 18, 1.2, '#fed7aa', 0.45)}${nuvem(290, 14, 0.9, '#fecaca', 0.4)}</g>
+    <rect y="52" width="320" height="28" fill="url(#${mar})"/>
+    <path d="M238 56h24M242 60h16M245 64h10" stroke="#fde68a" stroke-width="1.4" opacity=".7" class="enf-respira" style="--d:2.2s"/>
+    <g transform="translate(205 50)"><g class="enf-balanca" style="transform-origin:0 6px">
+      <path d="M-16 4H16L11 11H-11Z" fill="#78350f"/><path d="M0 4V-22" stroke="#451a03" stroke-width="1.4"/>
+      <path d="M1 -21L15 2H1Z" fill="url(#${vela})"/><path d="M-1 -17L-11 1H-1Z" fill="#fef3c7" opacity=".9"/>
+    </g></g>
+    ${onda(58, '#155e75', 0.75, 7, 0)}${onda(64, '#0e7490', 0.65, 9, -3)}${onda(70, '#164e63', 0.85, 6, -1)}
+    <g transform="translate(330 0)"><g class="enf-voa" style="--d:13s"><path class="enf-asa-v" style="--d:.5s" d="M-5 20Q-2.5 17 0 20Q2.5 17 5 20" stroke="#1f1033" stroke-width="1.2" fill="none"/></g></g>`;
+  },
+
+  'campo-de-lirios'() {
+    const ceu = idDoEnfeite('ceu');
+    const sol = idDoEnfeite('sol');
+    const morro = idDoEnfeite('morro');
+    const sorteio = sorteioFixo(23);
+    return `<defs>
+      <linearGradient id="${ceu}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#38bdf8"/><stop offset=".7" stop-color="#bae6fd"/><stop offset="1" stop-color="#fef3c7"/></linearGradient>
+      <radialGradient id="${sol}" gradientUnits="userSpaceOnUse" cx="296" cy="12" r="70"><stop offset="0" stop-color="#fffbeb" stop-opacity=".95"/><stop offset=".3" stop-color="#fef3c7" stop-opacity=".5"/><stop offset="1" stop-color="#fef3c7" stop-opacity="0"/></radialGradient>
+      <linearGradient id="${morro}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#86efac"/><stop offset="1" stop-color="#15803d"/></linearGradient>
+    </defs>
+    <rect width="320" height="80" fill="url(#${ceu})"/>
+    <rect width="320" height="80" fill="url(#${sol})" class="enf-respira"/>
+    <g class="enf-nuvem" style="--d:32s">${nuvem(200, 16, 1.3, '#ffffff', 0.7)}${nuvem(270, 30, 1, '#ffffff', 0.6)}</g>
+    <path d="M120 80C170 58 220 56 260 60C290 63 306 58 320 54V80Z" fill="url(#${morro})"/>
+    ${liriosDoCampo(sorteio)}
+    ${borboleta(240, 30, '#f472b6', 14, 0)}${borboleta(280, 18, '#facc15', 17, -6)}${borboleta(200, 40, '#a78bfa', 15, -11)}`;
+  },
+
+  'chuva-de-rosas'() {
+    const ceu = idDoEnfeite('ceu');
+    const luz = idDoEnfeite('luz');
+    const rosa = idDoEnfeite('rosa');
+    const sorteio = sorteioFixo(31);
+    let petalas = '';
+    for (let i = 0; i < 22; i += 1) {
+      const x = n1(130 + sorteio() * 190);
+      const escala = n1(0.7 + sorteio() * 0.7);
+      const cor = i % 3 ? '#fda4af' : '#e11d48';
+      petalas += `<g transform="translate(${x} -8)"><g class="enf-cai-longo" style="--a:${n1(-sorteio() * 8)}s;--d:${n1(6 + sorteio() * 4)}s"><path transform="scale(${escala})" d="M0 3C3 1 2.5 -3 .4 -2.4Q0 -1.7 -.4 -2.4C-2.5 -3 -3 1 0 3Z" fill="${cor}"/></g></g>`;
+    }
+    const flor = (x, y, e) => `<g transform="translate(${x} ${y}) scale(${e})"><circle r="6" fill="url(#${rosa})"/><path d="M-3 -1C-2 -4 2 -4 3 -1C2 1 -2 1 -3 -1Z" fill="#9f1239" opacity=".6"/><path d="M-6 3C-9 6 -6 9 -2 7M6 3C9 6 6 9 2 7" fill="#4d7c0f"/></g>`;
+    return `<defs>
+      <linearGradient id="${ceu}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4c1d95"/><stop offset=".5" stop-color="#be185d"/><stop offset="1" stop-color="#fda4af"/></linearGradient>
+      <radialGradient id="${luz}" gradientUnits="userSpaceOnUse" cx="260" cy="0" r="90"><stop offset="0" stop-color="#fff1f2" stop-opacity=".85"/><stop offset="1" stop-color="#fff1f2" stop-opacity="0"/></radialGradient>
+      <radialGradient id="${rosa}" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#fecdd3"/><stop offset=".5" stop-color="#e11d48"/><stop offset="1" stop-color="#881337"/></radialGradient>
+    </defs>
+    <rect width="320" height="80" fill="url(#${ceu})"/>
+    <rect width="320" height="80" fill="url(#${luz})" class="enf-respira"/>
+    ${petalas}
+    <path d="M190 80C220 66 270 64 320 70V80Z" fill="#14532d" opacity=".9"/>
+    ${flor(232, 70, 1.1)}${flor(262, 66, 1.3)}${flor(292, 70, 1.05)}${flor(312, 64, 0.9)}`;
+  },
+};
+
+Object.assign(MOLDURAS, MOLDURAS_NOVAS);
+Object.assign(FAIXAS, FAIXAS_NOVAS);
 
 function svgDaFaixa(id) {
   const desenho = FAIXAS[id];
@@ -1464,7 +1738,145 @@ function efeitoPenasDeAnjo(w, h) {
   };
 }
 
+function efeitoArcoIris(w, h) {
+  const CORES = ['#ef4444', '#f97316', '#facc15', '#22c55e', '#3b82f6', '#6366f1', '#a855f7'];
+  const cx = w / 2;
+  const cy = Math.min(h * 0.62, 340);
+  const raio = Math.min(w * 0.46, cy * 0.92);
+  const faixa = Math.max(5, raio * 0.055);
+  const brilhos = Array.from({ length: 26 }, () => ({ a: Math.PI + Math.random() * Math.PI, d: raio * (0.6 + Math.random() * 0.5), r: 1.6 + Math.random() * 2.6, fase: Math.random() * 6 }));
+  return (ctx, s) => {
+    const cresce = suave(s / 1.3);
+    const some = 1 - suave((s - 2.9) / 0.8);
+    ctx.save();
+    ctx.globalAlpha *= some;
+    ctx.lineCap = 'round';
+    CORES.forEach((cor, i) => {
+      ctx.strokeStyle = cor;
+      ctx.globalAlpha = some * 0.82;
+      ctx.lineWidth = faixa;
+      ctx.beginPath();
+      ctx.arc(cx, cy, raio - i * faixa, Math.PI, Math.PI + Math.PI * cresce);
+      ctx.stroke();
+    });
+    ctx.restore();
+    if (cresce > 0.2) {
+      [[cx - raio + faixa * 3, cy], [cx + raio - faixa * 3, cy]].forEach(([x, y]) => {
+        desenharLuz(ctx, x, y, raio * 0.28, '255, 255, 255', 0.55 * some);
+        ctx.save();
+        ctx.globalAlpha *= 0.85 * some;
+        ctx.fillStyle = '#ffffff';
+        [[-14, 4, 16], [0, -4, 20], [16, 3, 15]].forEach(([dx, dy, r]) => { ctx.beginPath(); ctx.arc(x + dx, y + dy, r, 0, Math.PI * 2); ctx.fill(); });
+        ctx.restore();
+      });
+    }
+    brilhos.forEach((b) => desenharFaisca(ctx, cx + Math.cos(b.a) * b.d, cy + Math.sin(b.a) * b.d, b.r, '#fffbeb', (0.3 + 0.7 * Math.abs(Math.sin(s * 3 + b.fase))) * cresce * some));
+    const voo = suave((s - 0.7) / 2.4);
+    if (voo > 0 && voo < 1) pombaDeFrente(ctx, w * (0.1 + voo * 0.8), cy - raio * (0.5 + Math.sin(voo * Math.PI) * 0.45), Math.min(w, 420) / 520, Math.sin(s * 14), Math.min(1, voo * 4) * some);
+  };
+}
+
+function desenharCoracao(ctx, x, y, tamanho, cor, alfa) {
+  if (alfa <= 0) return;
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(tamanho, tamanho);
+  ctx.globalAlpha *= alfa;
+  ctx.shadowColor = 'rgba(244, 114, 182, 0.8)';
+  ctx.shadowBlur = 10;
+  const g = ctx.createLinearGradient(0, -8, 0, 8);
+  g.addColorStop(0, cor[0]);
+  g.addColorStop(1, cor[1]);
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.moveTo(0, 7);
+  ctx.bezierCurveTo(-9, 1, -9, -7, -4.5, -7);
+  ctx.bezierCurveTo(-2, -7, -0.5, -5.5, 0, -4);
+  ctx.bezierCurveTo(0.5, -5.5, 2, -7, 4.5, -7);
+  ctx.bezierCurveTo(9, -7, 9, 1, 0, 7);
+  ctx.fill();
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.55)';
+  ctx.beginPath();
+  ctx.ellipse(-3.5, -3.5, 1.6, 1, -0.6, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+function efeitoCoracoes(w, h) {
+  const CORES = [['#fda4af', '#e11d48'], ['#f9a8d4', '#db2777'], ['#fecaca', '#dc2626'], ['#fde68a', '#f59e0b']];
+  const coracoes = Array.from({ length: 30 }, () => ({
+    x: Math.random() * w,
+    v: 70 + Math.random() * 90,
+    balanco: 10 + Math.random() * 22,
+    fase: Math.random() * 6,
+    tam: 1 + Math.random() * 1.4,
+    cor: CORES[Math.floor(Math.random() * CORES.length)],
+    inicio: Math.random() * 1.6,
+  }));
+  return (ctx, s) => {
+    const fundo = suave(s / 0.6) * (1 - suave((s - 2.8) / 0.8));
+    if (fundo > 0) {
+      const g = ctx.createLinearGradient(0, h, 0, h * 0.4);
+      g.addColorStop(0, `rgba(244, 114, 182, ${0.28 * fundo})`);
+      g.addColorStop(1, 'rgba(244, 114, 182, 0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, h * 0.4, w, h * 0.6);
+    }
+    coracoes.forEach((c) => {
+      const t = s - c.inicio;
+      if (t <= 0) return;
+      const y = h + 20 - t * c.v;
+      if (y < -20) return;
+      const pulso = 1 + Math.sin(t * 7 + c.fase) * 0.08;
+      desenharCoracao(ctx, c.x + Math.sin(t * 2 + c.fase) * c.balanco, y, c.tam * pulso, c.cor, Math.min(1, t * 2.5));
+    });
+  };
+}
+
+function efeitoLuzDoCeu(w, h) {
+  const feixes = Array.from({ length: 6 }, (_, i) => ({ x: w * (0.12 + i * 0.15) + (Math.random() - 0.5) * 20, largura: w * (0.035 + Math.random() * 0.04), fase: Math.random() * 6, inicio: i * 0.12 }));
+  const poeira = Array.from({ length: 40 }, () => ({ x: Math.random() * w, y: Math.random() * h, r: 0.8 + Math.random() * 1.8, vy: 6 + Math.random() * 14, fase: Math.random() * 6 }));
+  return (ctx, s) => {
+    const aparece = suave(s / 0.9) * (1 - suave((s - 2.9) / 0.8));
+    if (aparece <= 0) return;
+    const topo = ctx.createLinearGradient(0, 0, 0, h * 0.35);
+    topo.addColorStop(0, `rgba(254, 243, 199, ${0.45 * aparece})`);
+    topo.addColorStop(1, 'rgba(254, 243, 199, 0)');
+    ctx.fillStyle = topo;
+    ctx.fillRect(0, 0, w, h * 0.35);
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    feixes.forEach((f) => {
+      const t = s - f.inicio;
+      if (t <= 0) return;
+      const forca = suave(t / 0.8) * aparece * (0.75 + 0.25 * Math.sin(s * 2 + f.fase));
+      const desvio = Math.sin(s * 0.8 + f.fase) * 18;
+      const g = ctx.createLinearGradient(0, 0, 0, h);
+      g.addColorStop(0, `rgba(255, 244, 200, ${0.7 * forca})`);
+      g.addColorStop(0.45, `rgba(252, 211, 77, ${0.28 * forca})`);
+      g.addColorStop(1, 'rgba(252, 211, 77, 0)');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.moveTo(f.x - f.largura * 0.25, 0);
+      ctx.lineTo(f.x + f.largura * 0.25, 0);
+      ctx.lineTo(f.x + desvio + f.largura, h);
+      ctx.lineTo(f.x + desvio - f.largura, h);
+      ctx.closePath();
+      ctx.fill();
+    });
+    ctx.restore();
+    poeira.forEach((p) => {
+      const y = (p.y + s * p.vy) % h;
+      desenharLuz(ctx, p.x + Math.sin(s + p.fase) * 6, y, p.r * 3, '253, 230, 138', 0.5 * aparece * Math.abs(Math.sin(s * 2 + p.fase)));
+    });
+  };
+}
+
 const EFEITOS_DO_PERFIL = {
+  'arco-iris': efeitoArcoIris,
+  coracoes: efeitoCoracoes,
+  'luz-do-ceu': efeitoLuzDoCeu,
   'estrelas-cadentes': efeitoEstrelasCadentes,
   pombas: efeitoPombas,
   vitral: efeitoVitral,
@@ -1517,6 +1929,24 @@ function tocarEfeitoDoPerfil(alvo, id) {
   requestAnimationFrame(quadro);
   return tela;
 }
+
+const MINIS_NOVOS_DE_EFEITO = {
+  'arco-iris'(g) {
+    const cores = ['#ef4444', '#f97316', '#facc15', '#22c55e', '#3b82f6', '#a855f7'];
+    const arcos = cores.map((cor, i) => `<path d="M${10 + i * 2.6} 34A${22 - i * 2.6} ${22 - i * 2.6} 0 0 1 ${54 - i * 2.6} 34" stroke="${cor}" stroke-width="2.6" fill="none"/>`).join('');
+    return `<defs><linearGradient id="${g}c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0ea5e9"/><stop offset="1" stop-color="#bae6fd"/></linearGradient></defs>
+      <rect width="64" height="40" rx="7" fill="url(#${g}c)"/>${arcos}<circle cx="12" cy="35" r="5" fill="#fff"/><circle cx="17" cy="33" r="5" fill="#fff"/><circle cx="52" cy="35" r="5" fill="#fff"/><circle cx="47" cy="33" r="5" fill="#fff"/>${faisca(32, 8, 1.6, '#fffbeb', 0)}`;
+  },
+  coracoes(g) {
+    const coracao = (x, y, e, cor) => `<path transform="translate(${x} ${y}) scale(${e})" d="M0 7C-9 1 -9 -7 -4.5 -7C-2 -7 -.5 -5.5 0 -4C.5 -5.5 2 -7 4.5 -7C9 -7 9 1 0 7Z" fill="${cor}"/>`;
+    return `<defs><linearGradient id="${g}c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4c0519"/><stop offset="1" stop-color="#be185d"/></linearGradient></defs>
+      <rect width="64" height="40" rx="7" fill="url(#${g}c)"/>${coracao(18, 26, 1.2, '#fda4af')}${coracao(36, 14, 0.9, '#f43f5e')}${coracao(50, 28, 1, '#fde68a')}${coracao(28, 34, 0.6, '#f9a8d4')}`;
+  },
+  'luz-do-ceu'(g) {
+    return `<defs><linearGradient id="${g}c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e293b"/><stop offset="1" stop-color="#0f172a"/></linearGradient><linearGradient id="${g}l" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffbeb" stop-opacity=".9"/><stop offset="1" stop-color="#fde68a" stop-opacity="0"/></linearGradient></defs>
+      <rect width="64" height="40" rx="7" fill="url(#${g}c)"/><path d="M10 0H16L22 40H2Z" fill="url(#${g}l)"/><path d="M28 0H34L42 40H22Z" fill="url(#${g}l)"/><path d="M46 0H52L62 40H42Z" fill="url(#${g}l)"/>${faisca(20, 18, 1.4, '#fde68a', 0)}${faisca(44, 26, 1.2, '#fde68a', 1)}`;
+  },
+};
 
 const MINIS_DE_EFEITO = {
   'estrelas-cadentes'(g) {
@@ -1598,6 +2028,8 @@ const MINIS_DE_EFEITO = {
       <rect width="64" height="40" rx="7" fill="url(#${g}c)"/>${pena(16, 14, -30, 0.7)}${pena(36, 24, 25, 0.8)}${pena(52, 11, -10, 0.55)}${faisca(26, 9, 1.4, '#fde68a', 0)}${faisca(48, 30, 1.2, '#fde68a', 0.8)}`;
   },
 };
+
+Object.assign(MINIS_DE_EFEITO, MINIS_NOVOS_DE_EFEITO);
 
 function svgDoEfeito(id) {
   const desenho = MINIS_DE_EFEITO[id];
@@ -1712,6 +2144,11 @@ async function carregarEnfeitesPublicos(ids) {
 
 function enfeitarLinha(linha, escolha) {
   if (!linha || !escolha) return;
+  if (linha.classList.contains('podio-lugar')) {
+    if (FAIXAS[escolha.faixa]) colocarFaixa(linha, escolha.faixa, 'enfeite-faixa-podio');
+    if (MOLDURAS[escolha.moldura]) colocarMoldura(linha.querySelector('.podio-foto'), escolha.moldura);
+    return;
+  }
   if (FAIXAS[escolha.faixa]) colocarFaixa(linha, escolha.faixa, 'enfeite-faixa-linha');
   const avatar = linha.querySelector(':scope > .avatar');
   if (avatar && MOLDURAS[escolha.moldura]) {
@@ -1725,7 +2162,7 @@ function enfeitarLinha(linha, escolha) {
 
 async function enfeitarLinhasDoRanking(lista, familia) {
   if (!lista) return;
-  const linhas = Array.from(lista.querySelectorAll('.ranking-linha[data-perfil]'));
+  const linhas = Array.from(lista.querySelectorAll('.ranking-linha[data-perfil], .podio-lugar[data-perfil]'));
   if (!linhas.length) return;
   let mapa = {};
   if (familia) {

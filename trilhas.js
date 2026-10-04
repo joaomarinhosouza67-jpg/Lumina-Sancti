@@ -583,6 +583,7 @@ const TEXTOS_TRILHAS = {
     missoes_feitas: '{feitas} de {total} missões',
     fechar: 'Fechar',
     erro_sem_santidade: 'Sua Santidade está se renovando. Volte daqui a pouco.',
+    santidade_pouca: 'Esta missão tem {n} perguntas e cada resposta usa 1 de Santidade. Você tem {tem}. A próxima volta em {min} min.',
     erro_sem_perguntas: 'Esta missão ainda não tem perguntas para este perfil.',
     erro_abrir: 'Não foi possível abrir esta missão agora. Verifique sua internet.',
     leia_antes: 'Leia antes de começar',
@@ -648,6 +649,7 @@ const TEXTOS_TRILHAS = {
     missoes_feitas: '{feitas} of {total} missions',
     fechar: 'Close',
     erro_sem_santidade: 'Your Holiness is being renewed. Come back in a little while.',
+    santidade_pouca: 'This mission has {n} questions and each answer uses 1 Holiness. You have {tem}. The next one comes back in {min} min.',
     erro_sem_perguntas: 'This mission does not have questions for this profile yet.',
     erro_abrir: 'This mission could not be opened right now. Check your internet connection.',
     leia_antes: 'Read before you start',
@@ -713,6 +715,7 @@ const TEXTOS_TRILHAS = {
     missoes_feitas: '{feitas} de {total} misiones',
     fechar: 'Cerrar',
     erro_sem_santidade: 'Tu Santidad se está renovando. Vuelve dentro de un rato.',
+    santidade_pouca: 'Esta misión tiene {n} preguntas y cada respuesta usa 1 de Santidad. Tienes {tem}. La próxima vuelve en {min} min.',
     erro_sem_perguntas: 'Esta misión todavía no tiene preguntas para este perfil.',
     erro_abrir: 'No se pudo abrir esta misión ahora. Revisa tu conexión a internet.',
     leia_antes: 'Lee antes de empezar',
@@ -1238,6 +1241,8 @@ function renderizarTrilhas() {
       </section>`;
     }
 
+    const feitasDaTrilha = trilha.licoes.filter((licao) => !!estado.licoes[licao.slug]).length;
+    const porcentoDaTrilha = Math.round((feitasDaTrilha / Math.max(1, trilha.licoes.length)) * 100);
     const nos = trilha.licoes.map((licao, i) => {
       const feita = !!estado.licoes[licao.slug];
       const liberada = licaoDesbloqueada(trilha, i, estado);
@@ -1246,7 +1251,7 @@ function renderizarTrilhas() {
       const rotuloAcessivel = tt('missao_rotulo', { n: i + 1, titulo: licao.titulo })
         + (feita ? tt('missao_refazer') : (liberada ? '' : tt('missao_bloqueada')));
       return `
-        <div class="no-wrapper ${deslocamentos[i % deslocamentos.length]}">
+        <div class="no-wrapper ${deslocamentos[i % deslocamentos.length]}" style="--i:${i}">
           <button class="no-licao ${classe}" data-trilha="${trilha.slug}" data-indice="${i}" aria-label="${rotuloAcessivel}">
             ${classe === 'atual' ? `<span class="no-balao">${tt('comecar_balao')}</span>` : ''}
             <span class="no-circulo">${simbolo}</span>
@@ -1274,6 +1279,10 @@ function renderizarTrilhas() {
             <p>${trilha.descricao}</p>
             ${trilha.santoId ? `<button class="trilha-ler" data-santo="${trilha.santoId}">${tt('ler_historia')}</button>` : ''}
           </div>
+          <div class="trilha-progresso" aria-label="${tt('missoes_feitas', { feitas: feitasDaTrilha, total: trilha.licoes.length })}">
+            <span class="trilha-progresso-barra"><span style="width:${porcentoDaTrilha}%"></span></span>
+            <small>${tt('missoes_feitas', { feitas: feitasDaTrilha, total: trilha.licoes.length })}</small>
+          </div>
         </div>
         <div class="trilha-caminho">${nos}${noInsignia}</div>
       </section>`;
@@ -1300,14 +1309,20 @@ function renderizarTrilhas() {
   avisarMascote('mapa', { santidade: estado.santidade });
 }
 
+function estrelaDaFe(classeExtra) {
+  return `<span class="fe-estrela${classeExtra ? ` ${classeExtra}` : ''}" aria-hidden="true">${icone('estrela')}<i class="fe-brilho"></i><i class="fe-brilho"></i><i class="fe-brilho"></i></span>`;
+}
+
 function renderizarPlacarDasTrilhas(estado) {
   const painel = document.getElementById('trilhas-stats');
   if (!painel) return;
-  const santidadeTexto = perfilEhInfantil() ? '∞' : `${estado.santidade}/${SANTIDADE_MAXIMA}`;
+  const infantil = perfilEhInfantil();
+  const santidadeTexto = infantil ? '∞' : `${estado.santidade}/${SANTIDADE_MAXIMA}`;
+  const porcento = infantil ? 100 : Math.round((Math.max(0, estado.santidade) / SANTIDADE_MAXIMA) * 100);
   painel.innerHTML = `
-    <div class="stat stat-fe"><span>${icone('estrela')}${estado.fe}</span><small>${tt('fe')}</small></div>
-    <div class="stat stat-ofensiva"><span>${icone('chama')}${estado.ofensiva}</span><small>${tt('ofensiva')}</small></div>
-    <div class="stat stat-santidade"><span>${icone('pomba')}${santidadeTexto}</span><small>${tt('santidade')}</small></div>
+    <div class="stat stat-fe"><span class="stat-icone">${estrelaDaFe()}</span><span class="stat-valor">${estado.fe}</span><small>${tt('fe')}</small></div>
+    <div class="stat stat-ofensiva${estado.ofensiva > 0 ? ' acesa' : ''}"><span class="stat-icone">${icone('chama')}</span><span class="stat-valor">${estado.ofensiva}</span><small>${tt('ofensiva')}</small></div>
+    <div class="stat stat-santidade${porcento <= 20 ? ' baixa' : ''}"><span class="stat-icone">${icone('pomba')}</span><span class="stat-valor">${santidadeTexto}</span><small>${tt('santidade')}</small><span class="stat-barra" aria-hidden="true"><span style="width:${porcento}%"></span></span></div>
   `;
 }
 
@@ -1332,6 +1347,11 @@ function abrirNoDaTrilha(slugTrilha, indice) {
   }
   if (!perfilEhInfantil() && estado.santidade <= 0) {
     mostrarAvisoTrilhas(tt('santidade_renovando', { min: minutosParaProximaSantidade(estado), santo: trilha.santo }));
+    return;
+  }
+  const perguntasDaMissao = trilha.licoes[indice].conteudo ? trilha.licoes[indice].conteudo.length : 0;
+  if (!perfilEhInfantil() && !(modoConta() && trilha.servidor) && perguntasDaMissao > estado.santidade) {
+    mostrarAvisoTrilhas(tt('santidade_pouca', { n: perguntasDaMissao, tem: estado.santidade, min: minutosParaProximaSantidade(estado) }));
     return;
   }
   if (modoConta() && trilha.servidor) {
@@ -1403,6 +1423,19 @@ function renderizarCabecalhoDaMissao(trilha, indice, licao) {
       if (url && alvo) alvo.innerHTML = `<img src="${url}" alt="${trilha.santo}">`;
     });
   }
+}
+
+function mostrarGastoDeSantidade() {
+  const lugar = document.querySelector('.licao-santidade');
+  if (!lugar || perfilEhInfantil()) return;
+  lugar.classList.remove('gastou');
+  void lugar.offsetWidth;
+  lugar.classList.add('gastou');
+  const menos = document.createElement('span');
+  menos.className = 'licao-santidade-menos';
+  menos.textContent = '-1';
+  lugar.appendChild(menos);
+  setTimeout(() => menos.remove(), 1200);
 }
 
 function atualizarTopoDaLicao() {
@@ -1586,13 +1619,16 @@ function verificarRespostaAtual() {
   }
 
   const certo = respostaEstaCerta();
+  licaoAtual.gastouSantidade = false;
 
-  if (!certo) {
+  if (!certo || !perfilEhInfantil()) {
     const estado = carregarProgressoTrilhas();
     renovarSantidade(estado);
     perderSantidade(estado);
     salvarProgressoTrilhas(estado);
-    licaoAtual.santidadeAcabou = estado.santidade <= 0;
+    const restam = licaoAtual.fila.length - (certo ? 1 : 0);
+    licaoAtual.santidadeAcabou = estado.santidade <= 0 && restam > 0;
+    licaoAtual.gastouSantidade = true;
   }
   mostrarResultadoDaResposta(certo);
 }
@@ -1605,6 +1641,7 @@ function mostrarResultadoDaResposta(certo) {
   if (licaoAtual.primeiraTentativa[indice] === undefined) licaoAtual.primeiraTentativa[indice] = certo;
 
   atualizarTopoDaLicao();
+  if (licaoAtual.gastouSantidade) mostrarGastoDeSantidade();
   marcarRespostasNaTela(certo);
 
   const fraseDaLumi = avisarMascote('resposta', {
@@ -1692,7 +1729,7 @@ function finalizarLicao() {
         <h2>${tt('missao_concluida')}</h2>
         <p class="licao-fim-sub">${licao.titulo} · ${trilha.titulo}</p>
         <div class="licao-fim-dados">
-          <div class="licao-fim-dado"><strong id="licao-fe-ganha">+${feGanha}</strong><span>${tt('de_fe')}</span></div>
+          <div class="licao-fim-dado licao-fim-fe">${estrelaDaFe('fe-grande')}<strong id="licao-fe-ganha">+${feGanha}</strong><span>${tt('de_fe')}</span></div>
           <div class="licao-fim-dado"><strong>${acertosDePrimeira}/${total}</strong><span>${tt('de_primeira')}</span></div>
         </div>
         ${insigniaNova ? `
@@ -1805,6 +1842,11 @@ function converterPerguntaDoServidor(q) {
 function mensagemDeErroDaLicao(erro) {
   const texto = String((erro && erro.message) || '');
   if (texto.includes('account_suspended')) return 'Sua conta está suspensa. Enquanto isso, as trilhas ficam paradas, mas nada do seu progresso é apagado.';
+  if (texto.includes('santidade_insuficiente')) {
+    const estado = estadoEmMemoriaDaConta || carregarProgressoTrilhas();
+    const min = estado && Number.isFinite(estado.santidadeMarcadaEm) ? minutosParaProximaSantidade(estado) : MINUTOS_PARA_RENOVAR_SANTIDADE;
+    return tt('santidade_pouca', { n: Number((erro && erro.details) || 0) || 3, tem: estado ? estado.santidade : 0, min });
+  }
   if (texto.includes('no_santidade')) return tt('erro_sem_santidade');
   if (texto.includes('perfil_trancado')) {
     const membro = typeof obterMembroAtivo === 'function' ? obterMembroAtivo() : null;
@@ -1925,6 +1967,7 @@ async function verificarRespostaNoServidor() {
     estado.santidade = resultado.santidade;
   }
   licaoAtual.santidadeAcabou = !!resultado.failed;
+  licaoAtual.gastouSantidade = resultado.gastou === undefined ? !resultado.correct : !!resultado.gastou;
   mostrarResultadoDaResposta(!!resultado.correct);
 }
 
@@ -1978,7 +2021,7 @@ async function finalizarLicaoNoServidor() {
         <p class="licao-fim-sub">${licao.titulo} · ${trilha.titulo}</p>
         <div class="licao-estrelas" aria-label="${tt('estrelas', { n: r.stars })}">${estrelasDaMissao(r.stars)}</div>
         <div class="licao-fim-dados">
-          <div class="licao-fim-dado"><strong id="licao-fe-ganha">+${r.faith_awarded}</strong><span>${tt('de_fe')}</span></div>
+          <div class="licao-fim-dado licao-fim-fe">${estrelaDaFe('fe-grande')}<strong id="licao-fe-ganha">+${r.faith_awarded}</strong><span>${tt('de_fe')}</span></div>
           <div class="licao-fim-dado"><strong>${r.correct}/${r.total}</strong><span>${tt('acertos')}</span></div>
         </div>
         ${insigniaNova ? `
