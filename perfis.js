@@ -1035,9 +1035,54 @@ async function abrirPainelDoPerfil(membroId) {
         ? `<ul class="painel-insignias">${itens}</ul>`
         : '<p class="painel-vazio">Ainda nenhuma. Complete uma trilha inteira para ganhar a primeira.</p>'}`;
     if (typeof aplicarEnfeitesNoPainel === 'function') aplicarEnfeitesNoPainel(conteudo, membroId);
+    if (membroAtivo && membroAtivo.id === membroId && membroAtivo.tipo === 'crianca') {
+      conteudo.insertAdjacentHTML('beforeend', `
+        <div class="painel-kids-acoes">
+          <button type="button" class="painel-kids-botao" id="painel-kids-avatar">${icone('paleta')}<span>Mudar meu desenho</span></button>
+          <button type="button" class="painel-kids-botao painel-kids-enfeites" id="painel-kids-enfeites">${icone('estrela')}<span>Meus enfeites</span></button>
+        </div>
+        <p class="painel-kids-nota">Os seus enfeites aparecem só para a sua família.</p>`);
+      conteudo.querySelector('#painel-kids-avatar').addEventListener('click', () => {
+        modal.classList.remove('active');
+        abrirEscolhaDeDesenhoInfantil();
+      });
+      conteudo.querySelector('#painel-kids-enfeites').addEventListener('click', () => {
+        modal.classList.remove('active');
+        if (typeof abrirEnfeitesDoPerfil === 'function') abrirEnfeitesDoPerfil();
+      });
+    }
   } catch (e) {
     conteudo.innerHTML = '<p class="not-found-msg">Não foi possível carregar este perfil agora.</p>';
   }
+}
+
+function abrirEscolhaDeDesenhoInfantil() {
+  if (!membroAtivo || membroAtivo.tipo !== 'crianca' || typeof janelaDoCenaculo !== 'function') return;
+  const opcoes = AVATARES.filter((a) => a.grupo === 'kids');
+  const corpo = janelaDoCenaculo('Escolha o seu desenho', `
+    <div class="desenhos-kids">
+      ${opcoes.map((a) => `<button type="button" class="desenho-kids${membroAtivo.avatar === a.id ? ' escolhido' : ''}" data-avatar="${a.id}" aria-label="${a.icone}">${desenharAvatar(a.id, '', 'grande')}</button>`).join('')}
+    </div>
+    <p class="lembrete-aviso" id="desenhos-kids-aviso" aria-live="polite"></p>`);
+  corpo.querySelectorAll('[data-avatar]').forEach((botao) => {
+    botao.addEventListener('click', async () => {
+      const aviso = corpo.querySelector('#desenhos-kids-aviso');
+      corpo.querySelectorAll('[data-avatar]').forEach((b) => { b.disabled = true; });
+      try {
+        const { error } = await supabaseCliente.rpc('update_profile', { _pid: membroAtivo.id, _avatar_key: botao.dataset.avatar });
+        if (error) throw error;
+        membroAtivo.avatar = botao.dataset.avatar;
+        const naLista = membrosDaConta.find((m) => m.id === membroAtivo.id);
+        if (naLista) naLista.avatar = botao.dataset.avatar;
+        fecharJanelaDoCenaculo();
+        renderizarFaixaDaConta();
+        if (typeof mostrarAvisoTrilhas === 'function') mostrarAvisoTrilhas('Pronto! O seu desenho novo já aparece no seu perfil.');
+      } catch (erro) {
+        corpo.querySelectorAll('[data-avatar]').forEach((b) => { b.disabled = false; });
+        if (aviso) aviso.textContent = 'Não deu para mudar agora. Tente de novo.';
+      }
+    });
+  });
 }
 
 function abrirRanking() {

@@ -1,5 +1,5 @@
 const TAMANHO_DA_PAGINA_DA_COMUNIDADE = 30;
-const ORDEM_DOS_MARCOS = ['trilha', 'ofensiva', 'perfeitas', 'fe'];
+const ORDEM_DOS_MARCOS = ['trilha', 'ofensiva', 'perfeitas', 'fe', 'missao'];
 
 let abaDaComunidade = 'seguindo';
 let postagensDaComunidade = [];
@@ -18,6 +18,7 @@ function tituloDoMarco(m) {
   if (m.tipo === 'ofensiva') return `${valor} dias de ofensiva`;
   if (m.tipo === 'perfeitas') return `${valor} missões perfeitas`;
   if (m.tipo === 'fe') return `${valor} de Fé`;
+  if (m.tipo === 'missao') return `Missão perfeita na trilha de ${nomeDoSantoDoMarco(m.santo)}`;
   return `Trilha de ${nomeDoSantoDoMarco(m.santo)}`;
 }
 
@@ -27,10 +28,15 @@ function fraseDoMarco(m, nome) {
   if (m.tipo === 'ofensiva') return `${quem} chegou a <strong>${valor} dias seguidos</strong> estudando a vida dos santos!`;
   if (m.tipo === 'perfeitas') return `${quem} completou <strong>${valor} missões perfeitas</strong>, sem errar nada!`;
   if (m.tipo === 'fe') return `${quem} juntou <strong>${valor} de Fé</strong> nas trilhas dos santos!`;
+  if (m.tipo === 'missao') return `${quem} fez uma <strong>missão perfeita</strong> na trilha de ${escaparTexto(nomeDoSantoDoMarco(m.santo))}, sem errar nada!`;
   return `${quem} concluiu a <strong>trilha de ${escaparTexto(nomeDoSantoDoMarco(m.santo))}</strong> e ganhou a insígnia!`;
 }
 
-function desenhoDoMarco(tipo) {
+function desenhoDoMarco(tipo, m) {
+  if (tipo === 'trilha' && m && m.santo && typeof medalhaSvg === 'function') {
+    return medalhaSvg({ santoId: m.santo }, { conquistada: true, classe: 'marco-desenho marco-desenho-medalha' });
+  }
+  if (tipo === 'missao') tipo = 'perfeitas';
   sequenciaDasArtes += 1;
   const g = `marco-${sequenciaDasArtes}`;
   if (tipo === 'ofensiva') {
@@ -71,14 +77,17 @@ function arteDoMarco(m) {
   if (m.tipo === 'ofensiva') rotulo = valor === 1 ? 'dia de ofensiva' : 'dias de ofensiva';
   else if (m.tipo === 'perfeitas') rotulo = 'missões perfeitas';
   else if (m.tipo === 'fe') rotulo = 'de Fé';
-  else {
+  else if (m.tipo === 'missao') {
+    numero = '';
+    rotulo = `Missão perfeita · ${escaparTexto(nomeDoSantoDoMarco(m.santo))}`;
+  } else {
     numero = '';
     rotulo = `Insígnia de ${escaparTexto(nomeDoSantoDoMarco(m.santo))}`;
   }
   return `
     <div class="marco-arte marco-arte-${escaparTexto(m.tipo)}">
       <span class="marco-arte-brilho" aria-hidden="true"></span>
-      ${desenhoDoMarco(m.tipo)}
+      ${desenhoDoMarco(m.tipo, m)}
       <span class="marco-arte-textos">
         ${numero ? `<strong class="marco-arte-numero">${numero}</strong>` : ''}
         <span class="marco-arte-rotulo">${rotulo}</span>
@@ -568,6 +577,62 @@ function convidarParaPostar(m) {
       botao.disabled = false;
       botao.textContent = 'Sim, postar';
       avisoDaComunidade(mensagemDaComunidade(erro));
+    }
+  });
+}
+
+function oferecerCompartilharMissaoPerfeita(info) {
+  if (!info || !info.trilha || typeof janelaDoCenaculo !== 'function') return;
+  const { trilha, licao, chave } = info;
+  const traduzir = typeof tt === 'function' ? tt : (k) => k;
+  const perfil = perfilAdultoAtivo();
+  const podePostar = !!(chave && perfil && typeof contaLogada === 'function' && contaLogada());
+  const cores = typeof variaveisDeCorDaTrilha === 'function' ? variaveisDeCorDaTrilha(trilha) : '';
+  const estrelas = [0, 1, 2].map((i) => `<svg class="perfeita-estrela perfeita-estrela-${i}" viewBox="0 0 24 24" aria-hidden="true"><path d="${caminhoDaEstrelaDoMarco(12, 12.6, 11.5, 5.2)}"/></svg>`).join('');
+  const corpo = janelaDoCenaculo(traduzir('perfeita_titulo'), `
+    <div class="perfeita-convite" style="${cores}">
+      <div class="perfeita-arte" aria-hidden="true"><span class="perfeita-raios"></span>${estrelas}</div>
+      <h3>${traduzir('perfeita_titulo')}</h3>
+      <p class="perfeita-onde">${licao ? `${licao.titulo} · ` : ''}${trilha.titulo}</p>
+      <p class="perfeita-texto">${traduzir('perfeita_texto')}</p>
+      <div class="perfeita-botoes">
+        ${podePostar ? `<button type="button" class="licao-botao perfeita-postar" id="perfeita-postar">${iconeDaComunidade('comunidade')}<span>${traduzir('perfeita_postar')}</span></button>` : ''}
+        <button type="button" class="perfeita-enviar" id="perfeita-enviar">${iconeDaComunidade('enviar')}<span>${traduzir('perfeita_enviar')}</span></button>
+        <button type="button" class="marco-convite-nao" id="perfeita-nao">${traduzir('perfeita_agora_nao')}</button>
+      </div>
+    </div>`);
+  corpo.querySelector('#perfeita-nao').addEventListener('click', fecharJanelaDoCenaculo);
+  const postar = corpo.querySelector('#perfeita-postar');
+  if (postar) {
+    postar.addEventListener('click', async () => {
+      postar.disabled = true;
+      try {
+        await chamarComunidade('postar_marco', { _pid: perfil.id, _chave: chave });
+        fecharJanelaDoCenaculo();
+        avisoDaComunidade(traduzir('perfeita_postado'));
+        aposPostarMarco();
+      } catch (erro) {
+        postar.disabled = false;
+        avisoDaComunidade(mensagemDaComunidade(erro));
+      }
+    });
+  }
+  corpo.querySelector('#perfeita-enviar').addEventListener('click', async () => {
+    const mensagem = `${traduzir('perfeita_mensagem', { santo: trilha.santo })} https://luminasancti.com`;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: 'Lumina Sancti', text: mensagem });
+        fecharJanelaDoCenaculo();
+        return;
+      } catch (erro) {
+        if (erro && erro.name === 'AbortError') return;
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(mensagem);
+      avisoDaComunidade(traduzir('perfeita_copiado'));
+    } catch (erro) {
+      window.open(`https://wa.me/?text=${encodeURIComponent(mensagem)}`, '_blank', 'noopener');
     }
   });
 }

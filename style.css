@@ -4779,3 +4779,229 @@ button.ranking-linha:hover { border-color: rgba(var(--primary-rgb), 0.6); transf
 .lembrete-hora-linha { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: var(--text-main); font-size: 0.92rem; }
 .lembrete-hora-linha select { min-width: 96px; min-height: 40px; padding: 6px 10px; border-radius: 10px; border: 1px solid var(--secondary-color); background: var(--bg-color); color: var(--text-main); font: inherit; font-size: 1rem; }
 .lembrete-horario-explica { margin: 0; font-size: 0.84rem; line-height: 1.45; color: var(--text-muted); }
+
+.trilhas-layout { display: flex; flex-direction: column; }
+.trilhas-lateral { display: flex; flex-direction: column; min-width: 0; }
+.trilhas-principal { min-width: 0; }
+
+.trilhas-conta { flex-direction: column; align-items: stretch; gap: 12px; margin-bottom: 16px; }
+.trilhas-perfil { align-self: flex-start; padding: 6px 20px 6px 6px; font-size: 1.02rem; background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.2), var(--bg-alt) 70%); border: 1px solid rgba(var(--primary-rgb), 0.45); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25); transition: transform 0.2s ease; }
+.trilhas-perfil:hover { transform: translateY(-1px); }
+.trilhas-conta-acoes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.trilhas-conta-acoes .trilhas-acao { justify-content: center; gap: 10px; min-height: 52px; padding: 10px 14px; border-radius: 14px; border: 0; font-family: var(--font-text); font-weight: 800; font-size: 0.98rem; letter-spacing: 0.2px; transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease; }
+.trilhas-conta-acoes .trilhas-acao .icone { width: 22px; height: 22px; }
+.trilhas-conta-acoes .trilhas-acao:hover { transform: translateY(-1px); filter: brightness(1.08); }
+.trilhas-conta-acoes .trilhas-acao:active { transform: translateY(3px); }
+#trilhas-abrir-ranking { background: linear-gradient(135deg, #fde047, #f59e0b); color: #2a1a00; box-shadow: 0 5px 0 #a16207; }
+#trilhas-abrir-ranking:active { box-shadow: 0 2px 0 #a16207; }
+#trilhas-trocar-perfil { background: linear-gradient(135deg, #3b4a66, #243149); color: #e2e8f0; box-shadow: 0 5px 0 #111827; }
+#trilhas-trocar-perfil:active { box-shadow: 0 2px 0 #111827; }
+
+.trilhas-medalhas-cartao { margin: 14px 0 28px; padding: 14px 16px 16px; border-radius: 20px; background: radial-gradient(circle at 12% 0%, rgba(250, 204, 21, 0.18), transparent 58%), var(--bg-alt); border: 1px solid rgba(250, 204, 21, 0.3); box-shadow: 0 10px 26px rgba(0, 0, 0, 0.25); }
+.trilhas-medalhas-topo { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+.trilhas-medalhas-topo strong { font-family: var(--font-title); font-size: 1.2rem; color: #fde68a; }
+.trilhas-medalhas-conta { padding: 3px 11px; border-radius: 999px; background: rgba(250, 204, 21, 0.14); color: #fde68a; font-weight: 800; font-size: 0.86rem; }
+.trilhas-medalhas-conta:empty { display: none; }
+.trilhas-vitrine { display: flex; gap: 6px; overflow-x: auto; padding: 4px 2px 8px; scrollbar-width: thin; }
+.vitrine-medalha { flex: 0 0 auto; width: 52px; height: 62px; padding: 0; border: 0; background: none; cursor: pointer; transition: transform 0.2s ease; }
+.vitrine-medalha .medalha-svg { width: 100%; height: 100%; }
+.vitrine-medalha:hover, .vitrine-medalha:focus-visible { transform: translateY(-4px) scale(1.08); }
+.vitrine-medalha:focus-visible { outline: 2px solid #fde68a; outline-offset: 2px; border-radius: 10px; }
+.trilhas-ver-medalhas { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 8px; min-height: 48px; border-radius: 14px; border: 0; background: linear-gradient(135deg, #fde047, #f59e0b); color: #2a1a00; font-family: var(--font-text); font-weight: 800; font-size: 0.98rem; cursor: pointer; box-shadow: 0 5px 0 #a16207; transition: transform 0.15s ease, filter 0.15s ease; }
+.trilhas-ver-medalhas .icone { width: 21px; height: 21px; }
+.trilhas-ver-medalhas:hover { filter: brightness(1.07); transform: translateY(-1px); }
+.trilhas-ver-medalhas:active { transform: translateY(3px); box-shadow: 0 2px 0 #a16207; }
+
+.trilha-bloco .trilha-banner { background: radial-gradient(circle at 0% 0%, rgba(var(--cor-santo-rgb), 0.34), transparent 58%), linear-gradient(135deg, var(--bg-alt), #1a2437); border-color: rgba(var(--cor-santo-rgb), 0.45); box-shadow: 0 12px 30px rgba(var(--cor-santo-rgb), 0.12); }
+.trilha-bloco .trilha-banner.concluida { border-color: var(--cor-santo); box-shadow: 0 0 28px rgba(var(--cor-santo-rgb), 0.35); }
+.trilha-bloco .trilha-foto { border-color: var(--cor-santo); box-shadow: 0 0 0 4px rgba(var(--cor-santo-rgb), 0.18); }
+.trilha-bloco .trilha-virtude, .trilha-bloco .trilha-ler { color: var(--cor-santo-clara); }
+.trilha-bloco .trilha-progresso-barra > span { background: linear-gradient(90deg, var(--cor-santo-escura), var(--cor-santo), var(--cor-santo-clara), var(--cor-santo)); background-size: 300% 100%; }
+.trilha-bloco .no-licao.concluida .no-circulo { background: linear-gradient(145deg, var(--cor-santo-clara), var(--cor-santo)); color: #fff; box-shadow: 0 6px 0 var(--cor-santo-escura); }
+.trilha-bloco .no-licao.atual .no-circulo { background: linear-gradient(145deg, var(--cor-santo-clara), var(--cor-santo)); color: #fff; animation: noPulsoSanto 1.8s ease-in-out infinite; }
+.trilha-bloco .no-balao { background: var(--cor-santo-clara); color: #0f172a; }
+.trilha-bloco .no-balao::after { border-top-color: var(--cor-santo-clara); }
+@keyframes noPulsoSanto {
+  0%, 100% { box-shadow: 0 6px 0 var(--cor-santo-escura), 0 0 0 4px rgba(var(--cor-santo-rgb), 0.28); }
+  50% { box-shadow: 0 6px 0 var(--cor-santo-escura), 0 0 0 14px rgba(var(--cor-santo-rgb), 0.04); }
+}
+
+.medalha-svg { display: block; overflow: visible; }
+.medalha-conquistada .medalha-corpo { filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.45)); }
+.medalha-conquistada .medalha-emblema { filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.55)); }
+.medalha-trancada { filter: saturate(0.4); opacity: 0.8; }
+.medalha-reflexo { animation: medalhaReflexo 3.6s ease-in-out infinite; }
+@keyframes medalhaReflexo { 0%, 55% { transform: translateX(-40px); } 85%, 100% { transform: translateX(150px); } }
+
+.no-insignia { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 0; border: 0; background: none; cursor: pointer; font-family: var(--font-text); }
+.no-medalha { position: relative; display: block; width: 108px; height: 128px; transition: transform 0.2s ease; }
+.no-medalha .medalha-svg { position: relative; z-index: 1; width: 100%; height: 100%; }
+.no-insignia:hover .no-medalha { transform: scale(1.06); }
+.no-insignia.conquistada .no-medalha .medalha-svg { animation: medalhaFlutua 3.2s ease-in-out infinite; }
+.no-insignia.conquistada .no-rotulo { color: var(--cor-santo-clara); font-weight: 800; }
+.no-medalha-cadeado { position: absolute; z-index: 2; right: 8px; bottom: 12px; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #0f172a; border: 2px solid #475569; color: #94a3b8; }
+.no-medalha-cadeado .icone { width: 16px; height: 16px; }
+
+.medalha-raios { position: absolute; left: 50%; top: 62%; width: 190%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; background: repeating-conic-gradient(from 0deg, rgba(var(--cor-santo-rgb, 250, 204, 21), 0.38) 0deg 8deg, transparent 8deg 22deg); -webkit-mask: radial-gradient(circle, #000 22%, transparent 68%); mask: radial-gradient(circle, #000 22%, transparent 68%); animation: medalhaRaiosGiram 14s linear infinite; pointer-events: none; z-index: 0; }
+@keyframes medalhaRaiosGiram { to { transform: translate(-50%, -50%) rotate(360deg); } }
+@keyframes medalhaFlutua { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-7px) rotate(2deg); } }
+@keyframes medalhaEntrada { 0% { transform: scale(0.2) rotate(-25deg); opacity: 0; } 70% { transform: scale(1.12) rotate(6deg); opacity: 1; } 100% { transform: scale(1) rotate(0); opacity: 1; } }
+.medalha-palco { position: relative; display: flex; align-items: center; justify-content: center; width: 180px; height: 210px; margin: 0 auto 6px; }
+.medalha-palco .medalha-svg { position: relative; z-index: 1; width: 152px; height: 180px; }
+.medalha-palco.conquistada .medalha-svg { animation: medalhaFlutua 3.2s ease-in-out infinite; }
+.medalha-palco.conquistada .medalha-svg.medalha-entrada { animation: medalhaEntrada 0.9s cubic-bezier(0.2, 1.4, 0.4, 1) both, medalhaFlutua 3.2s ease-in-out 0.9s infinite; }
+.medalha-faiscas i { position: absolute; z-index: 2; width: 12px; height: 12px; background: #fde68a; clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); opacity: 0; animation: medalhaFaisca 2.4s ease-in-out infinite; }
+.medalha-faiscas i:nth-child(1) { left: 6%; top: 30%; animation-delay: 0s; }
+.medalha-faiscas i:nth-child(2) { right: 4%; top: 22%; animation-delay: 0.4s; }
+.medalha-faiscas i:nth-child(3) { left: 14%; bottom: 14%; animation-delay: 0.8s; }
+.medalha-faiscas i:nth-child(4) { right: 12%; bottom: 20%; animation-delay: 1.2s; }
+.medalha-faiscas i:nth-child(5) { left: 46%; top: 2%; animation-delay: 1.6s; }
+.medalha-faiscas i:nth-child(6) { right: 26%; bottom: 4%; animation-delay: 2s; }
+@keyframes medalhaFaisca { 0%, 100% { transform: scale(0); opacity: 0; } 50% { transform: scale(1.3) rotate(45deg); opacity: 1; } }
+
+.licao-fim { position: relative; isolation: isolate; }
+.licao-fim::before { content: ''; position: absolute; left: 50%; top: 0; width: 560px; max-width: 140vw; aspect-ratio: 1; transform: translateX(-50%); background: repeating-conic-gradient(from 0deg, rgba(var(--primary-rgb), 0.09) 0deg 10deg, transparent 10deg 24deg); -webkit-mask: radial-gradient(circle, #000 15%, transparent 62%); mask: radial-gradient(circle, #000 15%, transparent 62%); animation: fimRaiosGiram 40s linear infinite; z-index: -1; pointer-events: none; }
+@keyframes fimRaiosGiram { to { transform: translateX(-50%) rotate(360deg); } }
+.licao-fim .medalha-palco { margin-bottom: 0; }
+
+.licao-ofensiva { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; max-width: 360px; margin: 4px auto 20px; padding: 16px 16px 18px; border-radius: 22px; overflow: hidden; background: radial-gradient(circle at 50% 28%, rgba(251, 146, 60, 0.38), rgba(127, 29, 29, 0.12) 58%, transparent 80%), linear-gradient(180deg, rgba(124, 45, 18, 0.5), rgba(15, 23, 42, 0.25)); border: 1px solid rgba(251, 146, 60, 0.5); box-shadow: 0 0 34px rgba(249, 115, 22, 0.25); animation: ofensivaAparece 0.6s ease-out both; }
+.licao-ofensiva-fogo { position: relative; width: 96px; height: 116px; }
+.licao-ofensiva-brilho { position: absolute; inset: 12% -32% -4%; border-radius: 50%; background: radial-gradient(circle, rgba(253, 224, 71, 0.55), transparent 65%); animation: ofensivaBrilho 1.6s ease-in-out infinite; }
+.licao-ofensiva-chama { position: relative; z-index: 1; width: 100%; height: 100%; transform-origin: 50% 100%; filter: drop-shadow(0 0 16px rgba(251, 146, 60, 0.75)); animation: ofensivaChama 0.9s ease-in-out infinite alternate; }
+.licao-ofensiva-chama .chama-dentro { transform-box: fill-box; transform-origin: 50% 100%; animation: ofensivaChamaDentro 0.6s ease-in-out infinite alternate; }
+.licao-ofensiva-fagulhas i { position: absolute; z-index: 2; left: 50%; bottom: 22%; width: 5px; height: 5px; border-radius: 50%; background: #fde047; box-shadow: 0 0 6px #fb923c; opacity: 0; animation: ofensivaFagulha 1.9s ease-out infinite; animation-delay: var(--d); }
+.licao-ofensiva-numero { font-size: 3.4rem; font-weight: 900; line-height: 1; color: #fdba74; text-shadow: 0 0 18px rgba(251, 146, 60, 0.85); }
+.licao-ofensiva-numero.subiu { color: #fde047; animation: ofensivaNumero 0.6s cubic-bezier(0.2, 1.6, 0.4, 1); }
+.licao-ofensiva-texto { font-weight: 900; font-size: 1.12rem; color: #fed7aa; text-transform: uppercase; letter-spacing: 0.6px; }
+.licao-ofensiva-explica { max-width: 280px; color: var(--text-muted); font-size: 0.86rem; line-height: 1.45; }
+@keyframes ofensivaAparece { from { opacity: 0; transform: translateY(16px) scale(0.96); } to { opacity: 1; transform: none; } }
+@keyframes ofensivaBrilho { 0%, 100% { opacity: 0.6; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.08); } }
+@keyframes ofensivaChama { 0% { transform: scale(1, 1) skewX(-2deg); } 100% { transform: scale(1.05, 1.1) skewX(3deg); } }
+@keyframes ofensivaChamaDentro { 0% { transform: scaleY(0.9); } 100% { transform: scaleY(1.1); } }
+@keyframes ofensivaFagulha { 0% { transform: translate(0, 0) scale(1); opacity: 0; } 15% { opacity: 1; } 100% { transform: translate(var(--x), -112px) scale(0.3); opacity: 0; } }
+@keyframes ofensivaNumero { 0% { transform: scale(0.4) translateY(10px); } 60% { transform: scale(1.35); } 100% { transform: scale(1); } }
+
+.insignias-caixa { width: min(800px, 100%); padding: 28px 24px; border-radius: 24px; background: radial-gradient(circle at 50% 0%, rgba(250, 204, 21, 0.13), transparent 55%), var(--bg-alt); border-color: rgba(250, 204, 21, 0.28); }
+.insignias-caixa h2 { color: #fde68a; font-size: 1.9rem; }
+.insignias-lista[hidden], .insignia-detalhe[hidden] { display: none; }
+.insignias-grade { grid-template-columns: repeat(auto-fill, minmax(138px, 1fr)); gap: 12px; }
+.insignia-item { opacity: 1; cursor: pointer; color: inherit; font-family: var(--font-text); padding: 14px 8px 12px; border-radius: 18px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--secondary-color); transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease; }
+.insignia-item:hover, .insignia-item:focus-visible { transform: translateY(-3px); border-color: rgba(var(--cor-santo-rgb), 0.7); }
+.insignia-item.conquistada { border-color: rgba(var(--cor-santo-rgb), 0.7); background: radial-gradient(circle at 50% 22%, rgba(var(--cor-santo-rgb), 0.28), transparent 72%), rgba(255, 255, 255, 0.03); }
+.insignia-medalha { display: block; width: 84px; height: 100px; }
+.insignia-medalha .medalha-svg { width: 100%; height: 100%; }
+.insignia-item strong { color: var(--text-muted); }
+.insignia-item.conquistada strong { color: var(--cor-santo-clara); }
+.insignia-voltar { display: inline-flex; align-items: center; gap: 6px; padding: 6px 0; border: 0; background: none; color: var(--text-muted); font-family: var(--font-text); font-weight: 700; font-size: 0.92rem; cursor: pointer; }
+.insignia-voltar:hover { color: var(--text-main); }
+.insignia-voltar .icone { width: 18px; height: 18px; }
+.insignia-detalhe-corpo { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; padding: 4px 4px 2px; }
+.insignia-detalhe-corpo h3 { margin: 0; font-family: var(--font-title); font-size: 1.85rem; color: var(--text-main); }
+.insignia-detalhe-corpo.conquistada h3 { color: var(--cor-santo-clara); }
+.insignia-detalhe-santo { margin: 0; color: var(--text-muted); font-size: 1rem; }
+.insignia-detalhe-significado { width: 100%; max-width: 500px; padding: 14px 16px; border-radius: 16px; background: rgba(var(--cor-santo-rgb), 0.13); border: 1px solid rgba(var(--cor-santo-rgb), 0.38); text-align: left; }
+.insignia-detalhe-significado strong { display: block; margin-bottom: 4px; font-size: 0.76rem; letter-spacing: 1px; text-transform: uppercase; color: var(--cor-santo-clara); }
+.insignia-detalhe-significado p { margin: 0; line-height: 1.55; color: var(--text-main); }
+.insignia-detalhe-status { display: inline-flex; align-items: center; gap: 6px; margin: 4px 0 0; padding: 6px 14px; border-radius: 999px; background: rgba(74, 222, 128, 0.14); color: #4ade80; font-weight: 800; font-size: 0.9rem; }
+.insignia-detalhe-status .icone { width: 16px; height: 16px; }
+.insignia-detalhe-progresso { width: 100%; max-width: 420px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.insignia-detalhe-progresso .trilha-progresso-barra { width: 100%; flex: none; }
+.insignia-detalhe-progresso .trilha-progresso-barra > span { background: linear-gradient(90deg, var(--cor-santo-escura), var(--cor-santo), var(--cor-santo-clara)); }
+.insignia-detalhe-progresso small { color: var(--text-muted); font-weight: 700; }
+.insignia-detalhe-progresso p { margin: 0; color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
+.insignia-ir { width: auto; min-width: 230px; margin-top: 8px; background: linear-gradient(145deg, var(--cor-santo-clara), var(--cor-santo)); color: #fff; box-shadow: 0 5px 0 var(--cor-santo-escura); }
+
+.perfeita-convite { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.perfeita-arte { position: relative; display: flex; align-items: flex-end; justify-content: center; gap: 4px; width: 230px; height: 124px; }
+.perfeita-raios { position: absolute; left: 50%; top: 56%; width: 270px; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; background: repeating-conic-gradient(from 0deg, rgba(250, 204, 21, 0.3) 0deg 9deg, transparent 9deg 22deg); -webkit-mask: radial-gradient(circle, #000 18%, transparent 64%); mask: radial-gradient(circle, #000 18%, transparent 64%); animation: medalhaRaiosGiram 12s linear infinite; }
+.perfeita-estrela { position: relative; z-index: 1; fill: #facc15; stroke: #b45309; stroke-width: 0.8; stroke-linejoin: round; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4)); animation: perfeitaEstrela 0.7s cubic-bezier(0.2, 1.6, 0.4, 1) both; }
+.perfeita-estrela-0 { width: 62px; height: 62px; animation-delay: 0.1s; }
+.perfeita-estrela-1 { width: 94px; height: 94px; margin-bottom: 22px; animation-delay: 0.3s; }
+.perfeita-estrela-2 { width: 62px; height: 62px; animation-delay: 0.5s; }
+@keyframes perfeitaEstrela { 0% { transform: scale(0) rotate(-90deg); opacity: 0; } 100% { transform: scale(1) rotate(0); opacity: 1; } }
+.perfeita-convite h3 { margin: 4px 0 0; font-family: var(--font-title); font-size: 1.9rem; color: #fde047; }
+.perfeita-onde { margin: 0; color: var(--cor-santo-clara, var(--primary-color)); font-weight: 700; }
+.perfeita-texto { margin: 0; color: var(--text-muted); line-height: 1.55; }
+.perfeita-botoes { display: flex; flex-direction: column; gap: 8px; width: 100%; margin-top: 8px; }
+.perfeita-botoes .licao-botao, .perfeita-enviar { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.perfeita-botoes .icone { width: 20px; height: 20px; }
+.perfeita-enviar { min-height: 50px; border-radius: 14px; border: 0; background: linear-gradient(135deg, #4ade80, #16a34a); color: #fff; font-family: var(--font-text); font-weight: 800; font-size: 1rem; cursor: pointer; box-shadow: 0 5px 0 #14532d; transition: transform 0.15s ease, filter 0.15s ease; }
+.perfeita-enviar:hover { filter: brightness(1.07); }
+.perfeita-enviar:active { transform: translateY(3px); box-shadow: 0 2px 0 #14532d; }
+.perfeita-botoes .perfeita-postar { background: linear-gradient(135deg, #fde047, #f59e0b); color: #2a1a00; box-shadow: 0 5px 0 #a16207; }
+.perfeita-botoes .perfeita-postar:hover { background: linear-gradient(135deg, #fde047, #fbbf24); filter: brightness(1.05); }
+.perfeita-botoes .perfeita-postar:active { box-shadow: 0 2px 0 #a16207; }
+
+.comunidade-container { max-width: 720px; }
+.comunidade-topo { padding: 18px 20px; border-radius: 22px; background: radial-gradient(circle at 0% 0%, rgba(250, 204, 21, 0.2), transparent 50%), radial-gradient(circle at 100% 100%, rgba(var(--primary-rgb), 0.24), transparent 55%), var(--bg-alt); border: 1px solid rgba(var(--primary-rgb), 0.25); box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25); }
+.comunidade-titulo { font-size: 2.05rem; }
+.comunidade-postar { border: 0; border-radius: 14px; padding: 12px 18px; background: linear-gradient(135deg, #fde047, #f59e0b); color: #2a1a00; font-weight: 800; box-shadow: 0 5px 0 #a16207; transition: transform 0.15s ease, filter 0.15s ease; }
+.comunidade-postar:hover { background: linear-gradient(135deg, #fde047, #fbbf24); filter: brightness(1.05); }
+.comunidade-postar:active { transform: translateY(3px); box-shadow: 0 2px 0 #a16207; }
+.comunidade-eu { border-radius: 20px; background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.2), var(--bg-alt) 62%); border-color: rgba(var(--primary-rgb), 0.38); }
+.comunidade-eu .perfil-social-numero strong { color: #fde68a; }
+.comunidade-abas { border-radius: 16px; background: rgba(15, 23, 42, 0.65); border-color: rgba(var(--primary-rgb), 0.25); }
+.comunidade-aba { border-radius: 12px; padding: 12px; font-size: 0.98rem; transition: background 0.2s ease, color 0.2s ease; }
+.comunidade-aba:not(.ativa):hover { color: var(--text-main); background: rgba(255, 255, 255, 0.05); }
+.comunidade-aba.ativa { background: linear-gradient(135deg, var(--primary-claro), var(--primary-color)); color: #0f172a; box-shadow: 0 3px 0 var(--primary-sombra); }
+.comunidade-vazia { border: 0; border-radius: 24px; padding: 36px 20px 30px; background: radial-gradient(circle at 50% 0%, rgba(250, 204, 21, 0.18), transparent 62%), linear-gradient(180deg, rgba(var(--primary-rgb), 0.12), rgba(15, 23, 42, 0.45)); box-shadow: inset 0 0 0 1px rgba(var(--primary-rgb), 0.22), 0 12px 30px rgba(0, 0, 0, 0.2); }
+.comunidade-vazia-icone { width: 78px; height: 78px; background: radial-gradient(circle at 35% 30%, #fef3c7, #f59e0b 72%); color: #3b2300; box-shadow: 0 0 0 9px rgba(250, 204, 21, 0.12), 0 12px 26px rgba(245, 158, 11, 0.35); animation: comunidadeFlutua 3s ease-in-out infinite; }
+.comunidade-vazia-icone .icone { width: 34px; height: 34px; }
+.comunidade-vazia h3 { font-size: 1.5rem; }
+@keyframes comunidadeFlutua { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+.comunidade-mais { border-radius: 14px; border: 0; background: linear-gradient(135deg, #3b4a66, #243149); box-shadow: 0 4px 0 #111827; }
+.marco-cartao { border-radius: 20px; background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 40%), var(--bg-alt); border-color: rgba(var(--primary-rgb), 0.2); box-shadow: 0 10px 26px rgba(0, 0, 0, 0.25); transition: transform 0.2s ease; }
+.marco-cartao:hover { transform: translateY(-2px); }
+.marco-arte { border-radius: 18px; }
+.marco-arte-missao { background: linear-gradient(135deg, #713f12, #a16207 55%, #facc15); }
+.marco-arte-missao .marco-desenho { width: 104px; height: 70px; }
+.marco-desenho-medalha { width: 84px; height: 100px; filter: none; }
+.marco-reacao { border: 1px solid var(--secondary-color); background: rgba(255, 255, 255, 0.03); border-radius: 12px; font-weight: 800; }
+.marco-reacao[data-reacao="amem"].ativa { color: #93c5fd; border-color: rgba(147, 197, 253, 0.55); background: rgba(59, 130, 246, 0.16); }
+.marco-reacao[data-reacao="parabens"].ativa { color: #fde047; border-color: rgba(253, 224, 71, 0.55); background: rgba(234, 179, 8, 0.16); }
+
+@media (min-width: 1080px) {
+  .trilhas-container { max-width: 1260px; }
+  .trilhas-layout { display: grid; grid-template-columns: 372px minmax(0, 1fr); gap: 40px; align-items: start; }
+  .trilhas-lateral { position: sticky; top: 92px; max-height: calc(100vh - 108px); overflow-y: auto; padding: 22px 22px 20px; border-radius: 26px; background: radial-gradient(circle at 0% 0%, rgba(var(--primary-rgb), 0.16), transparent 55%), linear-gradient(180deg, rgba(30, 41, 59, 0.92), rgba(15, 23, 42, 0.92)); border: 1px solid rgba(var(--primary-rgb), 0.24); box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4); scrollbar-width: thin; }
+  .trilhas-lateral .trilhas-titulo { margin-top: 0; font-size: 2.1rem; }
+  .trilhas-lateral .trilhas-intro { font-size: 0.95rem; margin-bottom: 16px; }
+  .trilhas-lateral .trilhas-stats { margin-bottom: 0; }
+  .trilhas-medalhas-cartao { margin: 14px 0 0; }
+  .trilhas-vitrine { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); overflow: visible; gap: 2px 4px; }
+  .vitrine-medalha { width: 100%; height: auto; aspect-ratio: 120 / 142; }
+  .trilhas-principal { padding-top: 6px; }
+  .lista-trilhas { gap: 48px; }
+  .trilha-banner { padding: 22px 26px; gap: 22px; }
+  .trilha-foto { width: 112px; height: 112px; }
+  .trilha-info h3 { font-size: 1.75rem; }
+  .trilha-info p { font-size: 0.98rem; }
+  .trilha-caminho { gap: 28px; padding-top: 40px; }
+  .no-circulo { width: 86px; height: 86px; }
+  .no-circulo .icone-no { width: 34px; height: 34px; }
+  .desloc-d { transform: translateX(120px); }
+  .desloc-e { transform: translateX(-120px); }
+  .no-rotulo { font-size: 0.88rem; max-width: 180px; }
+  .no-medalha { width: 128px; height: 152px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .medalha-reflexo, .medalha-raios, .medalha-faiscas i, .medalha-palco .medalha-svg, .no-insignia.conquistada .no-medalha .medalha-svg,
+  .licao-fim::before, .licao-ofensiva, .licao-ofensiva-brilho, .licao-ofensiva-chama, .licao-ofensiva-chama .chama-dentro, .licao-ofensiva-fagulhas i,
+  .perfeita-raios, .perfeita-estrela, .comunidade-vazia-icone, .trilha-bloco .no-licao.atual .no-circulo { animation: none !important; }
+  .licao-ofensiva-fagulhas, .medalha-faiscas { display: none; }
+}
+
+.painel-kids-acoes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 18px; }
+.painel-kids-botao { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 84px; padding: 12px 10px; border: 0; border-radius: 18px; background: linear-gradient(145deg, #38bdf8, #0284c7); color: #fff; font-family: var(--font-text); font-weight: 900; font-size: 1rem; cursor: pointer; box-shadow: 0 5px 0 #075985; transition: transform 0.15s ease, filter 0.15s ease; }
+.painel-kids-botao .icone { width: 30px; height: 30px; }
+.painel-kids-botao:hover { filter: brightness(1.07); transform: translateY(-1px); }
+.painel-kids-botao:active { transform: translateY(3px); box-shadow: 0 2px 0 #075985; }
+.painel-kids-enfeites { background: linear-gradient(145deg, #f472b6, #db2777); box-shadow: 0 5px 0 #9d174d; }
+.painel-kids-enfeites:active { box-shadow: 0 2px 0 #9d174d; }
+.painel-kids-nota { margin: 10px 0 0; text-align: center; color: var(--text-muted); font-size: 0.86rem; }
+.desenhos-kids { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; padding: 6px 2px; }
+.desenho-kids { display: flex; align-items: center; justify-content: center; padding: 10px; border-radius: 22px; border: 3px solid transparent; background: rgba(255, 255, 255, 0.04); cursor: pointer; transition: transform 0.15s ease, border-color 0.15s ease; }
+.desenho-kids:hover { transform: scale(1.06); }
+.desenho-kids.escolhido { border-color: #facc15; background: rgba(250, 204, 21, 0.12); }
+.desenho-kids:disabled { opacity: 0.6; cursor: wait; }

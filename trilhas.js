@@ -829,10 +829,26 @@ const TEXTOS_TRILHAS = {
     ler_enquanto: 'Enquanto isso, ler a história de {santo}',
     voltar_trilhas: 'Voltar às trilhas',
     sair_confirmar: 'Sair agora? O progresso desta missão não será salvo.',
-    insignias_titulo: 'Minhas insígnias',
+    insignias_titulo: 'Minhas medalhas',
     insignias_resumo: '{feitas} de {total} medalhas. Conclua todas as missões de um santo para ganhar a dele.',
     conquistada: 'Conquistada',
     missoes_feitas: '{feitas} de {total} missões',
+    medalha_significado: 'O que esta medalha significa',
+    medalha_conquistada_em: 'Conquistada em {data}',
+    medalha_como_ganhar: 'Termine as {total} missões da trilha de {santo} para ganhar esta medalha.',
+    ir_para_trilha: 'Ir para a trilha',
+    voltar_medalhas: 'Voltar às medalhas',
+    ofensiva_dias: '{n} dias de ofensiva!',
+    ofensiva_um_dia: '1 dia de ofensiva!',
+    ofensiva_subiu: 'O seu fogo está aceso hoje. Volte amanhã para continuar a sequência.',
+    perfeita_titulo: 'Missão perfeita!',
+    perfeita_texto: 'Você acertou todas as perguntas de primeira. Compartilhe com mais pessoas!',
+    perfeita_postar: 'Postar na Comunidade',
+    perfeita_enviar: 'Enviar para amigos',
+    perfeita_agora_nao: 'Agora não',
+    perfeita_postado: 'Pronto! Sua missão perfeita está na Comunidade.',
+    perfeita_mensagem: 'Fiz uma missão perfeita na trilha de {santo} no Lumina Sancti! Venha aprender sobre a vida dos santos também:',
+    perfeita_copiado: 'Mensagem copiada! Cole onde quiser compartilhar.',
     fechar: 'Fechar',
     erro_sem_santidade: 'Sua Santidade está se renovando. Volte daqui a pouco.',
     santidade_pouca: 'Esta missão tem {n} perguntas e cada resposta usa 1 de Santidade. Você tem {tem}. A próxima volta em {min} min.',
@@ -895,10 +911,26 @@ const TEXTOS_TRILHAS = {
     ler_enquanto: 'Meanwhile, read the story of {santo}',
     voltar_trilhas: 'Back to the trails',
     sair_confirmar: 'Leave now? Your progress in this mission will not be saved.',
-    insignias_titulo: 'My badges',
+    insignias_titulo: 'My medals',
     insignias_resumo: '{feitas} of {total} medals. Finish all the missions of a saint to earn that medal.',
     conquistada: 'Earned',
     missoes_feitas: '{feitas} of {total} missions',
+    medalha_significado: 'What this medal means',
+    medalha_conquistada_em: 'Earned on {data}',
+    medalha_como_ganhar: 'Finish the {total} missions of the {santo} trail to earn this medal.',
+    ir_para_trilha: 'Go to the trail',
+    voltar_medalhas: 'Back to medals',
+    ofensiva_dias: '{n}-day streak!',
+    ofensiva_um_dia: '1-day streak!',
+    ofensiva_subiu: 'Your fire is lit today. Come back tomorrow to keep your streak going.',
+    perfeita_titulo: 'Perfect mission!',
+    perfeita_texto: 'You got every question right on the first try. Share it with more people!',
+    perfeita_postar: 'Post in the Community',
+    perfeita_enviar: 'Send to friends',
+    perfeita_agora_nao: 'Not now',
+    perfeita_postado: 'Done! Your perfect mission is in the Community.',
+    perfeita_mensagem: 'I completed a perfect mission on the {santo} trail in Lumina Sancti! Come learn about the lives of the saints too:',
+    perfeita_copiado: 'Message copied! Paste it wherever you want to share.',
     fechar: 'Close',
     erro_sem_santidade: 'Your Holiness is being renewed. Come back in a little while.',
     santidade_pouca: 'This mission has {n} questions and each answer uses 1 Holiness. You have {tem}. The next one comes back in {min} min.',
@@ -961,10 +993,26 @@ const TEXTOS_TRILHAS = {
     ler_enquanto: 'Mientras tanto, leer la historia de {santo}',
     voltar_trilhas: 'Volver a los senderos',
     sair_confirmar: '¿Salir ahora? El progreso de esta misión no se guardará.',
-    insignias_titulo: 'Mis insignias',
+    insignias_titulo: 'Mis medallas',
     insignias_resumo: '{feitas} de {total} medallas. Termina todas las misiones de un santo para ganar su medalla.',
     conquistada: 'Conseguida',
     missoes_feitas: '{feitas} de {total} misiones',
+    medalha_significado: 'Lo que significa esta medalla',
+    medalha_conquistada_em: 'Conseguida el {data}',
+    medalha_como_ganhar: 'Termina las {total} misiones del sendero de {santo} para ganar esta medalla.',
+    ir_para_trilha: 'Ir al sendero',
+    voltar_medalhas: 'Volver a las medallas',
+    ofensiva_dias: '¡{n} días de racha!',
+    ofensiva_um_dia: '¡1 día de racha!',
+    ofensiva_subiu: 'Tu fuego está encendido hoy. Vuelve mañana para seguir la racha.',
+    perfeita_titulo: '¡Misión perfecta!',
+    perfeita_texto: 'Acertaste todas las preguntas a la primera. ¡Compártelo con más personas!',
+    perfeita_postar: 'Publicar en la Comunidad',
+    perfeita_enviar: 'Enviar a amigos',
+    perfeita_agora_nao: 'Ahora no',
+    perfeita_postado: '¡Listo! Tu misión perfecta está en la Comunidad.',
+    perfeita_mensagem: '¡Hice una misión perfecta en el sendero de {santo} en Lumina Sancti! Ven a aprender sobre la vida de los santos tú también:',
+    perfeita_copiado: '¡Mensaje copiado! Pégalo donde quieras compartir.',
     fechar: 'Cerrar',
     erro_sem_santidade: 'Tu Santidad se está renovando. Vuelve dentro de un rato.',
     santidade_pouca: 'Esta misión tiene {n} preguntas y cada respuesta usa 1 de Santidad. Tienes {tem}. La próxima vuelve en {min} min.',
@@ -1005,6 +1053,88 @@ function tt(chave, valores, idioma) {
 
 function nomeDaMedalha(trilha) {
   return trilha.medalhaCompleta || tt('medalha_de', { m: trilha.medalha });
+}
+
+function variaveisDeCorDaTrilha(trilha) {
+  const cor = typeof corDaTrilha === 'function' ? corDaTrilha(trilha) : '#34d399';
+  const rgb = [1, 3, 5].map((i) => parseInt(cor.slice(i, i + 2), 16)).join(', ');
+  const clara = typeof misturarCor === 'function' ? misturarCor(cor, '#ffffff', 0.38) : cor;
+  const escura = typeof misturarCor === 'function' ? misturarCor(cor, '#000000', 0.42) : cor;
+  return `--cor-santo:${cor};--cor-santo-rgb:${rgb};--cor-santo-clara:${clara};--cor-santo-escura:${escura}`;
+}
+
+function desenhoDaMedalha(trilha, conquistada, classe) {
+  if (typeof medalhaSvg !== 'function') return icone(conquistada ? 'medalha' : 'cadeado');
+  return medalhaSvg(trilha, { conquistada, classe: classe || '', titulo: conquistada ? nomeDaMedalha(trilha) : trilha.medalha });
+}
+
+function medalhaGrandeAnimada(trilha) {
+  return `
+    <div class="medalha-palco conquistada" style="${variaveisDeCorDaTrilha(trilha)}">
+      <span class="medalha-raios" aria-hidden="true"></span>
+      <span class="medalha-faiscas" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+      ${desenhoDaMedalha(trilha, true, 'medalha-grande medalha-entrada')}
+    </div>`;
+}
+
+function dataDaMedalha(iso) {
+  const data = new Date(iso);
+  if (!iso || Number.isNaN(data.getTime())) return '';
+  const local = { en: 'en-US', es: 'es-ES' }[idiomaDasTrilhas()] || 'pt-BR';
+  return data.toLocaleDateString(local, { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+function renderizarVitrineDeMedalhas(trilhas, estado) {
+  const vitrine = document.getElementById('trilhas-vitrine');
+  const conta = document.getElementById('trilhas-medalhas-conta');
+  if (!vitrine) return;
+  const lista = trilhas.map((trilha) => ({ trilha, tem: trilhaConcluida(trilha, estado) }));
+  const ganhas = lista.filter((item) => item.tem).length;
+  if (conta) conta.textContent = `${ganhas}/${trilhas.length}`;
+  lista.sort((a, b) => Number(b.tem) - Number(a.tem));
+  vitrine.innerHTML = lista.map(({ trilha, tem }) => `
+    <button type="button" class="vitrine-medalha${tem ? ' conquistada' : ''}" data-medalha="${trilha.slug}" title="${tem ? nomeDaMedalha(trilha) : trilha.medalha} · ${trilha.santo}" aria-label="${tem ? nomeDaMedalha(trilha) : trilha.medalha}">
+      ${desenhoDaMedalha(trilha, tem)}
+    </button>`).join('');
+  vitrine.querySelectorAll('[data-medalha]').forEach((botao) => {
+    botao.addEventListener('click', () => abrirInsignias(botao.dataset.medalha));
+  });
+}
+
+let contadorDeChamas = 0;
+
+function htmlDaOfensivaAcesa(dias) {
+  const n = Math.max(1, Number(dias) || 1);
+  const id = `chama-fim-${++contadorDeChamas}`;
+  const fagulhas = Array.from({ length: 9 }, (_, i) => `<i style="--x:${(i - 4) * 9}px;--d:${(i * 0.23).toFixed(2)}s"></i>`).join('');
+  return `
+    <div class="licao-ofensiva" role="status">
+      <div class="licao-ofensiva-fogo" aria-hidden="true">
+        <span class="licao-ofensiva-brilho"></span>
+        <span class="licao-ofensiva-fagulhas">${fagulhas}</span>
+        <svg class="licao-ofensiva-chama" viewBox="0 0 64 80">
+          <defs>
+            <linearGradient id="${id}-fora" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fde047"/><stop offset="0.55" stop-color="#fb923c"/><stop offset="1" stop-color="#dc2626"/></linearGradient>
+            <linearGradient id="${id}-dentro" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffbeb"/><stop offset="1" stop-color="#fde047"/></linearGradient>
+          </defs>
+          <path class="chama-fora" d="M32 2C36 16 55 26 55 49C55 65 45 77 32 77C19 77 9 65 9 49C9 38 14 31 20 26C20 34 24 39 28 39C26 26 26 14 32 2Z" fill="url(#${id}-fora)"/>
+          <path class="chama-dentro" d="M32 38C35 47 44 51 44 61C44 69 39 75 32 75C25 75 20 69 20 61C20 56 23 52 26 50C27 55 29 57 31 57C30 51 30 44 32 38Z" fill="url(#${id}-dentro)"/>
+        </svg>
+      </div>
+      <strong class="licao-ofensiva-numero" data-para="${n}">${Math.max(0, n - 1)}</strong>
+      <span class="licao-ofensiva-texto">${n === 1 ? tt('ofensiva_um_dia') : tt('ofensiva_dias', { n })}</span>
+      <small class="licao-ofensiva-explica">${tt('ofensiva_subiu')}</small>
+    </div>`;
+}
+
+function animarOfensivaAcesa(lugar) {
+  const numero = lugar && lugar.querySelector('.licao-ofensiva-numero');
+  if (!numero) return;
+  setTimeout(() => {
+    if (!numero.isConnected) return;
+    numero.textContent = numero.dataset.para;
+    numero.classList.add('subiu');
+  }, 900);
 }
 
 function expandirEmMissoes(trilha, idioma) {
@@ -1481,7 +1611,7 @@ function renderizarTrilhas() {
 
     if (!liberada) {
       return `
-      <section class="trilha-bloco trilha-trancada" id="trilha-${trilha.slug}">
+      <section class="trilha-bloco trilha-trancada" id="trilha-${trilha.slug}" style="${variaveisDeCorDaTrilha(trilha)}">
         <div class="trilha-banner">
           <div class="trilha-foto" id="trilha-foto-${trilha.slug}"><svg class="card-img-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-aureola"></use></svg></div>
           <div class="trilha-info">
@@ -1515,14 +1645,18 @@ function renderizarTrilhas() {
     const posicaoInsignia = deslocamentos[trilha.licoes.length % deslocamentos.length];
     const noInsignia = `
       <div class="no-wrapper ${posicaoInsignia}">
-        <div class="no-insignia ${concluida ? 'conquistada' : ''}">
-          <span class="no-circulo">${icone('medalha', 'icone-no')}</span>
+        <button type="button" class="no-insignia ${concluida ? 'conquistada' : ''}" data-medalha="${trilha.slug}">
+          <span class="no-medalha">
+            ${concluida ? '<span class="medalha-raios" aria-hidden="true"></span>' : ''}
+            ${desenhoDaMedalha(trilha, concluida)}
+            ${concluida ? '' : `<span class="no-medalha-cadeado">${icone('cadeado')}</span>`}
+          </span>
           <span class="no-rotulo">${concluida ? nomeDaMedalha(trilha) : tt('insignia_da_trilha')}</span>
-        </div>
+        </button>
       </div>`;
 
     return `
-      <section class="trilha-bloco" id="trilha-${trilha.slug}">
+      <section class="trilha-bloco" id="trilha-${trilha.slug}" style="${variaveisDeCorDaTrilha(trilha)}">
         <div class="trilha-banner ${concluida ? 'concluida' : ''}">
           <div class="trilha-foto" id="trilha-foto-${trilha.slug}"><svg class="card-img-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-aureola"></use></svg></div>
           <div class="trilha-info">
@@ -1546,6 +1680,10 @@ function renderizarTrilhas() {
   lista.querySelectorAll('.trilha-ler').forEach((botao) => {
     botao.addEventListener('click', () => showDetail(botao.dataset.santo));
   });
+  lista.querySelectorAll('.no-insignia[data-medalha]').forEach((botao) => {
+    botao.addEventListener('click', () => abrirInsignias(botao.dataset.medalha));
+  });
+  renderizarVitrineDeMedalhas(trilhas, estado);
 
   trilhas.forEach((trilha) => {
     const santo = santoParaFotoDaTrilha(trilha);
@@ -1966,6 +2104,10 @@ function finalizarLicao() {
     estado.insignias[trilha.slug] = new Date().toISOString();
     insigniaNova = true;
   }
+  const hojeDaMissao = dataLocalISO(new Date());
+  const ofensivaSubiu = estado.diaDaUltimaMissao !== hojeDaMissao;
+  estado.diaDaUltimaMissao = hojeDaMissao;
+  const perfeita = acertosDePrimeira === total && !anterior;
   salvarProgressoTrilhas(estado);
 
   licaoAtual.finalizada = true;
@@ -1977,16 +2119,16 @@ function finalizarLicao() {
   if (corpo) {
     corpo.innerHTML = `
       <div class="licao-fim">
-        <div class="licao-fim-icone">${insigniaNova ? icone('medalha') : icone('estrela')}</div>
+        ${insigniaNova ? medalhaGrandeAnimada(trilha) : `<div class="licao-fim-icone">${icone('estrela')}</div>`}
         <h2>${tt('missao_concluida')}</h2>
         <p class="licao-fim-sub">${licao.titulo} · ${trilha.titulo}</p>
         <div class="licao-fim-dados">
           <div class="licao-fim-dado licao-fim-fe">${estrelaDaFe('fe-grande')}<strong id="licao-fe-ganha">+${feGanha}</strong><span>${tt('de_fe')}</span></div>
           <div class="licao-fim-dado"><strong>${acertosDePrimeira}/${total}</strong><span>${tt('de_primeira')}</span></div>
         </div>
+        ${ofensivaSubiu ? htmlDaOfensivaAcesa(estado.ofensiva) : ''}
         ${insigniaNova ? `
         <div class="insignia-conquistada">
-          <div class="insignia-icone">${icone('medalha')}</div>
           <h3>${tt('insignia_de', { santo: trilha.santo })}</h3>
           <p>${tt('ganhou_medalha', { medalha: nomeDaMedalha(trilha) })}</p>
         </div>` : ''}
@@ -1994,6 +2136,10 @@ function finalizarLicao() {
   }
   avisarMascote('concluiu', { medalha: insigniaNova });
   prepararRodapeDaLicao(tt('continuar'), true);
+  animarOfensivaAcesa(corpo);
+  if (perfeita && !perfilEhInfantil() && typeof oferecerCompartilharMissaoPerfeita === 'function') {
+    setTimeout(() => oferecerCompartilharMissaoPerfeita({ trilha, licao, chave: null }), 1600);
+  }
 }
 
 function mostrarFimSemSantidade() {
@@ -2048,7 +2194,7 @@ function aoClicarBotaoDaLicao() {
   else continuarLicao();
 }
 
-function abrirInsignias() {
+function abrirInsignias(slugParaAbrir) {
   const estado = carregarProgressoTrilhas();
   const trilhas = trilhasEmUso();
   const conquistadas = trilhas.filter((t) => trilhaConcluida(t, estado));
@@ -2058,29 +2204,80 @@ function abrirInsignias() {
     modal = document.createElement('div');
     modal.id = 'insignias-modal';
     modal.className = 'insignias-modal';
-    modal.innerHTML = '<div class="insignias-caixa"><button class="insignias-fechar">&times;</button><h2></h2><p class="insignias-resumo"></p><div class="insignias-grade"></div></div>';
+    modal.innerHTML = '<div class="insignias-caixa"><button class="insignias-fechar">&times;</button><div class="insignias-lista"><h2></h2><p class="insignias-resumo"></p><div class="insignias-grade"></div></div><div class="insignia-detalhe" hidden></div></div>';
     document.body.appendChild(modal);
     modal.addEventListener('click', (e) => {
       if (e.target === modal || e.target.classList.contains('insignias-fechar')) modal.classList.remove('aberto');
     });
   }
 
+  const listaDeMedalhas = modal.querySelector('.insignias-lista');
+  const detalhe = modal.querySelector('.insignia-detalhe');
+  const mostrarLista = () => {
+    detalhe.hidden = true;
+    detalhe.innerHTML = '';
+    listaDeMedalhas.hidden = false;
+  };
+
   modal.querySelector('.insignias-fechar').setAttribute('aria-label', tt('fechar'));
   modal.querySelector('h2').textContent = tt('insignias_titulo');
   modal.querySelector('.insignias-resumo').textContent =
     tt('insignias_resumo', { feitas: conquistadas.length, total: trilhas.length });
-  modal.querySelector('.insignias-grade').innerHTML = trilhas.map((trilha) => {
+  const grade = modal.querySelector('.insignias-grade');
+  grade.innerHTML = trilhas.map((trilha) => {
     const tem = trilhaConcluida(trilha, estado);
     const feitas = trilha.licoes.filter((l) => estado.licoes[l.slug]).length;
     return `
-      <div class="insignia-item ${tem ? 'conquistada' : ''}">
-        <span class="insignia-medalha">${icone(tem ? 'medalha' : 'cadeado')}</span>
+      <button type="button" class="insignia-item ${tem ? 'conquistada' : ''}" data-medalha="${trilha.slug}" style="${variaveisDeCorDaTrilha(trilha)}">
+        <span class="insignia-medalha">${desenhoDaMedalha(trilha, tem)}</span>
         <strong>${tem ? nomeDaMedalha(trilha) : trilha.medalha}</strong>
         <span class="insignia-santo">${trilha.santo}</span>
         <span class="insignia-progresso">${tem ? tt('conquistada') : tt('missoes_feitas', { feitas, total: trilha.licoes.length })}</span>
-      </div>`;
+      </button>`;
   }).join('');
+  grade.querySelectorAll('[data-medalha]').forEach((botao) => {
+    botao.addEventListener('click', () => {
+      const trilha = trilhas.find((item) => item.slug === botao.dataset.medalha);
+      if (trilha) mostrarDetalheDaMedalha(modal, trilha, estado, mostrarLista);
+    });
+  });
+
+  const alvo = slugParaAbrir ? trilhas.find((item) => item.slug === slugParaAbrir) : null;
+  if (alvo) mostrarDetalheDaMedalha(modal, alvo, estado, mostrarLista);
+  else mostrarLista();
   modal.classList.add('aberto');
+}
+
+function mostrarDetalheDaMedalha(modal, trilha, estado, voltar) {
+  const detalhe = modal.querySelector('.insignia-detalhe');
+  const listaDeMedalhas = modal.querySelector('.insignias-lista');
+  const tem = trilhaConcluida(trilha, estado);
+  const total = trilha.licoes.length;
+  const feitas = trilha.licoes.filter((l) => estado.licoes[l.slug]).length;
+  const porcento = Math.round((feitas / Math.max(1, total)) * 100);
+  const quando = tem && estado.insignias ? dataDaMedalha(estado.insignias[trilha.slug]) : '';
+  const significado = typeof significadoDaMedalha === 'function' ? significadoDaMedalha(trilha, idiomaDasTrilhas()) : '';
+  detalhe.innerHTML = `
+    <button type="button" class="insignia-voltar">${icone('voltar-seta')}<span>${tt('voltar_medalhas')}</span></button>
+    <div class="insignia-detalhe-corpo${tem ? ' conquistada' : ''}" style="${variaveisDeCorDaTrilha(trilha)}">
+      ${tem ? medalhaGrandeAnimada(trilha) : `<div class="medalha-palco">${desenhoDaMedalha(trilha, false, 'medalha-grande')}</div>`}
+      <h3>${tem ? nomeDaMedalha(trilha) : tt('medalha_de', { m: trilha.medalha })}</h3>
+      <p class="insignia-detalhe-santo">${trilha.santo}</p>
+      ${significado ? `<div class="insignia-detalhe-significado"><strong>${tt('medalha_significado')}</strong><p>${significado}</p></div>` : ''}
+      ${tem
+        ? `<p class="insignia-detalhe-status">${icone('check')}<span>${quando ? tt('medalha_conquistada_em', { data: quando }) : tt('conquistada')}</span></p>`
+        : `<div class="insignia-detalhe-progresso"><span class="trilha-progresso-barra"><span style="width:${porcento}%"></span></span><small>${tt('missoes_feitas', { feitas, total })}</small><p>${tt('medalha_como_ganhar', { total, santo: trilha.santo })}</p></div>`}
+      <button type="button" class="licao-botao insignia-ir">${tt('ir_para_trilha')}</button>
+    </div>`;
+  listaDeMedalhas.hidden = true;
+  detalhe.hidden = false;
+  const caixa = modal.querySelector('.insignias-caixa');
+  if (caixa) caixa.scrollTop = 0;
+  detalhe.querySelector('.insignia-voltar').addEventListener('click', voltar);
+  detalhe.querySelector('.insignia-ir').addEventListener('click', () => {
+    modal.classList.remove('aberto');
+    abrirTrilhas(trilha.slug);
+  });
 }
 
 function converterPerguntaDoServidor(q) {
@@ -2252,6 +2449,8 @@ async function finalizarLicaoNoServidor() {
 
   const estado = estadoEmMemoriaDaConta;
   const jaTinhaInsignia = estado ? trilhaConcluida(trilha, estado) : true;
+  const jaFeita = !!(estado && estado.licoes[licao.slug]);
+  const perfeita = Number(r.total) > 0 && Number(r.correct) === Number(r.total) && !jaFeita;
   if (estado) {
     estado.fe = r.faith_total;
     estado.ofensiva = r.streak;
@@ -2262,13 +2461,14 @@ async function finalizarLicaoNoServidor() {
   if (insigniaNova) estado.insignias[trilha.slug] = new Date().toISOString();
   const membro = typeof obterMembroAtivo === 'function' ? obterMembroAtivo() : null;
   const antesDaMissao = membro ? { fe: membro.fe, ofensiva: membro.ofensiva } : {};
+  const ofensivaSubiu = !!membro && Number(r.streak) > Number(antesDaMissao.ofensiva || 0);
   if (membro) Object.assign(membro, { fe: r.faith_total, ofensiva: r.streak, santidade: r.santidade });
 
   somDaLicao('fim');
   if (corpo) {
     corpo.innerHTML = `
       <div class="licao-fim">
-        <div class="licao-fim-icone">${insigniaNova ? icone('medalha') : icone('estrela')}</div>
+        ${insigniaNova ? medalhaGrandeAnimada(trilha) : `<div class="licao-fim-icone">${icone('estrela')}</div>`}
         <h2>${tt('missao_concluida')}</h2>
         <p class="licao-fim-sub">${licao.titulo} · ${trilha.titulo}</p>
         <div class="licao-estrelas" aria-label="${tt('estrelas', { n: r.stars })}">${estrelasDaMissao(r.stars)}</div>
@@ -2276,9 +2476,9 @@ async function finalizarLicaoNoServidor() {
           <div class="licao-fim-dado licao-fim-fe">${estrelaDaFe('fe-grande')}<strong id="licao-fe-ganha">+${r.faith_awarded}</strong><span>${tt('de_fe')}</span></div>
           <div class="licao-fim-dado"><strong>${r.correct}/${r.total}</strong><span>${tt('acertos')}</span></div>
         </div>
+        ${ofensivaSubiu ? htmlDaOfensivaAcesa(r.streak) : ''}
         ${insigniaNova ? `
         <div class="insignia-conquistada">
-          <div class="insignia-icone">${icone('medalha')}</div>
           <h3>${tt('insignia_de', { santo: trilha.santo })}</h3>
           <p>${tt('ganhou_medalha', { medalha: nomeDaMedalha(trilha) })}</p>
         </div>` : ''}
@@ -2286,12 +2486,18 @@ async function finalizarLicaoNoServidor() {
   }
   avisarMascote('concluiu', { medalha: insigniaNova });
   prepararRodapeDaLicao(tt('continuar'), true);
+  animarOfensivaAcesa(corpo);
   if (membro && membro.tipo === 'adulto') {
     (async () => {
       const mostrouMarco = typeof verificarNovoMarco === 'function'
         ? await verificarNovoMarco({ resultado: r, antes: antesDaMissao, insigniaNova, trilha })
         : false;
-      if (!mostrouMarco && Number(r.streak) >= 2 && typeof oferecerLembreteDaOfensiva === 'function') oferecerLembreteDaOfensiva();
+      if (mostrouMarco) return;
+      if (perfeita && typeof oferecerCompartilharMissaoPerfeita === 'function') {
+        setTimeout(() => oferecerCompartilharMissaoPerfeita({ trilha, licao, chave: licao.id ? `missao-${licao.id}` : null }), 1100);
+        return;
+      }
+      if (Number(r.streak) >= 2 && typeof oferecerLembreteDaOfensiva === 'function') oferecerLembreteDaOfensiva();
     })();
   }
 }

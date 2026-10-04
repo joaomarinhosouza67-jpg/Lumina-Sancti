@@ -658,15 +658,26 @@
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
           <span data-i18n="voltar_inicio">Voltar para o início</span>
         </button>
-        <h2 class="section-title trilhas-titulo" data-i18n="trilhas_titulo">Trilhas dos Santos</h2>
-        <p class="trilhas-intro" data-i18n="trilhas_intro">Uma trilha para cada santo. Complete as missões para ganhar Fé, manter sua ofensiva e conquistar a insígnia e a medalha da virtude de cada um.</p>
-        <div class="trilhas-conta" id="trilhas-conta"></div>
-        <div class="trilhas-stats" id="trilhas-stats"></div>
-        <div class="trilhas-acoes">
-          <button id="trilhas-abrir-insignias" class="trilhas-acao" data-i18n="trilhas_insignias">Minhas insígnias</button>
+        <div class="trilhas-layout">
+          <aside class="trilhas-lateral">
+            <h2 class="section-title trilhas-titulo" data-i18n="trilhas_titulo">Trilhas dos Santos</h2>
+            <p class="trilhas-intro" data-i18n="trilhas_intro">Uma trilha para cada santo. Complete as missões para ganhar Fé, manter sua ofensiva e conquistar a insígnia e a medalha da virtude de cada um.</p>
+            <div class="trilhas-conta" id="trilhas-conta"></div>
+            <div class="trilhas-stats" id="trilhas-stats"></div>
+            <div class="trilhas-medalhas-cartao">
+              <div class="trilhas-medalhas-topo">
+                <strong data-i18n="trilhas_insignias">Minhas medalhas</strong>
+                <span class="trilhas-medalhas-conta" id="trilhas-medalhas-conta"></span>
+              </div>
+              <div class="trilhas-vitrine" id="trilhas-vitrine"></div>
+              <button id="trilhas-abrir-insignias" class="trilhas-ver-medalhas"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-medalha"></use></svg><span data-i18n="trilhas_ver_medalhas">Ver todas as medalhas</span></button>
+            </div>
+          </aside>
+          <div class="trilhas-principal">
+            <div id="lista-trilhas" class="lista-trilhas"></div>
+            <p class="trilhas-nota" id="trilhas-nota">Por enquanto seu progresso fica salvo neste aparelho. Em breve ele vai ficar guardado na sua conta, com perfis e rankings.</p>
+          </div>
         </div>
-        <div id="lista-trilhas" class="lista-trilhas"></div>
-        <p class="trilhas-nota" id="trilhas-nota">Por enquanto seu progresso fica salvo neste aparelho. Em breve ele vai ficar guardado na sua conta, com perfis e rankings.</p>
       </div>
     </section>
 
@@ -1059,6 +1070,7 @@
   <script src="busca.js"></script>
   <script src="nomes-santos.js"></script>
   <script src="liturgia.js"></script>
+  <script src="medalhas.js"></script>
   <script src="script.js"></script>
   <script src="trilhas.js"></script>
   <script src="perfis.js"></script>
