@@ -18,14 +18,14 @@ function horarioDaOfensiva(dados) {
 function explicacaoDaOfensiva(modo, hora) {
   if (modo === 'hora') {
     return hora >= ULTIMA_HORA_DA_OFENSIVA
-      ? `Um aviso às ${hora}h, se você ainda não fez a missão do dia.`
-      : `Um aviso a cada hora, das ${hora}h às ${ULTIMA_HORA_DA_OFENSIVA}h, até você fazer a missão do dia.`;
+      ? tr('Um aviso às {hora}h, se você ainda não fez a missão do dia.', { hora })
+      : tr('Um aviso a cada hora, das {hora}h às {ultima}h, até você fazer a missão do dia.', { hora, ultima: ULTIMA_HORA_DA_OFENSIVA });
   }
-  return `Um aviso às ${hora}h, se você ainda não fez a missão do dia.`;
+  return tr('Um aviso às {hora}h, se você ainda não fez a missão do dia.', { hora });
 }
 
 function resumoDaOfensiva(modo, hora) {
-  return modo === 'hora' ? `Ofensiva de hora em hora a partir das ${hora}h` : `Ofensiva às ${hora}h`;
+  return modo === 'hora' ? tr('Ofensiva de hora em hora a partir das {hora}h', { hora }) : tr('Ofensiva às {hora}h', { hora });
 }
 
 function notificacoesSuportadas() {
@@ -112,6 +112,7 @@ async function mudarLembretes(novos) {
     _ofensiva: !!novos.ofensiva,
     _ofensiva_modo: horario.modo,
     _ofensiva_hora: horario.hora,
+    _idioma: typeof idiomaAtual !== 'undefined' ? idiomaAtual : 'pt',
   });
   if (error) throw error;
   if (!ligar) {
@@ -292,7 +293,7 @@ async function atualizarResumoDosLembretes() {
   const resumo = document.getElementById('meu-perfil-lembretes-resumo');
   if (!resumo) return;
   const atuais = await lembretesDoAparelho();
-  const ligados = Object.keys(LEMBRETES).filter((t) => atuais[t]).map((t) => (t === 'misericordia' ? 'Misericórdia às 15h' : resumoDaOfensiva(atuais.modo, atuais.hora)));
+  const ligados = Object.keys(LEMBRETES).filter((t) => atuais[t]).map((t) => (t === 'misericordia' ? tr('Misericórdia às 15h') : resumoDaOfensiva(atuais.modo, atuais.hora)));
   if (resumo.isConnected) resumo.textContent = ligados.length ? ligados.join(' e ') : 'Desligados';
 }
 
@@ -310,6 +311,19 @@ function abrirPeloEnderecoDoLembrete() {
     else if (destino === 'trilhas' && typeof abrirTrilhas === 'function') abrirTrilhas();
   }, 1200);
 }
+
+async function avisarIdiomaDosLembretes(idioma) {
+  if (!notificacoesSuportadas() || Notification.permission !== 'granted' || typeof contaLogada !== 'function' || !contaLogada()) return;
+  try {
+    const inscricao = await inscricaoDoAparelho(false);
+    if (inscricao) await supabaseCliente.rpc('notificacoes_idioma', { _endpoint: inscricao.endpoint, _idioma: idioma });
+  } catch (e) {
+  }
+}
+
+document.addEventListener('lumina-idioma', (evento) => {
+  avisarIdiomaDosLembretes(evento.detail && evento.detail.idioma ? evento.detail.idioma : 'pt');
+});
 
 document.addEventListener('DOMContentLoaded', () => {
   const iniciar = () => abrirPeloEnderecoDoLembrete();

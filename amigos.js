@@ -179,7 +179,7 @@ function mostrarCartaoDoCodigo(corpo, codigo) {
     aviso.textContent = (await copiarTexto(formatarCodigoPessoal(codigo))) ? 'Código copiado!' : 'Não foi possível copiar. Anote o código.';
   });
   corpo.querySelector('#meu-codigo-compartilhar').addEventListener('click', async () => {
-    const texto = `Converse comigo no Lumina Sancti. Meu código: ${formatarCodigoPessoal(codigo)}`;
+    const texto = tr('Converse comigo no Lumina Sancti. Meu código: {codigo}', { codigo: formatarCodigoPessoal(codigo) });
     if (navigator.share) {
       navigator.share({ title: 'Lumina Sancti', text: texto, url: link }).catch(() => {});
       return;
@@ -187,7 +187,7 @@ function mostrarCartaoDoCodigo(corpo, codigo) {
     aviso.textContent = (await copiarTexto(`${texto}\n${link}`)) ? 'Link copiado!' : 'Não foi possível copiar.';
   });
   corpo.querySelector('#meu-codigo-novo').addEventListener('click', async () => {
-    if (!window.confirm('Gerar um código novo? Quem tiver o código antigo não vai mais conseguir adicionar você. As conversas que você já tem continuam.')) return;
+    if (!window.confirm(tr('Gerar um código novo? Quem tiver o código antigo não vai mais conseguir adicionar você. As conversas que você já tem continuam.'))) return;
     try {
       const novo = await chamarCenaculo('amigo_novo_codigo', { _pid: perfilAdultoAtivo().id });
       mostrarCartaoDoCodigo(corpo, novo);
@@ -419,16 +419,16 @@ async function abrirAdicionarPessoa(codigoInicial) {
 function frasesDaComparacao(dados) {
   const nome = escaparTexto(primeiroNome(dados.nome));
   const diferenca = Number(dados.minha_fe || 0) - Number(dados.fe || 0);
-  if (diferenca > 0) return `Você tem <strong>${diferenca}</strong> de Fé a mais que ${nome}. Continue assim!`;
-  if (diferenca < 0) return `Faltam <strong>${-diferenca}</strong> de Fé para você alcançar ${nome}.`;
-  return `Você e ${nome} estão empatados em Fé.`;
+  if (diferenca > 0) return tr('Você tem <strong>{n}</strong> de Fé a mais que {nome}. Continue assim!', { n: diferenca, nome });
+  if (diferenca < 0) return tr('Faltam <strong>{n}</strong> de Fé para você alcançar {nome}.', { n: -diferenca, nome });
+  return tr('Você e {nome} estão empatados em Fé.', { nome });
 }
 
 function desdeQuando(iso) {
   if (!iso) return '';
   const data = new Date(iso);
   if (Number.isNaN(data.getTime())) return '';
-  return `No Lumina Sancti desde ${data.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}`;
+  return tr('No Lumina Sancti desde {data}', { data: data.toLocaleDateString(localDoIdioma(), { month: 'long', year: 'numeric' }) });
 }
 
 function cartaoDeEstatistica(icone, cor, valor, rotulo, detalhe) {
@@ -461,7 +461,7 @@ function blocoDaComparacao(dados, fotoDoOutro) {
   };
   return `
     <section class="perfil-secao">
-      <h4 class="perfil-secao-titulo">Você x ${escaparTexto(primeiroNome(dados.nome))}</h4>
+      <h4 class="perfil-secao-titulo">${tr('Você x {nome}', { nome: escaparTexto(primeiroNome(dados.nome)) })}</h4>
       <div class="perfil-duelo">
         ${lado(avatarDoCenaculo(perfil.avatar, perfil.fotoUrl, 'pequeno'), 'Você', minha, 'eu')}
         <span class="perfil-duelo-x">x</span>
@@ -495,7 +495,7 @@ function rodapeDoPerfil(dados) {
   const nome = escaparTexto(primeiroNome(dados.nome));
   return `
     <div class="perfil-perigo">
-      <button type="button" class="perfil-perigo-botao" id="perfil-publico-bloquear" data-bloqueado="${bloqueado ? 'sim' : 'nao'}">${iconeDoCenaculo('escudo')}<span>${bloqueado ? `Desbloquear ${nome}` : `Bloquear ${nome}`}</span></button>
+      <button type="button" class="perfil-perigo-botao" id="perfil-publico-bloquear" data-bloqueado="${bloqueado ? 'sim' : 'nao'}">${iconeDoCenaculo('escudo')}<span>${tr(bloqueado ? 'Desbloquear {nome}' : 'Bloquear {nome}', { nome })}</span></button>
     </div>`;
 }
 
@@ -533,15 +533,15 @@ async function abrirPerfilPublico(idDoPerfil) {
           <div class="perfil-selos">
             ${dados.eu ? '<span class="perfil-selo">Você</span>' : ''}
             ${dados.contato ? `<span class="perfil-selo">${iconeDoCenaculo('conversa')} Contato</span>` : ''}
-            ${sequencia >= 3 ? `<span class="perfil-selo fogo">${iconeDoCenaculo('chama')} ${sequencia} dias seguidos</span>` : ''}
-            ${licoes >= 10 ? `<span class="perfil-selo estudioso">${iconeDoCenaculo('livro')} ${licoes} lições</span>` : ''}
+            ${sequencia >= 3 ? `<span class="perfil-selo fogo">${iconeDoCenaculo('chama')} ${tr('{n} dias seguidos', { n: sequencia })}</span>` : ''}
+            ${licoes >= 10 ? `<span class="perfil-selo estudioso">${iconeDoCenaculo('livro')} ${tr('{n} lições', { n: licoes })}</span>` : ''}
           </div>
         </div>
         ${acoesDoPerfil(dados)}
         <section class="perfil-secao">
           <h4 class="perfil-secao-titulo">Estatísticas</h4>
           <div class="perfil-publico-numeros">
-            ${cartaoDeEstatistica('chama', '#ff9600', sequencia, sequencia === 1 ? 'dia seguido' : 'dias seguidos', recorde > 0 ? `recorde: ${recorde}` : '')}
+            ${cartaoDeEstatistica('chama', '#ff9600', sequencia, sequencia === 1 ? 'dia seguido' : 'dias seguidos', recorde > 0 ? tr('recorde: {n}', { n: recorde }) : '')}
             ${cartaoDeEstatistica('estrela', '#f5b400', Number(dados.fe || 0), 'Fé no total', '')}
             ${cartaoDeEstatistica('trofeu', '#58cc02', Number(dados.fe_semana || 0), 'Fé nesta semana', '')}
             ${cartaoDeEstatistica('livro', '#1cb0f6', licoes, licoes === 1 ? 'lição concluída' : 'lições concluídas', '')}
@@ -806,7 +806,7 @@ function blocoDasInsignias() {
           return `<span class="meu-perfil-insignia${tem ? ' conquistada' : ''}" title="${escaparTexto(trilha.santo || '')}">${iconeDoCenaculo(tem ? 'medalha' : 'cadeado')}<small>${escaparTexto(trilha.santo || '')}</small></span>`;
         }).join('')}
       </div>
-      <p class="meu-perfil-insignias-resumo">${conquistadas.length} de ${trilhas.length} insígnias conquistadas</p>
+      <p class="meu-perfil-insignias-resumo">${tr('{n} de {total} insígnias conquistadas', { n: conquistadas.length, total: trilhas.length })}</p>
     </section>`;
 }
 
@@ -826,8 +826,8 @@ async function renderizarMeuPerfil() {
         ${perfil ? `<button type="button" class="meu-perfil-camera" id="meu-perfil-foto" aria-label="Trocar a foto do perfil">${iconeDoCenaculo('camera')}</button>` : ''}
       </div>
       <div class="perfil-publico-topo">
-        <strong class="perfil-publico-nome" id="meu-perfil-nome">${escaparTexto(nome)}</strong>
-        <small>${perfil ? `Perfil de ${adulto ? 'adulto' : 'criança'}${nomeDaConta ? ` na conta de ${escaparTexto(nomeDaConta)}` : ''}` : 'Escolha um perfil para ver as suas estatísticas'}</small>
+        <strong class="perfil-publico-nome" id="meu-perfil-nome" translate="no">${escaparTexto(nome)}</strong>
+        <small>${perfil ? (nomeDaConta ? tr(adulto ? 'Perfil de adulto na conta de {nome}' : 'Perfil de criança na conta de {nome}', { nome: escaparTexto(nomeDaConta) }) : tr(adulto ? 'Perfil de adulto' : 'Perfil de criança')) : 'Escolha um perfil para ver as suas estatísticas'}</small>
         <small id="meu-perfil-desde"></small>
         ${adulto ? '<div class="perfil-social" id="meu-perfil-social"></div>' : ''}
       </div>
@@ -840,7 +840,7 @@ async function renderizarMeuPerfil() {
       <section class="perfil-secao">
         <h4 class="perfil-secao-titulo">Estatísticas</h4>
         <div class="perfil-publico-numeros" id="meu-perfil-numeros">
-          ${cartaoDeEstatistica('chama', '#ff9600', perfil.ofensiva || 0, (perfil.ofensiva || 0) === 1 ? 'dia seguido' : 'dias seguidos', perfil.melhorOfensiva ? `recorde: ${perfil.melhorOfensiva}` : '')}
+          ${cartaoDeEstatistica('chama', '#ff9600', perfil.ofensiva || 0, (perfil.ofensiva || 0) === 1 ? 'dia seguido' : 'dias seguidos', perfil.melhorOfensiva ? tr('recorde: {n}', { n: perfil.melhorOfensiva }) : '')}
           ${cartaoDeEstatistica('estrela', '#f5b400', perfil.fe || 0, 'Fé no total', '')}
           ${cartaoDeEstatistica('trofeu', '#58cc02', '...', 'Fé nesta semana', '')}
           ${cartaoDeEstatistica('livro', '#1cb0f6', '...', 'lições concluídas', '')}
@@ -918,7 +918,7 @@ async function renderizarMeuPerfil() {
     carregarAssinaturaSemFalhar().then(() => {
       const nomeDoPlano = document.getElementById('meu-perfil-plano-nome');
       const resumo = document.getElementById('meu-perfil-plano-resumo');
-      if (nomeDoPlano) nomeDoPlano.textContent = `Plano ${nomeDoPlanoAtual()}`;
+      if (nomeDoPlano) nomeDoPlano.textContent = tr('Plano {nome}', { nome: tr(nomeDoPlanoAtual()) });
       if (resumo) resumo.textContent = resumoDoPlanoNoPerfil();
     });
   }
@@ -933,7 +933,7 @@ async function renderizarMeuPerfil() {
         const sequencia = Number(dados.sequencia || 0);
         const licoes = Number(dados.licoes || 0);
         numeros.innerHTML = [
-          cartaoDeEstatistica('chama', '#ff9600', sequencia, sequencia === 1 ? 'dia seguido' : 'dias seguidos', Number(dados.melhor_sequencia) ? `recorde: ${Number(dados.melhor_sequencia)}` : ''),
+          cartaoDeEstatistica('chama', '#ff9600', sequencia, sequencia === 1 ? 'dia seguido' : 'dias seguidos', Number(dados.melhor_sequencia) ? tr('recorde: {n}', { n: Number(dados.melhor_sequencia) }) : ''),
           cartaoDeEstatistica('estrela', '#f5b400', Number(dados.fe || 0), 'Fé no total', ''),
           cartaoDeEstatistica('trofeu', '#58cc02', Number(dados.fe_semana || 0), 'Fé nesta semana', ''),
           cartaoDeEstatistica('livro', '#1cb0f6', licoes, licoes === 1 ? 'lição concluída' : 'lições concluídas', ''),

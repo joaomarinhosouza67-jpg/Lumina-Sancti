@@ -130,7 +130,7 @@ function avatarDoCenaculo(avatar, fotoUrl, tamanho) {
 
 function formatarHora(iso) {
   const data = new Date(iso);
-  return data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  return data.toLocaleTimeString(localDoIdioma(), { hour: '2-digit', minute: '2-digit' });
 }
 
 function formatarDia(iso) {
@@ -139,13 +139,13 @@ function formatarDia(iso) {
   const ontem = new Date(Date.now() - 86400000);
   if (data.toDateString() === hoje.toDateString()) return 'Hoje';
   if (data.toDateString() === ontem.toDateString()) return 'Ontem';
-  return data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  return data.toLocaleDateString(localDoIdioma(), { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
 function formatarEncontro(iso) {
   const data = new Date(iso);
-  const dia = data.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: '2-digit' });
-  return `${dia} às ${formatarHora(iso)}`;
+  const dia = data.toLocaleDateString(localDoIdioma(), { weekday: 'long', day: '2-digit', month: '2-digit' });
+  return tr('{dia} às {hora}', { dia, hora: formatarHora(iso) });
 }
 
 function formatarDuracao(segundos) {
@@ -215,15 +215,15 @@ async function atualizarSituacaoDaConta() {
 function textoDaSuspensao() {
   if (!suspensaoAtual) return '';
   return suspensaoAtual.fim
-    ? `até ${new Date(suspensaoAtual.fim).toLocaleDateString('pt-BR')} às ${formatarHora(suspensaoAtual.fim)}`
-    : 'por tempo indeterminado, enquanto a equipe analisa';
+    ? tr('até {dia} às {hora}', { dia: new Date(suspensaoAtual.fim).toLocaleDateString(localDoIdioma()), hora: formatarHora(suspensaoAtual.fim) })
+    : tr('por tempo indeterminado, enquanto a equipe analisa');
 }
 
 function mostrarAvisoDeSuspensao() {
-  const motivo = suspensaoAtual && suspensaoAtual.motivo ? `<p class="cenaculo-suspensao-motivo">Motivo: ${escaparTexto(suspensaoAtual.motivo)}</p>` : '';
+  const motivo = suspensaoAtual && suspensaoAtual.motivo ? `<p class="cenaculo-suspensao-motivo">${tr('Motivo:')} <span translate="no">${escaparTexto(suspensaoAtual.motivo)}</span></p>` : '';
   const corpo = janelaDoCenaculo('Sua conta está suspensa', `
     <div class="cenaculo-suspensao">
-      <p>Sua conta está suspensa ${textoDaSuspensao()}.</p>
+      <p>${tr('Sua conta está suspensa {quando}.', { quando: textoDaSuspensao() })}</p>
       ${motivo}
       <p>Enquanto isso, os Cenáculos e as trilhas ficam parados. Você pode continuar vendo a vida dos santos, as orações e o terço.</p>
       <p>Nada foi apagado: suas trilhas, medalhas e sequência continuam guardadas e voltam quando a suspensão acabar.</p>
@@ -413,12 +413,12 @@ function resumoDaUltimaMensagem(ultima, ehConversa) {
   if (!ultima) return ehConversa ? 'Diga olá!' : 'Nenhuma mensagem ainda.';
   const perfil = perfilAdultoAtivo();
   const minha = perfil && ultima.perfil_id === perfil.id;
-  const prefixo = minha ? 'Você: ' : (ehConversa ? '' : `${escaparTexto(ultima.autor)}: `);
-  if (ultima.apagada) return `${prefixo}mensagem apagada`;
+  const prefixo = minha ? `${tr('Você:')} ` : (ehConversa ? '' : `<span translate="no">${escaparTexto(ultima.autor)}:</span> `);
+  if (ultima.apagada) return `${prefixo}${tr('mensagem apagada')}`;
   if (ultima.tipo === 'gif') return `${prefixo}GIF`;
-  if (ultima.tipo === 'figurinha') return `${prefixo}figurinha`;
-  if (ultima.tipo === 'audio') return `${prefixo}áudio`;
-  return `${prefixo}${escaparTexto(ultima.texto || '')}`;
+  if (ultima.tipo === 'figurinha') return `${prefixo}${tr('figurinha')}`;
+  if (ultima.tipo === 'audio') return `${prefixo}${tr('áudio')}`;
+  return `${prefixo}<span translate="no">${escaparTexto(ultima.texto || '')}</span>`;
 }
 
 function iconeDaLista(c, fotos) {
@@ -435,10 +435,10 @@ function horaNaLista(iso) {
   if (data.toDateString() === hoje.toDateString()) return formatarHora(iso);
   if (data.toDateString() === new Date(Date.now() - 86400000).toDateString()) return 'Ontem';
   if (Date.now() - data.getTime() < 6 * 86400000) {
-    const dia = data.toLocaleDateString('pt-BR', { weekday: 'long' });
+    const dia = data.toLocaleDateString(localDoIdioma(), { weekday: 'long' });
     return dia.charAt(0).toUpperCase() + dia.slice(1);
   }
-  return data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  return data.toLocaleDateString(localDoIdioma(), { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
 function textoParaBusca(texto) {
@@ -490,11 +490,11 @@ function renderizarListaDeCenaculos(cenaculos, fotos) {
       ${iconeDaLista(c, enderecos)}
       <span class="cenaculo-cartao-textos">
         <span class="cenaculo-cartao-linha">
-          <strong>${escaparTexto(nomeDaConversa(c))}</strong>
+          <strong translate="no">${escaparTexto(nomeDaConversa(c))}</strong>
           <span class="cenaculo-cartao-hora">${horaNaLista(c.ultima ? c.ultima.quando : c.atividade)}</span>
         </span>
         <small>${resumoDaUltimaMensagem(c.ultima, conversa)}</small>
-        ${c.encontro ? `<small class="cenaculo-cartao-encontro">${iconeDoCenaculo('video')} ${escaparTexto(c.encontro.titulo)}: ${formatarEncontro(c.encontro.quando)}</small>` : ''}
+        ${c.encontro ? `<small class="cenaculo-cartao-encontro">${iconeDoCenaculo('video')} <span translate="no">${escaparTexto(c.encontro.titulo)}:</span> ${formatarEncontro(c.encontro.quando)}</small>` : ''}
       </span>
     </button>`;
   }).join('');
@@ -777,10 +777,10 @@ function normalizarMensagem(m) {
 function nomesParaOCabecalho() {
   const perfil = perfilAdultoAtivo();
   const nomes = ((cenaculoAberto && cenaculoAberto.membros) || [])
-    .map((m) => (perfil && m.perfil_id === perfil.id ? 'Você' : m.nome))
+    .map((m) => (perfil && m.perfil_id === perfil.id ? tr('Você') : m.nome))
     .filter(Boolean);
   if (nomes.length <= 3) return nomes.join(', ');
-  return `${nomes.slice(0, 3).join(', ')} e mais ${nomes.length - 3}`;
+  return tr('{nomes} e mais {n}', { nomes: nomes.slice(0, 3).join(', '), n: nomes.length - 3 });
 }
 
 function ehConversaADois() {
@@ -819,8 +819,8 @@ function renderizarCabecalhoDaConversa() {
   if (!cenaculoAberto) return;
   const conversa = ehConversaADois();
   document.getElementById('cenaculo-nome').textContent = conversa
-    ? ((cenaculoAberto.outro && cenaculoAberto.outro.nome) || 'Conversa')
-    : (cenaculoAberto.nome || 'Cenáculo');
+    ? ((cenaculoAberto.outro && cenaculoAberto.outro.nome) || tr('Conversa'))
+    : (cenaculoAberto.nome || tr('Cenáculo'));
   document.getElementById('cenaculo-membros-contagem').textContent = conversa ? 'toque aqui para ver o perfil' : nomesParaOCabecalho();
   const fotoDoTopo = document.getElementById('cenaculo-topo-foto');
   if (fotoDoTopo) fotoDoTopo.innerHTML = fotoDoTopoDaConversa();
@@ -831,8 +831,8 @@ function renderizarCabecalhoDaConversa() {
     encontro.innerHTML = `
       <span class="cenaculo-encontro-icone">${iconeDoCenaculo('video')}</span>
       <span class="cenaculo-encontro-textos">
-        <strong>${escaparTexto(cenaculoAberto.encontro.titulo)}</strong>
-        <small>${formatarEncontro(cenaculoAberto.encontro.quando)}, pelo Google Meet</small>
+        <strong translate="no">${escaparTexto(cenaculoAberto.encontro.titulo)}</strong>
+        <small>${tr('{quando}, pelo Google Meet', { quando: formatarEncontro(cenaculoAberto.encontro.quando) })}</small>
       </span>
       <a class="cenaculo-encontro-entrar" href="${escaparTexto(cenaculoAberto.encontro.link)}" target="_blank" rel="noopener noreferrer">Entrar no Meet</a>`;
   } else {
@@ -874,7 +874,7 @@ function corpoDaMensagem(m) {
   if (m.tipo === 'gif' && m.gif_id) return `<img class="cenaculo-gif${m.gif_figurinha ? ' figurinha' : ''}" src="${enderecoDoGif(m.gif_id)}" alt="${m.gif_figurinha ? 'Figurinha' : 'GIF'}" loading="lazy">`;
   if (m.tipo === 'audio') return htmlDoAudio(m);
   if (m.tipo === 'figurinha') return '<em class="cenaculo-apagada">Figurinha</em>';
-  return `<span class="cenaculo-texto-msg">${escaparTexto(m.texto)}</span>`;
+  return `<span class="cenaculo-texto-msg" translate="no">${escaparTexto(m.texto)}</span>`;
 }
 
 function htmlDaMensagem(m, comecoDoGrupo) {
@@ -947,7 +947,7 @@ function mostrarNomeDoAutor(botao) {
   etiqueta.type = 'button';
   etiqueta.className = 'cenaculo-nome-flutuante';
   etiqueta.textContent = botao.dataset.nome || '';
-  etiqueta.setAttribute('aria-label', `Ver o perfil de ${botao.dataset.nome || ''}`);
+  etiqueta.setAttribute('aria-label', tr('Ver o perfil de {nome}', { nome: botao.dataset.nome || '' }));
   const idDoPerfil = botao.dataset.perfil;
   etiqueta.addEventListener('click', (evento) => {
     evento.stopPropagation();
@@ -1794,10 +1794,10 @@ function abrirAcoesDaMensagem(idDaMensagem) {
   if (minha || organizador) opcoes.push('<button type="button" class="cenaculo-opcao" data-acao="apagar">Apagar mensagem</button>');
   if (!minha) {
     opcoes.push('<button type="button" class="cenaculo-opcao" data-acao="denunciar">Denunciar mensagem</button>');
-    opcoes.push(`<button type="button" class="cenaculo-opcao" data-acao="bloquear">Bloquear ${escaparTexto(m.autor_nome)}</button>`);
+    opcoes.push(`<button type="button" class="cenaculo-opcao" data-acao="bloquear">${tr('Bloquear {nome}', { nome: escaparTexto(m.autor_nome) })}</button>`);
   }
   if (opcoes.length === 0) return;
-  const corpo = janelaDoCenaculo(minha ? 'Sua mensagem' : `Mensagem de ${m.autor_nome}`, `<div class="cenaculo-opcoes">${opcoes.join('')}</div>`);
+  const corpo = janelaDoCenaculo(minha ? 'Sua mensagem' : tr('Mensagem de {nome}', { nome: m.autor_nome }), `<div class="cenaculo-opcoes">${opcoes.join('')}</div>`);
   corpo.querySelectorAll('.cenaculo-opcao').forEach((botao) => {
     botao.addEventListener('click', () => {
       const acao = botao.dataset.acao;
@@ -1843,7 +1843,7 @@ function abrirDenuncia(m) {
         <p class="cenaculo-explica">Obrigado. A denúncia foi enviada para a equipe do Lumina Sancti.</p>
         <p class="cenaculo-explica">Se quiser parar de ver as mensagens dessa pessoa, você também pode bloqueá-la.</p>
         <div class="cenaculo-botoes">
-          <button type="button" class="filter-btn" id="cenaculo-denuncia-bloquear">Bloquear ${escaparTexto(m.autor_nome)}</button>
+          <button type="button" class="filter-btn" id="cenaculo-denuncia-bloquear">${tr('Bloquear {nome}', { nome: escaparTexto(m.autor_nome) })}</button>
           <button type="button" class="licao-botao" id="cenaculo-denuncia-ok">Pronto</button>
         </div>`;
       corpo.querySelector('#cenaculo-denuncia-ok').addEventListener('click', fecharJanelaDoCenaculo);
@@ -1855,8 +1855,8 @@ function abrirDenuncia(m) {
 }
 
 function confirmarBloqueio(idDoPerfil, nome) {
-  const corpo = janelaDoCenaculo(`Bloquear ${nome}?`, `
-    <p class="cenaculo-explica">Você não vai mais ver as mensagens de ${escaparTexto(nome)} nos cenáculos. Dá para desbloquear depois, na lista de pessoas do cenáculo.</p>
+  const corpo = janelaDoCenaculo(tr('Bloquear {nome}?', { nome }), `
+    <p class="cenaculo-explica">${tr('Você não vai mais ver as mensagens de {nome} nos cenáculos. Dá para desbloquear depois, na lista de pessoas do cenáculo.', { nome: escaparTexto(nome) })}</p>
     <div class="cenaculo-botoes">
       <button type="button" class="filter-btn" id="cenaculo-bloqueio-cancelar">Cancelar</button>
       <button type="button" class="licao-botao" id="cenaculo-bloqueio-confirmar">Bloquear</button>
@@ -1888,7 +1888,7 @@ function abrirMenuDoCenaculo() {
   const opcoes = conversa ? [
     outro ? '<button type="button" class="cenaculo-opcao" data-acao="perfil">Ver perfil</button>' : '',
     '<button type="button" class="cenaculo-opcao" data-acao="fundo">Papel de parede</button>',
-    outro ? `<button type="button" class="cenaculo-opcao" data-acao="${bloqueado ? 'desbloquear' : 'bloquear'}">${bloqueado ? 'Desbloquear' : 'Bloquear'} ${escaparTexto(outro.nome)}</button>` : '',
+    outro ? `<button type="button" class="cenaculo-opcao" data-acao="${bloqueado ? 'desbloquear' : 'bloquear'}">${tr(bloqueado ? 'Desbloquear {nome}' : 'Bloquear {nome}', { nome: escaparTexto(outro.nome) })}</button>` : '',
     '<button type="button" class="cenaculo-opcao" data-acao="regras">Regras dos Cenáculos</button>',
     '<button type="button" class="cenaculo-opcao cenaculo-opcao-perigo" data-acao="sair">Apagar esta conversa da lista</button>',
   ] : [
@@ -1926,7 +1926,7 @@ function abrirMarcacaoDeEncontro() {
   const amanha = new Date(Date.now() + 86400000);
   const dataPadrao = `${amanha.getFullYear()}-${String(amanha.getMonth() + 1).padStart(2, '0')}-${String(amanha.getDate()).padStart(2, '0')}`;
   const corpo = janelaDoCenaculo('Encontro no Google Meet', `
-    ${atual ? `<p class="cenaculo-explica">Encontro marcado: <strong>${escaparTexto(atual.titulo)}</strong>, ${formatarEncontro(atual.quando)}. Marcar outro substitui este.</p>` : ''}
+    ${atual ? `<p class="cenaculo-explica">${tr('Encontro marcado: <strong>{titulo}</strong>, {quando}. Marcar outro substitui este.', { titulo: `<span translate="no">${escaparTexto(atual.titulo)}</span>`, quando: formatarEncontro(atual.quando) })}</p>` : ''}
     <p class="cenaculo-explica">Crie a reunião no Google Meet (meet.google.com), copie o link e cole aqui. A chamada acontece toda no Google.</p>
     <label class="perfil-editor-rotulo" for="cenaculo-encontro-titulo">Nome do encontro</label>
     <input type="text" id="cenaculo-encontro-titulo" class="perfil-editor-campo" maxlength="80" value="Encontro do cenáculo">

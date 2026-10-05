@@ -9,27 +9,35 @@ let fotosDaComunidade = {};
 
 function nomeDoSantoDoMarco(slug) {
   const santo = typeof santosData !== 'undefined' ? santosData.find((s) => s.id === slug) : null;
-  if (santo && santo.nome) return santo.nome;
+  if (santo && santo.nome) return typeof textoDoSanto === 'function' ? textoDoSanto(santo).nome : santo.nome;
   return String(slug || '').split('-').map((p) => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
 }
 
 function tituloDoMarco(m) {
   const valor = Number(m.valor || 0);
-  if (m.tipo === 'ofensiva') return `${valor} dias de ofensiva`;
-  if (m.tipo === 'perfeitas') return `${valor} missões perfeitas`;
-  if (m.tipo === 'fe') return `${valor} de Fé`;
-  if (m.tipo === 'missao') return `Missão perfeita na trilha de ${nomeDoSantoDoMarco(m.santo)}`;
-  return `Trilha de ${nomeDoSantoDoMarco(m.santo)}`;
+  if (m.tipo === 'ofensiva') return tr('{n} dias de ofensiva', { n: valor });
+  if (m.tipo === 'perfeitas') return tr('{n} missões perfeitas', { n: valor });
+  if (m.tipo === 'fe') return tr('{n} de Fé', { n: valor });
+  if (m.tipo === 'missao') return tr('Missão perfeita na trilha de {santo}', { santo: nomeDoSantoDoMarco(m.santo) });
+  return tr('Trilha de {santo}', { santo: nomeDoSantoDoMarco(m.santo) });
 }
 
 function fraseDoMarco(m, nome) {
   const quem = escaparTexto(nome);
   const valor = Number(m.valor || 0);
-  if (m.tipo === 'ofensiva') return `${quem} chegou a <strong>${valor} dias seguidos</strong> estudando a vida dos santos!`;
-  if (m.tipo === 'perfeitas') return `${quem} completou <strong>${valor} missões perfeitas</strong>, sem errar nada!`;
-  if (m.tipo === 'fe') return `${quem} juntou <strong>${valor} de Fé</strong> nas trilhas dos santos!`;
-  if (m.tipo === 'missao') return `${quem} fez uma <strong>missão perfeita</strong> na trilha de ${escaparTexto(nomeDoSantoDoMarco(m.santo))}, sem errar nada!`;
-  return `${quem} concluiu a <strong>trilha de ${escaparTexto(nomeDoSantoDoMarco(m.santo))}</strong> e ganhou a insígnia!`;
+  if (nome === 'Você') {
+    const santo = escaparTexto(nomeDoSantoDoMarco(m.santo));
+    if (m.tipo === 'ofensiva') return tr('Você chegou a <strong>{n} dias seguidos</strong> estudando a vida dos santos!', { n: valor });
+    if (m.tipo === 'perfeitas') return tr('Você completou <strong>{n} missões perfeitas</strong>, sem errar nada!', { n: valor });
+    if (m.tipo === 'fe') return tr('Você juntou <strong>{n} de Fé</strong> nas trilhas dos santos!', { n: valor });
+    if (m.tipo === 'missao') return tr('Você fez uma <strong>missão perfeita</strong> na trilha de {santo}, sem errar nada!', { santo });
+    return tr('Você concluiu a <strong>trilha de {santo}</strong> e ganhou a insígnia!', { santo });
+  }
+  if (m.tipo === 'ofensiva') return tr('{quem} chegou a <strong>{n} dias seguidos</strong> estudando a vida dos santos!', { quem, n: valor });
+  if (m.tipo === 'perfeitas') return tr('{quem} completou <strong>{n} missões perfeitas</strong>, sem errar nada!', { quem, n: valor });
+  if (m.tipo === 'fe') return tr('{quem} juntou <strong>{n} de Fé</strong> nas trilhas dos santos!', { quem, n: valor });
+  if (m.tipo === 'missao') return tr('{quem} fez uma <strong>missão perfeita</strong> na trilha de {santo}, sem errar nada!', { quem, santo: escaparTexto(nomeDoSantoDoMarco(m.santo)) });
+  return tr('{quem} concluiu a <strong>trilha de {santo}</strong> e ganhou a insígnia!', { quem, santo: escaparTexto(nomeDoSantoDoMarco(m.santo)) });
 }
 
 function desenhoDoMarco(tipo, m) {
@@ -79,10 +87,10 @@ function arteDoMarco(m) {
   else if (m.tipo === 'fe') rotulo = 'de Fé';
   else if (m.tipo === 'missao') {
     numero = '';
-    rotulo = `Missão perfeita · ${escaparTexto(nomeDoSantoDoMarco(m.santo))}`;
+    rotulo = tr('Missão perfeita · {santo}', { santo: escaparTexto(nomeDoSantoDoMarco(m.santo)) });
   } else {
     numero = '';
-    rotulo = `Insígnia de ${escaparTexto(nomeDoSantoDoMarco(m.santo))}`;
+    rotulo = tr('Insígnia de {santo}', { santo: escaparTexto(nomeDoSantoDoMarco(m.santo)) });
   }
   return `
     <div class="marco-arte marco-arte-${escaparTexto(m.tipo)}">
@@ -101,13 +109,13 @@ function haQuantoTempo(iso) {
   const segundos = Math.max(0, Math.round((Date.now() - data.getTime()) / 1000));
   if (segundos < 60) return 'agora';
   const minutos = Math.round(segundos / 60);
-  if (minutos < 60) return `há ${minutos} min`;
+  if (minutos < 60) return tr('há {n} min', { n: minutos });
   const horas = Math.round(minutos / 60);
-  if (horas < 24) return `há ${horas} h`;
+  if (horas < 24) return tr('há {n} h', { n: horas });
   const dias = Math.round(horas / 24);
   if (dias === 1) return 'ontem';
-  if (dias < 7) return `há ${dias} dias`;
-  return data.toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' });
+  if (dias < 7) return tr('há {n} dias', { n: dias });
+  return data.toLocaleDateString(localDoIdioma(), { day: 'numeric', month: 'short' });
 }
 
 function iconeDaComunidade(nome) {
@@ -141,7 +149,7 @@ function cartaoDaPostagem(p) {
       <header class="marco-cabecalho">
         <button type="button" class="marco-autor" data-perfil="${escaparTexto(autor.perfil_id)}">
           ${avatarDoAutor(autor)}
-          <span class="marco-autor-textos"><strong>${escaparTexto(autor.eu ? (perfilAdultoAtivo() || {}).nome || 'Você' : autor.nome)}</strong><small>${haQuantoTempo(p.criado_em)}</small></span>
+          <span class="marco-autor-textos"><strong translate="no">${escaparTexto(autor.eu ? (perfilAdultoAtivo() || {}).nome || tr('Você') : autor.nome)}</strong><small>${haQuantoTempo(p.criado_em)}</small></span>
         </button>
         ${p.meu ? `<button type="button" class="icon-btn marco-apagar" aria-label="Apagar esta postagem">${iconeDaComunidade('lixeira')}</button>` : ''}
         ${!p.meu && !autor.eu_sigo ? `<button type="button" class="marco-seguir" data-seguir="${escaparTexto(autor.perfil_id)}">Seguir</button>` : ''}
@@ -343,7 +351,7 @@ function ligarCartoesDaComunidade(lugar, postagens, redesenhar) {
         try {
           await chamarComunidade('seguir', { _pid: perfil.id, _alvo: seguir.dataset.seguir, _seguir: true });
           postagens.forEach((p) => { if (p.autor && p.autor.perfil_id === seguir.dataset.seguir) p.autor.eu_sigo = true; });
-          avisoDaComunidade(`Agora você segue ${postagem.autor.nome}.`);
+          avisoDaComunidade(tr('Agora você segue {nome}.', { nome: postagem.autor.nome }));
           redesenhar();
           preencherTopoDaComunidade();
         } catch (erro) {
@@ -375,7 +383,7 @@ function ligarCartoesDaComunidade(lugar, postagens, redesenhar) {
 function confirmarApagarMarco(postagem, postagens, redesenhar) {
   const perfil = perfilAdultoAtivo();
   const corpo = janelaDoCenaculo('Apagar postagem', `
-    <p class="cenaculo-explica">Apagar "${escaparTexto(tituloDoMarco(postagem))}" da Comunidade? As reações também somem.</p>
+    <p class="cenaculo-explica">${tr('Apagar "{titulo}" da Comunidade? As reações também somem.', { titulo: escaparTexto(tituloDoMarco(postagem)) })}</p>
     <div class="marco-convite-botoes">
       <button type="button" class="licao-botao marco-botao-perigo" id="marco-apagar-sim">Apagar</button>
       <button type="button" class="marco-convite-nao" id="marco-apagar-nao">Cancelar</button>
@@ -421,7 +429,7 @@ async function abrirListaSocial(alvoId, qual) {
       <div class="social-linha">
         <button type="button" class="marco-autor" data-perfil="${escaparTexto(p.perfil_id)}">
           ${avatarDoAutor(p)}
-          <span class="marco-autor-textos"><strong>${escaparTexto(p.eu ? 'Você' : p.nome)}</strong></span>
+          <span class="marco-autor-textos"><strong translate="no">${escaparTexto(p.eu ? tr('Você') : p.nome)}</strong></span>
         </button>
         ${p.eu ? '' : `<button type="button" class="perfil-social-seguir${p.eu_sigo ? ' seguindo' : ''}" data-alvo="${escaparTexto(p.perfil_id)}" data-seguindo="${p.eu_sigo ? 'sim' : 'nao'}">${p.eu_sigo ? 'Seguindo' : 'Seguir'}</button>`}
       </div>`).join('')}</div>`;
@@ -654,19 +662,19 @@ async function preencherAcoesDeConversa(lugar, alvoId, resumo, aoMudar) {
   const nome = escaparTexto(lugar.dataset.nome || 'essa pessoa');
   if (resumo.pedido_recebido) {
     lugar.innerHTML = `
-      <p class="pedido-aviso">${nome} pediu para conversar com você.</p>
+      <p class="pedido-aviso">${tr('{nome} pediu para conversar com você.', { nome })}</p>
       <div class="pedido-botoes">
         <button type="button" class="perfil-social-seguir" data-pedido="aceitar">${iconeDaComunidade('check')}Aceitar</button>
         <button type="button" class="pedido-recusar" data-pedido="recusar">Recusar</button>
       </div>`;
   } else if (resumo.pedido_enviado) {
     lugar.innerHTML = `
-      <p class="pedido-aviso">Pedido enviado. Quando ${nome} aceitar, a conversa aparece nos seus Cenáculos.</p>
+      <p class="pedido-aviso">${tr('Pedido enviado. Quando {nome} aceitar, a conversa aparece nos seus Cenáculos.', { nome })}</p>
       <div class="pedido-botoes"><button type="button" class="pedido-recusar" data-pedido="cancelar">Cancelar pedido</button></div>`;
   } else {
     lugar.innerHTML = `
       <div class="pedido-botoes"><button type="button" class="perfil-acao pedido-pedir" data-pedido="pedir">${iconeDaComunidade('conversa')}<span>Pedir para conversar</span></button></div>
-      <p class="pedido-explica">${nome} recebe o seu pedido e escolhe se aceita. Se vocês já se conhecem, também dá para usar o código pessoal.</p>`;
+      <p class="pedido-explica">${tr('{nome} recebe o seu pedido e escolhe se aceita. Se vocês já se conhecem, também dá para usar o código pessoal.', { nome })}</p>`;
   }
   lugar.querySelectorAll('[data-pedido]').forEach((botao) => {
     botao.addEventListener('click', async () => {
@@ -745,7 +753,7 @@ async function mostrarPedidosNosCenaculos() {
       <div class="pedido-linha" data-pedido-id="${escaparTexto(p.pedido_id)}">
         <button type="button" class="marco-autor" data-perfil="${escaparTexto(p.perfil_id)}">
           ${avatarDoAutor(p)}
-          <span class="marco-autor-textos"><strong>${escaparTexto(p.nome)}</strong><small>quer conversar com você · ${haQuantoTempo(p.criado_em)}</small></span>
+          <span class="marco-autor-textos"><strong translate="no">${escaparTexto(p.nome)}</strong><small>${tr('quer conversar com você · {quando}', { quando: haQuantoTempo(p.criado_em) })}</small></span>
         </button>
         <span class="pedido-botoes">
           <button type="button" class="perfil-social-seguir" data-resposta="sim">Aceitar</button>

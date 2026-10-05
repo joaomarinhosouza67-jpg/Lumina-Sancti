@@ -2448,6 +2448,8 @@ function textoDoSanto(santo) {
 function reaplicarTextosDosSantos() {
   if (typeof cardsGrid !== 'undefined' && cardsGrid) renderGrid(filtroAtual);
   renderSantoDoDia();
+  const campoDoPadroeiro = document.getElementById('padroeiro-input');
+  if (campoDoPadroeiro && typeof mostrarTemasDoPadroeiro === 'function') mostrarTemasDoPadroeiro(campoDoPadroeiro);
   const detalhe = document.getElementById('view-detail');
   if (detalhe && detalhe.style.display === 'block' && bioArticle.dataset.santoId) showDetail(bioArticle.dataset.santoId);
 }
@@ -2492,6 +2494,7 @@ function aplicarIdioma(codigo) {
   }
 
   if (codigo !== idiomaAnterior) {
+    if (typeof aplicarIdiomaNasTelas === 'function') aplicarIdiomaNasTelas(codigo);
     const trilhasTraduzidas = typeof carregarTraducoesDasTrilhas === 'function' ? carregarTraducoesDasTrilhas(codigo) : null;
     Promise.all([carregarBiografiasDoIdioma(codigo), trilhasTraduzidas]).then(() => {
       reaplicarTextosDosSantos();
@@ -2969,7 +2972,7 @@ function iniciarPaginaDeAutenticacao() {
       emailAguardandoConfirmacao = email;
       mostrarFormularioDeLogin('codigo');
       document.getElementById('codigo-confirmacao').value = '';
-      avisoDeLogin(`Enviamos um código para ${email}. Confira sua caixa de entrada (e o spam, só por garantia).`, 'certo');
+      avisoDeLogin(tr('Enviamos um código para {email}. Confira sua caixa de entrada (e o spam, só por garantia).', { email }), 'certo');
     }
   });
 
@@ -3025,7 +3028,7 @@ function iniciarPaginaDeAutenticacao() {
     mostrarFormularioDeLogin('nova-senha');
     document.getElementById('recuperar-codigo').value = '';
     document.getElementById('nova-senha').value = '';
-    document.getElementById('nova-senha-desc').textContent = `Se existir uma conta com ${email}, enviamos um código de 6 números para ele. Digite o código e a senha nova.`;
+    document.getElementById('nova-senha-desc').textContent = tr('Se existir uma conta com {email}, enviamos um código de 6 números para ele. Digite o código e a senha nova.', { email });
   });
 
   formNovaSenha.addEventListener('submit', async (e) => {
@@ -3217,7 +3220,7 @@ async function enviarPerguntaLumina() {
     areaResposta.scrollTop = areaResposta.scrollHeight;
 
     if (typeof dados.perguntasRestantesHoje === 'number') {
-      restantesEl.textContent = `${dados.perguntasRestantesHoje} pergunta(s) restante(s) hoje`;
+      restantesEl.textContent = tr('{n} pergunta(s) restante(s) hoje', { n: dados.perguntasRestantesHoje });
     }
   } catch (e) {
     esconderIndicadorPensando();
@@ -3378,7 +3381,7 @@ function getSantoEmDestaque(idParaEvitar) {
 function montarCartaoSantoDoDia(santo, rotulo, idBase) {
   const textos = textoDoSanto(santo);
   return `
-    <div class="sdd-card" id="${idBase}-card" role="button" tabindex="0" aria-label="Ver a história de ${textos.nome}">
+    <div class="sdd-card" id="${idBase}-card" role="button" tabindex="0" aria-label="${tr('Ver a história de {nome}', { nome: textos.nome })}">
       <div class="sdd-topo">
         <span class="sdd-label">${rotulo}</span>
         <button class="btn-compartilhar-sdd" id="${idBase}-compartilhar" aria-label="Baixar cartão para compartilhar">
@@ -3504,7 +3507,7 @@ async function compartilharSantoDoDia(santo, botao) {
 
       if (navigator.share && navigator.canShare && navigator.canShare({ files: [arquivo] })) {
         try {
-          await navigator.share({ files: [arquivo], title: santo.nome, text: `Conheça ${santo.nome} — Lumina Sancti` });
+          await navigator.share({ files: [arquivo], title: santo.nome, text: tr('Conheça {nome} — Lumina Sancti', { nome: textoDoSanto(santo).nome }) });
         } catch (e) {  }
       } else {
         const link = document.createElement('a');
@@ -3553,13 +3556,13 @@ function renderSantoDoDia() {
   const container = document.getElementById('santo-do-dia');
   if (!container) return;
 
-  const dataFormatada = new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' });
+  const dataFormatada = new Date().toLocaleDateString(typeof localDoIdioma === 'function' ? localDoIdioma() : 'pt-BR', { day: 'numeric', month: 'long' });
   const santoDeHoje = getSantoDeHoje();
   const santoDestaque = getSantoEmDestaque(santoDeHoje ? santoDeHoje.id : null);
 
   let html = '';
   if (santoDeHoje) {
-    html += montarCartaoSantoDoDia(santoDeHoje, `Hoje, ${dataFormatada}, a Igreja celebra`, 'sdd-hoje');
+    html += montarCartaoSantoDoDia(santoDeHoje, tr('Hoje, {data}, a Igreja celebra', { data: dataFormatada }), 'sdd-hoje');
   }
   html += montarCartaoSantoDoDia(santoDestaque, 'Santo em destaque', 'sdd-destaque');
 
@@ -3871,7 +3874,7 @@ function showDetail(id) {
         setTimeout(() => {
           const luminaInput = document.getElementById('lumina-input');
           if (luminaInput) {
-            luminaInput.value = `Me conte sobre ${santo.nome}.`;
+            luminaInput.value = tr('Me conte sobre {nome}.', { nome: textoDoSanto(santo).nome });
             luminaInput.focus();
           }
         }, 300);
@@ -3890,7 +3893,7 @@ function showDetail(id) {
     btnShare.onclick = () => {
       const shareData = {
         title: `Lumina Sancti - ${textoDoSanto(santo).nome}`,
-        text: `Leia a inspiradora história de ${textoDoSanto(santo).nome} no Lumina Sancti!`,
+        text: tr('Leia a inspiradora história de {nome} no Lumina Sancti!', { nome: textoDoSanto(santo).nome }),
         url: window.location.href,
       };
       if (navigator.share) {
@@ -4196,7 +4199,7 @@ function botaoDaAcaoDaOracao(oracao) {
 }
 
 function htmlDaOracao(oracao, indice, extra) {
-  const motivo = extra && extra.motivo ? `<span class="oracao-motivo">Para: ${escaparTextoDeOracao(extra.motivo)}</span>` : '';
+  const motivo = extra && extra.motivo ? `<span class="oracao-motivo">${tr('Para: {motivo}', { motivo: escaparTextoDeOracao(extra.motivo) })}</span>` : '';
   const selo = extra && extra.melhor ? '<span class="oracao-selo">Mais indicada</span>' : '';
   return `
     <div class="oracao-item${extra && extra.aberta ? ' aberta' : ''}${extra && extra.melhor ? ' oracao-destaque' : ''}" data-oracao="${oracao.id}" ${indice !== null ? `id="oracao-${indice}"` : ''}>
@@ -4237,7 +4240,7 @@ function mostrarResultadoDaBuscaDeOracao(consulta) {
   if (!achadas.length) {
     area.innerHTML = `
       <div class="oracao-sem-resultado">
-        <p>Não encontrei uma oração para "${escaparTextoDeOracao(texto)}". Tente contar com outras palavras (por exemplo: "medo", "doença", "agradecer") ou pergunte à Lumina.</p>
+        <p>${tr('Não encontrei uma oração para "{texto}". Tente contar com outras palavras (por exemplo: "medo", "doença", "agradecer") ou pergunte à Lumina.', { texto: escaparTextoDeOracao(texto) })}</p>
         <button type="button" class="btn-ask-ai" id="oracao-perguntar-lumina">Perguntar à Lumina</button>
       </div>`;
     const botao = document.getElementById('oracao-perguntar-lumina');
@@ -4245,7 +4248,7 @@ function mostrarResultadoDaBuscaDeOracao(consulta) {
       mudarDeView('view-ia');
       setTimeout(() => {
         const campo = document.getElementById('lumina-input');
-        if (campo) { campo.value = `Que oração posso rezar para: ${texto}?`; campo.focus(); }
+        if (campo) { campo.value = tr('Que oração posso rezar para: {texto}?', { texto }); campo.focus(); }
       }, 300);
     });
     return;
@@ -4277,11 +4280,11 @@ function iniciarPaginaDeOracoes() {
     });
   }
   if (sugestoes && campo) {
-    sugestoes.innerHTML = SUGESTOES_DE_BUSCA_DE_ORACAO.map(s => `<button type="button" class="busca-atalho">${s}</button>`).join('');
+    sugestoes.innerHTML = SUGESTOES_DE_BUSCA_DE_ORACAO.map(s => `<button type="button" class="busca-atalho" data-busca="${s}">${s}</button>`).join('');
     sugestoes.querySelectorAll('.busca-atalho').forEach(botao => {
       botao.addEventListener('click', () => {
         campo.value = botao.textContent;
-        mostrarResultadoDaBuscaDeOracao(campo.value);
+        mostrarResultadoDaBuscaDeOracao(botao.dataset.busca || campo.value);
       });
     });
   }
@@ -4394,8 +4397,8 @@ function montarPassosDoTercoDaMisericordia() {
     { titulo: 'Credo dos Apóstolos', texto: ORACOES[4].texto },
   ];
   for (let dezena = 1; dezena <= 5; dezena++) {
-    passos.push({ titulo: `${dezena}ª dezena — conta grande`, texto: o.eternoPai });
-    passos.push({ titulo: `${dezena}ª dezena — dez contas pequenas`, texto: o.dolorosaPaixao, contas: 10 });
+    passos.push({ titulo: tr('{n}ª dezena — conta grande', { n: dezena }), texto: o.eternoPai });
+    passos.push({ titulo: tr('{n}ª dezena — dez contas pequenas', { n: dezena }), texto: o.dolorosaPaixao, contas: 10 });
   }
   passos.push({ titulo: 'Para concluir (três vezes)', texto: o.deusSanto, contas: 3 });
   passos.push({ titulo: 'Oração final (opcional)', texto: o.oracaoFinal });
@@ -4418,13 +4421,13 @@ function renderizarContasDoPasso(passo) {
   }
   area.hidden = false;
   area.innerHTML = `
-    <div class="terco-contas-fila">${Array.from({ length: passo.contas }, (_, i) => `<button type="button" class="terco-conta" data-conta="${i}" aria-label="Conta ${i + 1} de ${passo.contas}"></button>`).join('')}</div>
-    <p class="terco-contas-dica" aria-live="polite">Toque numa conta a cada oração (0 de ${passo.contas})</p>`;
+    <div class="terco-contas-fila">${Array.from({ length: passo.contas }, (_, i) => `<button type="button" class="terco-conta" data-conta="${i}" aria-label="${tr('Conta {n} de {total}', { n: i + 1, total: passo.contas })}"></button>`).join('')}</div>
+    <p class="terco-contas-dica" aria-live="polite">${tr('Toque numa conta a cada oração ({n} de {total})', { n: 0, total: passo.contas })}</p>`;
   const atualizar = () => {
     area.querySelectorAll('.terco-conta').forEach((conta, i) => conta.classList.toggle('marcada', i < contasMarcadas));
     area.querySelector('.terco-contas-dica').textContent = contasMarcadas >= passo.contas
-      ? `Pronto: ${passo.contas} de ${passo.contas}`
-      : `Toque numa conta a cada oração (${contasMarcadas} de ${passo.contas})`;
+      ? tr('Pronto: {n} de {total}', { n: passo.contas, total: passo.contas })
+      : tr('Toque numa conta a cada oração ({n} de {total})', { n: contasMarcadas, total: passo.contas });
   };
   area.querySelectorAll('.terco-conta').forEach((conta) => {
     conta.addEventListener('click', () => {
@@ -4614,7 +4617,7 @@ function cartaoDePadroeiro(santo, prefixo) {
       <span class="padroeiro-textos">
         <span class="padroeiro-nome">${textos.nome}</span>
         <span class="padroeiro-resumo">${textos.resumo}</span>
-        ${festa ? `<span class="padroeiro-festa">Festa: ${festa}</span>` : ''}
+        ${festa ? `<span class="padroeiro-festa">${tr('Festa: {data}', { data: festa })}</span>` : ''}
       </span>
     </button>`;
 }
@@ -4633,8 +4636,8 @@ function mostrarTemasDoPadroeiro(input) {
   }).join('');
   area.querySelectorAll('.padroeiro-tema').forEach((botao) => {
     botao.addEventListener('click', () => {
-      input.value = botao.dataset.tema;
-      mostrarResultadosDoPadroeiro(input.value);
+      input.value = tr(botao.dataset.tema);
+      mostrarResultadosDoPadroeiro(botao.dataset.tema);
       const resultados = document.getElementById('padroeiro-resultados');
       if (resultados) resultados.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
@@ -4653,7 +4656,7 @@ function mostrarResultadosDoPadroeiro(valor) {
   if (!grupos.length) {
     resultados.innerHTML = `
       <div class="padroeiro-vazio">
-        <p>Não encontrei um santo do nosso catálogo ligado a "${escaparTextoDeOracao(texto)}". Tente outra palavra (por exemplo: saúde, viagem, trabalho, família) ou pergunte à Lumina.</p>
+        <p>${tr('Não encontrei um santo do nosso catálogo ligado a "{texto}". Tente outra palavra (por exemplo: saúde, viagem, trabalho, família) ou pergunte à Lumina.', { texto: escaparTextoDeOracao(texto) })}</p>
         <button type="button" class="btn-ask-ai" id="padroeiro-perguntar-lumina">Perguntar à Lumina</button>
         <button type="button" class="padroeiro-limpar" id="padroeiro-ver-temas">Ver todos os temas</button>
       </div>`;
@@ -4661,7 +4664,7 @@ function mostrarResultadosDoPadroeiro(valor) {
       mudarDeView('view-ia');
       setTimeout(() => {
         const campo = document.getElementById('lumina-input');
-        if (campo) { campo.value = `Qual santo é padroeiro de: ${texto}?`; campo.focus(); }
+        if (campo) { campo.value = tr('Qual santo é padroeiro de: {texto}?', { texto }); campo.focus(); }
       }, 300);
     });
     document.getElementById('padroeiro-ver-temas').addEventListener('click', () => {
@@ -4837,15 +4840,15 @@ function botaoDoPlano(plano) {
     return `<button class="plano-botao" disabled>${planoAtual === 'free' ? 'Plano atual' : 'Grátis'}</button>`;
   }
   if (assinante && plano.id === planoAtual) return '<button class="plano-botao plano-botao-atual" disabled>Plano atual</button>';
-  if (assinante) return `<button class="plano-botao plano-botao-assinar" data-gerenciar="1">Trocar para ${plano.nome}</button>`;
-  if (podeAssinar) return `<button class="plano-botao plano-botao-assinar" data-plano="${plano.id}">Assinar o ${plano.nome}</button>`;
+  if (assinante) return `<button class="plano-botao plano-botao-assinar" data-gerenciar="1">${tr('Trocar para {plano}', { plano: tr(plano.nome) })}</button>`;
+  if (podeAssinar) return `<button class="plano-botao plano-botao-assinar" data-plano="${plano.id}">${tr('Assinar o {plano}', { plano: tr(plano.nome) })}</button>`;
   return '<button class="plano-botao" disabled>Em breve</button>';
 }
 
 function precoDoPlano(plano) {
   if (!plano.mensal) return '<p class="plano-preco">Grátis</p><p class="plano-preco-detalhe">Para sempre, sem cartão.</p>';
   if (periodoDosPlanos === 'anual') {
-    return `<p class="plano-preco">${plano.anual}<small>/ano</small></p><p class="plano-preco-detalhe">Dá ${plano.porMesNoAnual} por mês. Pague 11 meses, use 12.</p>`;
+    return `<p class="plano-preco">${plano.anual}<small>/ano</small></p><p class="plano-preco-detalhe">${tr('Dá {valor} por mês. Pague 11 meses, use 12.', { valor: plano.porMesNoAnual })}</p>`;
   }
   return `<p class="plano-preco">${plano.mensal}<small>/mês</small></p><p class="plano-preco-detalhe">Cancele quando quiser.</p>`;
 }

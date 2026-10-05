@@ -86,7 +86,7 @@ async function carregarAssinaturaSemFalhar() {
 function dataCurta(iso) {
   const data = iso ? new Date(iso) : null;
   if (!data || Number.isNaN(data.getTime())) return '';
-  return data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  return data.toLocaleDateString(localDoIdioma(), { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
 function textoDaAssinatura() {
@@ -94,11 +94,11 @@ function textoDaAssinatura() {
   const assinatura = estado && estado.assinatura;
   if (!assinatura || !assinatura.vale) return '';
   const nome = NOMES_DOS_PLANOS[assinatura.plano] || nomeDoPlanoAtual();
-  const periodo = assinatura.periodo === 'anual' ? 'anual' : 'mensal';
+  const periodo = assinatura.periodo === 'anual' ? tr('anual') : tr('mensal');
   const fim = dataCurta(assinatura.periodo_fim);
-  if (assinatura.status === 'past_due') return `Plano ${nome} (${periodo}). Não conseguimos cobrar o seu cartão. Atualize a forma de pagamento para não perder o plano.`;
-  if (assinatura.cancela_no_fim) return `Plano ${nome} (${periodo}). A assinatura foi cancelada e vale até ${fim}. Depois disso, a conta volta ao plano Gratuito.`;
-  return `Plano ${nome} (${periodo}).${fim ? ` Renova em ${fim}.` : ''}`;
+  if (assinatura.status === 'past_due') return tr('Plano {nome} ({periodo}). Não conseguimos cobrar o seu cartão. Atualize a forma de pagamento para não perder o plano.', { nome: tr(nome), periodo });
+  if (assinatura.cancela_no_fim) return tr('Plano {nome} ({periodo}). A assinatura foi cancelada e vale até {fim}. Depois disso, a conta volta ao plano Gratuito.', { nome: tr(nome), periodo, fim });
+  return fim ? tr('Plano {nome} ({periodo}). Renova em {fim}.', { nome: tr(nome), periodo, fim }) : tr('Plano {nome} ({periodo}).', { nome: tr(nome), periodo });
 }
 
 function resumoDoPlanoNoPerfil() {
@@ -106,8 +106,9 @@ function resumoDoPlanoNoPerfil() {
   if (assinatura && assinatura.vale) {
     const fim = dataCurta(assinatura.periodo_fim);
     if (assinatura.status === 'past_due') return 'Pagamento pendente. Toque para resolver';
-    if (assinatura.cancela_no_fim) return fim ? `Cancelado, vale até ${fim}` : 'Cancelado';
-    return `${assinatura.periodo === 'anual' ? 'Anual' : 'Mensal'}${fim ? `, renova em ${fim}` : ''}`;
+    if (assinatura.cancela_no_fim) return fim ? tr('Cancelado, vale até {fim}', { fim }) : tr('Cancelado');
+    const tipo = assinatura.periodo === 'anual' ? tr('Anual') : tr('Mensal');
+    return fim ? tr('{tipo}, renova em {fim}', { tipo, fim }) : tipo;
   }
   return cobrancaLigadaNoSite() ? 'Veja os planos para ter mais perfis' : 'Os planos chegam em breve';
 }
@@ -254,10 +255,10 @@ function abrirJanelaDaAssinatura(titulo, texto, rotuloDoBotao, aoConfirmar) {
 
 function avisarPerfilSemPlano(membro) {
   const limite = maximoDePerfisDoPlano(1);
-  const quantos = limite === 1 ? '1 perfil' : `${limite} perfis`;
+  const quantos = limite === 1 ? tr('1 perfil') : tr('{n} perfis', { n: limite });
   abrirJanelaDaAssinatura(
-    `O perfil de ${membro && membro.nome ? membro.nome : 'alguém'} está guardado`,
-    `O plano ${nomeDoPlanoAtual()} libera ${quantos}. Tudo deste perfil continua salvo: Fé, medalhas e progresso. Para usá-lo de novo, assine um plano com mais perfis.`,
+    tr('O perfil de {nome} está guardado', { nome: membro && membro.nome ? membro.nome : tr('alguém') }),
+    tr('O plano {plano} libera {quantos}. Tudo deste perfil continua salvo: Fé, medalhas e progresso. Para usá-lo de novo, assine um plano com mais perfis.', { plano: tr(nomeDoPlanoAtual()), quantos }),
     'Ver planos',
     () => { if (typeof abrirPlanos === 'function') abrirPlanos(); },
   );
@@ -282,7 +283,7 @@ async function acompanharAssinaturaConfirmada() {
     const estado = await carregarAssinaturaSemFalhar();
     if (estado && estado.assinatura && estado.assinatura.vale) {
       janela.querySelector('#assinatura-janela-titulo').textContent = 'Assinatura ativa';
-      texto.textContent = `Pronto! O plano ${NOMES_DOS_PLANOS[estado.assinatura.plano] || nomeDoPlanoAtual()} já está valendo. Obrigado por caminhar com os santos no Lumina Sancti.`;
+      texto.textContent = tr('Pronto! O plano {plano} já está valendo. Obrigado por caminhar com os santos no Lumina Sancti.', { plano: tr(NOMES_DOS_PLANOS[estado.assinatura.plano] || nomeDoPlanoAtual()) });
       aposMudarAssinatura();
       return;
     }

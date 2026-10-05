@@ -120,10 +120,10 @@ async function salvarPinDoPerfil(idDoPerfil, pin) {
 
 function textosDoPinDoPerfil(nome) {
   return {
-    entrar: [`Perfil de ${nome}`, 'Digite o PIN deste perfil.'],
-    verificar: [`PIN do perfil de ${nome}`, 'Digite o PIN atual deste perfil.'],
-    criar: [`PIN do perfil de ${nome}`, 'Escolha 4 números. Eles serão pedidos sempre que alguém escolher este perfil.'],
-    confirmar: [`PIN do perfil de ${nome}`, 'Digite o mesmo PIN de novo, para confirmar.'],
+    entrar: [tr('Perfil de {nome}', { nome }), 'Digite o PIN deste perfil.'],
+    verificar: [tr('PIN do perfil de {nome}', { nome }), 'Digite o PIN atual deste perfil.'],
+    criar: [tr('PIN do perfil de {nome}', { nome }), 'Escolha 4 números. Eles serão pedidos sempre que alguém escolher este perfil.'],
+    confirmar: [tr('PIN do perfil de {nome}', { nome }), 'Digite o mesmo PIN de novo, para confirmar.'],
   };
 }
 
@@ -401,9 +401,9 @@ function perfilGuardadoPeloPlano(membro) {
 function mensagemDoLimiteDePerfis() {
   const limite = limiteDePerfis();
   if (typeof cobrancaLigadaNoSite === 'function' && cobrancaLigadaNoSite() && limite < 6) {
-    return `O plano da conta permite ${limite === 1 ? '1 perfil' : `${limite} perfis`}. Para ter mais, veja os planos Duo e Família.`;
+    return limite === 1 ? tr('O plano da conta permite 1 perfil. Para ter mais, veja os planos Duo e Família.') : tr('O plano da conta permite {n} perfis. Para ter mais, veja os planos Duo e Família.', { n: limite });
   }
-  return `Esta conta já tem o máximo de ${limite} perfis.`;
+  return tr('Esta conta já tem o máximo de {n} perfis.', { n: limite });
 }
 
 async function carregarMembrosDaConta() {
@@ -958,7 +958,7 @@ function tirarPinDoPerfil() {
   const membro = editorEstado && editorEstado.membro;
   if (!membro || !pinDoPerfil(membro.id)) return;
   const textos = textosDoPinDoPerfil(membro.nome);
-  textos.verificar = [`Tirar o PIN de ${membro.nome}`, 'Digite o PIN atual para destrancar este perfil.'];
+  textos.verificar = [tr('Tirar o PIN de {nome}', { nome: membro.nome }), 'Digite o PIN atual para destrancar este perfil.'];
   abrirPortao({
     modo: 'verificar',
     alvo: membro.id,
@@ -977,7 +977,7 @@ function tirarPinDoPerfil() {
 async function excluirPerfilDoEditor() {
   const e = editorEstado;
   if (!e || !e.membro) return;
-  const confirmou = confirm(`Excluir o perfil "${e.membro.nome}"? A Fé, a ofensiva e as insígnias dele serão apagadas para sempre.`);
+  const confirmou = confirm(tr('Excluir o perfil "{nome}"? A Fé, a ofensiva e as insígnias dele serão apagadas para sempre.', { nome: e.membro.nome }));
   if (!confirmou) return;
   const feedback = document.getElementById('perfil-editor-feedback');
   try {
