@@ -2113,6 +2113,7 @@ function irPelaBarra(destino) {
   else if (destino === 'cenaculos') abrirCenaculos();
   else if (destino === 'comunidade' && typeof abrirComunidade === 'function') abrirComunidade();
   else if (destino === 'oracoes') mudarDeView('view-oracoes');
+  else if (destino === 'cursos') mudarDeView('view-cursos');
   else if (destino === 'conta') {
     if (typeof contaLogada !== 'function' || !contaLogada()) { if (typeof irParaLogin === 'function') irParaLogin(); }
     else if (typeof modoInfantilAtivo === 'function' && modoInfantilAtivo()) { if (typeof sairDoModoInfantil === 'function') sairDoModoInfantil('inicio'); }

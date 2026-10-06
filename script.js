@@ -2449,7 +2449,10 @@ function reaplicarTextosDosSantos() {
   if (typeof cardsGrid !== 'undefined' && cardsGrid) renderGrid(filtroAtual);
   renderSantoDoDia();
   const campoDoPadroeiro = document.getElementById('padroeiro-input');
-  if (campoDoPadroeiro && typeof mostrarTemasDoPadroeiro === 'function') mostrarTemasDoPadroeiro(campoDoPadroeiro);
+  if (campoDoPadroeiro && typeof mostrarTemasDoPadroeiro === 'function') {
+    mostrarTemasDoPadroeiro(campoDoPadroeiro);
+    refazerBuscaDoPadroeiro(campoDoPadroeiro);
+  }
   const detalhe = document.getElementById('view-detail');
   if (detalhe && detalhe.style.display === 'block' && bioArticle.dataset.santoId) showDetail(bioArticle.dataset.santoId);
 }
@@ -2688,7 +2691,7 @@ function atualizarInterfaceDeConta() {
 function mudarDeView(idNovaView, opcoes) {
   if (typeof paginaSoParaAdultos === 'function' && paginaSoParaAdultos(idNovaView)) return;
   if (typeof paginaBloqueadaPelaSuspensao === 'function' && paginaBloqueadaPelaSuspensao(idNovaView)) return;
-  const todasAsViews = ['view-home', 'view-detail', 'view-ia', 'view-auth', 'view-perfil', 'view-privacidade', 'view-oracoes', 'view-leitura', 'view-terco', 'view-padroeiro', 'view-trilhas', 'view-licao', 'view-perfis', 'view-ranking', 'view-planos', 'view-termos', 'view-completar', 'view-cenaculos', 'view-cenaculo', 'view-comunidade'];
+  const todasAsViews = ['view-home', 'view-detail', 'view-ia', 'view-auth', 'view-perfil', 'view-privacidade', 'view-oracoes', 'view-leitura', 'view-terco', 'view-padroeiro', 'view-trilhas', 'view-licao', 'view-perfis', 'view-ranking', 'view-planos', 'view-termos', 'view-completar', 'view-cenaculos', 'view-cenaculo', 'view-comunidade', 'view-cursos'];
   const viewAtual = todasAsViews.map(id => document.getElementById(id)).find(v => v && v.classList.contains('active'));
   if (idNovaView !== 'view-licao' && typeof pararVozInfantil === 'function') pararVozInfantil(false);
   const catalogoInterno = idNovaView === 'view-home' && Boolean(opcoes && opcoes.catalogoInterno);
@@ -4172,18 +4175,56 @@ const SITUACOES_DE_ORACAO = [
 
 const SUGESTOES_DE_BUSCA_DE_ORACAO = ['Estou com medo', 'Para dormir', 'Pedir perdão', 'Agradecer', 'Alguém doente', 'Ansiedade', 'Pelos falecidos', 'Antes de comer', 'Prova ou decisão', 'Nossa Senhora'];
 
-let itensDeOracaoParaBusca = null;
-let situacoesDeOracaoParaBusca = null;
+const indicesDaBuscaDeOracao = {};
+
+function idiomaDaBusca() {
+  return typeof idiomaAtual !== 'undefined' && ['en', 'es'].includes(idiomaAtual) ? idiomaAtual : 'pt';
+}
+
+function chaveDoIndiceDaBusca() {
+  const idioma = idiomaDaBusca();
+  const comDicionario = idioma !== 'pt' && typeof dicionarioDasTelas === 'function' && dicionarioDasTelas() ? 1 : 0;
+  return `${idioma}:${comDicionario}`;
+}
+
+function termosDaBuscaEmOutrosIdiomas(grupo, rotulo) {
+  if (idiomaDaBusca() === 'pt' || typeof TERMOS_DE_BUSCA_POR_IDIOMA === 'undefined') return [];
+  const termos = (TERMOS_DE_BUSCA_POR_IDIOMA[grupo] || {})[rotulo];
+  return (termos && termos[idiomaDaBusca()]) || [];
+}
+
+function textoTraduzidoParaBusca(texto) {
+  if (!texto || idiomaDaBusca() === 'pt' || typeof tr !== 'function') return '';
+  const traduzido = tr(texto);
+  return traduzido && traduzido !== texto ? traduzido : '';
+}
+
+function indiceDaBuscaDeOracao() {
+  const chave = chaveDoIndiceDaBusca();
+  if (!indicesDaBuscaDeOracao[chave]) {
+    indicesDaBuscaDeOracao[chave] = {
+      itens: BuscaInteligente.prepararItens(ORACOES.map((o) => {
+        const titulo = textoTraduzidoParaBusca(o.titulo);
+        return { id: o.id, nomes: [o.titulo].concat(titulo ? [titulo] : [], o.nomes || []), texto: o.texto, oracao: o };
+      })).map((item) => {
+        if (idiomaDaBusca() === 'pt') return item;
+        const traduzido = textoTraduzidoParaBusca(item.oracao.texto);
+        item.textoPreparado = null;
+        if (traduzido) item.textoNormalizado = `${item.textoNormalizado} ${BuscaInteligente.normalizar(traduzido)}`;
+        return item;
+      }),
+      situacoes: BuscaInteligente.prepararSituacoes(SITUACOES_DE_ORACAO.map((s) => Object.assign({}, s, {
+        termos: s.termos.concat(termosDaBuscaEmOutrosIdiomas('oracoes', s.rotulo), [textoTraduzidoParaBusca(s.rotulo)].filter(Boolean)),
+      }))),
+    };
+  }
+  return indicesDaBuscaDeOracao[chave];
+}
 
 function buscarOracoes(consulta, limite) {
   if (typeof BuscaInteligente === 'undefined') return [];
-  if (!itensDeOracaoParaBusca) {
-    itensDeOracaoParaBusca = BuscaInteligente.prepararItens(ORACOES.map((o) => ({
-      id: o.id, nomes: [o.titulo].concat(o.nomes || []), texto: o.texto, oracao: o,
-    })));
-    situacoesDeOracaoParaBusca = BuscaInteligente.prepararSituacoes(SITUACOES_DE_ORACAO);
-  }
-  return BuscaInteligente.buscar(consulta, itensDeOracaoParaBusca, situacoesDeOracaoParaBusca)
+  const indice = indiceDaBuscaDeOracao();
+  return BuscaInteligente.buscar(consulta, indice.itens, indice.situacoes)
     .slice(0, limite || 4)
     .map((r) => ({ oracao: r.item.oracao, motivo: r.motivo, pontos: r.pontos }));
 }
@@ -4199,7 +4240,7 @@ function botaoDaAcaoDaOracao(oracao) {
 }
 
 function htmlDaOracao(oracao, indice, extra) {
-  const motivo = extra && extra.motivo ? `<span class="oracao-motivo">${tr('Para: {motivo}', { motivo: escaparTextoDeOracao(extra.motivo) })}</span>` : '';
+  const motivo = extra && extra.motivo ? `<span class="oracao-motivo">${tr('Para: {motivo}', { motivo: escaparTextoDeOracao(tr(extra.motivo)) })}</span>` : '';
   const selo = extra && extra.melhor ? '<span class="oracao-selo">Mais indicada</span>' : '';
   return `
     <div class="oracao-item${extra && extra.aberta ? ' aberta' : ''}${extra && extra.melhor ? ' oracao-destaque' : ''}" data-oracao="${oracao.id}" ${indice !== null ? `id="oracao-${indice}"` : ''}>
@@ -4230,6 +4271,8 @@ function ligarItensDeOracao(container) {
     });
   });
 }
+
+let atalhoDaBuscaDeOracao = null;
 
 function mostrarResultadoDaBuscaDeOracao(consulta) {
   const area = document.getElementById('oracao-resultado');
@@ -4272,8 +4315,18 @@ function iniciarPaginaDeOracoes() {
   if (campo) {
     let espera = null;
     campo.addEventListener('input', () => {
+      atalhoDaBuscaDeOracao = null;
       clearTimeout(espera);
       espera = setTimeout(() => mostrarResultadoDaBuscaDeOracao(campo.value), 150);
+    });
+    document.addEventListener('lumina-idioma', () => {
+      if (!campo.value.trim()) return;
+      if (atalhoDaBuscaDeOracao) {
+        campo.value = tr(atalhoDaBuscaDeOracao);
+        mostrarResultadoDaBuscaDeOracao(atalhoDaBuscaDeOracao);
+      } else {
+        mostrarResultadoDaBuscaDeOracao(campo.value);
+      }
     });
     campo.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') { clearTimeout(espera); mostrarResultadoDaBuscaDeOracao(campo.value); }
@@ -4284,6 +4337,7 @@ function iniciarPaginaDeOracoes() {
     sugestoes.querySelectorAll('.busca-atalho').forEach(botao => {
       botao.addEventListener('click', () => {
         campo.value = botao.textContent;
+        atalhoDaBuscaDeOracao = botao.dataset.busca || null;
         mostrarResultadoDaBuscaDeOracao(botao.dataset.busca || campo.value);
       });
     });
@@ -4570,22 +4624,35 @@ function festaPorExtenso(festa) {
   return `${dia} de ${meses[mes - 1]}`;
 }
 
-let temasDoPadroeiroParaBusca = null;
+const temasDoPadroeiroParaBusca = {};
+
+function temasDoPadroeiroNoIdioma() {
+  const chave = chaveDoIndiceDaBusca();
+  if (!temasDoPadroeiroParaBusca[chave]) {
+    temasDoPadroeiroParaBusca[chave] = BuscaInteligente.prepararSituacoes(PADROEIROS.map((t) => ({
+      rotulo: t.rotulo,
+      termos: t.termos.concat([t.rotulo], termosDaBuscaEmOutrosIdiomas('padroeiros', t.rotulo), [textoTraduzidoParaBusca(t.rotulo)].filter(Boolean)),
+      itens: [t.rotulo],
+      tema: t,
+    })));
+  }
+  return temasDoPadroeiroParaBusca[chave];
+}
+
+const TITULOS_DOS_SANTOS = ['sao', 'santo', 'santa', 'santos', 'beato', 'beata', 'saint', 'saints', 'st', 'blessed', 'san'];
 
 function buscarPadroeiro(termo) {
   const texto = String(termo || '').trim();
   if (!texto || typeof BuscaInteligente === 'undefined') return [];
-  if (!temasDoPadroeiroParaBusca) {
-    temasDoPadroeiroParaBusca = BuscaInteligente.prepararSituacoes(PADROEIROS.map((t) => ({ rotulo: t.rotulo, termos: t.termos.concat([t.rotulo]), itens: [t.rotulo], tema: t })));
-  }
-  const temas = temasDoPadroeiroParaBusca
-    .map((t) => ({ tema: t.tema, nota: BuscaInteligente.combinarSituacao(texto, t.preparados) }))
+  const TITULOS = TITULOS_DOS_SANTOS;
+  const semTitulos = BuscaInteligente.normalizar(texto).split(' ').filter((p) => !TITULOS.includes(p)).join(' ') || texto;
+  const temas = temasDoPadroeiroNoIdioma()
+    .map((t) => ({ tema: t.tema, nota: BuscaInteligente.combinarSituacao(semTitulos, t.preparados) }))
     .filter((t) => t.nota >= 0.5)
     .sort((a, b) => b.nota - a.nota)
     .slice(0, 3)
     .map((t) => ({ rotulo: t.tema.rotulo, santos: t.tema.santos.map((id) => santosData.find((s) => s.id === id)).filter(Boolean) }));
 
-  const TITULOS = ['sao', 'santo', 'santa', 'santos', 'beato', 'beata', 'saint', 'blessed', 'san'];
   const doPedido = BuscaInteligente.palavras(texto);
   const temNomeDeVerdade = doPedido.some((p) => !TITULOS.includes(p));
   const porNome = !temNomeDeVerdade || doPedido.length > 4 ? [] : santosData.map((s) => {
@@ -4622,6 +4689,18 @@ function cartaoDePadroeiro(santo, prefixo) {
     </button>`;
 }
 
+let temaEscolhidoDoPadroeiro = null;
+
+function refazerBuscaDoPadroeiro(input) {
+  if (!input || !input.value.trim()) return;
+  if (temaEscolhidoDoPadroeiro) {
+    input.value = tr(temaEscolhidoDoPadroeiro);
+    mostrarResultadosDoPadroeiro(temaEscolhidoDoPadroeiro);
+  } else {
+    mostrarResultadosDoPadroeiro(input.value);
+  }
+}
+
 function mostrarTemasDoPadroeiro(input) {
   const area = document.getElementById('padroeiro-temas');
   if (!area) return;
@@ -4636,6 +4715,7 @@ function mostrarTemasDoPadroeiro(input) {
   }).join('');
   area.querySelectorAll('.padroeiro-tema').forEach((botao) => {
     botao.addEventListener('click', () => {
+      temaEscolhidoDoPadroeiro = botao.dataset.tema;
       input.value = tr(botao.dataset.tema);
       mostrarResultadosDoPadroeiro(botao.dataset.tema);
       const resultados = document.getElementById('padroeiro-resultados');
@@ -4699,9 +4779,11 @@ function iniciarPaginaDePadroeiro() {
   mostrarTemasDoPadroeiro(input);
   let espera = null;
   input.addEventListener('input', () => {
+    temaEscolhidoDoPadroeiro = null;
     clearTimeout(espera);
     espera = setTimeout(() => mostrarResultadosDoPadroeiro(input.value), 150);
   });
+  document.addEventListener('lumina-idioma', () => refazerBuscaDoPadroeiro(input));
 
   const btnVoltar = document.getElementById('btn-back-padroeiro');
   if (btnVoltar) btnVoltar.addEventListener('click', () => mudarDeView('view-home'));
@@ -4744,6 +4826,13 @@ function iniciarNavegacaoDoMenuLateral() {
   if (navPadroeiro) navPadroeiro.addEventListener('click', () => { closeSidebar(); mudarDeView('view-padroeiro'); });
   if (navLeitura) navLeitura.addEventListener('click', () => { closeSidebar(); mudarDeView('view-leitura'); });
   if (voltarDaLeitura) voltarDaLeitura.addEventListener('click', () => mudarDeView('view-home'));
+
+  const navCursos = document.getElementById('nav-cursos');
+  const voltarDosCursos = document.getElementById('btn-back-cursos');
+  const cursosParaTrilhas = document.getElementById('cursos-ir-trilhas');
+  if (navCursos) navCursos.addEventListener('click', () => { closeSidebar(); mudarDeView('view-cursos'); });
+  if (voltarDosCursos) voltarDosCursos.addEventListener('click', () => mudarDeView('view-home'));
+  if (cursosParaTrilhas) cursosParaTrilhas.addEventListener('click', () => { if (typeof abrirTrilhas === 'function') abrirTrilhas(); });
 }
 
 let pedidoDeInstalacao = null;

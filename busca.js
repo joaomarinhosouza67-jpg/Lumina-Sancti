@@ -9,7 +9,14 @@ const BuscaInteligente = (() => {
     'preciso precisa precisando quero queria gostaria posso pode poderia favor ' +
     'vou vai vamos amanha ontem sempre dia dias tambem ' +
     'rezar reza rezo rezando oracao oracoes orar prece preces uma alguma ' +
-    'the of for to and my me i am is prayer pray el la los las del por para mi yo oracion rezo'
+    'the of for to and my me i am is prayer pray el la los las del por para mi yo oracion rezo ' +
+    'an or but mine myself you your he she it its we our they their them his her this that these those ' +
+    'in on at by from with about into so very really just now today have has had do does did ' +
+    'want would like can could should will please some something someone somebody ' +
+    'what which who how when where why there here feel feeling are was were be been being im ive dont ' +
+    'prayers praying patron patrons patroness patrono patrona padroeiro padroeira ' +
+    'al con pero mis tus sus le les estoy estamos soy es tengo tiene tenemos muy ya hoy ahora cuando donde ' +
+    'tambien algo alguien eso esto ese esa quiero quisiera necesito puedo puede voy va hay siento oraciones orar'
   ).split(' '));
 
   function normalizar(texto) {

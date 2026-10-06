@@ -1,9 +1,10 @@
-const CACHE_NOME = 'lumina-sancti-1.34.0';
+const CACHE_NOME = 'lumina-sancti-1.35.0';
 const ARQUIVOS_ESSENCIAIS = [
   './',
   './index.html',
   './style.css',
   './busca.js',
+  './busca-idiomas.js',
   './nomes-santos.js',
   './liturgia.js',
   './medalhas.js',

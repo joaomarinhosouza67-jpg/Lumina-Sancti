@@ -250,6 +250,7 @@
       <button class="side-nav-link side-nav-destaque" id="nav-trilhas"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-trilha"></use></svg><span data-i18n="trilhas_titulo">Trilhas dos Santos</span></button>
       <button class="side-nav-link side-nav-destaque" id="nav-cenaculos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-usuarios"></use></svg><span>Cenáculos</span></button>
       <button class="side-nav-link side-nav-destaque" id="nav-comunidade"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-comunidade"></use></svg><span>Comunidade</span></button>
+      <button class="side-nav-link side-nav-destaque" id="nav-cursos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-capelo"></use></svg><span>Cursos de aprofundamento</span></button>
       <button class="side-nav-link" id="nav-leitura"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-biblia"></use></svg><span data-i18n="nav_leitura">Leitura do dia</span></button>
       <button class="side-nav-link" id="nav-oracoes"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-livro"></use></svg><span data-i18n="nav_oracoes">Orações do dia a dia</span></button>
       <button class="side-nav-link" id="nav-terco"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-terco"></use></svg><span data-i18n="nav_terco">Terço guiado</span></button>
@@ -298,6 +299,10 @@
         <button type="button" class="atalho-cartao" data-destino="comunidade">
           <span class="atalho-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-comunidade"></use></svg></span>
           <span class="atalho-textos"><strong>Comunidade</strong><span>Siga outras pessoas e celebre juntos cada marco nas trilhas.</span></span>
+        </button>
+        <button type="button" class="atalho-cartao" data-destino="cursos">
+          <span class="atalho-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-capelo"></use></svg></span>
+          <span class="atalho-textos"><strong>Cursos de aprofundamento</strong><span>Em breve: estudos sobre casamento, Missa, Bíblia e muito mais.</span></span>
         </button>
       </section>
 
@@ -598,6 +603,118 @@
         <div class="leitura-em-breve">
           <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-biblia"></use></svg>
           <p data-i18n="leitura_em_breve">Em breve estará disponível.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-cursos" class="view">
+      <div class="container cursos-container">
+        <button class="btn-back" id="btn-back-cursos">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span data-i18n="voltar_inicio">Voltar para o início</span>
+        </button>
+        <header class="cursos-topo">
+          <span class="cursos-emblema"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-capelo"></use></svg></span>
+          <span class="cursos-selo">Em breve</span>
+          <h2 class="section-title">Cursos de aprofundamento</h2>
+          <div class="title-divider"></div>
+          <p class="cursos-intro">Para quem quer ir mais fundo na fé. Os cursos vão liberar páginas de aprofundamento sobre vários temas da vida cristã, com explicações simples, o que a Igreja ensina e como viver isso no dia a dia.</p>
+        </header>
+
+        <ol class="cursos-passos">
+          <li class="cursos-passo">
+            <span class="cursos-passo-numero">1</span>
+            <span class="cursos-passo-textos"><strong>Escolha um tema</strong><span>Casamento, Missa, Bíblia, Nossa Senhora e muitos outros.</span></span>
+          </li>
+          <li class="cursos-passo">
+            <span class="cursos-passo-numero">2</span>
+            <span class="cursos-passo-textos"><strong>Uma página por vez</strong><span>Cada curso vai liberando páginas de aprofundamento aos poucos, no seu ritmo.</span></span>
+          </li>
+          <li class="cursos-passo">
+            <span class="cursos-passo-numero">3</span>
+            <span class="cursos-passo-textos"><strong>Com a Igreja</strong><span>Tudo baseado na Bíblia, no Catecismo e no exemplo dos santos.</span></span>
+          </li>
+        </ol>
+
+        <h3 class="cursos-subtitulo">Temas que vão chegar</h3>
+        <div class="cursos-grade">
+          <article class="curso-cartao" style="--cor-curso: #f472b6;">
+            <span class="curso-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-aliancas"></use></svg></span>
+            <h4>Casamento e vida a dois</h4>
+            <p>O sacramento do Matrimônio, o namoro e o noivado cristãos e a família como Igreja doméstica.</p>
+            <span class="curso-em-breve">Em breve</span>
+          </article>
+          <article class="curso-cartao" style="--cor-curso: #fbbf24;">
+            <span class="curso-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-calice"></use></svg></span>
+            <h4>A Santa Missa explicada</h4>
+            <p>Cada parte da celebração, os gestos, as cores e por que a Eucaristia é o centro da fé.</p>
+            <span class="curso-em-breve">Em breve</span>
+          </article>
+          <article class="curso-cartao" style="--cor-curso: #38bdf8;">
+            <span class="curso-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-gota"></use></svg></span>
+            <h4>Os sete sacramentos</h4>
+            <p>Do Batismo à Unção dos Enfermos: os sinais que Jesus deixou para nos dar a sua graça.</p>
+            <span class="curso-em-breve">Em breve</span>
+          </article>
+          <article class="curso-cartao" style="--cor-curso: #fb923c;">
+            <span class="curso-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-biblia"></use></svg></span>
+            <h4>A Bíblia: como ler e rezar</h4>
+            <p>Como a Bíblia foi escrita, como entender cada parte e como rezar com a Palavra de Deus.</p>
+            <span class="curso-em-breve">Em breve</span>
+          </article>
+          <article class="curso-cartao" style="--cor-curso: #60a5fa;">
+            <span class="curso-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-coroa"></use></svg></span>
+            <h4>Maria na fé da Igreja</h4>
+            <p>Os dogmas sobre Nossa Senhora, as aparições reconhecidas e uma devoção bem vivida.</p>
+            <span class="curso-em-breve">Em breve</span>
+          </article>
+          <article class="curso-cartao" style="--cor-curso: #a78bfa;">
+            <span class="curso-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-vela"></use></svg></span>
+            <h4>Oração e vida interior</h4>
+            <p>Meditação, leitura orante, exame de consciência e outros caminhos para rezar melhor.</p>
+            <span class="curso-em-breve">Em breve</span>
+          </article>
+          <article class="curso-cartao" style="--cor-curso: #2dd4bf;">
+            <span class="curso-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-chave"></use></svg></span>
+            <h4>Confissão e misericórdia</h4>
+            <p>Como se preparar, como se confessar bem e o tamanho do perdão de Deus.</p>
+            <span class="curso-em-breve">Em breve</span>
+          </article>
+          <article class="curso-cartao" style="--cor-curso: #34d399;">
+            <span class="curso-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-livro"></use></svg></span>
+            <h4>O Credo e o Catecismo</h4>
+            <p>Aquilo em que a Igreja crê, frase por frase, explicado de um jeito simples.</p>
+            <span class="curso-em-breve">Em breve</span>
+          </article>
+          <article class="curso-cartao" style="--cor-curso: #a3e635;">
+            <span class="curso-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-tabuas"></use></svg></span>
+            <h4>Mandamentos e virtudes</h4>
+            <p>Os Dez Mandamentos, as virtudes e as escolhas do dia a dia à luz da fé.</p>
+            <span class="curso-em-breve">Em breve</span>
+          </article>
+          <article class="curso-cartao" style="--cor-curso: #f87171;">
+            <span class="curso-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-igreja"></use></svg></span>
+            <h4>História da Igreja</h4>
+            <p>Dos apóstolos até hoje: mártires, concílios, santos e grandes momentos.</p>
+            <span class="curso-em-breve">Em breve</span>
+          </article>
+          <article class="curso-cartao" style="--cor-curso: #e879f9;">
+            <span class="curso-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-calendario"></use></svg></span>
+            <h4>O ano litúrgico</h4>
+            <p>Advento, Natal, Quaresma, Páscoa e Tempo Comum: o que celebramos em cada tempo.</p>
+            <span class="curso-em-breve">Em breve</span>
+          </article>
+          <article class="curso-cartao" style="--cor-curso: #f97316;">
+            <span class="curso-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-chama"></use></svg></span>
+            <h4>Vocação e santidade</h4>
+            <p>Sacerdócio, vida consagrada e vida leiga: o chamado de cada um para ser santo.</p>
+            <span class="curso-em-breve">Em breve</span>
+          </article>
+        </div>
+
+        <div class="cursos-enquanto">
+          <p>Enquanto os cursos não chegam, continue aprendendo nas Trilhas dos Santos.</p>
+          <button type="button" class="licao-botao" id="cursos-ir-trilhas">Ir para as Trilhas</button>
         </div>
       </div>
     </section>
@@ -1063,6 +1180,16 @@
       <g id="icone-cruz"><path d="M12 3v18M6.5 8.5h11"/></g>
       <g id="icone-misericordia"><path d="M12 2.5v7M9 5h6"/><path d="M12 11.5 6 21.5M12 11.5l6 10M12 11.5 9.2 21.8M12 11.5l2.8 10.3"/></g>
       <g id="icone-sino"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></g>
+      <g id="icone-capelo"><path d="M2 9.5 12 4.5l10 5-10 5z"/><path d="M6 11.5V16c0 1.7 2.7 3 6 3s6-1.3 6-3v-4.5"/><path d="M22 9.5v5"/></g>
+      <g id="icone-aliancas"><circle cx="9" cy="14.5" r="5.5"/><circle cx="15" cy="14.5" r="5.5"/><path d="m12 2.5 1.6 2.2L12 6.9l-1.6-2.2z"/></g>
+      <g id="icone-calice"><path d="M6.5 3h11c0 5.2-2.5 8.5-5.5 8.5S6.5 8.2 6.5 3z"/><path d="M12 11.5V19"/><path d="M8 21h8"/><path d="M9.5 19h5"/></g>
+      <g id="icone-gota"><path d="M12 2.7s-6 6.4-6 11.1a6 6 0 0 0 12 0C18 9.1 12 2.7 12 2.7z"/><path d="M12 11v6M9.5 13.5h5"/></g>
+      <g id="icone-coroa"><path d="M3.5 18h17l1-10-5.5 4L12 5l-4 7-5.5-4z"/><path d="M4 21h16"/></g>
+      <g id="icone-vela"><path d="M12 2.5c1.6 1.8 2 3 2 4a2 2 0 0 1-4 0c0-1 .4-2.2 2-4z"/><rect x="8.5" y="10" width="7" height="11" rx="1"/></g>
+      <g id="icone-chave"><circle cx="7.5" cy="16.5" r="4.5"/><path d="m10.7 13.3 9.8-9.8"/><path d="m17 6.8 3 3"/><path d="m14.5 9.3 2 2"/></g>
+      <g id="icone-tabuas"><path d="M3.5 20.5V8a4.25 4.25 0 0 1 8.5 0v12.5z"/><path d="M12 20.5V8a4.25 4.25 0 0 1 8.5 0v12.5z"/><path d="M6 10.5h3.5M6 13.5h3.5M6 16.5h3.5M14.5 10.5H18M14.5 13.5H18M14.5 16.5H18"/></g>
+      <g id="icone-igreja"><path d="M12 2v4M10 4h4"/><path d="M5.5 21V11L12 6l6.5 5v10"/><path d="M3 21h18"/><path d="M10 21v-4a2 2 0 0 1 4 0v4"/></g>
+      <g id="icone-calendario"><rect x="3" y="4.5" width="18" height="16.5" rx="2"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><path d="M12 12v6M9.5 14.3h5"/></g>
       <g id="icone-seguir"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></g>
       <g id="icon-aureola">
         <circle cx="12" cy="8" r="6" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-dasharray="2 2" opacity="0.8"/>
@@ -1072,6 +1199,7 @@
   </svg>
 
   <script src="busca.js"></script>
+  <script src="busca-idiomas.js"></script>
   <script src="nomes-santos.js"></script>
   <script src="liturgia.js"></script>
   <script src="medalhas.js"></script>
