@@ -406,12 +406,31 @@ function mensagemDoLimiteDePerfis() {
   return tr('Esta conta já tem o máximo de {n} perfis.', { n: limite });
 }
 
+let contaEspecial = { santidadeInfinita: false, trilhasLiberadas: false };
+
+function contaComSantidadeInfinita() {
+  return contaLogada() && contaEspecial.santidadeInfinita;
+}
+
+function contaComTrilhasLiberadas() {
+  return contaLogada() && contaEspecial.trilhasLiberadas;
+}
+
+async function carregarContaEspecial() {
+  try {
+    const { data, error } = await supabaseCliente.rpc('minha_conta_especial');
+    if (error || !data) return;
+    contaEspecial = { santidadeInfinita: !!data.santidade_infinita, trilhasLiberadas: !!data.trilhas_liberadas };
+  } catch (e) {
+  }
+}
+
 async function carregarMembrosDaConta() {
   const assinatura = typeof carregarAssinaturaSemFalhar === 'function' ? carregarAssinaturaSemFalhar() : null;
   const { data, error } = await supabaseCliente.rpc('list_profiles');
   if (error) throw error;
   membrosDaConta = (data || []).map(membroDoPerfil);
-  await Promise.all([anexarFotos(membrosDaConta), assinatura]);
+  await Promise.all([anexarFotos(membrosDaConta), assinatura, carregarContaEspecial()]);
   return membrosDaConta;
 }
 
@@ -1349,6 +1368,7 @@ function iniciarPerfis() {
     supabaseCliente.auth.onAuthStateChange((evento, sessao) => {
       if (!sessao) {
         perfilEsperandoASessao = false;
+        contaEspecial = { santidadeInfinita: false, trilhasLiberadas: false };
         limparPerfilAtivo();
       } else if (evento === 'TOKEN_REFRESHED' && perfilEsperandoASessao && !membroAtivo) {
         perfilEsperandoASessao = false;

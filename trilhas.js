@@ -798,7 +798,7 @@ const TEXTOS_TRILHAS = {
     missao_rotulo: 'Missão {n}: {titulo}',
     missao_refazer: ' (concluída — refazer)',
     missao_bloqueada: ' (bloqueada)',
-    comecar_balao: 'COMEÇAR',
+    comecar_balao: 'Começar',
     medalha_de: 'Medalha da {m}',
     insignia_da_trilha: 'Insígnia da trilha',
     ler_historia: 'Ler a história →',
@@ -880,7 +880,7 @@ const TEXTOS_TRILHAS = {
     missao_rotulo: 'Mission {n}: {titulo}',
     missao_refazer: ' (completed — play again)',
     missao_bloqueada: ' (locked)',
-    comecar_balao: 'START',
+    comecar_balao: 'Start',
     medalha_de: 'Medal of {m}',
     insignia_da_trilha: 'Trail badge',
     ler_historia: 'Read the story →',
@@ -962,7 +962,7 @@ const TEXTOS_TRILHAS = {
     missao_rotulo: 'Misión {n}: {titulo}',
     missao_refazer: ' (completada — repetir)',
     missao_bloqueada: ' (bloqueada)',
-    comecar_balao: 'EMPEZAR',
+    comecar_balao: 'Empezar',
     medalha_de: 'Medalla de {m}',
     insignia_da_trilha: 'Insignia del sendero',
     ler_historia: 'Leer la historia →',
@@ -1516,8 +1516,12 @@ function perderSantidade(estado, agoraMs) {
   estado.santidade = Math.max(0, estado.santidade - 1);
 }
 
+function trilhasTodasLiberadas() {
+  return typeof contaComTrilhasLiberadas === 'function' && contaComTrilhasLiberadas();
+}
+
 function licaoDesbloqueada(trilha, indice, estado) {
-  if (indice === 0) return true;
+  if (indice === 0 || trilhasTodasLiberadas()) return true;
   return !!estado.licoes[trilha.licoes[indice - 1].slug];
 }
 
@@ -1607,7 +1611,7 @@ function renderizarTrilhas() {
   lista.innerHTML = trilhas.map((trilha, posicao) => {
     const concluida = trilhaConcluida(trilha, estado);
     const anterior = posicao > 0 ? trilhas[posicao - 1] : null;
-    const liberada = !anterior || trilhaConcluida(anterior, estado);
+    const liberada = !anterior || trilhaConcluida(anterior, estado) || trilhasTodasLiberadas();
 
     if (!liberada) {
       return `
@@ -1625,10 +1629,11 @@ function renderizarTrilhas() {
 
     const feitasDaTrilha = trilha.licoes.filter((licao) => !!estado.licoes[licao.slug]).length;
     const porcentoDaTrilha = Math.round((feitasDaTrilha / Math.max(1, trilha.licoes.length)) * 100);
+    const proximaDaTrilha = trilha.licoes.findIndex((licao) => !estado.licoes[licao.slug]);
     const nos = trilha.licoes.map((licao, i) => {
       const feita = !!estado.licoes[licao.slug];
       const liberada = licaoDesbloqueada(trilha, i, estado);
-      const classe = feita ? 'concluida' : (liberada ? 'atual' : 'bloqueada');
+      const classe = feita ? 'concluida' : (liberada ? (i === proximaDaTrilha ? 'atual' : 'atual sem-pulso') : 'bloqueada');
       const simbolo = feita ? icone('check', 'icone-no') : (liberada ? icone('estrela', 'icone-no') : icone('cadeado', 'icone-no'));
       const rotuloAcessivel = tt('missao_rotulo', { n: i + 1, titulo: licao.titulo })
         + (feita ? tt('missao_refazer') : (liberada ? '' : tt('missao_bloqueada')));
@@ -1707,8 +1712,9 @@ function renderizarPlacarDasTrilhas(estado) {
   const painel = document.getElementById('trilhas-stats');
   if (!painel) return;
   const infantil = perfilEhInfantil();
-  const santidadeTexto = infantil ? '∞' : `${estado.santidade}/${SANTIDADE_MAXIMA}`;
-  const porcento = infantil ? 100 : Math.round((Math.max(0, estado.santidade) / SANTIDADE_MAXIMA) * 100);
+  const infinita = infantil || (typeof contaComSantidadeInfinita === 'function' && contaComSantidadeInfinita());
+  const santidadeTexto = infinita ? '∞' : `${estado.santidade}/${SANTIDADE_MAXIMA}`;
+  const porcento = infinita ? 100 : Math.round((Math.max(0, estado.santidade) / SANTIDADE_MAXIMA) * 100);
   painel.innerHTML = `
     <div class="stat stat-fe"><span class="stat-icone">${estrelaDaFe()}</span><span class="stat-valor">${estado.fe}</span><small>${tt('fe')}</small></div>
     <div class="stat stat-ofensiva${estado.ofensiva > 0 ? ' acesa' : ''}"><span class="stat-icone">${icone('chama')}</span><span class="stat-valor">${estado.ofensiva}</span><small>${tt('ofensiva')}</small></div>
