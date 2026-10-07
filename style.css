@@ -103,6 +103,8 @@ input:focus-visible,
 }
 
 .intro-screen {
+  --primary-color: #d4af37;
+  --primary-rgb: 212, 175, 55;
   position: fixed;
   top: 0;
   left: 0;

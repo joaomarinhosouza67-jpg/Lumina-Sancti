@@ -587,12 +587,21 @@ function aindaNaTelaInicial() {
   return !!inicio && inicio.classList.contains('active') && !document.body.classList.contains('catalogo-interno');
 }
 
+let perfilEsperandoASessao = false;
+
 async function restaurarPerfilSalvo() {
   if (typeof supabaseCliente === 'undefined' || !supabaseCliente || membroAtivo) return;
   const voltarAoInicio = () => { if (telaDePerfisAberta()) mudarDeView('view-home'); };
-  const { data } = await supabaseCliente.auth.getSession();
-  if (!data || !data.session) { voltarAoInicio(); return; }
-  if (typeof cadastroCompleto === 'function' && !cadastroCompleto(data.session.user)) return;
+  const sessao = typeof sessaoConfirmadaDoAparelho === 'function'
+    ? await sessaoConfirmadaDoAparelho()
+    : (await supabaseCliente.auth.getSession()).data.session;
+  if (!sessao) {
+    perfilEsperandoASessao = temSessaoGuardada();
+    voltarAoInicio();
+    return;
+  }
+  perfilEsperandoASessao = false;
+  if (typeof cadastroCompleto === 'function' && !cadastroCompleto(sessao.user)) return;
   let id = null;
   try { id = localStorage.getItem(CHAVE_MEMBRO_ATIVO); } catch (e) {  }
   try {
@@ -1337,8 +1346,15 @@ function iniciarPerfis() {
   if (tirarPin) tirarPin.addEventListener('click', tirarPinDoPerfil);
 
   if (typeof supabaseCliente !== 'undefined' && supabaseCliente) {
-    supabaseCliente.auth.onAuthStateChange((_evento, sessao) => {
-      if (!sessao) limparPerfilAtivo();
+    supabaseCliente.auth.onAuthStateChange((evento, sessao) => {
+      if (!sessao) {
+        perfilEsperandoASessao = false;
+        limparPerfilAtivo();
+      } else if (evento === 'TOKEN_REFRESHED' && perfilEsperandoASessao && !membroAtivo) {
+        perfilEsperandoASessao = false;
+        promessaDaSessaoDoAparelho = Promise.resolve(sessao);
+        restaurarPerfilSalvo();
+      }
     });
     abrirPerfisJaNaEntrada();
     restaurarPerfilSalvo();

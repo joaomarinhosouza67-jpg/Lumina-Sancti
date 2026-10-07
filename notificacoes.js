@@ -18,14 +18,14 @@ function horarioDaOfensiva(dados) {
 function explicacaoDaOfensiva(modo, hora) {
   if (modo === 'hora') {
     return hora >= ULTIMA_HORA_DA_OFENSIVA
-      ? tr('Um aviso às {hora}h, se você ainda não fez a missão do dia.', { hora })
-      : tr('Um aviso a cada hora, das {hora}h às {ultima}h, até você fazer a missão do dia.', { hora, ultima: ULTIMA_HORA_DA_OFENSIVA });
+      ? tr('Dois avisos, às 22h e às 22h30, se você ainda não fez a missão do dia.')
+      : tr('Um aviso a cada meia hora, das {hora}h às {ultima}h30, até você fazer a missão do dia.', { hora, ultima: ULTIMA_HORA_DA_OFENSIVA });
   }
   return tr('Um aviso às {hora}h, se você ainda não fez a missão do dia.', { hora });
 }
 
 function resumoDaOfensiva(modo, hora) {
-  return modo === 'hora' ? tr('Ofensiva de hora em hora a partir das {hora}h', { hora }) : tr('Ofensiva às {hora}h', { hora });
+  return modo === 'hora' ? tr('Ofensiva de meia em meia hora a partir das {hora}h', { hora }) : tr('Ofensiva às {hora}h', { hora });
 }
 
 function notificacoesSuportadas() {
@@ -138,7 +138,7 @@ function convidarParaLembrete(tipo) {
       <h3>${misericordia ? 'Quer um lembrete às 15h?' : 'Quer ajuda para não perder a sequência?'}</h3>
       <p>${misericordia
         ? 'Todo dia, às 3 da tarde, o Lumina Sancti avisa no seu celular: "Hoje é a Hora da Misericórdia, reze o terço com a gente".'
-        : 'Se você ainda não tiver feito a missão do dia, às 20h chega um aviso no celular para você não perder a sua ofensiva. Depois dá para mudar o horário ou receber de hora em hora, em Meu perfil, na opção Notificações.'}</p>
+        : 'Se você ainda não tiver feito a missão do dia, às 20h chega um aviso no celular para você não perder a sua ofensiva. Depois dá para mudar o horário ou receber de meia em meia hora até fazer, em Meu perfil, na opção Notificações.'}</p>
       <div class="marco-convite-botoes">
         <button type="button" class="licao-botao" id="lembrete-sim">Sim, me lembre</button>
         <button type="button" class="marco-convite-nao" id="lembrete-nao">Agora não</button>
@@ -277,7 +277,7 @@ function htmlDoHorarioDaOfensiva(atuais, travado) {
     <div class="lembrete-horario" id="lembrete-ofensiva-opcoes" ${atuais.ofensiva ? '' : 'hidden'}>
       <div class="lembrete-modos" role="radiogroup" aria-label="Quantas vezes avisar">
         <button type="button" class="lembrete-modo" data-modo="uma" role="radio" ${travado ? 'disabled' : ''}>Uma vez por dia</button>
-        <button type="button" class="lembrete-modo" data-modo="hora" role="radio" ${travado ? 'disabled' : ''}>De hora em hora</button>
+        <button type="button" class="lembrete-modo" data-modo="hora" role="radio" ${travado ? 'disabled' : ''}>De meia em meia hora</button>
       </div>
       <label class="lembrete-hora-linha">
         <span id="lembrete-hora-rotulo">Horário do aviso</span>
@@ -286,6 +286,7 @@ function htmlDoHorarioDaOfensiva(atuais, travado) {
         </select>
       </label>
       <p class="lembrete-horario-explica" id="lembrete-ofensiva-explica"></p>
+      <p class="lembrete-horario-explica">Se a ofensiva acabar, chega um convite por dia, por alguns dias, para você voltar.</p>
     </div>`;
 }
 

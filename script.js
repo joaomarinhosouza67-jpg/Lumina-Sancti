@@ -2556,19 +2556,84 @@ const supabaseCliente = (SUPABASE_URL.includes('SEU-PROJETO') || SUPABASE_ANON_K
   : window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let sessaoAtual = null;
+let promessaDaSessaoDoAparelho = null;
+
+function esperarSessaoDoAparelho(limite) {
+  return new Promise((resolver) => {
+    let terminou = false;
+    let inscricao = null;
+    let relogio = null;
+    let prazo = null;
+    let tentar = null;
+    const terminar = (sessao) => {
+      if (terminou) return;
+      terminou = true;
+      clearInterval(relogio);
+      clearTimeout(prazo);
+      if (tentar) window.removeEventListener('online', tentar);
+      if (inscricao) inscricao.unsubscribe();
+      resolver(sessao || null);
+    };
+    const resposta = supabaseCliente.auth.onAuthStateChange((evento, sessao) => {
+      if (sessao) terminar(sessao);
+      else if (evento === 'SIGNED_OUT') terminar(null);
+    });
+    inscricao = resposta && resposta.data ? resposta.data.subscription : null;
+    tentar = () => {
+      if (terminou || (typeof navigator !== 'undefined' && navigator.onLine === false)) return;
+      try {
+        supabaseCliente.auth.refreshSession()
+          .then(({ data }) => { if (data && data.session) terminar(data.session); })
+          .catch(() => {});
+      } catch (e) {
+        terminar(null);
+      }
+    };
+    relogio = setInterval(tentar, 4000);
+    prazo = setTimeout(() => terminar(null), limite);
+    window.addEventListener('online', tentar);
+    tentar();
+  });
+}
+
+function sessaoConfirmadaDoAparelho() {
+  if (!supabaseCliente) return Promise.resolve(null);
+  if (!promessaDaSessaoDoAparelho) {
+    promessaDaSessaoDoAparelho = supabaseCliente.auth.getSession()
+      .then(({ data }) => {
+        if (data && data.session) return data.session;
+        if (typeof temSessaoGuardada === 'function' && temSessaoGuardada()) return esperarSessaoDoAparelho(20000);
+        return null;
+      })
+      .catch(() => null);
+  }
+  return promessaDaSessaoDoAparelho;
+}
+
+function guardarDadosDoSiteNoAparelho() {
+  try {
+    if (!navigator.storage || !navigator.storage.persist) return;
+    const instalado = typeof appJaInstalado === 'function' && appJaInstalado();
+    const comAvisos = typeof Notification !== 'undefined' && Notification.permission === 'granted';
+    if (!instalado && !comAvisos) return;
+    navigator.storage.persisted().then((jaGuardado) => { if (!jaGuardado) navigator.storage.persist(); }).catch(() => {});
+  } catch (e) {
+  }
+}
 
 async function iniciarAutenticacao() {
   if (!supabaseCliente) return;
 
-  const { data } = await supabaseCliente.auth.getSession();
-  sessaoAtual = data.session;
+  sessaoAtual = await sessaoConfirmadaDoAparelho();
   atualizarInterfaceDeConta();
   verificarCadastroCompleto();
+  if (sessaoAtual) guardarDadosDoSiteNoAparelho();
 
-  supabaseCliente.auth.onAuthStateChange((_evento, sessao) => {
+  supabaseCliente.auth.onAuthStateChange((evento, sessao) => {
     sessaoAtual = sessao;
     atualizarInterfaceDeConta();
     verificarCadastroCompleto();
+    if (sessao && evento === 'SIGNED_IN') guardarDadosDoSiteNoAparelho();
   });
 }
 

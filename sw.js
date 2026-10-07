@@ -1,4 +1,4 @@
-const CACHE_NOME = 'lumina-sancti-1.35.0';
+const CACHE_NOME = 'lumina-sancti-1.36.0';
 const ARQUIVOS_ESSENCIAIS = [
   './',
   './index.html',
@@ -22,6 +22,7 @@ const ARQUIVOS_ESSENCIAIS = [
   './avisos.js',
   './favicon.svg',
   './favicon-48.png',
+  './badge-estrela.png',
   './apple-touch-icon.png',
   './icon-192.png',
   './icon-512.png',
@@ -78,7 +79,7 @@ self.addEventListener('push', (evento) => {
     self.registration.showNotification(titulo, {
       body: dados.texto || '',
       icon: './icon-192.png',
-      badge: './favicon-48.png',
+      badge: './badge-estrela.png',
       tag: dados.tag || 'lumina-sancti',
       renotify: true,
       data: { url: endereco },
