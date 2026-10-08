@@ -391,7 +391,8 @@ function membroDoPerfil(perfil) {
 }
 
 function limiteDePerfis() {
-  return typeof maximoDePerfisDoPlano === 'function' ? maximoDePerfisDoPlano(MAXIMO_DE_PERFIS) : MAXIMO_DE_PERFIS;
+  const doPlano = typeof maximoDePerfisDoPlano === 'function' ? maximoDePerfisDoPlano(MAXIMO_DE_PERFIS) : MAXIMO_DE_PERFIS;
+  return contaLogada() && contaEspecial.perfisMax ? Math.max(doPlano, contaEspecial.perfisMax) : doPlano;
 }
 
 function perfilGuardadoPeloPlano(membro) {
@@ -406,7 +407,12 @@ function mensagemDoLimiteDePerfis() {
   return tr('Esta conta já tem o máximo de {n} perfis.', { n: limite });
 }
 
-let contaEspecial = { santidadeInfinita: false, trilhasLiberadas: false };
+const CONTA_ESPECIAL_VAZIA = { santidadeInfinita: false, trilhasLiberadas: false, enfeitesExclusivos: false, perfisMax: 0 };
+let contaEspecial = Object.assign({}, CONTA_ESPECIAL_VAZIA);
+
+function contaComEnfeitesExclusivos() {
+  return contaLogada() && contaEspecial.enfeitesExclusivos;
+}
 
 function contaComSantidadeInfinita() {
   return contaLogada() && contaEspecial.santidadeInfinita;
@@ -420,7 +426,12 @@ async function carregarContaEspecial() {
   try {
     const { data, error } = await supabaseCliente.rpc('minha_conta_especial');
     if (error || !data) return;
-    contaEspecial = { santidadeInfinita: !!data.santidade_infinita, trilhasLiberadas: !!data.trilhas_liberadas };
+    contaEspecial = {
+      santidadeInfinita: !!data.santidade_infinita,
+      trilhasLiberadas: !!data.trilhas_liberadas,
+      enfeitesExclusivos: !!data.enfeites_exclusivos,
+      perfisMax: Number(data.perfis_max) || 0,
+    };
   } catch (e) {
   }
 }
@@ -1368,7 +1379,7 @@ function iniciarPerfis() {
     supabaseCliente.auth.onAuthStateChange((evento, sessao) => {
       if (!sessao) {
         perfilEsperandoASessao = false;
-        contaEspecial = { santidadeInfinita: false, trilhasLiberadas: false };
+        contaEspecial = Object.assign({}, CONTA_ESPECIAL_VAZIA);
         limparPerfilAtivo();
       } else if (evento === 'TOKEN_REFRESHED' && perfilEsperandoASessao && !membroAtivo) {
         perfilEsperandoASessao = false;

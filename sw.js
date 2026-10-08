@@ -1,4 +1,4 @@
-const CACHE_NOME = 'lumina-sancti-1.37.0';
+const CACHE_NOME = 'lumina-sancti-1.22.16';
 const ARQUIVOS_ESSENCIAIS = [
   './',
   './index.html',
@@ -18,6 +18,7 @@ const ARQUIVOS_ESSENCIAIS = [
   './amigos.js',
   './planos.js',
   './enfeites.js',
+  './enfeites-novos.js',
   './comunidade.js',
   './notificacoes.js',
   './avisos.js',

@@ -40,7 +40,7 @@
   if (!p) return;
 
   const CORES = [[196, 214, 255], [255, 255, 255], [255, 245, 226], [255, 226, 178], [255, 200, 140]];
-  const mundo = { w: 0, h: 0, dpr: 1, ceu: null, estrelas: [], poeira: [], meteoros: [], brilhos: [] };
+  const mundo = { w: 0, h: 0, dpr: 1, ceu: null, estrelas: [], poeira: [], meteoros: [], brilhos: [], convergem: [] };
 
   function rgba(c, a) {
     return `rgba(${c[0]}, ${c[1]}, ${c[2]}, ${a})`;
@@ -192,6 +192,12 @@
       };
     });
 
+    mundo.convergem = Array.from({ length: 6 }, (_, i) => {
+      const ang = ((360 / 6) * i + (Math.random() * 25 - 12)) * Math.PI / 180;
+      const dist = ((38 + Math.random() * 14) * m) / 100;
+      return { dx: Math.cos(ang) * dist, dy: Math.sin(ang) * dist, atraso: Math.random() * 0.25 };
+    });
+
     const escala = Math.max(0.55, m / 900);
     mundo.meteoros = [1.15, 2.05, 2.95].map((t0, i) => {
       const dir = i === 1 ? -1 : 1;
@@ -247,40 +253,151 @@
     p.restore();
   }
 
+  const ESTRELA = typeof Path2D === 'function' ? new Path2D('M50 0 C52 35 65 48 100 50 C65 52 52 65 50 100 C48 65 35 52 0 50 C35 48 48 35 50 0 Z') : null;
+  const ESTRELA_DE_DENTRO = typeof Path2D === 'function' ? new Path2D('M50 15 C52 38 62 48 85 50 C62 52 52 62 50 85 C48 62 38 52 15 50 C38 48 48 38 50 15 Z') : null;
+
+  function entre(a, b, x) {
+    return Math.min(1, Math.max(0, (x - a) / (b - a)));
+  }
+
+  function voltaComPulo(x) {
+    const c1 = 1.56;
+    const c3 = c1 + 1;
+    return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2);
+  }
+
+  function saidaSuave(x) {
+    return 1 - Math.pow(1 - x, 3);
+  }
+
+  function desenharCoroa(cx, cy, raio, angulo, forca) {
+    if (forca <= 0.01) return;
+    const g = p.createRadialGradient(cx, cy, 0, cx, cy, raio);
+    g.addColorStop(0, 'rgba(255, 215, 0, 0)');
+    g.addColorStop(0.18, `rgba(255, 215, 0, ${0.16 * forca})`);
+    g.addColorStop(0.68, 'rgba(255, 215, 0, 0)');
+    p.fillStyle = g;
+    p.beginPath();
+    const fatia = (2.5 * Math.PI) / 180;
+    for (let i = 0; i < 24; i++) {
+      const a = angulo + (i * Math.PI * 2) / 24;
+      p.moveTo(cx, cy);
+      p.arc(cx, cy, raio, a, a + fatia);
+      p.closePath();
+    }
+    p.fill();
+  }
+
+  function desenharRaio(cx, cy, angulo, comprimento, forca) {
+    if (comprimento <= 1 || forca <= 0.01) return;
+    p.save();
+    p.translate(cx, cy);
+    p.rotate(angulo);
+    const g = p.createLinearGradient(0, 0, comprimento, 0);
+    g.addColorStop(0, 'rgba(255, 215, 0, 0)');
+    g.addColorStop(0.38, `rgba(255, 215, 0, ${forca})`);
+    g.addColorStop(0.5, `rgba(255, 251, 232, ${forca})`);
+    g.addColorStop(0.62, `rgba(255, 215, 0, ${forca})`);
+    g.addColorStop(1, 'rgba(255, 215, 0, 0)');
+    p.fillStyle = g;
+    p.fillRect(0, -1, comprimento, 2);
+    p.restore();
+  }
+
+  function desenharEstrela(cx, cy, tamanho, angulo, forca, pulso) {
+    if (!ESTRELA || tamanho <= 1 || forca <= 0.01) return;
+    p.save();
+    p.translate(cx, cy);
+    p.rotate(angulo);
+    p.scale(tamanho / 100, tamanho / 100);
+    p.translate(-50, -50);
+    p.globalCompositeOperation = 'source-over';
+    p.shadowColor = 'rgba(255, 210, 90, 0.9)';
+    p.shadowBlur = 26 * mundo.dpr * Math.max(0.6, tamanho / 110);
+    const ouro = p.createLinearGradient(20, 0, 80, 100);
+    ouro.addColorStop(0, '#fbe7a1');
+    ouro.addColorStop(0.45, '#e2bd4f');
+    ouro.addColorStop(1, '#b8902f');
+    p.globalAlpha = 0.95 * forca;
+    p.fillStyle = ouro;
+    p.fill(ESTRELA);
+    p.shadowBlur = 0;
+    p.translate(50, 50);
+    p.rotate(Math.PI / 4);
+    p.translate(-50, -50);
+    p.globalAlpha = forca * pulso;
+    p.fillStyle = '#fff3c4';
+    p.fill(ESTRELA_DE_DENTRO);
+    p.restore();
+  }
+
   function desenharLuz(t) {
     const { w, h } = mundo;
     const m = Math.min(w, h);
     const cx = w / 2;
     const cy = h * 0.42;
-    const acende = suave(0.35, 1.75, t);
-    const clarao = Math.exp(-Math.pow((t - 1.8) / 0.22, 2)) * 0.55;
-    const respira = 1 + Math.sin(t * 2.3) * 0.04 * acende;
-    const k = Math.min(1.5, acende * respira + clarao);
-    if (k <= 0.001) return;
+    const tamanho = Math.max(92, Math.min(150, m * 0.17));
+    const unidade = tamanho / 100;
 
-    circuloDeLuz(cx, cy, m * 0.62 * (0.55 + 0.45 * acende), [
-      [0, `rgba(255, 214, 130, ${0.2 * k})`],
-      [0.35, `rgba(212, 160, 60, ${0.07 * k})`],
-      [1, 'rgba(212, 175, 55, 0)'],
-    ]);
-    circuloDeLuz(cx, cy, m * 0.15 * (0.5 + 0.5 * acende), [
-      [0, `rgba(255, 248, 228, ${Math.min(1, 0.95 * k)})`],
-      [0.3, `rgba(255, 222, 150, ${0.5 * k})`],
-      [1, 'rgba(255, 200, 110, 0)'],
-    ]);
+    p.save();
+    p.globalCompositeOperation = 'lighter';
 
-    const longo = m * 0.4 * acende * (1 + clarao * 0.5);
-    const curto = m * 0.14 * acende * (1 + clarao * 0.4);
-    const largo = Math.max(1.2, m / 360);
-    for (let i = 0; i < 4; i++) espinho(cx, cy, (Math.PI / 2) * i, longo, largo, Math.min(1, 0.95 * k));
-    for (let i = 0; i < 4; i++) espinho(cx, cy, Math.PI / 4 + (Math.PI / 2) * i, curto, largo * 0.7, Math.min(1, 0.5 * k));
+    mundo.convergem.forEach((luz) => {
+      const pr = entre(luz.atraso, luz.atraso + 0.85, t);
+      if (pr <= 0 || pr >= 1) return;
+      const mov = pr < 0.5 ? 4 * pr * pr * pr : 1 - Math.pow(-2 * pr + 2, 3) / 2;
+      const x = cx + luz.dx * (1 - mov);
+      const y = cy + luz.dy * (1 - mov);
+      const a = pr < 0.2 ? pr / 0.2 : 1 - (pr - 0.2) / 0.8;
+      const lado = 16 * (1 - 0.75 * mov);
+      p.globalAlpha = Math.max(0, a);
+      p.drawImage(mundo.brilhos[3], x - lado / 2, y - lado / 2, lado, lado);
+    });
+    p.globalAlpha = 1;
 
-    circuloDeLuz(cx, cy, 6 + m * 0.018, [
-      [0, 'rgba(255, 255, 255, 1)'],
-      [0.45, `rgba(255, 250, 235, ${Math.min(1, k)})`],
-      [1, 'rgba(255, 240, 200, 0)'],
-    ]);
-    return { cx, cy, k: acende, m };
+    const coroa = entre(1.2, 2.4, t);
+    desenharCoroa(cx, cy, Math.min(260, m * 0.65), ((t - 1.2) * Math.PI * 2) / 40, coroa);
+
+    for (let i = 0; i < 12; i++) {
+      const pr = entre(0.85 + 0.04 * i, 1.85 + 0.04 * i, t);
+      if (pr <= 0 || pr >= 1) continue;
+      const a = pr < 0.35 ? pr / 0.35 : 1 - (pr - 0.35) / 0.65;
+      desenharRaio(cx, cy, (i * Math.PI) / 6, 280 * unidade * saidaSuave(pr), a);
+    }
+
+    const forma = entre(0.25, 1.95, t);
+    const forcaDaEstrela = Math.min(1, forma / 0.55);
+    const escalaDaEstrela = forma > 0 ? voltaComPulo(forma) : 0;
+    const giro = (-60 * Math.PI / 180) * (1 - voltaComPulo(forma)) + (t > 1.95 ? ((t - 1.95) * Math.PI * 2) / 14 : 0);
+    const pulso = t > 1.95 ? 0.55 + 0.45 * (1 - Math.cos(((t - 1.95) * Math.PI * 2) / 2.2)) / 2 : 0.6;
+
+    if (forcaDaEstrela > 0) {
+      const largo = Math.max(1, m / 420);
+      for (let i = 0; i < 4; i++) {
+        espinho(cx, cy, giro + (Math.PI / 2) * i - Math.PI / 2, m * 0.3 * escalaDaEstrela, largo, 0.35 * forcaDaEstrela);
+      }
+    }
+
+    p.restore();
+    desenharEstrela(cx, cy, tamanho * escalaDaEstrela, giro, forcaDaEstrela, pulso);
+
+    const clarao = entre(1.8, 2.9, t);
+    if (clarao > 0 && clarao < 1) {
+      const escala = clarao < 0.4 ? 0.6 + 0.5 * (clarao / 0.4) : 1.1 + 0.4 * ((clarao - 0.4) / 0.6);
+      const a = clarao < 0.4 ? 0.6 * (clarao / 0.4) : 0.6 * (1 - (clarao - 0.4) / 0.6);
+      const r = (Math.hypot(w, h) / 2) * escala;
+      p.save();
+      p.globalCompositeOperation = 'lighter';
+      circuloDeLuz(cx, cy, r, [
+        [0, `rgba(255, 250, 225, ${0.95 * a})`],
+        [0.3, `rgba(255, 215, 0, ${0.42 * a})`],
+        [0.65, 'rgba(255, 215, 0, 0)'],
+        [1, 'rgba(255, 215, 0, 0)'],
+      ]);
+      p.restore();
+    }
+
+    return { cx, cy, k: forcaDaEstrela, m };
   }
 
   function desenharPoeira(t, dt, luz) {

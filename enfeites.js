@@ -2045,9 +2045,14 @@ function perfilEhCrianca(perfil) {
   return !!perfil && perfil.tipo === 'crianca';
 }
 
+function enfeitesDaFamiliaLiberados() {
+  return typeof contaComEnfeitesExclusivos === 'function' && contaComEnfeitesExclusivos();
+}
+
 function enfeiteLiberado(item, perfil) {
   if (!item) return true;
   if (perfilEhCrianca(perfil) && !item.criancas) return false;
+  if (item.exclusivo) return enfeitesDaFamiliaLiberados();
   if (item.gratis) return true;
   if (typeof cobrancaLigadaNoSite !== 'function' || !cobrancaLigadaNoSite()) return true;
   const plano = typeof estadoDaAssinatura !== 'undefined' && estadoDaAssinatura && estadoDaAssinatura.plano ? estadoDaAssinatura.plano.id : 'free';
@@ -2185,11 +2190,13 @@ function perfilDaEscolha() {
 
 function itensVisiveis(tipo, perfil) {
   const crianca = perfilEhCrianca(perfil);
-  return (ENFEITES[tipo] || []).filter((item) => (!crianca || (item.criancas && enfeiteLiberado(item, perfil))));
+  return (ENFEITES[tipo] || []).filter((item) => (!item.exclusivo || enfeitesDaFamiliaLiberados()) && (!crianca || (item.criancas && enfeiteLiberado(item, perfil))));
 }
 
 function seloDoEnfeite(item, perfil) {
-  if (!item || perfilEhCrianca(perfil)) return '';
+  if (!item) return '';
+  if (item.exclusivo) return '<span class="enfeite-selo exclusivo">Família</span>';
+  if (perfilEhCrianca(perfil)) return '';
   if (item.gratis) return '<span class="enfeite-selo gratis">Grátis</span>';
   if (enfeiteLiberado(item, perfil)) return '<span class="enfeite-selo">Assinantes</span>';
   return `<span class="enfeite-selo trancado">${icone('cadeado')}Assinantes</span>`;
