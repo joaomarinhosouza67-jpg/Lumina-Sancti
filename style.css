@@ -5218,3 +5218,21 @@ body.intro-ativa .navbar { backdrop-filter: none; }
 .codigo-especial-aviso { min-height: 1.4em; text-align: center; color: var(--text-muted); font-size: 0.95rem; }
 .enf-varre { animation: enfVarre 4.5s ease-in-out infinite; }
 @keyframes enfVarre { 0% { transform: translateX(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateX(200px); opacity: 0; } }
+.enf-asa-sm { transform-box: view-box; transform-origin: 0 0; animation: enfAsaSm 3.4s ease-in-out infinite; }
+.enf-fita-sm { transform-box: view-box; transform-origin: 68px 120px; animation: enfFitaSm 4.2s ease-in-out var(--a, 0s) infinite; }
+.enf-brilho-sobe { transform-box: view-box; transform-origin: 0 0; animation: enfBrilhoSobe 3.2s ease-in-out 0.6s infinite; opacity: 0; }
+.enf-reflexo-passa { animation: enfReflexoPassa 4.6s ease-in-out 1s infinite; }
+@keyframes enfAsaSm { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-7deg); } }
+@keyframes enfFitaSm { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-1.8deg); } }
+@keyframes enfBrilhoSobe { 0% { opacity: 0; transform: translateY(4px) scale(0.3); } 15% { opacity: 1; transform: translateY(0) scale(1); } 55% { opacity: 1; transform: translateY(-34px) scale(0.9); } 68%, 100% { opacity: 0; transform: translateY(-40px) scale(0.3); } }
+@keyframes enfReflexoPassa { 0% { transform: translateX(0); } 50%, 100% { transform: translateX(210px); } }
+.enf-raios-sm { transform-box: view-box; transform-origin: 0 0; animation: enfRaiosSm 14s ease-in-out infinite; }
+.enf-capa-sm { transform-box: view-box; transform-origin: 0 0; animation: enfCapaSm 3.8s ease-in-out infinite; }
+.enf-corrente { transform-box: view-box; transform-origin: 0 0; animation: enfCorrente 3s ease-in-out infinite; }
+.enf-brilho-lamina { transform-box: view-box; transform-origin: 0 0; animation: enfBrilhoLamina 3s ease-in-out 0.8s infinite; opacity: 0; }
+.enf-relampago { animation: enfRelampago 7s linear var(--a, 0s) infinite; opacity: 0; }
+@keyframes enfRaiosSm { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
+@keyframes enfCapaSm { 0%, 100% { transform: rotate(0deg) skewY(0deg); } 50% { transform: rotate(4deg) skewY(-3deg); } }
+@keyframes enfCorrente { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
+@keyframes enfBrilhoLamina { 0% { opacity: 0; transform: translateY(-2px) scale(0.3); } 12% { opacity: 1; transform: translateY(-4px) scale(1); } 50% { opacity: 1; transform: translateY(-26px) scale(0.9); } 62%, 100% { opacity: 0; transform: translateY(-30px) scale(0.3); } }
+@keyframes enfRelampago { 0%, 88%, 100% { opacity: 0; } 89% { opacity: 1; } 90.5% { opacity: 0.15; } 92% { opacity: 0.95; } 95% { opacity: 0; } }

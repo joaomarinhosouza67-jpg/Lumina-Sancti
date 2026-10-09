@@ -1889,13 +1889,28 @@ const EFEITOS_DO_PERFIL = {
   'penas-de-anjo': efeitoPenasDeAnjo,
 };
 
+function margemDoEfeito(alvo) {
+  let corte = alvo.parentElement;
+  while (corte && corte !== document.body && getComputedStyle(corte).overflow === 'visible') corte = corte.parentElement;
+  const a = alvo.getBoundingClientRect();
+  if (!corte || corte === document.body) {
+    return { e: Math.floor(Math.max(0, Math.min(60, a.left))), d: Math.floor(Math.max(0, Math.min(60, document.documentElement.clientWidth - a.right))), t: Math.floor(Math.max(0, Math.min(60, a.top - 70))) };
+  }
+  const c = corte.getBoundingClientRect();
+  const esquerda = c.left + corte.clientLeft;
+  const topo = c.top + corte.clientTop;
+  const direita = esquerda + corte.clientWidth;
+  return { e: Math.floor(Math.max(0, Math.min(140, a.left - esquerda))), d: Math.floor(Math.max(0, Math.min(140, direita - a.right))), t: Math.floor(Math.max(0, Math.min(140, a.top - topo))) };
+}
+
 function tocarEfeitoDoPerfil(alvo, id) {
   const criar = EFEITOS_DO_PERFIL[id];
   if (!alvo || !criar || movimentoReduzido()) return null;
   alvo.querySelectorAll(':scope > .enfeite-efeito').forEach((antigo) => antigo.remove());
   if (getComputedStyle(alvo).position === 'static') alvo.style.position = 'relative';
-  const w = Math.max(1, Math.round(alvo.clientWidth));
-  const h = Math.max(1, Math.round(Math.min(alvo.scrollHeight || alvo.clientHeight, 720)));
+  const m = criar.usaMargem ? margemDoEfeito(alvo) : { e: 0, d: 0, t: 0 };
+  const w = Math.max(1, Math.round(alvo.clientWidth) + m.e + m.d);
+  const h = Math.max(1, Math.round(Math.min(alvo.scrollHeight || alvo.clientHeight, 720)) + m.t);
   const tela = document.createElement('canvas');
   tela.className = 'enfeite-efeito';
   tela.setAttribute('aria-hidden', 'true');
@@ -1904,11 +1919,22 @@ function tocarEfeitoDoPerfil(alvo, id) {
   tela.height = Math.round(h * escala);
   tela.style.width = `${w}px`;
   tela.style.height = `${h}px`;
+  if (m.e || m.t) {
+    tela.style.left = `${-m.e}px`;
+    tela.style.top = `${-m.t}px`;
+  }
   const ctx = tela.getContext && tela.getContext('2d');
   if (!ctx) return null;
   alvo.appendChild(tela);
   ctx.scale(escala, escala);
-  const desenhar = criar(w, h);
+  let foco = null;
+  const foto = alvo.querySelector('.perfil-publico-foto, .enfeite-lugar-da-foto, .painel-topo .avatar');
+  if (foto) {
+    const caixa = alvo.getBoundingClientRect();
+    const dela = foto.getBoundingClientRect();
+    if (dela.width > 0) foco = { x: dela.left - caixa.left + dela.width / 2 + m.e, y: dela.top - caixa.top + alvo.scrollTop + dela.height / 2 + m.t, r: dela.width / 2 };
+  }
+  const desenhar = criar(w, h, foco);
   const inicio = performance.now();
   const quadro = (agora) => {
     if (!tela.isConnected) return;
