@@ -64,24 +64,6 @@ function membro(x1, y1, x2, y2, w1, w2, cor, bojo) {
   return `<circle cx="${n1(x1)}" cy="${n1(y1)}" r="${n1(w1 / 2)}" fill="${cor}"/><circle cx="${n1(x2)}" cy="${n1(y2)}" r="${n1(w2 / 2)}" fill="${cor}"/><path d="M${p(x1 + nx * w1 / 2, y1 + ny * w1 / 2)}Q${p(mx + nx * m * b, my + ny * m * b)} ${p(x2 + nx * w2 / 2, y2 + ny * w2 / 2)}A${n1(w2 / 2)} ${n1(w2 / 2)} 0 0 1 ${p(x2 - nx * w2 / 2, y2 - ny * w2 / 2)}Q${p(mx - nx * m * 1.05, my - ny * m * 1.05)} ${p(x1 - nx * w1 / 2, y1 - ny * w1 / 2)}A${n1(w1 / 2)} ${n1(w1 / 2)} 0 0 1 ${p(x1 + nx * w1 / 2, y1 + ny * w1 / 2)}Z" fill="${cor}"/>`;
 }
 
-function anjinho(x, y, escala, atraso) {
-  return `<g transform="translate(${x} ${y}) scale(${escala})"><g class="enf-flutua" style="animation-delay:${atraso}s">
-    <path d="M-2 1C-7 -4 -11 -1 -10 3C-7 4 -4 3 -2 1Z" fill="#e0f2fe" stroke="#93c5fd" stroke-width=".4"/>
-    <path d="M2 1C7 -4 11 -1 10 3C7 4 4 3 2 1Z" fill="#e0f2fe" stroke="#93c5fd" stroke-width=".4"/>
-    <circle cx="0" cy="0" r="3.4" fill="#fde7c7"/><path d="M-3 4C-2 9 2 9 3 4Z" fill="#fef9c3"/>
-    <ellipse cx="0" cy="-5.2" rx="3.4" ry="1" fill="none" stroke="#facc15" stroke-width=".9"/>
-    <circle cx="-1.1" cy="-.2" r=".4" fill="#3f3f46"/><circle cx="1.1" cy="-.2" r=".4" fill="#3f3f46"/><path d="M-1 1.3Q0 2 1 1.3" stroke="#e11d48" stroke-width=".4" fill="none"/>
-  </g></g>`;
-}
-
-function pombinha(cor) {
-  return `<g fill="${cor}"><path d="M-6 0C-9 -2 -11 -6 -9 -8C-6 -6 -3 -3 -1 -1Z"/><path d="M6 0C9 -2 11 -6 9 -8C6 -6 3 -3 1 -1Z"/><ellipse cx="0" cy="0" rx="5" ry="2.6"/><circle cx="4.5" cy="-1.2" r="1.8"/><path d="M6 -1.3L8 -.8L6 -.3Z" fill="#f59e0b"/><path d="M-5 0L-9 2L-5 1.5Z"/></g>`;
-}
-
-function folhaDeOutono(cor) {
-  return `<path d="M0 -5C3 -3 4 1 0 5C-4 1 -3 -3 0 -5Z" fill="${cor}"/><path d="M0 -4V5" stroke="#78350f" stroke-width=".4"/>`;
-}
-
 const DEFS_DO_ARCANJO = `<defs>
   <linearGradient id="ou" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff6cf"/><stop offset=".22" stop-color="#eebf4a"/><stop offset=".42" stop-color="#8a5a0a"/><stop offset=".6" stop-color="#f7d774"/><stop offset=".8" stop-color="#b07a12"/><stop offset="1" stop-color="#5c3a04"/></linearGradient>
   <linearGradient id="oc" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fffbea"/><stop offset=".5" stop-color="#f5cf5a"/><stop offset="1" stop-color="#9a6a0e"/></linearGradient>
@@ -240,94 +222,6 @@ Object.assign(MOLDURAS, {
     ${faisca(-6, 46, 3.2, '#fffbeb', 0.2)}${faisca(142, 50, 2.8, '#fffbeb', 1.1)}${faisca(68, -48, 3.6, '#e0f2fe', 0.7)}${faisca(30, 128, 2.4, '#fde68a', 1.7)}${faisca(108, 130, 2.2, '#fde68a', 2.3)}`;
   },
 
-  'arco-iris-da-foto'() {
-    const cores = ['#ef4444', '#f97316', '#facc15', '#22c55e', '#3b82f6', '#8b5cf6'];
-    const aneis = cores.map((cor, i) => `<circle cx="68" cy="68" r="${n1(51 + i * 2.2)}" fill="none" stroke="${cor}" stroke-width="2.4"/>`).join('');
-    return `${aneis}
-    <g class="enf-flutua">${nuvem(26, 112, 0.9, '#ffffff', 1)}${nuvem(110, 112, 0.9, '#ffffff', 1)}</g>
-    ${faisca(68, 4, 3, '#fffbeb', 0.2)}${faisca(14, 50, 2.4, '#fffbeb', 1)}${faisca(122, 50, 2.4, '#fffbeb', 1.8)}`;
-  },
-
-  anjinhos() {
-    const ouro = idDoEnfeite('ouro');
-    return `<defs><linearGradient id="${ouro}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fffbeb"/><stop offset="1" stop-color="#facc15"/></linearGradient></defs>
-    <circle cx="68" cy="68" r="54" fill="none" stroke="url(#${ouro})" stroke-width="2.5"/>
-    <circle cx="68" cy="68" r="54" fill="none" stroke="#fff" stroke-width=".8" stroke-dasharray="1 7"/>
-    <g class="enf-gira" style="--d:18s">${anjinho(68, 12, 1.5, 0)}${anjinho(116, 96, 1.5, 0.8)}${anjinho(20, 96, 1.5, 1.6)}</g>`;
-  },
-
-  'estrelinhas-coloridas'() {
-    const cores = ['#f472b6', '#facc15', '#60a5fa', '#4ade80', '#c084fc', '#fb923c', '#f87171', '#2dd4bf'];
-    const estrelas = cores.map((cor, i) => {
-      const [x, y] = pontoNoCirculo(56, i * 45);
-      return `<g transform="translate(${n1(x)} ${n1(y)})"><g class="enf-cintila" style="--a:${n1(i * 0.3)}s"><path d="${caminhoDeEstrela(0, 0, 7, 3, 5)}" fill="${cor}" stroke="#fff" stroke-width=".6"/></g></g>`;
-    }).join('');
-    return `<circle cx="68" cy="68" r="56" fill="none" stroke="#fde68a" stroke-width="1.2" stroke-dasharray="2 4"/>
-    <g class="enf-gira" style="--d:20s">${estrelas}</g>`;
-  },
-
-  pombinhas() {
-    return `<circle cx="68" cy="68" r="54" fill="none" stroke="#bae6fd" stroke-width="2.4"/>
-    <circle cx="68" cy="68" r="58" fill="none" stroke="#fff" stroke-width=".7" opacity=".7"/>
-    <g class="enf-gira" style="--d:9s"><g transform="translate(68 10) scale(1.6)">${pombinha('#ffffff')}</g><g transform="translate(68 126) scale(-1.6 1.6)">${pombinha('#f1f5f9')}</g></g>
-    ${faisca(20, 30, 2.4, '#fffbeb', 0.4)}${faisca(116, 104, 2.4, '#fffbeb', 1.5)}`;
-  },
-
-  'folhas-de-outono'() {
-    const cores = ['#f59e0b', '#ea580c', '#dc2626', '#facc15', '#b45309'];
-    let folhas = '';
-    for (let i = 0; i < 20; i += 1) {
-      const a = i * 18;
-      const [x, y] = pontoNoCirculo(55, a);
-      folhas += `<g transform="translate(${n1(x)} ${n1(y)}) rotate(${a + 60}) scale(1.4)">${folhaDeOutono(cores[i % cores.length])}</g>`;
-    }
-    const caindo = [[36, 118, 0], [92, 122, 1.6], [64, 128, 3]].map(([x, y, a], i) => `<g transform="translate(${x} ${y})"><g class="enf-cai" style="--a:${a}s">${folhaDeOutono(cores[i])}</g></g>`).join('');
-    return `<circle cx="68" cy="68" r="55" fill="none" stroke="#92400e" stroke-width="2"/>${folhas}${caindo}`;
-  },
-
-  'coracao-imaculado'() {
-    const ouro = idDoEnfeite('ouro');
-    const coracao = idDoEnfeite('coracao');
-    const fogo = idDoEnfeite('fogo');
-    const brilho = idDoEnfeite('brilho');
-    let rosas = '';
-    for (let i = 0; i < 12; i += 1) {
-      const [x, y] = pontoNoCirculo(55, i * 30 + 15);
-      rosas += `<g transform="translate(${n1(x)} ${n1(y)})"><circle r="3.4" fill="#fecdd3"/><circle r="2.2" fill="#fb7185"/><circle r="1" fill="#be123c"/></g>`;
-    }
-    return `<defs>
-      <linearGradient id="${ouro}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fffbeb"/><stop offset=".5" stop-color="#f5c542"/><stop offset="1" stop-color="#a16207"/></linearGradient>
-      <radialGradient id="${coracao}" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#fda4af"/><stop offset=".6" stop-color="#e11d48"/><stop offset="1" stop-color="#881337"/></radialGradient>
-      <linearGradient id="${fogo}" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#f97316"/><stop offset="1" stop-color="#fde68a"/></linearGradient>
-      ${filtroDeBrilho(brilho, 1.6)}
-    </defs>
-    <circle cx="68" cy="68" r="55" fill="none" stroke="url(#${ouro})" stroke-width="2.8"/>
-    ${rosas}
-    <g transform="translate(68 116)" filter="url(#${brilho})">
-      <g transform="translate(0 -9)"><g class="enf-chama" style="--d:.45s"><path d="M0 0C-3 -3 -2 -7 0 -11C2 -7 3 -3 0 0Z" fill="url(#${fogo})"/></g></g>
-      <path d="M0 9C-12 1 -11 -9 -5 -9C-2.5 -9 -.8 -7.5 0 -6C.8 -7.5 2.5 -9 5 -9C11 -9 12 1 0 9Z" fill="url(#${coracao})" class="enf-respira-local"/>
-      <path d="M-11 -8L9 6" stroke="#cbd5e1" stroke-width="1.2"/><circle cx="-11" cy="-8" r="1.2" fill="url(#${ouro})"/>
-    </g>`;
-  },
-
-  'luz-divina'() {
-    const ouro = idDoEnfeite('ouro');
-    const brilho = idDoEnfeite('brilho');
-    let raios = '';
-    for (let i = 0; i < 36; i += 1) {
-      const [x1, y1] = pontoNoCirculo(57.5, i * 10);
-      const [x2, y2] = pontoNoCirculo(i % 2 ? 62 : 66.5, i * 10);
-      raios += `<path d="M${n1(x1)} ${n1(y1)}L${n1(x2)} ${n1(y2)}" stroke="${i % 2 ? '#fef3c7' : '#fcd34d'}" stroke-width="${i % 2 ? 0.9 : 1.6}" stroke-linecap="round"/>`;
-    }
-    return `<defs>
-      <linearGradient id="${ouro}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fffbeb"/><stop offset=".5" stop-color="#facc15"/><stop offset="1" stop-color="#a16207"/></linearGradient>
-      ${filtroDeBrilho(brilho, 1.3)}
-    </defs>
-    <g class="enf-gira" style="--d:36s"><g filter="url(#${brilho})" class="enf-respira" style="--d:2.6s">${raios}</g></g>
-    <circle cx="68" cy="68" r="54" fill="none" stroke="url(#${ouro})" stroke-width="2.6"/>
-    <circle cx="68" cy="68" r="51" fill="none" stroke="#fffbeb" stroke-width=".6" opacity=".7"/>
-    ${faisca(68, 3, 2.6, '#fffbeb', 0.2)}${faisca(118, 96, 2.2, '#fffbeb', 1.1)}${faisca(18, 96, 2.2, '#fffbeb', 1.9)}`;
-  },
 });
 
 Object.assign(FAIXAS, {
@@ -377,126 +271,6 @@ Object.assign(FAIXAS, {
     ${faisca(233, 4, 4.2, '#ffffff', 0.4)}${faisca(196, 20, 2.2, '#fef9c3', 1.2)}${faisca(306, 16, 2.4, '#fef9c3', 2)}${faisca(286, 46, 1.8, '#fef9c3', 0.9)}`;
   },
 
-  'jardim-do-eden'() {
-    const ceu = idDoEnfeite('ceu');
-    const sorteio = sorteioFixo(12);
-    let flores = '';
-    for (let i = 0; i < 16; i += 1) flores += `<g transform="translate(${n1(130 + sorteio() * 190)} ${n1(66 + sorteio() * 12)}) scale(1.1)"><g class="enf-respira-local" style="--a:${n1(sorteio() * 3)}s">${florzinha(['#f472b6', '#facc15', '#ffffff', '#c084fc'][i % 4], '#f59e0b')}</g></g>`;
-    const arvore = (x, e) => `<g transform="translate(${x} 62) scale(${e})"><path d="M-2 0H2V18H-2Z" fill="#78350f"/><circle cx="0" cy="-6" r="12" fill="#16a34a"/><circle cx="-8" cy="0" r="8" fill="#15803d"/><circle cx="8" cy="0" r="8" fill="#22c55e"/><circle cx="-3" cy="-4" r="2" fill="#ef4444"/><circle cx="5" cy="-8" r="2" fill="#ef4444"/></g>`;
-    return `<defs><linearGradient id="${ceu}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7dd3fc"/><stop offset="1" stop-color="#ecfccb"/></linearGradient></defs>
-    <rect width="320" height="80" fill="url(#${ceu})"/>
-    <path d="M100 80C140 60 220 62 320 58V80Z" fill="#84cc16"/>
-    ${arvore(170, 1)}${arvore(290, 1.2)}${arvore(232, 0.8)}
-    ${flores}
-    <g transform="translate(200 24)"><g class="enf-borboleta"><path d="M0 0C-5 -6 -9 -2 -6 2C-4 4 -1 2 0 0Z" fill="#c084fc"/><path d="M0 0C5 -6 9 -2 6 2C4 4 1 2 0 0Z" fill="#a855f7"/></g></g>
-    <g transform="translate(262 18)"><g class="enf-borboleta" style="--a:.7s"><path d="M0 0C-5 -6 -9 -2 -6 2C-4 4 -1 2 0 0Z" fill="#fb923c"/><path d="M0 0C5 -6 9 -2 6 2C4 4 1 2 0 0Z" fill="#f97316"/></g></g>`;
-  },
-
-  'arca-de-noe'() {
-    const ceu = idDoEnfeite('ceu');
-    const mar = idDoEnfeite('mar');
-    const cores = ['#ef4444', '#f97316', '#facc15', '#22c55e', '#3b82f6', '#8b5cf6'];
-    const arco = cores.map((cor, i) => `<path d="M${150 + i * 4} 62A${85 - i * 4} ${60 - i * 4} 0 0 1 ${320 - i * 4} 62" fill="none" stroke="${cor}" stroke-width="3.4" opacity=".75"/>`).join('');
-    const onda = (y, cor, d) => {
-      let caminho = `M0 ${y}`;
-      for (let x = 0; x <= 380; x += 20) caminho += `Q${x + 10} ${y - 4} ${x + 20} ${y}`;
-      return `<g class="enf-onda" style="--d:${d}s"><path d="${caminho}V80H0Z" fill="${cor}"/></g>`;
-    };
-    return `<defs>
-      <linearGradient id="${ceu}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#60a5fa"/><stop offset="1" stop-color="#e0f2fe"/></linearGradient>
-      <linearGradient id="${mar}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0284c7"/><stop offset="1" stop-color="#075985"/></linearGradient>
-    </defs>
-    <rect width="320" height="80" fill="url(#${ceu})"/>
-    ${arco}
-    <g class="enf-balanca-suave"><g transform="translate(232 52)">
-      <path d="M-34 0H34L26 14H-26Z" fill="#92400e"/><path d="M-20 -12H20V0H-20Z" fill="#b45309"/><path d="M-24 -12L0 -24L24 -12Z" fill="#78350f"/>
-      <circle cx="-10" cy="-6" r="2.2" fill="#fde68a"/><circle cx="0" cy="-6" r="2.2" fill="#fde68a"/><circle cx="10" cy="-6" r="2.2" fill="#fde68a"/>
-      <path d="M-16 -16C-16 -22 -12 -24 -11 -19" stroke="#a16207" stroke-width="1.6" fill="none"/><circle cx="-11" cy="-19" r="2" fill="#a16207"/>
-      <path d="M14 -16L16 -26M18 -16L20 -24" stroke="#facc15" stroke-width="1.6"/><circle cx="18" cy="-14" r="3.6" fill="#facc15"/>
-    </g></g>
-    ${onda(66, 'url(#' + mar + ')', 4)}${onda(72, '#0369a1', 6)}`;
-  },
-
-  'fundo-do-mar'() {
-    const agua = idDoEnfeite('agua');
-    const peixe = (cor, e) => `<g transform="scale(${e})"><path d="M0 0C4 -5 12 -5 16 0C12 5 4 5 0 0Z" fill="${cor}"/><path d="M0 0L-6 -4V4Z" fill="${cor}"/><circle cx="11" cy="-1" r="1.1" fill="#0f172a"/></g>`;
-    const peixes = [[110, 30, '#f97316', 1.2, 14, 0], [140, 54, '#facc15', 1, 18, 4], [90, 20, '#f472b6', 0.9, 16, 8], [160, 66, '#22d3ee', 1.1, 20, 2]]
-      .map(([x, y, cor, e, d, a]) => `<g transform="translate(${x + 220} ${y})"><g class="enf-voa" style="--d:${d}s;--a:-${a}s"><g transform="scale(-1 1)">${peixe(cor, e)}</g></g></g>`).join('');
-    const sorteio = sorteioFixo(3);
-    let bolhas = '';
-    for (let i = 0; i < 12; i += 1) bolhas += `<g transform="translate(${n1(150 + sorteio() * 170)} ${n1(72 + sorteio() * 8)})"><circle class="enf-sobe-lento" style="--a:-${n1(sorteio() * 9)}s;--d:${n1(5 + sorteio() * 4)}s" r="${n1(1.2 + sorteio() * 2)}" fill="none" stroke="#e0f2fe" stroke-width=".7"/></g>`;
-    return `<defs><linearGradient id="${agua}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#1e3a8a"/></linearGradient></defs>
-    <rect width="320" height="80" fill="url(#${agua})"/>
-    <path d="M120 80C150 72 200 76 240 72C270 70 300 74 320 72V80Z" fill="#fde68a"/>
-    <path d="M190 80C188 70 194 64 192 56M196 80C200 72 196 66 200 60" stroke="#16a34a" stroke-width="2.4" fill="none" class="enf-balanca-suave"/>
-    <path d="M280 80C278 68 284 62 282 54" stroke="#22c55e" stroke-width="2.4" fill="none" class="enf-balanca-suave"/>
-    ${peixes}${bolhas}`;
-  },
-
-  'estrelinhas-do-ceu'() {
-    const ceu = idDoEnfeite('ceu');
-    const cores = ['#f472b6', '#facc15', '#60a5fa', '#4ade80', '#c084fc', '#fb923c'];
-    const sorteio = sorteioFixo(21);
-    let estrelas = '';
-    for (let i = 0; i < 18; i += 1) estrelas += `<g transform="translate(${n1(120 + sorteio() * 200)} ${n1(8 + sorteio() * 64)})"><g class="enf-cintila" style="--a:${n1(sorteio() * 3)}s"><path d="${caminhoDeEstrela(0, 0, 3 + sorteio() * 3, 1.4, 5)}" fill="${cores[i % cores.length]}"/></g></g>`;
-    return `<defs><linearGradient id="${ceu}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e1b4b"/><stop offset="1" stop-color="#4c1d95"/></linearGradient></defs>
-    <rect width="320" height="80" fill="url(#${ceu})"/>
-    ${estrelas}
-    <g transform="translate(276 34)"><g class="enf-flutua"><path d="M8 -16A18 18 0 1 0 8 16A14 14 0 1 1 8 -16Z" fill="#fde68a"/><circle cx="-5" cy="-3" r="1.3" fill="#78350f"/><path d="M-8 4Q-4 8 0 5" stroke="#78350f" stroke-width="1" fill="none"/><circle cx="-9" cy="2" r="1.6" fill="#fda4af" opacity=".7"/></g></g>`;
-  },
-
-  'pentecostes-faixa'() {
-    const ceu = idDoEnfeite('ceu');
-    const fogo = idDoEnfeite('fogo');
-    const brilho = idDoEnfeite('brilho');
-    let chamas = '';
-    [170, 200, 230, 260, 290, 314].forEach((x, i) => {
-      const y = 30 + (i % 2) * 12;
-      chamas += `<g transform="translate(${x} ${y})"><g class="enf-chama" style="--d:${n1(0.4 + (i % 3) * 0.1)}s;--a:${n1(i * 0.2)}s" filter="url(#${brilho})"><path d="M0 0C-4 -3 -3.5 -8 0 -15C3.5 -8 4 -3 0 0Z" fill="url(#${fogo})"/></g></g>`;
-    });
-    return `<defs>
-      <linearGradient id="${ceu}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#450a0a"/><stop offset=".6" stop-color="#9a3412"/><stop offset="1" stop-color="#f59e0b"/></linearGradient>
-      <linearGradient id="${fogo}" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#dc2626"/><stop offset=".5" stop-color="#f97316"/><stop offset="1" stop-color="#fef08a"/></linearGradient>
-      ${filtroDeBrilho(brilho, 1.8)}
-    </defs>
-    <rect width="320" height="80" fill="url(#${ceu})"/>
-    <g transform="translate(240 14)"><g class="enf-flutua"><path d="M-2 0C-6 -3 -10 -6 -15 -6C-12 -3 -10 0 -8 1C-6 2 -4 2 -2 3Z" fill="#fff"/><path d="M2 0C6 -3 10 -6 15 -6C12 -3 10 0 8 1C6 2 4 2 2 3Z" fill="#fff"/><ellipse cx="0" cy="2" rx="2.4" ry="5" fill="#fff"/></g></g>
-    ${chamas}`;
-  },
-
-  'oliveiras-ao-luar'() {
-    const ceu = idDoEnfeite('ceu');
-    const lua = idDoEnfeite('lua');
-    const sorteio = sorteioFixo(14);
-    let estrelas = '';
-    for (let i = 0; i < 24; i += 1) estrelas += `<circle cx="${n1(120 + sorteio() * 200)}" cy="${n1(3 + sorteio() * 40)}" r="${n1(0.3 + sorteio() * 0.7)}" fill="#fff" class="enf-pisca" style="--a:${n1(sorteio() * 3)}s"/>`;
-    const oliveira = (x, e) => `<g transform="translate(${x} 80) scale(${e})"><path d="M-2 0C-3 -8 -6 -12 -2 -20H2C5 -13 2 -8 3 0Z" fill="#0b1120"/><ellipse cx="0" cy="-24" rx="14" ry="8" fill="#0f172a"/><ellipse cx="-9" cy="-20" rx="8" ry="5" fill="#0b1120"/><ellipse cx="9" cy="-19" rx="8" ry="5" fill="#111827"/></g>`;
-    return `<defs>
-      <linearGradient id="${ceu}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#020617"/><stop offset="1" stop-color="#1e293b"/></linearGradient>
-      <radialGradient id="${lua}"><stop offset="0" stop-color="#f8fafc" stop-opacity=".55"/><stop offset="1" stop-color="#f8fafc" stop-opacity="0"/></radialGradient>
-    </defs>
-    <rect width="320" height="80" fill="url(#${ceu})"/>
-    ${estrelas}
-    <circle cx="282" cy="20" r="22" fill="url(#${lua})" class="enf-respira"/><circle cx="282" cy="20" r="8" fill="#f1f5f9"/>
-    <path d="M110 80C160 70 240 72 320 68V80Z" fill="#0b1120"/>
-    ${oliveira(170, 1)}${oliveira(230, 1.3)}${oliveira(300, 1)}`;
-  },
-
-  basilica() {
-    const ceu = idDoEnfeite('ceu');
-    const pedra = idDoEnfeite('pedra');
-    const janelas = [[206, 66], [218, 66], [262, 66], [274, 66], [240, 48], [234, 66], [246, 66]].map(([x, y], i) => `<rect x="${x}" y="${y}" width="3" height="5" rx="1.4" fill="#fcd34d" class="enf-respira" style="--a:${n1(i * 0.4)}s"/>`).join('');
-    return `<defs>
-      <linearGradient id="${ceu}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#312e81"/><stop offset=".55" stop-color="#be185d"/><stop offset="1" stop-color="#fb923c"/></linearGradient>
-      <linearGradient id="${pedra}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b2f4a"/><stop offset="1" stop-color="#1c1626"/></linearGradient>
-    </defs>
-    <rect width="320" height="80" fill="url(#${ceu})"/>
-    <circle cx="160" cy="70" r="18" fill="#fde68a" opacity=".5" class="enf-respira"/>
-    <path d="M190 80V60H204V56H226V48C226 36 234 30 240 28C246 30 254 36 254 48V56H276V60H290V80Z" fill="url(#${pedra})"/>
-    <path d="M240 28V20M237 23H243" stroke="#fde68a" stroke-width="1.4"/>
-    <path d="M196 80V64M284 80V64" stroke="#1c1626" stroke-width="5"/>
-    ${janelas}`;
-  },
 });
 
 function imagemDoSvg(conteudo, caixa, largura, altura) {
@@ -867,226 +641,8 @@ function efeitoSaoMiguel(w, h, foco) {
 
 efeitoSaoMiguel.usaMargem = true;
 
-function efeitoBolhas(w, h) {
-  const bolhas = Array.from({ length: 34 }, () => ({ x: Math.random() * w, y: h + 20 + Math.random() * h * 0.5, vy: 60 + Math.random() * 80, r: 8 + Math.random() * 18, fase: Math.random() * 6 }));
-  return (ctx, s) => {
-    bolhas.forEach((b) => {
-      const y = b.y - b.vy * s;
-      if (y < -b.r * 2) return;
-      const x = b.x + Math.sin(s * 1.5 + b.fase) * 16;
-      const g = ctx.createRadialGradient(x - b.r * 0.35, y - b.r * 0.35, b.r * 0.1, x, y, b.r);
-      g.addColorStop(0, 'rgba(255, 255, 255, 0.55)');
-      g.addColorStop(0.7, 'rgba(186, 230, 253, 0.12)');
-      g.addColorStop(0.92, `hsla(${(s * 120 + b.fase * 60) % 360}, 90%, 75%, 0.55)`);
-      g.addColorStop(1, 'rgba(255, 255, 255, 0)');
-      ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.arc(x, y, b.r, 0, Math.PI * 2);
-      ctx.fill();
-    });
-  };
-}
-
-function desenharAnjinho(ctx, x, y, t, bater) {
-  ctx.save();
-  ctx.translate(x, y);
-  ctx.scale(t / 20, t / 20);
-  [-1, 1].forEach((lado) => {
-    ctx.save();
-    ctx.scale(lado, 1 - 0.4 * Math.abs(bater));
-    ctx.fillStyle = '#e0f2fe';
-    ctx.beginPath();
-    ctx.ellipse(10, -4, 10, 6, -0.5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-  });
-  ctx.fillStyle = '#fef9c3';
-  ctx.beginPath();
-  ctx.moveTo(-6, 4);
-  ctx.lineTo(6, 4);
-  ctx.lineTo(8, 16);
-  ctx.lineTo(-8, 16);
-  ctx.closePath();
-  ctx.fill();
-  ctx.fillStyle = '#fde7c7';
-  ctx.beginPath();
-  ctx.arc(0, -2, 6.5, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = '#facc15';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.ellipse(0, -11, 6, 2, 0, 0, Math.PI * 2);
-  ctx.stroke();
-  ctx.restore();
-}
-
-function efeitoAnjinhosVoando(w, h) {
-  const anjos = Array.from({ length: 6 }, (_, i) => ({ y: h * (0.12 + i * 0.12), v: 120 + Math.random() * 90, atraso: i * 0.3, t: 22 + Math.random() * 10, dir: i % 2 === 0 ? 1 : -1, fase: Math.random() * 6 }));
-  return (ctx, s) => {
-    anjos.forEach((a) => {
-      const t = s - a.atraso;
-      if (t <= 0) return;
-      const x = a.dir === 1 ? -40 + a.v * t : w + 40 - a.v * t;
-      desenharAnjinho(ctx, x, a.y + Math.sin(t * 3 + a.fase) * 10, a.t, Math.sin(t * 12 + a.fase));
-      desenharFaisca(ctx, x - a.dir * 26, a.y + 6, 4, '#fde68a', 0.7);
-    });
-  };
-}
-
-function efeitoEstrelinhas(w, h) {
-  const cores = ['#f472b6', '#facc15', '#60a5fa', '#4ade80', '#c084fc', '#fb923c'];
-  const estrelas = Array.from({ length: 50 }, (_, i) => ({ a: Math.random() * Math.PI * 2, v: 140 + Math.random() * 240, r: 4 + Math.random() * 6, cor: cores[i % cores.length], giro: Math.random() * 6 }));
-  return (ctx, s) => {
-    const cx = w / 2;
-    const cy = Math.min(h * 0.32, 180);
-    estrelas.forEach((e) => {
-      const d = e.v * s * (1 - s / 8);
-      const x = cx + Math.cos(e.a) * d;
-      const y = cy + Math.sin(e.a) * d + 30 * s * s;
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.rotate(e.giro + s * 3);
-      ctx.fillStyle = e.cor;
-      ctx.beginPath();
-      for (let k = 0; k < 10; k += 1) {
-        const r = k % 2 === 0 ? e.r : e.r * 0.45;
-        const ang = -Math.PI / 2 + (k * Math.PI) / 5;
-        ctx.lineTo(Math.cos(ang) * r, Math.sin(ang) * r);
-      }
-      ctx.closePath();
-      ctx.fill();
-      ctx.restore();
-    });
-  };
-}
-
-function efeitoBaloes(w, h) {
-  const cores = ['#ef4444', '#f97316', '#facc15', '#22c55e', '#3b82f6', '#a855f7', '#ec4899'];
-  const baloes = Array.from({ length: 16 }, (_, i) => ({ x: Math.random() * w, y: h + 30 + Math.random() * h * 0.4, vy: 110 + Math.random() * 70, r: 14 + Math.random() * 8, cor: cores[i % cores.length], fase: Math.random() * 6 }));
-  return (ctx, s) => {
-    baloes.forEach((b) => {
-      const y = b.y - b.vy * s;
-      if (y < -b.r * 4) return;
-      const x = b.x + Math.sin(s * 1.4 + b.fase) * 12;
-      ctx.strokeStyle = 'rgba(241, 245, 249, 0.7)';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(x, y + b.r * 1.2);
-      ctx.quadraticCurveTo(x + 6, y + b.r * 2, x, y + b.r * 2.8);
-      ctx.stroke();
-      const g = ctx.createRadialGradient(x - b.r * 0.35, y - b.r * 0.4, b.r * 0.1, x, y, b.r * 1.2);
-      g.addColorStop(0, '#ffffff');
-      g.addColorStop(0.25, b.cor);
-      g.addColorStop(1, b.cor);
-      ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.ellipse(x, y, b.r, b.r * 1.2, 0, 0, Math.PI * 2);
-      ctx.fill();
-    });
-  };
-}
-
-function efeitoRaiosDaMisericordia(w, h) {
-  return (ctx, s) => {
-    const cx = w / 2;
-    const cy = Math.min(h * 0.3, 170);
-    const abre = suave(s / 1.2);
-    ctx.save();
-    ctx.globalCompositeOperation = 'lighter';
-    [[-1, '239, 68, 68'], [1, '224, 242, 254']].forEach(([lado, cor]) => {
-      for (let i = 0; i < 3; i += 1) {
-        const a = Math.PI / 2 + lado * (0.15 + i * 0.12) * abre;
-        const comprimento = h * 1.1 * abre;
-        const g = ctx.createLinearGradient(cx, cy, cx + Math.cos(a) * comprimento, cy + Math.sin(a) * comprimento);
-        g.addColorStop(0, `rgba(${cor}, ${0.75 * (1 - i * 0.2)})`);
-        g.addColorStop(1, `rgba(${cor}, 0)`);
-        ctx.fillStyle = g;
-        ctx.beginPath();
-        ctx.moveTo(cx, cy);
-        ctx.lineTo(cx + Math.cos(a - 0.09) * comprimento, cy + Math.sin(a - 0.09) * comprimento);
-        ctx.lineTo(cx + Math.cos(a + 0.09) * comprimento, cy + Math.sin(a + 0.09) * comprimento);
-        ctx.closePath();
-        ctx.fill();
-      }
-    });
-    desenharLuz(ctx, cx, cy, 70 * abre, '255, 251, 235', 0.8 * abre);
-    ctx.restore();
-  };
-}
-
-function efeitoCometa(w, h) {
-  const faiscas = Array.from({ length: 40 }, () => ({ atraso: Math.random(), dx: (Math.random() - 0.5) * 30, dy: (Math.random() - 0.5) * 30 }));
-  return (ctx, s) => {
-    const p = suave(s / 2.6);
-    const x = -80 + (w + 160) * p;
-    const y = h * 0.12 + h * 0.25 * p;
-    const cauda = Math.min(w * 0.45, 360);
-    ctx.save();
-    ctx.globalCompositeOperation = 'lighter';
-    const g = ctx.createLinearGradient(x - cauda, y - cauda * 0.25, x, y);
-    g.addColorStop(0, 'rgba(147, 197, 253, 0)');
-    g.addColorStop(0.7, 'rgba(191, 219, 254, 0.45)');
-    g.addColorStop(1, 'rgba(255, 255, 255, 0.95)');
-    ctx.strokeStyle = g;
-    ctx.lineWidth = 7;
-    ctx.lineCap = 'round';
-    ctx.beginPath();
-    ctx.moveTo(x - cauda, y - cauda * 0.25);
-    ctx.lineTo(x, y);
-    ctx.stroke();
-    desenharLuz(ctx, x, y, 34, '224, 242, 254', 0.9);
-    faiscas.forEach((f) => {
-      const t = (s * 1.5 + f.atraso) % 1;
-      desenharFaisca(ctx, x - t * cauda * 0.6 + f.dx, y - t * cauda * 0.15 + f.dy, 3, '#e0f2fe', 1 - t);
-    });
-    ctx.restore();
-  };
-}
-
-function efeitoAleluia(w, h) {
-  const notas = Array.from({ length: 24 }, () => ({ x: Math.random() * w, y: h + 20 + Math.random() * h * 0.3, vy: 80 + Math.random() * 70, t: 14 + Math.random() * 10, fase: Math.random() * 6, dupla: Math.random() < 0.4 }));
-  return (ctx, s) => {
-    notas.forEach((n) => {
-      const y = n.y - n.vy * s;
-      if (y < -40) return;
-      const x = n.x + Math.sin(s * 2 + n.fase) * 14;
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.rotate(Math.sin(s * 2 + n.fase) * 0.2);
-      ctx.fillStyle = '#facc15';
-      ctx.strokeStyle = '#facc15';
-      ctx.lineWidth = n.t * 0.1;
-      ctx.beginPath();
-      ctx.ellipse(0, 0, n.t * 0.32, n.t * 0.24, -0.4, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.moveTo(n.t * 0.3, 0);
-      ctx.lineTo(n.t * 0.3, -n.t);
-      if (n.dupla) {
-        ctx.lineTo(n.t * 1.1, -n.t * 0.8);
-        ctx.lineTo(n.t * 1.1, -n.t * 0.1);
-      }
-      ctx.stroke();
-      if (n.dupla) {
-        ctx.beginPath();
-        ctx.ellipse(n.t * 0.8, -n.t * 0.1, n.t * 0.32, n.t * 0.24, -0.4, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.restore();
-      desenharLuz(ctx, x, y, n.t, '253, 224, 71', 0.25);
-    });
-  };
-}
-
 Object.assign(EFEITOS_DO_PERFIL, {
   'sao-miguel-entrada': efeitoSaoMiguel,
-  bolhas: efeitoBolhas,
-  'anjinhos-voando': efeitoAnjinhosVoando,
-  estrelinhas: efeitoEstrelinhas,
-  baloes: efeitoBaloes,
-  'raios-da-misericordia': efeitoRaiosDaMisericordia,
-  cometa: efeitoCometa,
-  aleluia: efeitoAleluia,
 });
 
 Object.assign(MINIS_DE_EFEITO, {
@@ -1097,28 +653,1040 @@ Object.assign(MINIS_DE_EFEITO, {
     <path d="M28 30C24 24 18 18 12 16C16 21 20 26 26 31Z" fill="#f8fafc"/><path d="M36 30C40 24 46 18 52 16C48 21 44 26 38 31Z" fill="#f8fafc"/><circle cx="32" cy="31" r="4.5" fill="#64748b" stroke="#facc15" stroke-width="1"/>`;
   },
 
+});
+
+const METAIS = {
+  ouro: ['#fff6cf', '#eebf4a', '#8a5a0a', '#f7d774', '#b07a12', '#5c3a04'],
+  prata: ['#ffffff', '#d9e1ec', '#7b8798', '#f1f5f9', '#a3adbd', '#475569'],
+  rosa: ['#fff1ec', '#f6bfae', '#9c5545', '#fcd9ce', '#c47c69', '#6b2f24'],
+};
+
+function anelDeMetal(metal, opcoes) {
+  const c = METAIS[metal];
+  const o = opcoes || {};
+  const r = o.raio || 53;
+  const largura = o.largura || 5.2;
+  let rebites = '';
+  if (o.rebites) {
+    o.rebites.forEach((a) => {
+      const [x, y] = pontoNoCirculo(r, a);
+      rebites += `<circle cx="${n1(x)}" cy="${n1(y)}" r="1.5" fill="url(#mc)" stroke="${c[5]}" stroke-width=".35"/><circle cx="${n1(x - 0.45)}" cy="${n1(y - 0.45)}" r=".45" fill="#fff" opacity=".85"/>`;
+    });
+  }
+  return `<defs><linearGradient id="mt" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c[0]}"/><stop offset=".22" stop-color="${c[1]}"/><stop offset=".42" stop-color="${c[2]}"/><stop offset=".6" stop-color="${c[3]}"/><stop offset=".8" stop-color="${c[4]}"/><stop offset="1" stop-color="${c[5]}"/></linearGradient>
+    <radialGradient id="mc" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="${c[0]}"/><stop offset=".5" stop-color="${c[1]}"/><stop offset="1" stop-color="${c[4]}"/></radialGradient></defs>
+    <circle cx="68" cy="69.3" r="${r}" fill="none" stroke="#060a1e" stroke-width="${largura + 0.3}" opacity=".42"/>
+    <circle cx="68" cy="68" r="${r}" fill="none" stroke="url(#mt)" stroke-width="${largura}"/>
+    <circle cx="68" cy="68" r="${n1(r - largura / 2 - 1.2)}" fill="none" stroke="#050817" stroke-width="2" opacity=".26"/>
+    <circle cx="68" cy="68" r="${n1(r - largura / 2 + 0.3)}" fill="none" stroke="${c[5]}" stroke-width=".6"/>
+    <circle cx="68" cy="68" r="${n1(r + largura / 2 - 0.2)}" fill="none" stroke="${c[0]}" stroke-width=".55" opacity=".9"/>
+    ${o.gravura === false ? '' : `<circle cx="68" cy="68" r="${r}" fill="none" stroke="${c[0]}" stroke-width=".4" stroke-dasharray="1.1 3.1" opacity=".55"/>`}${rebites}`;
+}
+
+function reflexoNoAnel(id, raio, largura) {
+  const r1 = n1(raio + largura / 2 + 0.6);
+  const r2 = n1(raio - largura / 2 - 0.6);
+  return `<defs><linearGradient id="${id}-g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".9"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <clipPath id="${id}-c"><path clip-rule="evenodd" d="M68 ${n1(68 - r1)}A${r1} ${r1} 0 1 1 67.99 ${n1(68 - r1)}ZM68 ${n1(68 - r2)}A${r2} ${r2} 0 1 0 68.01 ${n1(68 - r2)}Z"/></clipPath></defs>
+    <g clip-path="url(#${id}-c)"><g transform="skewX(-22)"><rect class="enf-reflexo-passa" x="-30" y="-20" width="16" height="180" fill="url(#${id}-g)"/></g></g>`;
+}
+
+const PECAS_PREMIUM = {
+  anelArcoIris: () => {
+    const cores = ['#ef4444', '#f97316', '#facc15', '#22c55e', '#3b82f6', '#6366f1', '#a855f7'];
+    const faixas = cores.map((cor, i) => `<circle cx="68" cy="68" r="${n1(57.4 - i * 1.02)}" fill="none" stroke="${cor}" stroke-width="1.12"/>`).join('');
+    return `<circle cx="68" cy="69.2" r="54.4" fill="none" stroke="#060a1e" stroke-width="8" opacity=".35"/>${faixas}
+      <circle cx="68" cy="68" r="58.1" fill="none" stroke="#ffffff" stroke-width=".7" opacity=".9"/>
+      <circle cx="68" cy="68" r="50.6" fill="none" stroke="#1e1b4b" stroke-width=".7" opacity=".7"/>
+      <path d="M${pontoNoCirculo(54.4, 205).map(n1).join(' ')}A54.4 54.4 0 0 1 ${pontoNoCirculo(54.4, 295).map(n1).join(' ')}" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" opacity=".38"/>`;
+  },
+  nuvemFofinha: () => `<defs><radialGradient id="nf" cx="40%" cy="30%" r="75%"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#f1f5ff"/><stop offset="1" stop-color="#c7d2fe"/></radialGradient></defs>
+    <ellipse cx="0" cy="7.5" rx="17" ry="3" fill="#1e1b4b" opacity=".25"/>
+    <circle cx="-10" cy="1.5" r="6.5" fill="url(#nf)"/><circle cx="-2" cy="-3" r="8.5" fill="url(#nf)"/><circle cx="8" cy="-0.5" r="7" fill="url(#nf)"/><circle cx="14" cy="3" r="4.8" fill="url(#nf)"/>
+    <rect x="-15" y="1" width="31" height="6.6" rx="3.3" fill="url(#nf)"/>
+    <circle cx="-4.5" cy="-6.2" r="2.2" fill="#fff"/>`,
+  solSorrindo: () => `<defs><radialGradient id="ss" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#fffbe6"/><stop offset=".45" stop-color="#fcd34d"/><stop offset="1" stop-color="#f59e0b"/></radialGradient></defs>
+    <circle r="9.5" fill="url(#ss)" stroke="#d97706" stroke-width=".6"/>
+    <path d="M-4.2 -1.2Q-3 -2.6 -1.8 -1.2M1.8 -1.2Q3 -2.6 4.2 -1.2" fill="none" stroke="#7c2d12" stroke-width=".8" stroke-linecap="round"/>
+    <path d="M-3 2.4Q0 5.2 3 2.4" fill="none" stroke="#7c2d12" stroke-width=".8" stroke-linecap="round"/>
+    <circle cx="-5.4" cy="1.8" r="1.5" fill="#fb7185" opacity=".55"/><circle cx="5.4" cy="1.8" r="1.5" fill="#fb7185" opacity=".55"/>
+    <circle cx="-3.2" cy="-5.2" r="2" fill="#fff" opacity=".7"/>`,
+  raiosDoSol: () => {
+    let r = '';
+    for (let i = 0; i < 12; i += 1) r += `<path d="M-1.6 -11.5L0 -16.5L1.6 -11.5Z" transform="rotate(${i * 30})" fill="#fbbf24" stroke="#f59e0b" stroke-width=".4" stroke-linejoin="round"/>`;
+    return r;
+  },
+  anelDePerolas: () => {
+    let perolas = '';
+    for (let i = 0; i < 20; i += 1) {
+      const [x, y] = pontoNoCirculo(53.2, i * 18 + 9);
+      perolas += `<circle cx="${n1(x)}" cy="${n1(y)}" r="2.15" fill="url(#pe2)"/><circle cx="${n1(x - 0.7)}" cy="${n1(y - 0.7)}" r=".6" fill="#fff"/>`;
+    }
+    return `<defs><radialGradient id="pe2" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#f1eee8"/><stop offset="1" stop-color="#b7b1a6"/></radialGradient></defs>${anelDeMetal('ouro', { largura: 3.6, gravura: false })}${perolas}`;
+  },
+  querubimCorpo: () => `<defs>
+      <radialGradient id="qp" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#fff1e4"/><stop offset=".7" stop-color="#f8cfae"/><stop offset="1" stop-color="#e2a07a"/></radialGradient>
+      <radialGradient id="qc" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#fff3b0"/><stop offset=".6" stop-color="#f6c443"/><stop offset="1" stop-color="#c58a14"/></radialGradient>
+      <linearGradient id="qv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#dbe4f3"/></linearGradient>
+      <linearGradient id="qh" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fde68a"/><stop offset=".5" stop-color="#fffbe6"/><stop offset="1" stop-color="#eab308"/></linearGradient>
+    </defs>
+    <path d="M-5.6 4.5C-6.6 9 -6 12.5 -4.8 13.6H4.8C6 12.5 6.6 9 5.6 4.5C3.5 3 -3.5 3 -5.6 4.5Z" fill="url(#qv)" stroke="#b8c4d9" stroke-width=".4"/>
+    <path d="M-5 7.2H5" stroke="#f6c443" stroke-width="1"/>
+    <circle cx="0" cy="-1.2" r="6.2" fill="url(#qp)"/>
+    <circle cx="-4.6" cy="-5.8" r="2.1" fill="url(#qc)"/><circle cx="-1.6" cy="-7.4" r="2.3" fill="url(#qc)"/><circle cx="1.8" cy="-7.4" r="2.3" fill="url(#qc)"/><circle cx="4.7" cy="-5.6" r="2.1" fill="url(#qc)"/><circle cx="0" cy="-8.3" r="1.6" fill="url(#qc)"/>
+    <path d="M-3.2 -1.4Q-2.2 -2.6 -1.2 -1.4M1.2 -1.4Q2.2 -2.6 3.2 -1.4" fill="none" stroke="#7c4a2d" stroke-width=".65" stroke-linecap="round"/>
+    <path d="M-1.4 1.6Q0 2.8 1.4 1.6" fill="none" stroke="#c2410c" stroke-width=".6" stroke-linecap="round"/>
+    <circle cx="-3.9" cy=".9" r="1.2" fill="#fb7185" opacity=".5"/><circle cx="3.9" cy=".9" r="1.2" fill="#fb7185" opacity=".5"/>
+    <ellipse cx="0" cy="-11.4" rx="5.6" ry="1.6" fill="none" stroke="#fef08a" stroke-width="2.4" opacity=".35"/>
+    <ellipse cx="0" cy="-11.4" rx="5.6" ry="1.6" fill="none" stroke="url(#qh)" stroke-width="1.1"/>`,
+  querubimAsa: () => `<defs><linearGradient id="qa" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#dbe7f7"/><stop offset=".5" stop-color="#ffffff"/><stop offset="1" stop-color="#fff6dc"/></linearGradient></defs>
+    ${[[34, 13], [16, 11], [-2, 8.5]].map(([a, L]) => penaLonga(L, a, 'qa', '#a8b8d0', 1.6)).join('')}`,
+  estrelaDoce: (cor) => () => {
+    const [claro, medio, escuro] = cor;
+    return `<defs><radialGradient id="ed" cx="40%" cy="35%" r="75%"><stop offset="0" stop-color="${claro}"/><stop offset=".55" stop-color="${medio}"/><stop offset="1" stop-color="${escuro}"/></radialGradient></defs>
+      <path d="${caminhoDeEstrela(0, 0.9, 8, 3.9, 5)}" fill="#0b1022" opacity=".35"/>
+      <path d="${caminhoDeEstrela(0, 0, 8, 3.9, 5)}" fill="url(#ed)" stroke="${escuro}" stroke-width=".6" stroke-linejoin="round"/>
+      <path d="${caminhoDeEstrela(0, -0.3, 4.6, 2.2, 5)}" fill="${claro}" opacity=".55"/>
+      <ellipse cx="-2.2" cy="-3" rx="1.6" ry=".9" transform="rotate(-30 -2.2 -3)" fill="#fff" opacity=".9"/>`;
+  },
+  anelPastel: () => `<defs><linearGradient id="ap" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fbcfe8"/><stop offset=".35" stop-color="#f9a8d4"/><stop offset=".55" stop-color="#c4b5fd"/><stop offset=".8" stop-color="#93c5fd"/><stop offset="1" stop-color="#a5f3fc"/></linearGradient></defs>
+    <circle cx="68" cy="69.2" r="53" fill="none" stroke="#060a1e" stroke-width="5.4" opacity=".35"/>
+    <circle cx="68" cy="68" r="53" fill="none" stroke="url(#ap)" stroke-width="5"/>
+    <circle cx="68" cy="68" r="54.9" fill="none" stroke="#ffffff" stroke-width=".7" opacity=".85"/>
+    <circle cx="68" cy="68" r="50.7" fill="none" stroke="#6d28d9" stroke-width=".5" opacity=".5"/>
+    <circle cx="68" cy="68" r="53" fill="none" stroke="#fff" stroke-width=".9" stroke-dasharray=".1 5.4" stroke-linecap="round" opacity=".9"/>`,
+  ramoDeOliveira: () => {
+    let folhas = '';
+    const pontos = [[-30, 2, -20], [-24, 5, 160], [-18, 3, -30], [-12, 7, 150], [-6, 5, -40], [0, 8, 140], [6, 5, -35], [12, 7, 160], [18, 3, -25], [24, 5, 165], [30, 2, -15]];
+    pontos.forEach(([x, y, a]) => { folhas += `<path d="M0 0C2 -1.6 6 -1.8 9 0C6 1.8 2 1.6 0 0Z" transform="translate(${x} ${y}) rotate(${a})" fill="url(#ol)" stroke="#365314" stroke-width=".35"/>`; });
+    return `<defs><linearGradient id="ol" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3f6212"/><stop offset=".5" stop-color="#84cc16"/><stop offset="1" stop-color="#bef264"/></linearGradient>
+      <radialGradient id="oa" cx="35%" cy="30%" r="70%"><stop offset="0" stop-color="#a78bfa"/><stop offset=".6" stop-color="#4c1d95"/><stop offset="1" stop-color="#1e1b4b"/></radialGradient></defs>
+      <path d="M-34 0Q0 12 34 0" fill="none" stroke="#713f12" stroke-width="1.1"/>${folhas}
+      <circle cx="-9" cy="9.2" r="1.7" fill="url(#oa)"/><circle cx="4" cy="10.4" r="1.7" fill="url(#oa)"/><circle cx="15" cy="8.4" r="1.6" fill="url(#oa)"/>`;
+  },
+  pombaCorpo: () => `<defs><linearGradient id="pb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".7" stop-color="#eef2f8"/><stop offset="1" stop-color="#b6c2d6"/></linearGradient>
+      <linearGradient id="pw" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#cfd8e6"/><stop offset="1" stop-color="#8d9bb3"/></linearGradient></defs>
+    <path d="M-2 -1C-6 -7 -12 -10 -17 -9C-14 -5 -10 -1 -5 1Z" fill="url(#pw)"/>
+    <path d="M-12 1.5L-20 -1.5L-19 3.5L-21 6L-12 4.5Z" fill="url(#pb)" stroke="#9aa8bf" stroke-width=".35"/>
+    <path d="M-13 3C-10 -1.5 -2 -3.5 5 -2.5C9 -2 11 0 11 2.2C11 4.8 7 6.6 1 6.6C-5 6.6 -10.5 5.6 -13 3Z" fill="url(#pb)" stroke="#9aa8bf" stroke-width=".35"/>
+    <circle cx="9.2" cy="-.4" r="3.2" fill="url(#pb)"/>
+    <path d="M12 -.6L14.6 .2L12 1Z" fill="#f59e0b"/><circle cx="10.2" cy="-1.1" r=".55" fill="#1f2937"/><circle cx="10.4" cy="-1.3" r=".18" fill="#fff"/>`,
+  pombaAsa: () => `<defs><linearGradient id="pa" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#e5ebf5"/><stop offset=".5" stop-color="#ffffff"/><stop offset="1" stop-color="#f8fafc"/></linearGradient></defs>
+    ${[[62, 15], [48, 14], [34, 12], [20, 9.5]].map(([a, L]) => penaLonga(L, a, 'pa', '#a3b1c9', 1.4)).join('')}`,
+};
+
+Object.assign(PECAS_PREMIUM, {
+  folhaDeBordo: (c1, c2, c3) => () => `<defs><linearGradient id="fb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset=".55" stop-color="${c2}"/><stop offset="1" stop-color="${c3}"/></linearGradient></defs>
+    <path d="M0 9L.6 4.6C2.2 5.6 4.4 5.8 6 5C5 4 4.8 3 5.4 2C6.6 2.2 8 1.6 8.6.4C7.2 0 6.4-.8 6.4-2C5 -1.4 3.6-1.8 3-3C3.6-4.6 3.2-6.6 2-8C1.2-6.8.6-6.4 0-6.4C-.6-6.4-1.2-6.8-2-8C-3.2-6.6-3.6-4.6-3-3C-3.6-1.8-5-1.4-6.4-2C-6.4-.8-7.2 0-8.6.4C-8 1.6-6.6 2.2-5.4 2C-4.8 3-5 4-6 5C-4.4 5.8-2.2 5.6-.6 4.6Z" fill="url(#fb)" stroke="${c3}" stroke-width=".4" stroke-linejoin="round"/>
+    <path d="M0 8V-5.6M0 2L4.6-1.2M0 2L-4.6-1.2M0 -.6L2.4-5M0-.6L-2.4-5" fill="none" stroke="${c3}" stroke-width=".35" opacity=".7"/>`,
+  folhaOval: (c1, c2, c3) => () => `<defs><linearGradient id="fo" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${c1}"/><stop offset=".5" stop-color="${c2}"/><stop offset="1" stop-color="${c3}"/></linearGradient></defs>
+    <path d="M0 -8C4 -5 4.6 2 0 8C-4.6 2 -4 -5 0 -8Z" fill="url(#fo)" stroke="${c3}" stroke-width=".4"/><path d="M0 -7V7.4M0 -2L2 -4M0 1L2.4 -1M0 -2L-2 -4M0 1L-2.4 -1" fill="none" stroke="${c3}" stroke-width=".3" opacity=".7"/>`,
+  bolota: () => `<defs><radialGradient id="bn" cx="35%" cy="35%" r="70%"><stop offset="0" stop-color="#f3d9a4"/><stop offset=".6" stop-color="#c08a44"/><stop offset="1" stop-color="#7c4a1c"/></radialGradient>
+      <linearGradient id="bc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8b5a2b"/><stop offset="1" stop-color="#4a2c12"/></linearGradient></defs>
+    <ellipse cx="0" cy="1.6" rx="2.8" ry="3.6" fill="url(#bn)"/><path d="M-3.3 -.4C-3.3 -3 3.3 -3 3.3 -.4C2 .5 -2 .5 -3.3 -.4Z" fill="url(#bc)"/>
+    <path d="M-2.4 -1.6L2.4 -1.6M-2.8 -.6L2.8 -.6" stroke="#2f1b0b" stroke-width=".3" opacity=".6"/><path d="M0 -2.6L.6 -4.2" stroke="#4a2c12" stroke-width=".7" stroke-linecap="round"/>`,
+  rosa: (c1, c2, c3) => () => {
+    let petalas = '';
+    for (let i = 0; i < 6; i += 1) petalas += `<ellipse cx="0" cy="-4.2" rx="3.4" ry="4.4" transform="rotate(${i * 60})" fill="url(#ro)" stroke="${c3}" stroke-width=".3"/>`;
+    let meio = '';
+    for (let i = 0; i < 5; i += 1) meio += `<ellipse cx="0" cy="-2.6" rx="2.4" ry="3" transform="rotate(${i * 72 + 30})" fill="url(#rm)" stroke="${c3}" stroke-width=".25"/>`;
+    return `<defs><radialGradient id="ro" cx="50%" cy="20%" r="80%"><stop offset="0" stop-color="${c1}"/><stop offset=".6" stop-color="${c2}"/><stop offset="1" stop-color="${c3}"/></radialGradient>
+      <radialGradient id="rm" cx="50%" cy="30%" r="80%"><stop offset="0" stop-color="${c2}"/><stop offset="1" stop-color="${c3}"/></radialGradient></defs>
+      ${petalas}${meio}<path d="M-1.4 .4C-1.6 -1.4 .4 -2.2 1.4 -1C2.2 0 1.4 1.6 0 1.6C-1 1.6 -1.6 .8 -1.2 0" fill="none" stroke="${c3}" stroke-width=".5"/>`;
+  },
+  folhaDeRosa: () => `<defs><linearGradient id="fr" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#14532d"/><stop offset=".55" stop-color="#16a34a"/><stop offset="1" stop-color="#86efac"/></linearGradient></defs>
+    <path d="M0 0C2.6 -2.6 7 -2.8 10 0C7 2.8 2.6 2.6 0 0Z" fill="url(#fr)" stroke="#14532d" stroke-width=".3"/><path d="M.6 0H9.4" stroke="#14532d" stroke-width=".3"/>`,
+  coracao: () => `<defs><radialGradient id="ch" cx="38%" cy="30%" r="75%"><stop offset="0" stop-color="#ffb4b4"/><stop offset=".45" stop-color="#dc2626"/><stop offset="1" stop-color="#6b0f1a"/></radialGradient>
+      <linearGradient id="ce" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#94a3b8"/><stop offset=".5" stop-color="#f8fafc"/><stop offset="1" stop-color="#64748b"/></linearGradient>
+      <linearGradient id="co" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff6cf"/><stop offset=".5" stop-color="#eebf4a"/><stop offset="1" stop-color="#7a4e05"/></linearGradient></defs>
+    <path d="M0 11C-14 2 -13 -9 -6 -9C-3 -9 -1 -7.4 0 -5.6C1 -7.4 3 -9 6 -9C13 -9 14 2 0 11Z" fill="#060a1e" opacity=".35" transform="translate(0 1.2)"/>
+    <path d="M0 11C-14 2 -13 -9 -6 -9C-3 -9 -1 -7.4 0 -5.6C1 -7.4 3 -9 6 -9C13 -9 14 2 0 11Z" fill="url(#ch)" stroke="#5f0f17" stroke-width=".5"/>
+    <path d="M-8.4 -5.4C-6.6 -7.6 -3.6 -7.2 -2.6 -5.2" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round" opacity=".6"/>
+    <path d="M-15 -8L10 9" stroke="url(#ce)" stroke-width="1.6"/><path d="M-16.6 -9.4L-13 -6.6M-17.8 -7.8L-14.6 -10.4" stroke="url(#co)" stroke-width="1.4" stroke-linecap="round"/>
+    ${[[-9, 3], [0, 7.6], [9, 3]].map(([x, y]) => `<g transform="translate(${x} ${y}) scale(.32)"><circle r="5" fill="#fff7f7"/><circle r="3" fill="#ffe4e6"/><circle r="1.2" fill="#fecdd3"/></g>`).join('')}`,
+  raiosDivinos: () => {
+    let r = '';
+    for (let i = 0; i < 40; i += 1) {
+      const a = (i * 360) / 40;
+      if (i % 2 === 0) r += `<path d="M66.6 9L68 -6L69.4 9Z" transform="rotate(${a} 68 68)"/>`;
+      else r += `<path d="M66.9 11C67.6 6 66.2 3 67.2 -0.5C67.9 2.8 69.2 5 69.1 11Z" transform="rotate(${a} 68 68)"/>`;
+    }
+    return `<defs><radialGradient id="rd" gradientUnits="userSpaceOnUse" cx="68" cy="68" r="76"><stop offset=".7" stop-color="#ffffff" stop-opacity="1"/><stop offset=".84" stop-color="#fde68a" stop-opacity=".95"/><stop offset="1" stop-color="#fbbf24" stop-opacity="0"/></radialGradient></defs><g fill="url(#rd)">${r}</g>`;
+  },
+});
+
+const PECAS_PREMIUM_PRONTAS = {};
+
+function pecaPremium(chave, caixa, desenho) {
+  if (!PECAS_PREMIUM_PRONTAS[chave]) {
+    PECAS_PREMIUM_PRONTAS[chave] = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${caixa.join(' ')}">${desenho()}</svg>`)}`;
+  }
+  const [x, y, w, h] = caixa;
+  return `<image href="${PECAS_PREMIUM_PRONTAS[chave]}" x="${x}" y="${y}" width="${w}" height="${h}"/>`;
+}
+
+const CORES_DE_ESTRELA = [['#fff0f6', '#f472b6', '#be185d'], ['#fffbe6', '#facc15', '#ca8a04'], ['#eff6ff', '#60a5fa', '#1d4ed8'], ['#f0fdf4', '#4ade80', '#15803d'], ['#faf5ff', '#c084fc', '#7e22ce'], ['#fff7ed', '#fb923c', '#c2410c']];
+
+Object.assign(MOLDURAS, {
+  'arco-iris-da-foto'() {
+    const nuvem = pecaPremium('nuvem-fofinha', [-18, -12, 36, 22], PECAS_PREMIUM.nuvemFofinha);
+    const brilho = idDoEnfeite('arco-brilho');
+    return `<defs><linearGradient id="${brilho}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".9"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+      ${pecaPremium('anel-arco-iris', [0, 0, 136, 136], PECAS_PREMIUM.anelArcoIris)}
+      <g class="enf-gira" style="--d:6s"><path d="M${pontoNoCirculo(54.4, -18).map(n1).join(' ')}A54.4 54.4 0 0 1 ${pontoNoCirculo(54.4, 18).map(n1).join(' ')}" fill="none" stroke="url(#${brilho})" stroke-width="5.6" stroke-linecap="round" opacity=".75"/></g>
+      <g transform="translate(110 22)"><g class="enf-gira-local" style="--d:16s">${pecaPremium('raios-do-sol', [-17, -17, 34, 34], PECAS_PREMIUM.raiosDoSol)}</g>${pecaPremium('sol-sorrindo', [-10, -10, 20, 20], PECAS_PREMIUM.solSorrindo)}</g>
+      <g transform="translate(22 110)"><g class="enf-flutua">${nuvem}</g></g>
+      <g transform="translate(116 112) scale(-.9 .9)"><g class="enf-flutua" style="animation-delay:-1.4s">${nuvem}</g></g>
+      ${faisca(18, 34, 3, '#fffbeb', 0.2)}${faisca(66, 2, 2.6, '#fffbeb', 1)}${faisca(132, 70, 2.4, '#fffbeb', 1.8)}${faisca(40, 128, 2.2, '#fde68a', 2.4)}`;
+  },
+
+  anjinhos() {
+    const corpo = pecaPremium('querubim-corpo', [-9, -14, 18, 28], PECAS_PREMIUM.querubimCorpo);
+    const asa = pecaPremium('querubim-asa', [-14, -10, 16, 14], PECAS_PREMIUM.querubimAsa);
+    const querubim = (x, y, atraso) => `<g transform="translate(${x} ${y})"><g class="enf-contra-gira" style="--d:30s"><g class="enf-flutua" style="animation-delay:${atraso}s">
+      <g transform="translate(-4 3)"><g class="enf-asa-querubim" style="--a:${atraso}s">${asa}</g></g>
+      <g transform="translate(4 3) scale(-1 1)"><g class="enf-asa-querubim" style="--a:${atraso}s">${asa}</g></g>
+      ${corpo}</g></g></g>`;
+    return `${pecaPremium('anel-perolas', [0, 0, 136, 136], PECAS_PREMIUM.anelDePerolas)}
+      ${reflexoNoAnel(idDoEnfeite('anj'), 53, 3.6)}
+      <g class="enf-gira" style="--d:30s">${querubim(68, 9, 0)}${querubim(119, 97, -0.8)}${querubim(17, 97, -1.6)}</g>
+      ${faisca(32, 20, 2.6, '#fffbeb', 0.3)}${faisca(104, 18, 2.6, '#fffbeb', 1.3)}${faisca(68, 128, 2.4, '#fde68a', 2.1)}`;
+  },
+
+  'estrelinhas-coloridas'() {
+    const estrelas = [0, 45, 90, 135, 180, 225, 270, 315].map((a, i) => {
+      const [x, y] = pontoNoCirculo(57, a);
+      const e = i % 2 ? 0.85 : 1.15;
+      const peca = pecaPremium(`estrela-doce-${i % 6}`, [-9, -9, 18, 19], PECAS_PREMIUM.estrelaDoce(CORES_DE_ESTRELA[i % 6]));
+      return `<g transform="translate(${n1(x)} ${n1(y)}) scale(${e})"><g class="enf-cintila" style="--a:${n1(i * 0.32)}s">${peca}</g></g>`;
+    }).join('');
+    let pontinhos = '';
+    for (let i = 0; i < 16; i += 1) {
+      const [x, y] = pontoNoCirculo(62 + (i % 2) * 4, i * 22.5 + 11);
+      pontinhos += `<circle cx="${n1(x)}" cy="${n1(y)}" r=".9" fill="${CORES_DE_ESTRELA[i % 6][1]}" class="enf-pisca" style="--a:${n1(i * 0.2)}s"/>`;
+    }
+    return `${pecaPremium('anel-pastel', [0, 0, 136, 136], PECAS_PREMIUM.anelPastel)}
+      ${reflexoNoAnel(idDoEnfeite('est'), 53, 5)}
+      ${pontinhos}<g class="enf-gira" style="--d:46s">${estrelas}</g>`;
+  },
+
+  pombinhas() {
+    const corpo = pecaPremium('pomba-corpo', [-22, -11, 38, 19], PECAS_PREMIUM.pombaCorpo);
+    const asa = pecaPremium('pomba-asa', [-17, -16, 19, 18], PECAS_PREMIUM.pombaAsa);
+    const pomba = (atraso) => `${corpo}<g transform="translate(1 -1)"><g class="enf-asa-pomba-sm" style="--a:${atraso}s">${asa}</g></g>`;
+    return `${pecaPremium('anel-prata', [0, 0, 136, 136], () => anelDeMetal('prata', { rebites: [45, 135, 225, 315] }))}
+      ${reflexoNoAnel(idDoEnfeite('pom'), 53, 5.2)}
+      <g transform="translate(68 120)">${pecaPremium('ramo-oliveira', [-36, -6, 72, 18], PECAS_PREMIUM.ramoDeOliveira)}</g>
+      <g class="enf-gira" style="--d:13s"><g transform="translate(68 4) scale(1.05)">${pomba(0)}</g><g transform="translate(68 132) rotate(180) scale(1.05)">${pomba(-0.35)}</g></g>
+      ${faisca(16, 40, 2.6, '#f8fafc', 0.4)}${faisca(122, 44, 2.4, '#f8fafc', 1.4)}`;
+  },
+
+  'folhas-de-outono'() {
+    const tipos = [
+      pecaPremium('bordo-vermelho', [-9, -9, 18, 19], PECAS_PREMIUM.folhaDeBordo('#fca5a5', '#dc2626', '#7f1d1d')),
+      pecaPremium('bordo-laranja', [-9, -9, 18, 19], PECAS_PREMIUM.folhaDeBordo('#fed7aa', '#f97316', '#9a3412')),
+      pecaPremium('bordo-ouro', [-9, -9, 18, 19], PECAS_PREMIUM.folhaDeBordo('#fef08a', '#eab308', '#854d0e')),
+      pecaPremium('oval-marrom', [-5, -9, 10, 18], PECAS_PREMIUM.folhaOval('#fcd34d', '#b45309', '#78350f')),
+      pecaPremium('oval-vermelha', [-5, -9, 10, 18], PECAS_PREMIUM.folhaOval('#fdba74', '#c2410c', '#7c2d12')),
+    ];
+    const caindo = [[30, 112, 0, 0], [100, 116, 1.4, 1], [64, 122, 2.8, 2], [14, 92, 4, 3]].map(([x, y, a, t]) => `<g transform="translate(${x} ${y})"><g class="enf-cai" style="--a:-${a}s"><g transform="scale(.7)">${tipos[t]}</g></g></g>`).join('');
+    const coroa = pecaPremium('coroa-outono', [0, 0, 136, 136], () => {
+      const desenhos = [
+        PECAS_PREMIUM.folhaDeBordo('#fca5a5', '#dc2626', '#7f1d1d')(), PECAS_PREMIUM.folhaDeBordo('#fed7aa', '#f97316', '#9a3412')(),
+        PECAS_PREMIUM.folhaDeBordo('#fef08a', '#eab308', '#854d0e')(), PECAS_PREMIUM.folhaOval('#fcd34d', '#b45309', '#78350f')(),
+        PECAS_PREMIUM.folhaOval('#fdba74', '#c2410c', '#7c2d12')(),
+      ].map((d, i) => d.split('id="fb"').join(`id="fb${i}"`).split('url(#fb)').join(`url(#fb${i})`).split('id="fo"').join(`id="fo${i}"`).split('url(#fo)').join(`url(#fo${i})`));
+      let anel = '<circle cx="68" cy="68" r="53.5" fill="none" stroke="#5b3416" stroke-width="2.4"/><circle cx="68" cy="68" r="53.5" fill="none" stroke="#a16207" stroke-width=".8" stroke-dasharray="6 3"/>';
+      for (let i = 0; i < 26; i += 1) {
+        const a = i * (360 / 26);
+        const [x, y] = pontoNoCirculo(54 + (i % 2) * 2.5, a);
+        anel += `<g transform="translate(${n1(x)} ${n1(y)}) rotate(${n1(a + (i % 2 ? 30 : -20))}) scale(${i % 3 ? 0.9 : 1.05})">${desenhos[i % 5]}</g>`;
+      }
+      const bolota = PECAS_PREMIUM.bolota();
+      [100, 220, 330].forEach((a) => { const [x, y] = pontoNoCirculo(56, a); anel += `<g transform="translate(${n1(x)} ${n1(y)}) rotate(${a})">${bolota}</g>`; });
+      return anel;
+    });
+    return `${coroa}${caindo}${faisca(20, 28, 2.4, '#fde68a', 0.5)}${faisca(118, 30, 2.4, '#fde68a', 1.5)}`;
+  },
+
+  'coracao-imaculado'() {
+    const brilho = idDoEnfeite('ch-luz');
+    const fogo = idDoEnfeite('ch-fogo');
+    const coroa = pecaPremium('coroa-rosas', [0, 0, 136, 136], () => {
+      const rosa = PECAS_PREMIUM.rosa('#fecdd3', '#e11d48', '#881337')();
+      const rosaClara = PECAS_PREMIUM.rosa('#ffffff', '#fbcfe8', '#be185d')().split('id="ro"').join('id="ro2"').split('url(#ro)').join('url(#ro2)').split('id="rm"').join('id="rm2"').split('url(#rm)').join('url(#rm2)');
+      const folha = PECAS_PREMIUM.folhaDeRosa();
+      let c = anelDeMetal('ouro', { largura: 4.4 });
+      for (let i = 0; i < 12; i += 1) {
+        const a = i * 30 + 15;
+        if (a > 150 && a < 210) continue;
+        const [x, y] = pontoNoCirculo(55.5, a);
+        const [fx, fy] = pontoNoCirculo(55.5, a + 15);
+        c += `<g transform="translate(${n1(fx)} ${n1(fy)}) rotate(${a + 105})">${folha}</g><g transform="translate(${n1(x)} ${n1(y)}) scale(.82)">${i % 2 ? rosaClara : rosa}</g>`;
+      }
+      return c;
+    });
+    return `<defs><radialGradient id="${brilho}"><stop offset="0" stop-color="#fecaca" stop-opacity=".85"/><stop offset="1" stop-color="#fecaca" stop-opacity="0"/></radialGradient>
+        <linearGradient id="${fogo}" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#dc2626"/><stop offset=".45" stop-color="#f97316"/><stop offset="1" stop-color="#fef08a"/></linearGradient></defs>
+      ${coroa}
+      ${reflexoNoAnel(idDoEnfeite('ci'), 53, 4.4)}
+      <g transform="translate(68 118)">
+        <circle r="17" fill="url(#${brilho})" class="enf-respira" style="--d:2.2s"/>
+        ${[[-4, -9, 0.42], [0, -11, 0.5], [4, -9, 0.4]].map(([x, y, d], i) => `<g transform="translate(${x} ${y})"><g class="enf-chama" style="--d:${d}s;--a:${i * 0.15}s"><path d="M0 0C-2.6 -2.4 -2.2 -6 0 -10C2.2 -6 2.6 -2.4 0 0Z" fill="url(#${fogo})"/></g></g>`).join('')}
+        ${pecaPremium('coracao-imaculado', [-18, -11, 34, 24], PECAS_PREMIUM.coracao)}
+      </g>
+      ${faisca(22, 26, 2.6, '#fff1f2', 0.4)}${faisca(114, 26, 2.6, '#fff1f2', 1.4)}`;
+  },
+
+  'luz-divina'() {
+    const halo = idDoEnfeite('ld-halo');
+    return `<defs><radialGradient id="${halo}"><stop offset=".7" stop-color="#fde68a" stop-opacity="0"/><stop offset=".8" stop-color="#fef3c7" stop-opacity=".55"/><stop offset="1" stop-color="#fde68a" stop-opacity="0"/></radialGradient></defs><circle cx="68" cy="68" r="76" fill="url(#${halo})" class="enf-respira" style="--d:2.6s"/><g class="enf-gira" style="--d:70s"><g class="enf-respira" style="--d:3s">${pecaPremium('raios-divinos', [-10, -10, 156, 156], PECAS_PREMIUM.raiosDivinos)}</g></g>
+      ${pecaPremium('anel-ouro-ld', [0, 0, 136, 136], () => anelDeMetal('ouro', { rebites: [0, 90, 180, 270] }))}
+      ${reflexoNoAnel(idDoEnfeite('ld'), 53, 5.2)}
+      <circle cx="30" cy="110" r=".9" fill="#fffbeb" class="enf-sobe-lento" style="--d:5s"/><circle cx="106" cy="112" r=".8" fill="#fffbeb" class="enf-sobe-lento" style="--d:6s;--a:-2s"/>
+      ${faisca(68, -8, 3.4, '#ffffff', 0.2)}${faisca(-6, 68, 2.8, '#fffbeb', 1)}${faisca(142, 68, 2.8, '#fffbeb', 1.7)}${faisca(68, 144, 2.6, '#fffbeb', 2.4)}`;
+  },
+});
+
+function nuvemDoDia(id, claro, meio, sombra) {
+  const bolas = [[-24, 4, 6], [-15, 0, 8.5], [-4, -4, 10], [8, -2, 9], [18, 2, 7], [26, 5, 4.6], [0, 4, 8]];
+  return `<defs><linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="0" y1="-14" x2="0" y2="10"><stop offset="0" stop-color="${claro}"/><stop offset=".55" stop-color="${meio}"/><stop offset="1" stop-color="${sombra}"/></linearGradient></defs>
+    <rect x="-28" y="3" width="58" height="7" rx="3.5" fill="url(#${id})"/>${bolas.map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="url(#${id})"/>`).join('')}`;
+}
+
+const PECAS_DAS_FAIXAS = {
+  edenFundo: () => `<defs>
+      <linearGradient id="ec" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7cc4f2"/><stop offset=".6" stop-color="#cfe9f7"/><stop offset="1" stop-color="#fde7c4"/></linearGradient>
+      <radialGradient id="esol" gradientUnits="userSpaceOnUse" cx="286" cy="16" r="90"><stop offset="0" stop-color="#fffbe6" stop-opacity="1"/><stop offset=".2" stop-color="#fde68a" stop-opacity=".6"/><stop offset="1" stop-color="#fde68a" stop-opacity="0"/></radialGradient>
+      <linearGradient id="em1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fbf9a"/><stop offset="1" stop-color="#5d8f72"/></linearGradient>
+      <linearGradient id="em2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7ccf5a"/><stop offset="1" stop-color="#3f8f3a"/></linearGradient>
+      <linearGradient id="em3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9be15d"/><stop offset="1" stop-color="#4d9a2c"/></linearGradient>
+      <linearGradient id="er" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7dd3fc"/><stop offset=".5" stop-color="#e0f2fe"/><stop offset="1" stop-color="#38bdf8"/></linearGradient>
+    </defs>
+    <rect width="320" height="80" fill="url(#ec)"/><rect width="320" height="80" fill="url(#esol)"/>
+    <path d="M0 52C40 40 80 44 120 38C160 32 200 40 240 34C270 30 300 36 320 32V80H0Z" fill="url(#em1)" opacity=".85"/>
+    <path d="M0 62C50 52 100 58 150 50C200 44 250 54 320 46V80H0Z" fill="url(#em2)"/>
+    <path d="M150 80C175 70 205 66 232 66C258 66 280 72 300 80Z" fill="url(#er)" opacity=".9"/>
+    <path d="M0 72C60 66 120 70 170 66C230 62 280 70 320 66V80H0Z" fill="url(#em3)"/>`,
+  arvoreDaVida: () => {
+    const copa = [[0, -20, 14], [-12, -14, 10], [12, -14, 10], [-18, -4, 8], [18, -4, 8], [-7, -8, 11], [7, -8, 11], [0, -30, 9]];
+    const macas = [[-8, -16], [6, -22], [12, -8], [-14, -4], [2, -10], [-2, -26]];
+    return `<defs><radialGradient id="ac2" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#a3e635"/><stop offset=".55" stop-color="#22a447"/><stop offset="1" stop-color="#14532d"/></radialGradient>
+        <linearGradient id="at" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5b3416"/><stop offset=".5" stop-color="#8b5a2b"/><stop offset="1" stop-color="#3f230e"/></linearGradient>
+        <radialGradient id="am" cx="35%" cy="30%" r="70%"><stop offset="0" stop-color="#fecaca"/><stop offset=".5" stop-color="#ef4444"/><stop offset="1" stop-color="#7f1d1d"/></radialGradient></defs>
+      <ellipse cx="0" cy="22" rx="20" ry="3" fill="#14532d" opacity=".35"/>
+      <path d="M-3 22C-2 10 -4 2 -9 -4L-5 -5C-2 0 0 4 0 6C1 2 3 -2 6 -6L9 -4C4 2 3 10 4 22Z" fill="url(#at)"/>
+      ${copa.map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="url(#ac2)"/>`).join('')}
+      ${copa.map(([x, y, r]) => `<circle cx="${n1(x - r * 0.3)}" cy="${n1(y - r * 0.35)}" r="${n1(r * 0.35)}" fill="#d9f99d" opacity=".35"/>`).join('')}
+      ${macas.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1.9" fill="url(#am)"/><circle cx="${n1(x - 0.6)}" cy="${n1(y - 0.6)}" r=".5" fill="#fff" opacity=".8"/>`).join('')}`;
+  },
+  flores: () => {
+    const sorteio = sorteioFixo(44);
+    let f = '';
+    const cores = [['#fff', '#fde68a'], ['#f9a8d4', '#fef08a'], ['#c4b5fd', '#fde68a'], ['#fca5a5', '#fef3c7'], ['#fde047', '#f59e0b']];
+    for (let i = 0; i < 26; i += 1) {
+      const x = 120 + sorteio() * 200;
+      const y = 68 + sorteio() * 11;
+      const [p, m] = cores[i % cores.length];
+      const e = 0.7 + sorteio() * 0.6;
+      let pet = '';
+      for (let k = 0; k < 5; k += 1) pet += `<ellipse cx="0" cy="-1.8" rx="1.1" ry="1.8" transform="rotate(${k * 72})" fill="${p}" stroke="#00000022" stroke-width=".2"/>`;
+      f += `<g transform="translate(${n1(x)} ${n1(y)}) scale(${n1(e)})"><path d="M0 0V5" stroke="#3f6212" stroke-width=".6"/>${pet}<circle r=".9" fill="${m}"/></g>`;
+    }
+    return f;
+  },
+  borboleta: (c1, c2) => () => `<defs><linearGradient id="bo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient></defs>
+    <path d="M0 0C-3 -6 -9 -6 -8 -1C-7.5 1.4 -3 1.2 0 0Z" fill="url(#bo)" stroke="#1f2937" stroke-width=".3"/><path d="M0 0C-2 2 -6 5 -5 6.4C-3.6 7 -1 3 0 0Z" fill="url(#bo)" stroke="#1f2937" stroke-width=".3"/>
+    <circle cx="-5" cy="-2.6" r=".9" fill="#fff" opacity=".7"/><ellipse cx="0" cy=".6" rx=".6" ry="2.6" fill="#1f2937"/>`,
+  arcaCeu: () => `<defs>
+      <linearGradient id="ac3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5b7fb8"/><stop offset=".55" stop-color="#a9c6e8"/><stop offset="1" stop-color="#f6dfb8"/></linearGradient>
+      <radialGradient id="al" gradientUnits="userSpaceOnUse" cx="250" cy="10" r="120"><stop offset="0" stop-color="#fffbe6" stop-opacity=".9"/><stop offset=".3" stop-color="#fde68a" stop-opacity=".35"/><stop offset="1" stop-color="#fde68a" stop-opacity="0"/></radialGradient>
+    </defs>
+    <rect width="320" height="80" fill="url(#ac3)"/><rect width="320" height="80" fill="url(#al)"/>
+    ${['#ef4444', '#f97316', '#facc15', '#22c55e', '#3b82f6', '#6366f1', '#a855f7'].map((c, i) => `<path d="M${150 + i * 3.6} 70A${92 - i * 3.6} ${66 - i * 3.6} 0 0 1 ${334 - i * 3.6} 70" fill="none" stroke="${c}" stroke-width="3.6" opacity=".55"/>`).join('')}`,
+  arca: () => `<defs><linearGradient id="ak" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b7793f"/><stop offset=".5" stop-color="#8a5326"/><stop offset="1" stop-color="#4a2a10"/></linearGradient>
+      <linearGradient id="ar2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7c2d12"/><stop offset="1" stop-color="#431407"/></linearGradient>
+      <linearGradient id="ag" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fde047"/><stop offset="1" stop-color="#d97706"/></linearGradient></defs>
+    <path d="M-38 0H38L30 15C10 18 -10 18 -30 15Z" fill="url(#ak)" stroke="#3b1f0a" stroke-width=".5"/>
+    ${[3, 6.5, 10, 13].map((y) => `<path d="M${-37 + y * 0.55} ${y}H${37 - y * 0.55}" stroke="#3b1f0a" stroke-width=".35" opacity=".7"/>`).join('')}
+    <path d="M-24 -13H22V0H-24Z" fill="url(#ak)" stroke="#3b1f0a" stroke-width=".45"/>
+    <path d="M-28 -13L-1 -25L26 -13Z" fill="url(#ar2)" stroke="#2a0e04" stroke-width=".45"/>
+    ${[-15, -4, 7].map((x) => `<rect x="${x}" y="-9" width="6" height="5" rx="1" fill="#fef3c7" stroke="#3b1f0a" stroke-width=".4"/>`).join('')}
+    <g transform="translate(16 -12)"><path d="M0 0L1 -10L2.6 -10L2 0Z" fill="url(#ag)"/><path d="M1.6 -10C1.6 -12 4 -13.6 6 -13C6.2 -11.6 4.6 -10.4 2.6 -10Z" fill="url(#ag)"/><circle cx="4.4" cy="-12.2" r=".4" fill="#1f2937"/><path d="M1.4 -6L2.2 -5.4M1.2 -3L2 -2.6" stroke="#92400e" stroke-width=".5"/></g>
+    <g transform="translate(-21 -11)"><ellipse rx="4.2" ry="3.4" fill="#9ca3af"/><path d="M-3 1.6C-4 4 -4.6 5 -3.6 6" fill="none" stroke="#9ca3af" stroke-width="1.4" stroke-linecap="round"/><circle cx="-1.6" cy="-1" r=".45" fill="#1f2937"/><ellipse cx="2.6" cy="-1" rx="1.6" ry="2.2" fill="#d1d5db"/></g>`,
+  pombaComRamo: () => `<defs><linearGradient id="pd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#cbd5e1"/></linearGradient></defs>
+    <path d="M-6 0C-3 -2 3 -2 6 -1C8 0 8 1.4 6 2C2 3 -3 2.6 -6 0Z" fill="url(#pd)"/><circle cx="6" cy="-.6" r="1.8" fill="url(#pd)"/><path d="M7.6 -.6L9.6 0L7.6 .4Z" fill="#f59e0b"/>
+    <path d="M9 .2C10.6 1.4 12 1 13 2" fill="none" stroke="#3f6212" stroke-width=".5"/><path d="M11 1.3C11.6 .3 12.6 .4 12.6 1.3C12 1.9 11.4 1.8 11 1.3Z" fill="#65a30d"/><path d="M12.4 2.2C13.2 1.6 14 2 13.8 2.8C13.1 3.1 12.6 2.8 12.4 2.2Z" fill="#65a30d"/>
+    <path d="M-6 0L-10 -1.6L-9.4 1L-10.6 2.6L-6 1.4Z" fill="url(#pd)"/>`,
+  asaDaPomba: () => `<path d="M0 0C-2 -4 -6 -7 -10 -7C-7 -4 -4 -1 0 0Z" fill="#f8fafc" stroke="#cbd5e1" stroke-width=".3"/><path d="M-1 -1.4C-3 -4 -6 -5.4 -8.4 -5.2" fill="none" stroke="#cbd5e1" stroke-width=".3"/>`,
+  marFundo: () => `<defs><linearGradient id="mf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset=".45" stop-color="#0e7490"/><stop offset="1" stop-color="#083344"/></linearGradient>
+      <linearGradient id="ma" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fde68a"/><stop offset="1" stop-color="#b45309"/></linearGradient></defs>
+    <rect width="320" height="80" fill="url(#mf)"/>
+    <path d="M100 80C130 70 170 74 210 70C250 66 290 72 320 69V80Z" fill="url(#ma)"/>
+    <path d="M150 76C160 74 170 75 180 74M230 73C240 71 252 72 262 71" stroke="#fef3c7" stroke-width=".6" opacity=".6"/>`,
+  coralRamo: () => `<defs><linearGradient id="cr" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#be185d"/><stop offset="1" stop-color="#f9a8d4"/></linearGradient></defs>
+    <path d="M0 0C0 -6 -1 -10 -4 -14M0 -5C2 -9 5 -11 6 -16M-2 -9C-5 -11 -7 -12 -8 -15M3 -10C5 -12 4 -15 3 -18" fill="none" stroke="url(#cr)" stroke-width="2.2" stroke-linecap="round"/>`,
+  coralLeque: () => `<defs><radialGradient id="cl" cx="50%" cy="100%" r="100%"><stop offset="0" stop-color="#6d28d9"/><stop offset="1" stop-color="#c4b5fd"/></radialGradient></defs>
+    <path d="M0 0C-10 -6 -12 -16 -6 -20C-2 -22 2 -22 6 -20C12 -16 10 -6 0 0Z" fill="url(#cl)" opacity=".9"/>
+    <path d="M0 0L-6 -18M0 0L0 -21M0 0L6 -18M0 0L-9 -12M0 0L9 -12" stroke="#ede9fe" stroke-width=".35" opacity=".7"/>`,
+  estrelaDoMar: () => `<path d="${caminhoDeEstrela(0, 0, 5, 2.2, 5)}" fill="#fb923c" stroke="#c2410c" stroke-width=".4" stroke-linejoin="round"/><circle r="1" fill="#fed7aa"/>`,
+  peixePalhaco: () => `<defs><linearGradient id="pp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fdba74"/><stop offset="1" stop-color="#ea580c"/></linearGradient></defs>
+    <path d="M-8 0C-5 -5 5 -5 8 0C5 5 -5 5 -8 0Z" fill="url(#pp)" stroke="#1f2937" stroke-width=".4"/><path d="M-8 0L-12 -3.4L-11 0L-12 3.4Z" fill="url(#pp)" stroke="#1f2937" stroke-width=".4"/>
+    <path d="M2.6 -3.6C1.6 -1 1.6 1 2.6 3.6M-2.6 -3.8C-3.6 -1 -3.6 1 -2.6 3.8" stroke="#fff" stroke-width="1.4"/><circle cx="5.4" cy="-.8" r=".9" fill="#111827"/><circle cx="5.6" cy="-1" r=".3" fill="#fff"/>`,
+  peixeAzul: () => `<defs><linearGradient id="pz" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#60a5fa"/><stop offset="1" stop-color="#1e3a8a"/></linearGradient></defs>
+    <path d="M-7 0C-4 -6 5 -6 8 0C5 6 -4 6 -7 0Z" fill="url(#pz)" stroke="#0f172a" stroke-width=".4"/><path d="M-7 0L-11 -3L-11 3Z" fill="#facc15"/><path d="M-3 -3C0 -1 2 -1 5 -2.6" stroke="#0f172a" stroke-width=".8" fill="none"/><circle cx="5" cy="-.8" r=".8" fill="#111827"/>`,
+  peixeAmarelo: () => `<defs><linearGradient id="py" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fef08a"/><stop offset="1" stop-color="#eab308"/></linearGradient></defs>
+    <path d="M-6 0C-4 -7 4 -7 7 0C4 6 -4 6 -6 0Z" fill="url(#py)" stroke="#713f12" stroke-width=".4"/><path d="M-6 0L-9.6 -2.6L-9.6 2.6Z" fill="url(#py)"/><circle cx="4.2" cy="-1" r=".8" fill="#111827"/>`,
+  luaSorrindo: () => `<defs><radialGradient id="lu" cx="35%" cy="35%" r="75%"><stop offset="0" stop-color="#fffbe6"/><stop offset=".6" stop-color="#fde68a"/><stop offset="1" stop-color="#d97706"/></radialGradient></defs>
+    <path d="M6 -14A15 15 0 1 0 6 14A11.5 11.5 0 1 1 6 -14Z" fill="url(#lu)" stroke="#b45309" stroke-width=".5"/>
+    <path d="M-5.6 -3.2Q-4.4 -4.4 -3.2 -3.2" fill="none" stroke="#78350f" stroke-width=".8" stroke-linecap="round"/><path d="M-6.4 3Q-4.4 5 -2.6 3.2" fill="none" stroke="#78350f" stroke-width=".8" stroke-linecap="round"/>
+    <circle cx="-7.6" cy=".4" r="1.5" fill="#fb7185" opacity=".45"/>
+    <path d="M-1 -12.4C3 -16 9 -16 12 -12L10 -10C8 -12.6 4 -12.8 1 -10.6Z" fill="#6366f1"/><circle cx="12.6" cy="-11" r="1.6" fill="#fff"/>`,
+};
+
+Object.assign(FAIXAS, {
+  'jardim-do-eden'() {
+    const borboletas = [['#f9a8d4', '#a855f7', 210, 22, 0], ['#fde047', '#f97316', 268, 30, 1.4], ['#7dd3fc', '#2563eb', 170, 34, 2.6]].map(([c1, c2, x, y, a], i) => `<g transform="translate(${x} ${y})"><g class="enf-borboleta-voa" style="--a:-${a}s"><g class="enf-bate" style="--a:${n1(i * 0.1)}s">${pecaPremium(`borboleta-${i}`, [-9, -7, 18, 14], PECAS_DAS_FAIXAS.borboleta(c1, c2))}</g><g transform="scale(-1 1)"><g class="enf-bate" style="--a:${n1(i * 0.1)}s">${pecaPremium(`borboleta-${i}`, [-9, -7, 18, 14], PECAS_DAS_FAIXAS.borboleta(c1, c2))}</g></g></g></g>`).join('');
+    return `${pecaPremium('eden-fundo', [0, 0, 320, 80], PECAS_DAS_FAIXAS.edenFundo)}
+      <g class="enf-respira" style="--d:4s"><circle cx="286" cy="16" r="16" fill="#fef9c3" opacity=".35"/></g><circle cx="286" cy="16" r="8.5" fill="#fffbe6"/><circle cx="286" cy="16" r="6" fill="#ffffff"/>
+      <g transform="translate(250 50)">${pecaPremium('arvore-da-vida', [-24, -42, 48, 68], PECAS_DAS_FAIXAS.arvoreDaVida)}</g>
+      <g transform="translate(176 56) scale(.62)">${pecaPremium('arvore-da-vida', [-24, -42, 48, 68], PECAS_DAS_FAIXAS.arvoreDaVida)}</g>
+      <g transform="translate(306 58) scale(.7)">${pecaPremium('arvore-da-vida', [-24, -42, 48, 68], PECAS_DAS_FAIXAS.arvoreDaVida)}</g>
+      <g class="enf-balanca-suave">${pecaPremium('flores-eden', [0, 0, 320, 80], PECAS_DAS_FAIXAS.flores)}</g>
+      ${borboletas}`;
+  },
+
+  'arca-de-noe'() {
+    const onda = (y, c1, c2, d, a, amp) => {
+      let caminho = `M0 ${y}`;
+      for (let x = 0; x <= 380; x += 20) caminho += `Q${x + 10} ${y - amp} ${x + 20} ${y}`;
+      return `<g class="enf-onda" style="--d:${d}s;--a:-${a}s"><path d="${caminho}V80H0Z" fill="${c1}"/><path d="${caminho}" fill="none" stroke="${c2}" stroke-width=".8" opacity=".8"/></g>`;
+    };
+    const asa = pecaPremium('asa-pomba-arca', [-11, -8, 12, 9], PECAS_DAS_FAIXAS.asaDaPomba);
+    return `${pecaPremium('arca-ceu', [0, 0, 320, 80], PECAS_DAS_FAIXAS.arcaCeu)}
+      ${nuvemFofa(176, 18, 0.7, pecaPremium('nuvem-dia', [-30, -14, 62, 26], () => nuvemDoDia('nd', '#ffffff', '#f1f5f9', '#cbd5e1')), 30, 0)}
+      ${nuvemFofa(300, 12, 0.6, pecaPremium('nuvem-dia', [-30, -14, 62, 26], () => nuvemDoDia('nd', '#ffffff', '#f1f5f9', '#cbd5e1')), 26, 5)}
+      ${onda(62, '#1d6fa5', '#93c5fd', 7, 0, 3)}
+      <g transform="translate(246 56) scale(1.28)"><g class="enf-balanca-suave">${pecaPremium('arca', [-40, -27, 80, 46], PECAS_DAS_FAIXAS.arca)}</g></g>
+      ${onda(68, '#155e8c', '#bae6fd', 5, 2, 3.4)}${onda(74, '#0c4a6e', '#7dd3fc', 4, 1, 2.6)}
+      <g transform="translate(200 26)"><g class="enf-voa-curto"><g transform="scale(1.4)">${pecaPremium('pomba-ramo', [-11, -4, 26, 8], PECAS_DAS_FAIXAS.pombaComRamo)}<g transform="translate(-1 -.6)"><g class="enf-bate-asa">${asa}</g></g></g></g></g>
+      ${faisca(286, 10, 2.2, '#fffbeb', 0.4)}${faisca(160, 30, 2, '#fffbeb', 1.6)}`;
+  },
+
+  'fundo-do-mar'() {
+    const raios = idDoEnfeite('mar-raios');
+    let bolhas = '';
+    const sorteio = sorteioFixo(9);
+    for (let i = 0; i < 14; i += 1) bolhas += `<g transform="translate(${n1(130 + sorteio() * 190)} ${n1(70 + sorteio() * 8)})"><circle class="enf-sobe-lento" style="--a:-${n1(sorteio() * 9)}s;--d:${n1(5 + sorteio() * 4)}s" r="${n1(1 + sorteio() * 1.8)}" fill="#e0f2fe" fill-opacity=".18" stroke="#e0f2fe" stroke-width=".5"/></g>`;
+    const peixe = (p, x, y, d, a, e) => `<g transform="translate(${x} ${y})"><g class="enf-voa" style="--d:${d}s;--a:-${a}s"><g transform="scale(-${e} ${e})">${p}</g></g></g>`;
+    const pp = pecaPremium('peixe-palhaco', [-13, -6, 22, 12], PECAS_DAS_FAIXAS.peixePalhaco);
+    const pz = pecaPremium('peixe-azul', [-12, -6, 21, 12], PECAS_DAS_FAIXAS.peixeAzul);
+    const py = pecaPremium('peixe-amarelo', [-10, -6, 18, 12], PECAS_DAS_FAIXAS.peixeAmarelo);
+    return `<defs><linearGradient id="${raios}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ecfeff" stop-opacity=".5"/><stop offset="1" stop-color="#ecfeff" stop-opacity="0"/></linearGradient></defs>
+      ${pecaPremium('mar-fundo', [0, 0, 320, 80], PECAS_DAS_FAIXAS.marFundo)}
+      <g class="enf-raios-agua" fill="url(#${raios})"><path d="M180 0H190L170 80H150Z"/><path d="M236 0H242L232 80H216Z"/><path d="M290 0H300L296 80H276Z"/></g>
+      <g transform="translate(178 76)"><g class="enf-balanca-suave">${pecaPremium('coral-ramo', [-10, -20, 18, 22], PECAS_DAS_FAIXAS.coralRamo)}</g></g>
+      <g transform="translate(296 76)"><g class="enf-balanca-suave">${pecaPremium('coral-leque', [-13, -23, 26, 24], PECAS_DAS_FAIXAS.coralLeque)}</g></g>
+      <path d="M206 80C204 70 210 64 206 56C204 50 208 46 206 40" fill="none" stroke="#16a34a" stroke-width="2.4" stroke-linecap="round" class="enf-balanca-suave"/>
+      <path d="M262 80C266 72 260 66 264 58" fill="none" stroke="#22c55e" stroke-width="2.2" stroke-linecap="round" class="enf-balanca-suave"/>
+      <g transform="translate(240 75) rotate(-15)">${pecaPremium('estrela-do-mar', [-6, -6, 12, 12], PECAS_DAS_FAIXAS.estrelaDoMar)}</g>
+      ${peixe(pp, 330, 30, 13, 0, 1.55)}${peixe(pz, 360, 50, 16, 5, 1.45)}${peixe(py, 300, 18, 11, 8, 1.35)}${peixe(pp, 370, 58, 20, 12, 1)}
+      ${bolhas}`;
+  },
+
+  'estrelinhas-do-ceu'() {
+    const ceu = idDoEnfeite('noite');
+    const sorteio = sorteioFixo(21);
+    let estrelas = '';
+    for (let i = 0; i < 14; i += 1) {
+      const peca = pecaPremium(`estrela-doce-${i % 6}`, [-9, -9, 18, 19], PECAS_PREMIUM.estrelaDoce(CORES_DE_ESTRELA[i % 6]));
+      estrelas += `<g transform="translate(${n1(120 + sorteio() * 196)} ${n1(8 + sorteio() * 60)}) scale(${n1(0.35 + sorteio() * 0.35)})"><g class="enf-cintila" style="--a:${n1(sorteio() * 3)}s">${peca}</g></g>`;
+    }
+    let pontos = '';
+    for (let i = 0; i < 40; i += 1) pontos += `<circle cx="${n1(sorteio() * 320)}" cy="${n1(sorteio() * 80)}" r="${n1(0.3 + sorteio() * 0.6)}" fill="#fff" class="enf-pisca" style="--a:${n1(sorteio() * 3)}s"/>`;
+    return `<defs><linearGradient id="${ceu}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e1b4b"/><stop offset=".6" stop-color="#3b2a7a"/><stop offset="1" stop-color="#6b3fa0"/></linearGradient></defs>
+      <rect width="320" height="80" fill="url(#${ceu})"/>${pontos}
+      <g class="enf-cadente" style="--a:-1s"><path d="M300 6L284 12" stroke="#fff" stroke-width="1" stroke-linecap="round"/></g>
+      ${estrelas}
+      ${nuvemFofa(272, 60, 0.75, pecaPremium('nuvem-noite', [-30, -14, 62, 26], () => nuvemDoDia('nn', '#e0e7ff', '#a5b4fc', '#6366f1')), 24, 0)}
+      <g transform="translate(276 38)"><g class="enf-flutua">${pecaPremium('lua-sorrindo', [-16, -18, 32, 34], PECAS_DAS_FAIXAS.luaSorrindo)}</g></g>`;
+  },
+});
+
+Object.assign(PECAS_DAS_FAIXAS, {
+  pentecostesFundo: () => {
+    let raios = '';
+    for (let i = 0; i < 18; i += 1) raios += `<path d="M0 0L${n1(Math.cos((i * 20 * Math.PI) / 180 - 0.06) * 200)} ${n1(Math.sin((i * 20 * Math.PI) / 180 - 0.06) * 200)}L${n1(Math.cos((i * 20 * Math.PI) / 180 + 0.06) * 200)} ${n1(Math.sin((i * 20 * Math.PI) / 180 + 0.06) * 200)}Z"/>`;
+    return `<defs><linearGradient id="pfc" x1="0" y1="0" x2=".4" y2="1"><stop offset="0" stop-color="#2a0710"/><stop offset=".5" stop-color="#7c1d12"/><stop offset="1" stop-color="#c2410c"/></linearGradient>
+        <radialGradient id="pfl" gradientUnits="userSpaceOnUse" cx="262" cy="16" r="130"><stop offset="0" stop-color="#fffbeb" stop-opacity="1"/><stop offset=".15" stop-color="#fde68a" stop-opacity=".75"/><stop offset=".45" stop-color="#f97316" stop-opacity=".25"/><stop offset="1" stop-color="#f97316" stop-opacity="0"/></radialGradient>
+        <radialGradient id="pfr" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="200"><stop offset="0" stop-color="#fff7d6" stop-opacity=".35"/><stop offset="1" stop-color="#fff7d6" stop-opacity="0"/></radialGradient></defs>
+      <rect width="320" height="80" fill="url(#pfc)"/><rect width="320" height="80" fill="url(#pfl)"/>
+      <g transform="translate(262 16)" fill="url(#pfr)">${raios}</g>`;
+  },
+  pombaDeFrente: () => `<defs><linearGradient id="pdf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e2e8f0"/></linearGradient></defs>
+    ${[[0, 1], [1, -1]].map(([k, s]) => `<g transform="scale(${s} 1)">${[[14, 22], [8, 20], [2, 17], [-6, 13]].map(([a, L]) => `<path d="M2 0C${n1(L * 0.3)} ${n1(-L * 0.25 - a * 0.1)} ${n1(L * 0.7)} ${n1(-L * 0.3 - a * 0.2)} ${L} ${n1(-a * 0.6 - 4)}C${n1(L * 0.7)} ${n1(-a * 0.2)} ${n1(L * 0.3)} 2 2 2Z" fill="url(#pdf)" stroke="#cbd5e1" stroke-width=".35"/>`).join('')}</g>`).join('')}
+    <ellipse cx="0" cy="2" rx="3.2" ry="6.5" fill="url(#pdf)" stroke="#cbd5e1" stroke-width=".35"/><circle cx="0" cy="-4.6" r="2.6" fill="url(#pdf)" stroke="#cbd5e1" stroke-width=".35"/>
+    <path d="M-.7 -3.6L0 -2.2L.7 -3.6Z" fill="#f59e0b"/><path d="M-2.4 8L0 13L2.4 8Z" fill="url(#pdf)" stroke="#cbd5e1" stroke-width=".35"/>`,
+  apostolos: () => {
+    const pos = [[170, 1, '#3b1a12'], [192, 0.9, '#2a120c'], [214, 1.05, '#3b1a12'], [238, 0.95, '#2a120c'], [262, 1.08, '#3b1a12'], [286, 0.92, '#2a120c'], [308, 1, '#3b1a12']];
+    return `<defs><linearGradient id="apr" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fdba74" stop-opacity=".7"/><stop offset=".25" stop-color="#fdba74" stop-opacity="0"/></linearGradient></defs>
+      ${pos.map(([x, e, c]) => `<g transform="translate(${x} 80) scale(${e})"><path d="M-12 0C-12 -10 -8 -14 -4 -15C-6 -17 -6.5 -21 -5 -24C-3 -27.5 3 -27.5 5 -24C6.5 -21 6 -17 4 -15C8 -14 12 -10 12 0Z" fill="${c}"/><path d="M-12 0C-12 -10 -8 -14 -4 -15C-6 -17 -6.5 -21 -5 -24C-3 -27.5 3 -27.5 5 -24" fill="none" stroke="#fdba74" stroke-width=".7" opacity=".55"/></g>`).join('')}`;
+  },
+  getsemaniFundo: () => `<defs><linearGradient id="gfc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#030712"/><stop offset=".6" stop-color="#0f1b3d"/><stop offset="1" stop-color="#1e2b52"/></linearGradient>
+      <radialGradient id="gfl" gradientUnits="userSpaceOnUse" cx="292" cy="18" r="70"><stop offset="0" stop-color="#e2e8f0" stop-opacity=".55"/><stop offset=".3" stop-color="#cbd5e1" stop-opacity=".18"/><stop offset="1" stop-color="#cbd5e1" stop-opacity="0"/></radialGradient>
+      <radialGradient id="gflua" cx="40%" cy="40%" r="70%"><stop offset="0" stop-color="#ffffff"/><stop offset=".7" stop-color="#e2e8f0"/><stop offset="1" stop-color="#94a3b8"/></radialGradient>
+      <linearGradient id="gfh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e293b"/><stop offset="1" stop-color="#0b1120"/></linearGradient></defs>
+    <rect width="320" height="80" fill="url(#gfc)"/><rect width="320" height="80" fill="url(#gfl)"/>
+    <circle cx="292" cy="18" r="9" fill="url(#gflua)"/><circle cx="289" cy="15.6" r="1.6" fill="#cbd5e1" opacity=".5"/><circle cx="295" cy="20.4" r="1.2" fill="#cbd5e1" opacity=".45"/>
+    <path d="M0 66C60 60 120 64 180 58C230 54 280 60 320 56V80H0Z" fill="url(#gfh)"/>`,
+  oliveira: () => `<defs><linearGradient id="otr" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1c1917"/><stop offset=".6" stop-color="#44403c"/><stop offset="1" stop-color="#78716c"/></linearGradient>
+      <radialGradient id="ofo" cx="60%" cy="25%" r="80%"><stop offset="0" stop-color="#8aa29a"/><stop offset=".5" stop-color="#3f5550"/><stop offset="1" stop-color="#1b2a2a"/></radialGradient></defs>
+    <path d="M-3 24C-2 18 -5 14 -3 9C-1 5 -6 2 -9 -2L-6 -3C-3 0 -1 2 0 4C1 0 4 -2 7 -5L9 -3C5 1 3 5 4 9C6 14 3 18 4 24Z" fill="url(#otr)"/>
+    ${[[-12, -8, 9, 5], [0, -12, 11, 6], [12, -7, 9, 5], [-6, -4, 8, 4], [7, -2, 8, 4], [-17, -2, 6, 3.4], [18, -1, 6, 3.4]].map(([x, y, rx, ry]) => `<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="url(#ofo)"/>`).join('')}
+    ${[[-12, -10], [0, -15], [12, -9], [4, -6]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="4.5" ry="1.4" fill="#c7d6d0" opacity=".25"/>`).join('')}`,
+  jesusRezando: () => `<defs><linearGradient id="jr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#cbd5e1"/><stop offset=".4" stop-color="#475569"/><stop offset="1" stop-color="#1e293b"/></linearGradient>
+      <linearGradient id="jp" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#94a3b8"/><stop offset="1" stop-color="#1f2937"/></linearGradient></defs>
+    <path d="M-16 12C-16 4 -10 -2 -2 -3C6 -3 14 2 15 12Z" fill="url(#jp)"/>
+    <path d="M-4 -3C-6 -6 -6 -10 -4 -13C-3 -15 -1 -16 1 -15.4C2 -18 4.6 -19 6.6 -17.4C8.6 -15.8 8.4 -12.6 6.6 -11C9 -9 10 -6 9.6 -3Z" fill="url(#jr)"/>
+    <path d="M6.6 -17.4C8.6 -15.8 8.4 -12.6 6.6 -11M1 -15.4C3.4 -14 6 -12 9.6 -8" fill="none" stroke="#f1f5f9" stroke-width=".6" opacity=".7"/>
+    <circle cx="4.4" cy="-15.6" r="4.6" fill="none" stroke="#fef9c3" stroke-width=".7" opacity=".7"/>`,
+  basilicaFundo: () => `<defs><linearGradient id="bfc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e1b4b"/><stop offset=".4" stop-color="#7e1d5b"/><stop offset=".75" stop-color="#ea580c"/><stop offset="1" stop-color="#fbbf24"/></linearGradient>
+      <radialGradient id="bfs" gradientUnits="userSpaceOnUse" cx="190" cy="74" r="110"><stop offset="0" stop-color="#fffbeb" stop-opacity="1"/><stop offset=".12" stop-color="#fde68a" stop-opacity=".8"/><stop offset=".4" stop-color="#fb923c" stop-opacity=".3"/><stop offset="1" stop-color="#fb923c" stop-opacity="0"/></radialGradient></defs>
+    <rect width="320" height="80" fill="url(#bfc)"/><rect width="320" height="80" fill="url(#bfs)"/>
+    <circle cx="190" cy="76" r="10" fill="#fff7d6"/>`,
+  basilica: () => {
+    const colunas = (x0, n, passo, y, h) => Array.from({ length: n }, (_, i) => `<rect x="${n1(x0 + i * passo)}" y="${y}" width="1.2" height="${h}" fill="#3a2a4a"/>`).join('');
+    return `<defs><linearGradient id="bsp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4b3863"/><stop offset="1" stop-color="#1d1428"/></linearGradient>
+        <linearGradient id="bsd" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2a1f3a"/><stop offset=".35" stop-color="#6b5288"/><stop offset=".55" stop-color="#3d2d52"/><stop offset="1" stop-color="#1d1428"/></linearGradient></defs>
+      <path d="M-46 0V-8H-6V0ZM46 0V-8H6V0Z" fill="url(#bsp)"/>${colunas(-45, 16, 2.5, -8, 8)}${colunas(6.5, 16, 2.5, -8, 8)}
+      <path d="M-22 0V-20H22V0Z" fill="url(#bsp)"/>${colunas(-20, 10, 4.2, -18, 16)}
+      <path d="M-24 -20L0 -27L24 -20Z" fill="url(#bsp)"/>
+      <path d="M-14 -27V-33H14V-27Z" fill="url(#bsp)"/>${colunas(-13, 8, 3.6, -33, 6)}
+      <path d="M-14 -33C-14 -48 -6 -55 0 -56C6 -55 14 -48 14 -33Z" fill="url(#bsd)"/>
+      <path d="M-9 -34C-9 -45 -4 -51 0 -52M-4 -34C-4 -46 -2 -52 0 -53M4 -34C4 -46 2 -52 0 -53M9 -34C9 -45 4 -51 0 -52" fill="none" stroke="#8d75a8" stroke-width=".35" opacity=".7"/>
+      <path d="M-2 -56V-61H2V-56Z" fill="url(#bsp)"/><path d="M-2.4 -61C-2.4 -63 2.4 -63 2.4 -61Z" fill="#4b3863"/>
+      <path d="M0 -62.6V-69M-2 -67H2" stroke="#fde68a" stroke-width=".8"/>
+      <path d="M58 0V-26L59.6 -30L61.2 -26V0Z" fill="url(#bsp)"/><path d="M59.6 -30V-33M58.6 -32H60.6" stroke="#fde68a" stroke-width=".5"/>`;
+  },
+  janelas: () => [[-17, -14], [-9, -14], [-1.2, -14], [6.6, -14], [14.4, -14], [-9, -31], [-1.2, -31], [6.6, -31], [-38, -5], [-30, -5], [26, -5], [34, -5]]
+    .map(([x, y]) => `<rect x="${x}" y="${y}" width="2.2" height="3.4" rx="1.1" fill="#fcd34d"/>`).join(''),
+});
+
+Object.assign(FAIXAS, {
+  'pentecostes-faixa'() {
+    const fogo = idDoEnfeite('pf-fogo');
+    const luz = idDoEnfeite('pf-luz');
+    const chama = (x, y, i) => `<g transform="translate(${x} ${y})"><g class="enf-chama" style="--d:${n1(0.38 + (i % 3) * 0.08)}s;--a:${n1(i * 0.13)}s"><path d="M0 0C-3.4 -3 -3 -8 0 -14C3 -8 3.4 -3 0 0Z" fill="url(#${fogo})"/><path d="M0 -1C-1.4 -2.6 -1.2 -5.4 0 -8C1.2 -5.4 1.4 -2.6 0 -1Z" fill="#fef9c3"/></g></g>`;
+    const xs = [170, 192, 214, 238, 262, 286, 308];
+    return `<defs><linearGradient id="${fogo}" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#dc2626"/><stop offset=".5" stop-color="#f97316"/><stop offset="1" stop-color="#fde047"/></linearGradient>
+        <radialGradient id="${luz}"><stop offset="0" stop-color="#fffbeb" stop-opacity=".95"/><stop offset=".5" stop-color="#fde68a" stop-opacity=".4"/><stop offset="1" stop-color="#fde68a" stop-opacity="0"/></radialGradient></defs>
+      ${pecaPremium('pentecostes-fundo', [0, 0, 320, 80], PECAS_DAS_FAIXAS.pentecostesFundo)}
+      <circle cx="262" cy="16" r="22" fill="url(#${luz})" class="enf-respira" style="--d:2.8s"/>
+      <g transform="translate(262 15)"><g class="enf-flutua">${pecaPremium('pomba-frente', [-24, -16, 48, 30], PECAS_DAS_FAIXAS.pombaDeFrente)}</g></g>
+      ${pecaPremium('apostolos', [150, 50, 170, 30], PECAS_DAS_FAIXAS.apostolos)}
+      ${xs.map((x, i) => chama(x, 52 - (i % 2) * 2, i)).join('')}
+      ${faisca(200, 18, 2, '#fef3c7', 0.4)}${faisca(300, 40, 1.8, '#fef3c7', 1.3)}${faisca(232, 34, 1.6, '#fef3c7', 2.1)}`;
+  },
+
+  'oliveiras-ao-luar'() {
+    const sorteio = sorteioFixo(14);
+    let estrelas = '';
+    for (let i = 0; i < 30; i += 1) estrelas += `<circle cx="${n1(110 + sorteio() * 210)}" cy="${n1(3 + sorteio() * 40)}" r="${n1(0.3 + sorteio() * 0.6)}" fill="#fff" class="enf-pisca" style="--a:${n1(sorteio() * 3)}s"/>`;
+    const feixe = idDoEnfeite('gt-feixe');
+    const nevoa = idDoEnfeite('gt-nevoa');
+    const oliveira = pecaPremium('oliveira', [-24, -20, 48, 46], PECAS_DAS_FAIXAS.oliveira);
+    return `<defs><linearGradient id="${feixe}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fef9c3" stop-opacity=".0"/><stop offset=".4" stop-color="#fef9c3" stop-opacity=".18"/><stop offset="1" stop-color="#fef9c3" stop-opacity=".05"/></linearGradient>
+        <linearGradient id="${nevoa}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#cbd5e1" stop-opacity="0"/><stop offset=".5" stop-color="#cbd5e1" stop-opacity=".18"/><stop offset="1" stop-color="#cbd5e1" stop-opacity="0"/></linearGradient></defs>
+      ${pecaPremium('getsemani-fundo', [0, 0, 320, 80], PECAS_DAS_FAIXAS.getsemaniFundo)}
+      ${estrelas}
+      <path d="M234 0H254L270 80H222Z" fill="url(#${feixe})" class="enf-respira" style="--d:4s"/>
+      <g transform="translate(178 56) scale(.95)">${oliveira}</g><g transform="translate(300 54) scale(1.1)">${oliveira}</g><g transform="translate(132 60) scale(.75)">${oliveira}</g>
+      <g transform="translate(244 66) scale(1.3)"><path d="M-14 12C-12 2 -4 -1 6 0C12 1 16 6 16 12Z" fill="#334155"/><path d="M-12 4C-6 0 4 -1 12 2" stroke="#94a3b8" stroke-width=".6" opacity=".6"/>
+        <g transform="translate(0 -.6) scale(.78)">${pecaPremium('jesus-rezando', [-17, -20, 34, 33], PECAS_DAS_FAIXAS.jesusRezando)}</g></g>
+      <g class="enf-nuvem" style="--d:20s"><rect x="100" y="66" width="220" height="10" fill="url(#${nevoa})"/></g>`;
+  },
+
+  basilica() {
+    const passaro = (x, y, d, a, e) => `<g transform="translate(${x} ${y}) scale(${e})"><g class="enf-voa" style="--d:${d}s;--a:-${a}s"><path d="M0 0Q2 -2 4 0Q6 -2 8 0" fill="none" stroke="#1d1428" stroke-width="1" stroke-linecap="round" class="enf-respira" style="--d:.5s"/></g></g>`;
+    return `${pecaPremium('basilica-fundo', [0, 0, 320, 80], PECAS_DAS_FAIXAS.basilicaFundo)}
+      ${nuvemFofa(140, 22, 0.7, pecaPremium('nuvem-tarde', [-30, -14, 62, 26], () => nuvemDoDia('nt', '#fde68a', '#f472b6', '#7e1d5b')), 32, 0)}
+      ${nuvemFofa(290, 14, 0.6, pecaPremium('nuvem-tarde', [-30, -14, 62, 26], () => nuvemDoDia('nt', '#fde68a', '#f472b6', '#7e1d5b')), 26, 9)}
+      <g transform="translate(252 80)">${pecaPremium('basilica', [-48, -70, 112, 72], PECAS_DAS_FAIXAS.basilica)}
+        <g class="enf-respira" style="--d:3s">${pecaPremium('janelas', [-40, -33, 78, 33], PECAS_DAS_FAIXAS.janelas)}</g></g>
+      ${passaro(330, 20, 16, 0, 1)}${passaro(350, 26, 18, 4, 0.8)}${passaro(370, 16, 15, 8, 0.9)}
+      ${faisca(210, 50, 2, '#fffbeb', 0.6)}`;
+  },
+});
+
+const SPRITES_PREMIUM = {};
+
+function spritePremium(chave, criar) {
+  if (!SPRITES_PREMIUM[chave]) SPRITES_PREMIUM[chave] = criar();
+  const s = SPRITES_PREMIUM[chave];
+  return s && s.tela !== undefined ? s.tela : s;
+}
+
+function focoDoEfeito(w, h, foco) {
+  const f = foco || { x: w / 2, y: Math.min(h * 0.3, 170), r: Math.min(w, h) * 0.12 };
+  return { cx: f.x, cy: f.y, R: Math.max(30, Math.min(f.r, 80)) };
+}
+
+function spriteDeBolha() {
+  const tela = document.createElement('canvas');
+  tela.width = 128;
+  tela.height = 128;
+  const c = tela.getContext('2d');
+  if (!c) return tela;
+  const g = c.createRadialGradient(64, 64, 40, 64, 64, 62);
+  g.addColorStop(0, 'rgba(255, 255, 255, 0.02)');
+  g.addColorStop(0.8, 'rgba(224, 242, 254, 0.12)');
+  g.addColorStop(1, 'rgba(255, 255, 255, 0.5)');
+  c.fillStyle = g;
+  c.beginPath();
+  c.arc(64, 64, 62, 0, Math.PI * 2);
+  c.fill();
+  const cores = ['rgba(244, 114, 182, 0.55)', 'rgba(250, 204, 21, 0.5)', 'rgba(74, 222, 128, 0.45)', 'rgba(96, 165, 250, 0.55)', 'rgba(192, 132, 252, 0.55)'];
+  c.lineWidth = 3.2;
+  cores.forEach((cor, i) => {
+    c.strokeStyle = cor;
+    c.beginPath();
+    c.arc(64, 64, 59, (i / cores.length) * Math.PI * 2 + 0.3, ((i + 1) / cores.length) * Math.PI * 2 + 0.3);
+    c.stroke();
+  });
+  c.fillStyle = 'rgba(255, 255, 255, 0.9)';
+  c.beginPath();
+  c.ellipse(44, 40, 14, 8, -0.7, 0, Math.PI * 2);
+  c.fill();
+  c.fillStyle = 'rgba(255, 255, 255, 0.55)';
+  c.beginPath();
+  c.arc(86, 90, 5, 0, Math.PI * 2);
+  c.fill();
+  return tela;
+}
+
+function efeitoBolhas(w, h, foco) {
+  const { cx, cy, R } = focoDoEfeito(w, h, foco);
+  const bolha = spritePremium('bolha', spriteDeBolha);
+  const bolhas = Array.from({ length: 26 }, (_, i) => {
+    const lado = i % 2 ? 1 : -1;
+    const longe = R * 1.25 + Math.random() * Math.max(10, (w / 2) - R * 1.25);
+    return { x: cx + lado * longe, y: Math.min(h, cy + R * (2.2 + Math.random() * 3.4)), v: 70 + Math.random() * 60, r: 7 + Math.random() * 17, fase: Math.random() * 6.28, nasce: Math.random() * 1.2, estoura: 1.5 + Math.random() * 1.6 };
+  });
+  return (ctx, s) => {
+    const base = ctx.globalAlpha;
+    bolhas.forEach((b) => {
+      const t = s - b.nasce;
+      if (t <= 0) return;
+      const x = b.x + Math.sin(t * 1.8 + b.fase) * 10;
+      const y = b.y - b.v * t;
+      if (t < b.estoura) {
+        const pulsa = 1 + Math.sin(t * 5 + b.fase) * 0.04;
+        ctx.globalAlpha = base * Math.min(1, t * 3);
+        ctx.drawImage(bolha, x - b.r * pulsa, y - b.r / pulsa, b.r * 2 * pulsa, b.r * 2 / pulsa);
+      } else {
+        const q = (t - b.estoura) / 0.35;
+        if (q > 1) return;
+        ctx.globalAlpha = base * (1 - q);
+        ctx.strokeStyle = 'rgba(224, 242, 254, 0.9)';
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.arc(x, y, b.r * (1 + q * 0.6), 0, Math.PI * 2);
+        ctx.stroke();
+        for (let k = 0; k < 6; k += 1) {
+          const a = (k / 6) * Math.PI * 2 + b.fase;
+          desenharFaisca(ctx, x + Math.cos(a) * b.r * (1 + q * 1.4), y + Math.sin(a) * b.r * (1 + q * 1.4), 2.2, '#e0f2fe', 1 - q);
+        }
+      }
+    });
+    ctx.globalAlpha = base;
+  };
+}
+efeitoBolhas.usaMargem = true;
+
+function efeitoAnjinhosVoando(w, h, foco) {
+  const { cx, cy, R } = focoDoEfeito(w, h, foco);
+  const corpo = spritePremium('querubim-corpo', () => bitmapDoSvg(PECAS_PREMIUM.querubimCorpo(), '-9 -14 18 28', 108, 168));
+  const asa = spritePremium('querubim-asa', () => bitmapDoSvg(PECAS_PREMIUM.querubimAsa(), '-14 -10 16 14', 96, 84));
+  const coracao = spritePremium('coracaozinho', () => bitmapDoSvg('<path d="M0 6C-7 1 -6 -5 -2.6 -5C-1.4 -5 -.4 -4.2 0 -3.2C.4 -4.2 1.4 -5 2.6 -5C6 -5 7 1 0 6Z" fill="#fb7185" stroke="#be123c" stroke-width=".5"/><circle cx="-2.6" cy="-2.6" r="1" fill="#fff" opacity=".8"/>', '-7 -6 14 13', 56, 52));
+  const caminhos = [
+    { de: [-R, cy + R * 3], meio: [cx - R * 2.4, cy - R * 0.2], ate: [cx + R * 0.6, -R * 1.5], atraso: 0 },
+    { de: [w + R, cy + R * 2.6], meio: [cx + R * 2.5, cy + R * 0.2], ate: [cx - R * 0.8, -R * 1.5], atraso: 0.35 },
+    { de: [cx - R * 0.3, h + R], meio: [cx + R * 1.8, cy + R * 1.6], ate: [w + R, cy - R * 1.4], atraso: 0.7 },
+  ];
+  const coracoes = Array.from({ length: 14 }, () => ({ quem: Math.floor(Math.random() * 3), nasce: 0.4 + Math.random() * 2.2, dx: (Math.random() - 0.5) * 30, r: 5 + Math.random() * 5 }));
+  const ponto = (c, q) => {
+    const u = 1 - q;
+    return [u * u * c.de[0] + 2 * u * q * c.meio[0] + q * q * c.ate[0], u * u * c.de[1] + 2 * u * q * c.meio[1] + q * q * c.ate[1]];
+  };
+  const tam = R * 0.95;
+  return (ctx, s) => {
+    const base = ctx.globalAlpha;
+    caminhos.forEach((c, i) => {
+      const q = Math.min(1, Math.max(0, (s - c.atraso) / 2.9));
+      if (q <= 0 || q >= 1) return;
+      const [x, y] = ponto(c, suave(q));
+      for (let k = 1; k <= 6; k += 1) {
+        const [tx, ty] = ponto(c, suave(Math.max(0, q - k * 0.025)));
+        desenharFaisca(ctx, tx, ty + tam * 0.2, 3.4 - k * 0.4, '#fde68a', (1 - k / 7) * 0.8);
+      }
+      const bate = Math.sin(s * 22 + i) * 0.45;
+      if (!imagemPronta(corpo) || !imagemPronta(asa)) return;
+      ctx.save();
+      ctx.translate(x, y + Math.sin(s * 3 + i) * 4);
+      [-1, 1].forEach((lado) => {
+        ctx.save();
+        ctx.translate(lado * tam * 0.2, tam * 0.1);
+        ctx.scale(lado, 1);
+        ctx.rotate(-0.15 - bate);
+        ctx.drawImage(asa, -tam * 0.78, -tam * 0.56, tam * 0.89, tam * 0.78);
+        ctx.restore();
+      });
+      ctx.drawImage(corpo, -tam * 0.5, -tam * 0.78, tam, tam * 1.56);
+      ctx.restore();
+    });
+    coracoes.forEach((c) => {
+      const t = s - c.nasce;
+      const cam = caminhos[c.quem];
+      const q = Math.min(1, Math.max(0, (c.nasce - cam.atraso) / 2.9));
+      if (t <= 0 || t > 1.4 || q <= 0 || q >= 1 || !imagemPronta(coracao)) return;
+      const [x, y] = ponto(cam, suave(q));
+      ctx.globalAlpha = base * Math.max(0, 1 - t / 1.4);
+      ctx.drawImage(coracao, x + c.dx * t - c.r, y - 30 * t - c.r, c.r * 2, c.r * 1.86);
+    });
+    ctx.globalAlpha = base;
+  };
+}
+efeitoAnjinhosVoando.usaMargem = true;
+
+function efeitoEstrelinhas(w, h, foco) {
+  const { cx, cy, R } = focoDoEfeito(w, h, foco);
+  const sprites = CORES_DE_ESTRELA.map((cor, i) => spritePremium(`estrela-doce-${i}`, () => bitmapDoSvg(PECAS_PREMIUM.estrelaDoce(cor)(), '-9 -9 18 19', 72, 76)));
+  const estrelas = Array.from({ length: 40 }, (_, i) => {
+    const a = (i / 40) * Math.PI * 2 + Math.random() * 0.3;
+    return { a, v: R * (2.6 + Math.random() * 3.2), r: R * (0.14 + Math.random() * 0.16), giro: Math.random() * 6.28, vg: (Math.random() - 0.5) * 8, tipo: i % 6, atraso: Math.random() * 0.25 };
+  });
+  return (ctx, s) => {
+    const base = ctx.globalAlpha;
+    const anel = Math.min(1, s / 0.6);
+    if (anel < 1) {
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.strokeStyle = `rgba(253, 230, 138, ${0.7 * (1 - anel)})`;
+      ctx.lineWidth = R * 0.18 * (1 - anel) + 1;
+      ctx.beginPath();
+      ctx.arc(cx, cy, R * (1.05 + anel * 1.8), 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
+    estrelas.forEach((e) => {
+      const t = s - e.atraso;
+      if (t <= 0) return;
+      const corre = (1 - Math.exp(-t * 2.6)) / 2.6;
+      const x = cx + Math.cos(e.a) * (R * 1.1 + e.v * corre);
+      const y = cy + Math.sin(e.a) * (R * 1.1 + e.v * corre) + 26 * Math.max(0, t - 0.6) * Math.max(0, t - 0.6);
+      const img = sprites[e.tipo];
+      const alfa = Math.min(1, t * 6) * Math.max(0, 1 - Math.max(0, t - 2.2) / 1.2);
+      if (alfa <= 0) return;
+      desenharFaisca(ctx, x - Math.cos(e.a) * e.r * 1.6, y - Math.sin(e.a) * e.r * 1.6, e.r * 0.5, '#fffbeb', alfa * Math.max(0, 1 - t));
+      if (!imagemPronta(img)) return;
+      ctx.save();
+      ctx.globalAlpha = base * alfa;
+      ctx.translate(x, y);
+      ctx.rotate(e.giro + e.vg * corre);
+      ctx.drawImage(img, -e.r, -e.r, e.r * 2, e.r * 2.1);
+      ctx.restore();
+    });
+    ctx.globalAlpha = base;
+  };
+}
+efeitoEstrelinhas.usaMargem = true;
+
+function spriteDeBalao(cor, escura) {
+  const tela = document.createElement('canvas');
+  tela.width = 96;
+  tela.height = 128;
+  const c = tela.getContext('2d');
+  if (!c) return tela;
+  const g = c.createRadialGradient(36, 36, 4, 48, 52, 56);
+  g.addColorStop(0, '#ffffff');
+  g.addColorStop(0.18, cor);
+  g.addColorStop(0.85, cor);
+  g.addColorStop(1, escura);
+  c.fillStyle = g;
+  c.beginPath();
+  c.moveTo(48, 112);
+  c.bezierCurveTo(14, 96, 6, 60, 10, 40);
+  c.bezierCurveTo(14, 14, 34, 4, 48, 4);
+  c.bezierCurveTo(62, 4, 82, 14, 86, 40);
+  c.bezierCurveTo(90, 60, 82, 96, 48, 112);
+  c.fill();
+  c.fillStyle = escura;
+  c.beginPath();
+  c.moveTo(42, 120);
+  c.lineTo(48, 110);
+  c.lineTo(54, 120);
+  c.closePath();
+  c.fill();
+  c.fillStyle = 'rgba(255, 255, 255, 0.75)';
+  c.beginPath();
+  c.ellipse(32, 30, 7, 13, 0.5, 0, Math.PI * 2);
+  c.fill();
+  return tela;
+}
+
+function efeitoBaloes(w, h, foco) {
+  const { cx, cy, R } = focoDoEfeito(w, h, foco);
+  const cores = [['#ef4444', '#7f1d1d'], ['#f59e0b', '#92400e'], ['#facc15', '#a16207'], ['#22c55e', '#14532d'], ['#3b82f6', '#1e3a8a'], ['#a855f7', '#581c87'], ['#ec4899', '#831843']];
+  const sprites = cores.map(([c1, c2], i) => spritePremium(`balao-${i}`, () => spriteDeBalao(c1, c2)));
+  const baloes = Array.from({ length: 14 }, (_, i) => {
+    const lado = i % 2 ? 1 : -1;
+    const longe = R * 1.3 + Math.random() * Math.max(10, w / 2 - R * 1.3);
+    return { x: cx + lado * longe, y: Math.min(h + R, cy + R * (3.2 + Math.random() * 3.4)), v: 110 + Math.random() * 70, r: R * (0.38 + Math.random() * 0.22), fase: Math.random() * 6.28, cor: i % sprites.length, atraso: Math.random() * 0.9 };
+  });
+  return (ctx, s) => {
+    const base = ctx.globalAlpha;
+    baloes.forEach((b) => {
+      const t = s - b.atraso;
+      if (t <= 0) return;
+      const balanca = Math.sin(t * 1.6 + b.fase);
+      const x = b.x + balanca * 12;
+      const y = b.y - b.v * t;
+      if (y < -b.r * 4) return;
+      const largura = b.r * 1.5;
+      const altura = largura * (128 / 96);
+      ctx.globalAlpha = base;
+      ctx.strokeStyle = 'rgba(226, 232, 240, 0.75)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(x, y + altura * 0.44);
+      ctx.bezierCurveTo(x - balanca * 10, y + altura * 0.8, x + balanca * 8, y + altura * 1.1, x - balanca * 4, y + altura * 1.45);
+      ctx.stroke();
+      const img = sprites[b.cor];
+      if (!imagemPronta(img)) return;
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(balanca * 0.08);
+      ctx.drawImage(img, -largura / 2, -altura / 2, largura, altura);
+      ctx.restore();
+    });
+    ctx.globalAlpha = base;
+  };
+}
+efeitoBaloes.usaMargem = true;
+
+function efeitoRaiosDaMisericordia(w, h, foco) {
+  const { cx, cy, R } = focoDoEfeito(w, h, foco);
+  const motas = Array.from({ length: 30 }, () => ({ lado: Math.random() < 0.5 ? -1 : 1, d: Math.random(), q: 0.15 + Math.random() * 0.85, fase: Math.random() * 6.28, nasce: 0.6 + Math.random() * 1.6 }));
+  const origem = [cx, cy + R * 0.35];
+  const luz = spritePremium('luz-misericordia', () => spriteDeBrasa('255, 251, 235'));
+  return (ctx, s) => {
+    const base = ctx.globalAlpha;
+    const abre = suave(s / 1.1);
+    const pulsa = 0.85 + 0.15 * Math.sin(s * 3.2);
+    const alcance = (h - origem[1]) * 1.05 * abre;
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    [[-1, [226, 240, 255]], [1, [239, 68, 68]]].forEach(([lado, [r, g, b]]) => {
+      for (let i = 0; i < 4; i += 1) {
+        const meio = Math.PI / 2 + lado * (0.17 + i * 0.08);
+        const largura = 0.07 + i * 0.012;
+        const gr = ctx.createLinearGradient(origem[0], origem[1], origem[0] + Math.cos(meio) * alcance, origem[1] + Math.sin(meio) * alcance);
+        gr.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0)`);
+        gr.addColorStop(0.12, `rgba(${r}, ${g}, ${b}, ${0.5 * pulsa * (1 - i * 0.15)})`);
+        gr.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+        ctx.fillStyle = gr;
+        ctx.beginPath();
+        ctx.moveTo(origem[0] + lado * R * 0.05, origem[1]);
+        ctx.lineTo(origem[0] + Math.cos(meio - largura) * alcance, origem[1] + Math.sin(meio - largura) * alcance);
+        ctx.lineTo(origem[0] + Math.cos(meio + largura) * alcance, origem[1] + Math.sin(meio + largura) * alcance);
+        ctx.closePath();
+        ctx.fill();
+      }
+    });
+    ctx.globalAlpha = base * 0.55 * abre * pulsa;
+    ctx.drawImage(luz, origem[0] - R * 0.9, origem[1] - R * 0.5, R * 1.8, R * 1.2);
+    ctx.restore();
+    motas.forEach((m) => {
+      const t = s - m.nasce;
+      if (t <= 0) return;
+      const a = Math.PI / 2 + m.lado * (0.17 + m.d * 0.3);
+      const dist = alcance * m.q;
+      const x = origem[0] + Math.cos(a) * dist + Math.sin(t * 2 + m.fase) * 6;
+      const y = origem[1] + Math.sin(a) * dist - t * 12;
+      desenharFaisca(ctx, x, y, 2.6, m.lado < 0 ? '#f0f9ff' : '#fecaca', Math.max(0, Math.sin(t * 3 + m.fase)) * Math.max(0, 1 - t / 2.4));
+    });
+    ctx.globalAlpha = base;
+  };
+}
+efeitoRaiosDaMisericordia.usaMargem = true;
+
+function efeitoCometa(w, h, foco) {
+  const { cx, cy, R } = focoDoEfeito(w, h, foco);
+  const luz = spritePremium('luz-cometa', () => spriteDeBrasa('224, 242, 254'));
+  const ouro = spritePremium('luz-dourada', () => spriteDeBrasa('253, 230, 138'));
+  const de = [w + R, cy - R * 2.4];
+  const meio = [cx, cy - R * 2.2];
+  const ate = [-R * 1.5, cy + R * 0.4];
+  const ponto = (q) => {
+    const u = 1 - q;
+    return [u * u * de[0] + 2 * u * q * meio[0] + q * q * ate[0], u * u * de[1] + 2 * u * q * meio[1] + q * q * ate[1]];
+  };
+  const poeira = Array.from({ length: 70 }, () => ({ q: Math.random(), dx: (Math.random() - 0.5) * 18, dy: (Math.random() - 0.5) * 18, vy: 10 + Math.random() * 30, r: 1 + Math.random() * 2.4, ouro: Math.random() < 0.4 }));
+  return (ctx, s) => {
+    const base = ctx.globalAlpha;
+    const q = Math.min(1.05, suave(s / 2.4));
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    const passos = 40;
+    for (let k = passos; k >= 1; k -= 1) {
+      const qa = q - (k / passos) * 0.32;
+      const qb = q - ((k - 1) / passos) * 0.32;
+      if (qb <= 0) continue;
+      const [x0, y0] = ponto(Math.max(0, qa));
+      const [x1, y1] = ponto(Math.min(1, Math.max(0, qb)));
+      const f = 1 - k / passos;
+      ctx.strokeStyle = `rgba(186, 230, 253, ${0.55 * f})`;
+      ctx.lineWidth = R * 0.32 * f + 0.5;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(x0, y0);
+      ctx.lineTo(x1, y1);
+      ctx.stroke();
+      ctx.strokeStyle = `rgba(255, 255, 255, ${0.8 * f})`;
+      ctx.lineWidth = R * 0.08 * f + 0.4;
+      ctx.beginPath();
+      ctx.moveTo(x0, y0);
+      ctx.lineTo(x1, y1);
+      ctx.stroke();
+    }
+    if (q < 1) {
+      const [x, y] = ponto(q);
+      ctx.globalAlpha = base;
+      ctx.drawImage(luz, x - R * 0.9, y - R * 0.9, R * 1.8, R * 1.8);
+      ctx.drawImage(ouro, x - R * 0.4, y - R * 0.4, R * 0.8, R * 0.8);
+      desenharFaisca(ctx, x, y, R * 0.35, '#ffffff', 1);
+    }
+    poeira.forEach((p) => {
+      if (p.q > q) return;
+      const desde = (q - p.q) * 2.4;
+      const [x, y] = ponto(p.q);
+      const alfa = Math.max(0, 1 - desde / 1.6);
+      if (alfa <= 0) return;
+      ctx.globalAlpha = base * alfa;
+      ctx.drawImage(p.ouro ? ouro : luz, x + p.dx - p.r * 2, y + p.dy + p.vy * desde - p.r * 2, p.r * 4, p.r * 4);
+    });
+    ctx.restore();
+    ctx.globalAlpha = base;
+  };
+}
+efeitoCometa.usaMargem = true;
+
+const NOTAS_DE_OURO = {
+  colcheia: '<path d="M2.6 -12V2.4" stroke="url(#no)" stroke-width="1.3"/><path d="M2.6 -12C5 -10 7.4 -8.6 6.4 -5" fill="none" stroke="url(#no)" stroke-width="1.3" stroke-linecap="round"/><ellipse cx="0" cy="2.6" rx="3" ry="2.2" transform="rotate(-22)" fill="url(#no)"/>',
+  dupla: '<path d="M-1.4 -10V2.4M8.6 -12V.4" stroke="url(#no)" stroke-width="1.3"/><path d="M-1.4 -10L8.6 -12V-9L-1.4 -7Z" fill="url(#no)"/><ellipse cx="-4" cy="2.6" rx="3" ry="2.2" transform="rotate(-22 -4 2.6)" fill="url(#no)"/><ellipse cx="6" cy=".6" rx="3" ry="2.2" transform="rotate(-22 6 .6)" fill="url(#no)"/>',
+  seminima: '<path d="M2.6 -12V2.4" stroke="url(#no)" stroke-width="1.3"/><ellipse cx="0" cy="2.6" rx="3" ry="2.2" transform="rotate(-22)" fill="url(#no)"/>',
+};
+
+function efeitoAleluia(w, h, foco) {
+  const { cx, cy, R } = focoDoEfeito(w, h, foco);
+  const defs = '<defs><linearGradient id="no" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fffbe6"/><stop offset=".45" stop-color="#facc15"/><stop offset="1" stop-color="#a16207"/></linearGradient></defs>';
+  const sprites = Object.keys(NOTAS_DE_OURO).map((k) => spritePremium(`nota-${k}`, () => bitmapDoSvg(defs + NOTAS_DE_OURO[k], '-8 -14 18 20', 72, 80)));
+  const ouro = spritePremium('luz-dourada', () => spriteDeBrasa('253, 230, 138'));
+  const notas = Array.from({ length: 22 }, (_, i) => {
+    const lado = i % 2 ? 1 : -1;
+    const longe = R * 1.2 + Math.random() * Math.max(10, w / 2 - R * 1.2);
+    return { x: cx + lado * longe, y: cy + R * (1.4 + Math.random() * 3), v: 50 + Math.random() * 40, t: R * (0.36 + Math.random() * 0.2), fase: Math.random() * 6.28, tipo: i % sprites.length, nasce: Math.random() * 1.6 };
+  });
+  return (ctx, s) => {
+    const base = ctx.globalAlpha;
+    const onda = suave(s / 0.8) * (1 - suave((s - 2.6) / 1));
+    if (onda > 0) {
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      for (let linha = 0; linha < 5; linha += 1) {
+        ctx.strokeStyle = `rgba(253, 230, 138, ${0.22 * onda})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        for (let x = 0; x <= w; x += 8) {
+          const y = cy + R * 1.9 + linha * 5 + Math.sin(x * 0.02 + s * 2.4) * R * 0.25;
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+    notas.forEach((n) => {
+      const t = s - n.nasce;
+      if (t <= 0) return;
+      const x = n.x + Math.sin(t * 2 + n.fase) * 12;
+      const y = n.y - n.v * t;
+      const alfa = Math.min(1, t * 3) * Math.max(0, 1 - t / 2.6);
+      if (alfa <= 0) return;
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.globalAlpha = base * alfa * 0.6;
+      ctx.drawImage(ouro, x - n.t * 1.1, y - n.t * 1.1, n.t * 2.2, n.t * 2.2);
+      ctx.restore();
+      const img = sprites[n.tipo];
+      if (!imagemPronta(img)) return;
+      ctx.save();
+      ctx.globalAlpha = base * alfa;
+      ctx.translate(x, y);
+      ctx.rotate(Math.sin(t * 2.4 + n.fase) * 0.25);
+      ctx.drawImage(img, -n.t * 0.8, -n.t * 1.4, n.t * 1.8, n.t * 2);
+      ctx.restore();
+    });
+    ctx.globalAlpha = base;
+  };
+}
+efeitoAleluia.usaMargem = true;
+
+Object.assign(EFEITOS_DO_PERFIL, {
+  bolhas: efeitoBolhas,
+  'anjinhos-voando': efeitoAnjinhosVoando,
+  estrelinhas: efeitoEstrelinhas,
+  baloes: efeitoBaloes,
+  'raios-da-misericordia': efeitoRaiosDaMisericordia,
+  cometa: efeitoCometa,
+  aleluia: efeitoAleluia,
+});
+
+Object.assign(MINIS_DE_EFEITO, {
   bolhas(g) {
-    return `${fundoDoMini(g, '#0ea5e9', '#7dd3fc')}${[[16, 26, 7], [34, 14, 9], [50, 28, 6], [26, 8, 4]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#ffffff" fill-opacity=".25" stroke="#f0f9ff" stroke-width=".9"/><circle cx="${x - r * 0.35}" cy="${y - r * 0.35}" r="${n1(r * 0.25)}" fill="#fff"/>`).join('')}`;
+    const bolha = (x, y, r) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#e0f2fe" fill-opacity=".12" stroke="url(#${g}i)" stroke-width="${n1(r * 0.16)}"/><ellipse cx="${n1(x - r * 0.35)}" cy="${n1(y - r * 0.4)}" rx="${n1(r * 0.28)}" ry="${n1(r * 0.16)}" transform="rotate(-35 ${n1(x - r * 0.35)} ${n1(y - r * 0.4)})" fill="#fff" opacity=".9"/>`;
+    return `${fundoDoMini(g, '#0c4a6e', '#38bdf8')}<defs><linearGradient id="${g}i" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f9a8d4"/><stop offset=".35" stop-color="#fde047"/><stop offset=".65" stop-color="#86efac"/><stop offset="1" stop-color="#93c5fd"/></linearGradient></defs>
+      ${bolha(16, 26, 8)}${bolha(36, 14, 10)}${bolha(52, 29, 6)}${bolha(26, 8, 4)}`;
   },
   'anjinhos-voando'(g) {
-    return `${fundoDoMini(g, '#7dd3fc', '#e0f2fe')}<g transform="scale(.32)">${anjinho(60, 60, 2.4, 0)}${anjinho(140, 70, 2, 0.5)}</g>`;
+    const corpo = pecaPremium('querubim-corpo', [-9, -14, 18, 28], PECAS_PREMIUM.querubimCorpo);
+    const asa = pecaPremium('querubim-asa', [-14, -10, 16, 14], PECAS_PREMIUM.querubimAsa);
+    const anjo = (x, y, e) => `<g transform="translate(${x} ${y}) scale(${e})"><g transform="translate(-4 3)">${asa}</g><g transform="translate(4 3) scale(-1 1)">${asa}</g>${corpo}</g>`;
+    return `${fundoDoMini(g, '#7dd3fc', '#e0f2fe')}${anjo(20, 22, 0.95)}${anjo(46, 20, 0.8)}${faisca(33, 32, 2, '#fde68a', 0)}${faisca(58, 8, 1.6, '#fde68a', 0)}`;
   },
   estrelinhas(g) {
-    const cores = ['#f472b6', '#facc15', '#60a5fa', '#4ade80', '#c084fc'];
-    return `${fundoDoMini(g, '#1e1b4b', '#4c1d95')}${[[14, 12], [30, 24], [48, 10], [52, 30], [20, 32]].map(([x, y], i) => `<path d="${caminhoDeEstrela(x, y, 5, 2.2, 5)}" fill="${cores[i]}"/>`).join('')}`;
+    const estrela = (x, y, e, i) => `<g transform="translate(${x} ${y}) scale(${e})">${pecaPremium(`estrela-doce-${i}`, [-9, -9, 18, 19], PECAS_PREMIUM.estrelaDoce(CORES_DE_ESTRELA[i]))}</g>`;
+    return `${fundoDoMini(g, '#1e1b4b', '#4c1d95')}<circle cx="32" cy="22" r="9" fill="none" stroke="#fde68a" stroke-width="1" opacity=".6"/>${estrela(12, 12, 0.6, 0)}${estrela(52, 10, 0.55, 1)}${estrela(14, 32, 0.5, 2)}${estrela(50, 32, 0.6, 3)}${estrela(32, 6, 0.45, 4)}`;
   },
   baloes(g) {
-    const cores = ['#ef4444', '#facc15', '#3b82f6', '#22c55e'];
-    return `${fundoDoMini(g, '#38bdf8', '#e0f2fe')}${[[16, 16], [30, 12], [44, 18], [54, 10]].map(([x, y], i) => `<path d="M${x} ${y + 7}Q${x + 2} ${y + 12} ${x} ${y + 18}" stroke="#f1f5f9" stroke-width=".6" fill="none"/><ellipse cx="${x}" cy="${y}" rx="5" ry="6.2" fill="${cores[i]}"/>`).join('')}`;
+    const cores = [['#ef4444', '#7f1d1d'], ['#facc15', '#a16207'], ['#3b82f6', '#1e3a8a'], ['#22c55e', '#14532d']];
+    const defs = cores.map(([c, e], i) => `<radialGradient id="${g}b${i}" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#fff"/><stop offset=".25" stop-color="${c}"/><stop offset="1" stop-color="${e}"/></radialGradient>`).join('');
+    const balao = (x, y, i) => `<path d="M${x} ${y + 7}Q${x + 2} ${y + 12} ${x - 1} ${y + 18}" stroke="#f1f5f9" stroke-width=".5" fill="none"/><ellipse cx="${x}" cy="${y}" rx="5" ry="6.4" fill="url(#${g}b${i})"/><path d="M${x - 1} ${y + 7.2}L${x} ${y + 6}L${x + 1} ${y + 7.2}Z" fill="${cores[i][1]}"/>`;
+    return `${fundoDoMini(g, '#0ea5e9', '#e0f2fe')}<defs>${defs}</defs>${balao(15, 15, 0)}${balao(29, 11, 1)}${balao(43, 17, 2)}${balao(54, 10, 3)}`;
   },
   'raios-da-misericordia'(g) {
-    return `${fundoDoMini(g, '#1e293b', '#0f172a')}<path d="M32 6L18 40H28Z" fill="#ef4444" opacity=".8"/><path d="M32 6L46 40H36Z" fill="#e0f2fe" opacity=".85"/><circle cx="32" cy="7" r="4" fill="#fffbeb"/>`;
+    return `${fundoDoMini(g, '#111827', '#1e293b')}<defs><linearGradient id="${g}p" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e0f2fe" stop-opacity=".95"/><stop offset="1" stop-color="#e0f2fe" stop-opacity="0"/></linearGradient>
+      <linearGradient id="${g}v" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ef4444" stop-opacity=".95"/><stop offset="1" stop-color="#ef4444" stop-opacity="0"/></linearGradient></defs>
+      <path d="M31 12L10 40H24Z" fill="url(#${g}v)"/><path d="M33 12L54 40H40Z" fill="url(#${g}p)"/><circle cx="32" cy="11" r="5" fill="#64748b" stroke="#fde68a" stroke-width="1"/>`;
   },
   cometa(g) {
-    return `${fundoDoMini(g, '#020617', '#1e1b4b')}<path d="M4 6L46 22" stroke="#bfdbfe" stroke-width="3" stroke-linecap="round" opacity=".6"/><circle cx="47" cy="22" r="4" fill="#ffffff"/>${faisca(20, 30, 1.6, '#e0f2fe', 0)}${faisca(56, 8, 1.4, '#e0f2fe', 0.6)}`;
+    return `${fundoDoMini(g, '#020617', '#1e1b4b')}<defs><linearGradient id="${g}c" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#bae6fd" stop-opacity="0"/><stop offset="1" stop-color="#ffffff"/></linearGradient><radialGradient id="${g}l"><stop offset="0" stop-color="#fff"/><stop offset=".4" stop-color="#e0f2fe" stop-opacity=".8"/><stop offset="1" stop-color="#e0f2fe" stop-opacity="0"/></radialGradient></defs>
+      <path d="M4 5Q24 7 46 22" fill="none" stroke="#93c5fd" stroke-width="6" stroke-linecap="round" opacity=".25"/><path d="M14 8Q30 10 46 22" fill="none" stroke="#e0f2fe" stroke-width="3" stroke-linecap="round" opacity=".7"/><circle cx="47" cy="23" r="8" fill="url(#${g}l)"/><circle cx="47" cy="23" r="2.4" fill="#fff"/>${faisca(20, 30, 1.6, '#fde68a', 0)}${faisca(56, 8, 1.4, '#e0f2fe', 0)}`;
   },
   aleluia(g) {
-    const nota = (x, y) => `<ellipse cx="${x}" cy="${y}" rx="3" ry="2.2" transform="rotate(-20 ${x} ${y})" fill="#facc15"/><path d="M${x + 2.8} ${y}V${y - 12}" stroke="#facc15" stroke-width="1"/>`;
-    return `${fundoDoMini(g, '#422006', '#92400e')}${nota(16, 30)}${nota(32, 20)}${nota(48, 32)}<path d="M34.8 8L50.8 12V20" stroke="#facc15" stroke-width="1" fill="none"/>`;
+    const defs = `<linearGradient id="no" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fffbe6"/><stop offset=".45" stop-color="#facc15"/><stop offset="1" stop-color="#a16207"/></linearGradient>`;
+    const nota = (x, y, tipo, e) => `<g transform="translate(${x} ${y}) scale(${e})">${pecaPremium(`nota-mini-${tipo}`, [-8, -14, 18, 20], () => `<defs>${defs}</defs>${NOTAS_DE_OURO[tipo]}`)}</g>`;
+    return `${fundoDoMini(g, '#422006', '#92400e')}${[0, 1, 2, 3, 4].map((i) => `<path d="M0 ${26 + i * 2.4}Q16 ${22 + i * 2.4} 32 ${26 + i * 2.4}T64 ${26 + i * 2.4}" fill="none" stroke="#fde68a" stroke-width=".35" opacity=".5"/>`).join('')}
+      ${nota(16, 24, 'colcheia', 0.95)}${nota(34, 18, 'dupla', 0.9)}${nota(52, 26, 'seminima', 0.95)}`;
   },
 });
