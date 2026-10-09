@@ -5252,3 +5252,11 @@ body.intro-ativa .navbar { backdrop-filter: none; }
 @keyframes enfVoaCurto { from { transform: translate(0, 0); } to { transform: translate(-26px, -4px); } }
 @keyframes enfBateAsa { from { transform: rotate(14deg); } to { transform: rotate(-38deg); } }
 @keyframes enfRaiosAgua { from { transform: skewX(-5deg); opacity: 0.55; } to { transform: skewX(5deg); opacity: 1; } }
+.enf-balanca-local { transform-box: view-box; transform-origin: 0 0; animation: enfBalancaLocal 3.6s ease-in-out var(--a, 0s) infinite alternate; }
+.enf-gota { animation: enfGota 1.8s ease-in var(--a, 0s) infinite; opacity: 0; }
+.enf-linhas-constelacao { animation: enfLinhasConstelacao 6s linear infinite; }
+@keyframes enfBalancaLocal { from { transform: rotate(-4deg); } to { transform: rotate(4deg); } }
+@keyframes enfGota { 0% { opacity: 0; transform: translateY(0); } 15% { opacity: 1; } 80% { opacity: 1; } 100% { opacity: 0; transform: translateY(14px); } }
+@keyframes enfLinhasConstelacao { to { stroke-dashoffset: -70; } }
+.enf-aurora { transform-box: view-box; transform-origin: 50% 0; animation: enfAurora var(--d, 9s) ease-in-out var(--a, 0s) infinite alternate; }
+@keyframes enfAurora { 0% { transform: skewX(-8deg) translateX(-6px); opacity: 0.65; } 50% { opacity: 1; } 100% { transform: skewX(8deg) translateX(8px); opacity: 0.75; } }
