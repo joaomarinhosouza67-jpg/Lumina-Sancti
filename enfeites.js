@@ -201,6 +201,8 @@ function tocarEfeitoDoPerfil(alvo, id) {
     const dela = foto.getBoundingClientRect();
     if (dela.width > 0) foco = { x: dela.left - caixa.left + dela.width / 2 + m.e, y: dela.top - caixa.top + alvo.scrollTop + dela.height / 2 + m.t, r: dela.width / 2 };
   }
+  if (foco) foco.caixa = { x: m.e, y: m.t, w: Math.round(alvo.clientWidth), h: Math.round(Math.min(alvo.scrollHeight || alvo.clientHeight, 720)) };
+  const duracao = criar.duracao || DURACAO_DO_EFEITO;
   const desenhar = criar(w, h, foco);
   const inicio = performance.now();
   const quadro = (agora) => {
@@ -208,7 +210,7 @@ function tocarEfeitoDoPerfil(alvo, id) {
     const t = agora - inicio;
     ctx.clearRect(0, 0, w, h);
     ctx.save();
-    ctx.globalAlpha = t > DURACAO_DO_EFEITO - 450 ? Math.max(0, (DURACAO_DO_EFEITO - t) / 450) : 1;
+    ctx.globalAlpha = t > duracao - 450 ? Math.max(0, (duracao - t) / 450) : 1;
     try {
       desenhar(ctx, t / 1000);
     } catch (e) {
@@ -216,7 +218,7 @@ function tocarEfeitoDoPerfil(alvo, id) {
       return;
     }
     ctx.restore();
-    if (t < DURACAO_DO_EFEITO) requestAnimationFrame(quadro);
+    if (t < duracao) requestAnimationFrame(quadro);
     else tela.remove();
   };
   requestAnimationFrame(quadro);

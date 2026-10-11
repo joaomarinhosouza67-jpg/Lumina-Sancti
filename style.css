@@ -5260,3 +5260,15 @@ body.intro-ativa .navbar { backdrop-filter: none; }
 @keyframes enfLinhasConstelacao { to { stroke-dashoffset: -70; } }
 .enf-aurora { transform-box: view-box; transform-origin: 50% 0; animation: enfAurora var(--d, 9s) ease-in-out var(--a, 0s) infinite alternate; }
 @keyframes enfAurora { 0% { transform: skewX(-8deg) translateX(-6px); opacity: 0.65; } 50% { opacity: 1; } 100% { transform: skewX(8deg) translateX(8px); opacity: 0.75; } }
+.enf-graca-asa { transform-box: view-box; transform-origin: 0 0; animation: enfGracaAsa 4.2s ease-in-out infinite; }
+.enf-graca-luz { animation: enfGracaLuz 4.2s ease-in-out infinite; }
+.enf-asa-celeste { transform-box: view-box; transform-origin: 52px 128px; animation: enfAsaCeleste 4.6s ease-in-out infinite; }
+@keyframes enfGracaAsa { 0% { opacity: 0; transform: rotate(40deg) scale(0.5); } 14% { opacity: 1; transform: rotate(0deg) scale(1); } 32% { opacity: 1; transform: rotate(-3deg) scale(1.03); } 48% { opacity: 0; transform: rotate(32deg) scale(0.8); } 100% { opacity: 0; transform: rotate(40deg) scale(0.5); } }
+@keyframes enfGracaLuz { 0% { opacity: 0.2; } 12% { opacity: 1; } 34% { opacity: 0.9; } 56% { opacity: 0.25; } 100% { opacity: 0.2; } }
+@keyframes enfAsaCeleste { 0%, 100% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(-3deg) scale(1.02); } }
+.enf-fiapo { animation: enfFiapo 3.2s ease-in-out infinite; }
+.enf-brilho-desce { animation: enfBrilhoDesce 3.6s ease-in-out infinite; }
+@keyframes enfFiapo { 0%, 100% { opacity: 0.2; transform: translate(0, -2px); } 50% { opacity: 1; transform: translate(-2px, 2px); } }
+@keyframes enfBrilhoDesce { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: 0.6; } 70% { opacity: 0.4; } 100% { transform: translateY(130px); opacity: 0; } }
+.enf-asa-bate { transform-box: view-box; transform-origin: 27px 28px; animation: enfAsaBate 2.8s ease-in-out infinite; }
+@keyframes enfAsaBate { 0%, 100% { transform: rotate(4deg); } 45% { transform: rotate(-11deg); } 60% { transform: rotate(-11deg); } }
