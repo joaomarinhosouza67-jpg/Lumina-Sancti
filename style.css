@@ -5274,3 +5274,18 @@ body.intro-ativa .navbar { backdrop-filter: none; }
 @keyframes enfAsaBate { 0%, 100% { transform: rotate(0deg) scale(1); } 40% { transform: rotate(7deg) scale(1.02); } 55% { transform: rotate(7deg) scale(1.02); } }
 .enf-asa-reflexo { animation: enfAsaReflexo 4.4s ease-in-out infinite; }
 @keyframes enfAsaReflexo { 0% { transform: translate(0, -10px) skewX(18deg); opacity: 0; } 15% { opacity: 1; } 55% { transform: translate(70px, 20px) skewX(18deg); opacity: 0.9; } 70%, 100% { transform: translate(70px, 20px) skewX(18deg); opacity: 0; } }
+.enf-ceu-zoom { transform-box: view-box; transform-origin: 246px 28px; animation: enfCeuZoom 16s ease-in-out infinite alternate; }
+@keyframes enfCeuZoom { from { transform: scale(1); } to { transform: scale(1.08); } }
+.enf-ceu-tela { mix-blend-mode: screen; }
+.enf-ceu-raios { transform-box: view-box; transform-origin: 246px 28px; animation: enfCeuBalanca 9s ease-in-out infinite alternate; }
+@keyframes enfCeuBalanca { from { transform: rotate(-3deg); } to { transform: rotate(3deg); } }
+.enf-ceu-raio { animation: enfCeuRaio 4.2s ease-in-out var(--a, 0s) infinite; }
+@keyframes enfCeuRaio { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.85; } }
+.enf-ceu-luz { transform-box: view-box; transform-origin: 246px 28px; animation: enfCeuLuz 4s ease-in-out infinite; }
+@keyframes enfCeuLuz { 0%, 100% { transform: scale(0.9); opacity: 0.6; } 50% { transform: scale(1.15); opacity: 0.95; } }
+.enf-ceu-nucleo { transform-box: view-box; transform-origin: 246px 28px; animation: enfCeuPulso 7s ease-in-out 1.5s infinite; }
+@keyframes enfCeuPulso { 0%, 62%, 100% { transform: scale(1); opacity: 0.75; } 74% { transform: scale(1.9); opacity: 1; } }
+.enf-ceu-veu { opacity: 0; transform-box: view-box; transform-origin: 246px 28px; animation: enfCeuVeu 2.8s cubic-bezier(0.55, 0, 0.3, 1) both; }
+@keyframes enfCeuVeu { 0% { transform: scale(0.55); opacity: 1; } 65% { opacity: 0.85; } 100% { transform: scale(6); opacity: 0; } }
+.enf-ceu-faisca { opacity: 0; animation: enfCeuFaisca var(--d, 4s) ease-in-out var(--a, 0s) infinite; }
+@keyframes enfCeuFaisca { 0% { opacity: 0; transform: translate(0, 0); } 20% { opacity: 1; } 80% { opacity: 0.8; } 100% { opacity: 0; transform: translate(-8px, -16px); } }

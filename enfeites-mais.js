@@ -3477,6 +3477,9 @@ ENFEITES.moldura.push(
   { id: 'asas-celestiais', nome: 'Asas celestiais', texto: 'Grandes asas brancas em volta da foto', criancas: true, exclusivo: true },
   { id: 'asas-celestiais-douradas', nome: 'Asas celestiais douradas', texto: 'Grandes asas de ouro em volta da foto', criancas: true, exclusivo: true },
 );
+ENFEITES.faixa.push(
+  { id: 'ceu-se-abrindo', nome: 'Céu se abrindo', texto: 'As nuvens se abrem e a luz do céu aparece', criancas: true, exclusivo: true },
+);
 ENFEITES.efeito.push(
   { id: 'intervencao-angelical', nome: 'Intervenção angelical', texto: 'O sol se abre em luz e um anjo guerreiro aparece', criancas: true, exclusivo: true },
 );
@@ -4048,6 +4051,37 @@ Object.assign(MOLDURAS, {
     return asasCelestiais('asa-celestial-dourada.webp', '#fff4c7');
   },
 
+});
+
+Object.assign(FAIXAS, {
+  'ceu-se-abrindo'() {
+    const brilho = idDoEnfeite('csa-b');
+    const raio = idDoEnfeite('csa-r');
+    const veu = idDoEnfeite('csa-v');
+    const lx = 246;
+    const ly = 27.6;
+    const raios = [70, 82, 93, 103, 114, 125, 137, 149, 162].map((a, i) => {
+      const r = (a * Math.PI) / 180;
+      const abre = 0.03 + (i % 3) * 0.013;
+      const L = 200;
+      return `<path d="M${lx} ${ly}L${n1(lx + Math.cos(r - abre) * L)} ${n1(ly + Math.sin(r - abre) * L)}L${n1(lx + Math.cos(r + abre) * L)} ${n1(ly + Math.sin(r + abre) * L)}Z" fill="url(#${raio})" class="enf-ceu-raio" style="--a:${(-i * 0.63).toFixed(2)}s"/>`;
+    }).join('');
+    const faiscas = [[214, 44, 1.1, 0, 4.2], [262, 52, 0.9, 1.1, 3.6], [232, 64, 1.2, 2.3, 4.6], [288, 38, 0.8, 0.6, 3.9], [196, 30, 0.9, 1.8, 4.4], [276, 70, 1, 3, 4], [250, 46, 0.7, 2.7, 3.4], [168, 56, 0.8, 0.3, 5], [302, 58, 0.9, 1.5, 4.1], [224, 22, 0.8, 3.4, 3.8]]
+      .map(([x, y, r, a, d]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#fff3c4" class="enf-ceu-faisca" style="--a:-${a}s;--d:${d}s"/>`).join('');
+    return `<defs>
+        <radialGradient id="${brilho}"><stop offset="0" stop-color="#fff"/><stop offset=".22" stop-color="#fff7dc" stop-opacity=".9"/><stop offset=".55" stop-color="#ffd98a" stop-opacity=".32"/><stop offset="1" stop-color="#ffc45a" stop-opacity="0"/></radialGradient>
+        <radialGradient id="${raio}" gradientUnits="userSpaceOnUse" cx="${lx}" cy="${ly}" r="200"><stop offset="0" stop-color="#fff" stop-opacity=".8"/><stop offset=".3" stop-color="#ffeab4" stop-opacity=".32"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></radialGradient>
+        <radialGradient id="${veu}" gradientUnits="userSpaceOnUse" cx="${lx}" cy="${ly}" r="110"><stop offset="0" stop-color="#050818" stop-opacity="0"/><stop offset=".1" stop-color="#050818" stop-opacity=".1"/><stop offset=".42" stop-color="#050818" stop-opacity=".93"/><stop offset="1" stop-color="#050818" stop-opacity=".97"/></radialGradient>
+      </defs>
+      <g class="enf-ceu-zoom"><image href="ceu-se-abrindo.webp" x="0" y="-6" width="320" height="120" preserveAspectRatio="none"/></g>
+      <g class="enf-ceu-tela">
+        <g class="enf-ceu-raios">${raios}</g>
+        <circle cx="${lx}" cy="${ly}" r="46" fill="url(#${brilho})" class="enf-ceu-luz"/>
+        <circle cx="${lx}" cy="${ly}" r="15" fill="url(#${brilho})" class="enf-ceu-nucleo"/>
+        ${faiscas}
+      </g>
+      <rect x="-420" y="-260" width="1160" height="600" fill="url(#${veu})" class="enf-ceu-veu"/>`;
+  },
 });
 
 Object.assign(EFEITOS_DO_PERFIL, { 'intervencao-angelical': efeitoIntervencaoAngelical });
