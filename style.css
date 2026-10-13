@@ -5289,3 +5289,20 @@ body.intro-ativa .navbar { backdrop-filter: none; }
 @keyframes enfCeuVeu { 0% { transform: scale(0.55); opacity: 1; } 65% { opacity: 0.85; } 100% { transform: scale(6); opacity: 0; } }
 .enf-ceu-faisca { opacity: 0; animation: enfCeuFaisca var(--d, 4s) ease-in-out var(--a, 0s) infinite; }
 @keyframes enfCeuFaisca { 0% { opacity: 0; transform: translate(0, 0); } 20% { opacity: 1; } 80% { opacity: 0.8; } 100% { opacity: 0; transform: translate(-8px, -16px); } }
+.enf-smc-estrela { animation: enfSmcPisca var(--d, 3s) ease-in-out var(--a, 0s) infinite; }
+@keyframes enfSmcPisca { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+.enf-smc-cintila { transform-box: fill-box; transform-origin: center; animation: enfSmcCintila 3.4s ease-in-out var(--a, 0s) infinite; }
+@keyframes enfSmcCintila { 0%, 100% { transform: scale(0.35) rotate(0deg); opacity: 0.3; } 50% { transform: scale(1) rotate(45deg); opacity: 1; } }
+.enf-smc-cadente { opacity: 0; animation: enfSmcCadente 7s ease-in 2s infinite; }
+@keyframes enfSmcCadente { 0% { transform: translate(0, 0); opacity: 0; } 2% { opacity: 1; } 12% { transform: translate(-96px, 32px); opacity: 0; } 100% { transform: translate(-96px, 32px); opacity: 0; } }
+.enf-smc-luz { transform-box: view-box; transform-origin: 257px 28px; animation: enfSmcLuz 3.8s ease-in-out infinite; }
+@keyframes enfSmcLuz { 0%, 100% { transform: scale(0.92); opacity: 0.55; } 50% { transform: scale(1.1); opacity: 0.9; } }
+.enf-smc-flutua { animation: enfSmcFlutua 4.6s ease-in-out infinite; }
+@keyframes enfSmcFlutua { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-1.6px); } }
+.enf-smc-asa-e { transform-box: fill-box; transform-origin: 34% 52%; animation: enfSmcAsaE 2.8s ease-in-out infinite; }
+@keyframes enfSmcAsaE { 0%, 100% { transform: rotate(0deg); } 40% { transform: rotate(6deg); } 72% { transform: rotate(-2deg); } }
+.enf-smc-asa-d { transform-box: fill-box; transform-origin: 64% 56%; animation: enfSmcAsaD 2.8s ease-in-out infinite; }
+@keyframes enfSmcAsaD { 0%, 100% { transform: rotate(0deg); } 40% { transform: rotate(-6deg); } 72% { transform: rotate(2deg); } }
+.enf-smc-aureola { mix-blend-mode: screen; transform-box: fill-box; transform-origin: center; animation: enfSmcLuz 3s ease-in-out infinite; }
+.enf-smc-espada { mix-blend-mode: screen; transform-box: fill-box; transform-origin: center; animation: enfSmcEspada 2.6s ease-in-out infinite; }
+@keyframes enfSmcEspada { 0%, 100% { transform: scale(0.5) rotate(0deg); opacity: 0.4; } 50% { transform: scale(1.15) rotate(20deg); opacity: 1; } }

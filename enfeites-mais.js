@@ -3479,6 +3479,7 @@ ENFEITES.moldura.push(
 );
 ENFEITES.faixa.push(
   { id: 'ceu-se-abrindo', nome: 'Céu se abrindo', texto: 'As nuvens se abrem e a luz do céu aparece', criancas: true, exclusivo: true },
+  { id: 'sao-miguel-estrelas', nome: 'São Miguel nas estrelas', texto: 'O arcanjo bate as asas entre as estrelas', criancas: true, exclusivo: true },
 );
 ENFEITES.efeito.push(
   { id: 'intervencao-angelical', nome: 'Intervenção angelical', texto: 'O sol se abre em luz e um anjo guerreiro aparece', criancas: true, exclusivo: true },
@@ -4081,6 +4082,57 @@ Object.assign(FAIXAS, {
         ${faiscas}
       </g>
       <rect x="-420" y="-260" width="1160" height="600" fill="url(#${veu})" class="enf-ceu-veu"/>`;
+  },
+});
+
+const ESTRELAS_DE_SAO_MIGUEL = (() => {
+  let semente = 7;
+  const sorte = () => {
+    semente = (semente * 16807) % 2147483647;
+    return (semente - 1) / 2147483646;
+  };
+  return Array.from({ length: 58 }, () => ({ x: n1(sorte() * 320), y: n1(sorte() * 80), r: n1(0.25 + sorte() * sorte() * 1.1), d: n1(2.2 + sorte() * 3), a: n1(sorte() * 4), dourada: sorte() < 0.22 }));
+})();
+
+Object.assign(FAIXAS, {
+  'sao-miguel-estrelas'() {
+    const ceu = idDoEnfeite('sme-c');
+    const neb = idDoEnfeite('sme-n');
+    const luz = idDoEnfeite('sme-l');
+    const corpo = idDoEnfeite('sme-corpo');
+    const asaE = idDoEnfeite('sme-ae');
+    const asaD = idDoEnfeite('sme-ad');
+    const some = idDoEnfeite('sme-s');
+    const somePasso = idDoEnfeite('sme-sg');
+    const cauda = idDoEnfeite('sme-t');
+    const contorno = 'M74 0H94L92 22L100 24L112 27L120 33L122 42L120 53L126 58L136 62L140 75L148 85L158 93L164 100H40L44 85L50 68L60 60L66 52L64 40L64 24L68 19L72 12Z';
+    const img = (mascara) => `<image href="sao-miguel-estrelas.webp" width="200" height="100" mask="url(#${mascara})"/>`;
+    const estrelas = ESTRELAS_DE_SAO_MIGUEL.map((e) => `<circle cx="${e.x}" cy="${e.y}" r="${e.r}" fill="${e.dourada ? '#fde68a' : '#fff'}" class="enf-smc-estrela" style="--d:${e.d}s;--a:-${e.a}s"/>`).join('');
+    const cintilas = [[38, 14, 2.6, 0], [96, 52, 2, 1.3], [150, 18, 2.3, 2.1], [178, 62, 1.8, 0.7]].map(([x, y, t, a]) => `<path d="M${x} ${y - t}Q${x + t * 0.14} ${y - t * 0.14} ${x + t} ${y}Q${x + t * 0.14} ${y + t * 0.14} ${x} ${y + t}Q${x - t * 0.14} ${y + t * 0.14} ${x - t} ${y}Q${x - t * 0.14} ${y - t * 0.14} ${x} ${y - t}Z" fill="#fff8e1" class="enf-smc-cintila" style="--a:-${a}s"/>`).join('');
+    return `<defs>
+        <linearGradient id="${ceu}" x1="0" y1="0" x2="1" y2="0.4"><stop offset="0" stop-color="#040714"/><stop offset=".55" stop-color="#0a1130"/><stop offset="1" stop-color="#161040"/></linearGradient>
+        <radialGradient id="${neb}"><stop offset="0" stop-color="#6d5bd0" stop-opacity=".35"/><stop offset=".6" stop-color="#3b3a8f" stop-opacity=".12"/><stop offset="1" stop-color="#1e1b4b" stop-opacity="0"/></radialGradient>
+        <radialGradient id="${luz}"><stop offset="0" stop-color="#fff7dc" stop-opacity=".9"/><stop offset=".3" stop-color="#fcd34d" stop-opacity=".4"/><stop offset="1" stop-color="#f59e0b" stop-opacity="0"/></radialGradient>
+        <linearGradient id="${cauda}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset="1" stop-color="#bfdbfe" stop-opacity="0"/></linearGradient>
+        <mask id="${corpo}" maskUnits="userSpaceOnUse" x="-60" y="-30" width="320" height="160"><path d="${contorno}" fill="#fff"/></mask>
+        <mask id="${asaE}" maskUnits="userSpaceOnUse" x="-60" y="-30" width="320" height="160"><rect x="-60" y="-30" width="160" height="160" fill="#fff"/><path d="${contorno}" fill="#000"/></mask>
+        <mask id="${asaD}" maskUnits="userSpaceOnUse" x="-60" y="-30" width="320" height="160"><rect x="100" y="-30" width="160" height="160" fill="#fff"/><path d="${contorno}" fill="#000"/></mask>
+        <linearGradient id="${somePasso}" gradientUnits="userSpaceOnUse" x1="0" y1="64" x2="0" y2="99"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>
+        <mask id="${some}" maskUnits="userSpaceOnUse" x="-60" y="-30" width="320" height="160"><rect x="-60" y="-30" width="320" height="160" fill="url(#${somePasso})"/></mask>
+      </defs>
+      <rect width="320" height="80" fill="url(#${ceu})"/>
+      <ellipse cx="226" cy="22" rx="110" ry="46" fill="url(#${neb})"/>
+      <ellipse cx="70" cy="64" rx="90" ry="34" fill="url(#${neb})" opacity=".7"/>
+      ${estrelas}${cintilas}
+      <g class="enf-smc-cadente"><path d="M118 6L160 -8" stroke="url(#${cauda})" stroke-width=".9" stroke-linecap="round"/><circle cx="118" cy="6" r=".9" fill="#fff"/></g>
+      <circle cx="257" cy="28" r="56" fill="url(#${luz})" class="enf-smc-luz"/>
+      <g class="enf-smc-flutua"><g transform="translate(203 3) scale(.53)"><g mask="url(#${some})">
+        <g class="enf-smc-asa-e">${img(asaE)}</g>
+        <g class="enf-smc-asa-d">${img(asaD)}</g>
+        ${img(corpo)}
+      </g>
+      <circle cx="101" cy="42" r="15" fill="url(#${luz})" class="enf-smc-aureola"/>
+      <path d="M81 -6Q82.4 7 90 9Q82.4 11 81 24Q79.6 11 72 9Q79.6 7 81 -6Z" fill="#fffbeb" class="enf-smc-espada"/></g></g>`;
   },
 });
 
