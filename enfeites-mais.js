@@ -3473,8 +3473,9 @@ Object.assign(MINIS_DE_EFEITO, {
 });
 
 ENFEITES.moldura.push(
-  { id: 'sol-da-graca', nome: 'Sol da Graça', texto: 'Um sol de ouro e asas brancas que se abrem sobre a foto', criancas: true },
-  { id: 'asas-celestiais', nome: 'Asas celestiais', texto: 'Grandes asas brancas em volta da foto', criancas: true },
+  { id: 'sol-da-graca', nome: 'Sol da Graça', texto: 'Um sol de ouro e asas brancas que se abrem sobre a foto', criancas: true, exclusivo: true },
+  { id: 'asas-celestiais', nome: 'Asas celestiais', texto: 'Grandes asas brancas em volta da foto', criancas: true, exclusivo: true },
+  { id: 'asas-celestiais-douradas', nome: 'Asas celestiais douradas', texto: 'Grandes asas de ouro em volta da foto', criancas: true, exclusivo: true },
 );
 ENFEITES.efeito.push(
   { id: 'intervencao-angelical', nome: 'Intervenção angelical', texto: 'O sol se abre em luz e um anjo guerreiro aparece', criancas: true },
@@ -3914,6 +3915,20 @@ Object.assign(PECAS_PREMIUM, {
   filigrana: desenhoDaFiligrana,
 });
 
+function asasCelestiais(arquivo, brilho) {
+  const atras = idDoEnfeite('ac-atras');
+  const forma = idDoEnfeite('ac-forma');
+  const luz = idDoEnfeite('ac-luz');
+  const asa = `<image href="${arquivo}" x="-21.4" y="6.2" width="52" height="105" transform="translate(9.1 0) scale(-1 1)"/>`;
+  const lado = (espelho) => `<g${espelho ? ' transform="translate(136 0) scale(-1 1)"' : ''}><g class="enf-asa-bate"${espelho ? ' style="animation-delay:-.15s"' : ''}>${asa}<rect x="-40" y="0" width="22" height="120" fill="url(#${luz})" mask="url(#${forma})" class="enf-asa-reflexo"${espelho ? ' style="animation-delay:-1.2s"' : ''}/></g></g>`;
+  return `<defs>
+      <mask id="${atras}" maskUnits="userSpaceOnUse" x="-60" y="-20" width="256" height="176"><rect x="-60" y="-20" width="256" height="176" fill="#fff"/><circle cx="68" cy="68" r="49.6" fill="#000"/></mask>
+      <mask id="${forma}" maskUnits="userSpaceOnUse" x="-60" y="-20" width="256" height="176">${asa}</mask>
+      <linearGradient id="${luz}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${brilho}" stop-opacity="0"/><stop offset=".5" stop-color="${brilho}" stop-opacity=".7"/><stop offset="1" stop-color="${brilho}" stop-opacity="0"/></linearGradient>
+    </defs>
+    <g mask="url(#${atras})">${lado(false)}${lado(true)}</g>`;
+}
+
 Object.assign(MOLDURAS, {
   'sol-da-graca'() {
     const luz = idDoEnfeite('sg-luz');
@@ -3940,21 +3955,12 @@ Object.assign(MOLDURAS, {
   },
 
   'asas-celestiais'() {
-    const atras = idDoEnfeite('ac-atras');
-    const forma = idDoEnfeite('ac-forma');
-    const luz = idDoEnfeite('ac-luz');
-    const asa = '<image href="asa-celestial.webp" x="-21.4" y="6.2" width="52" height="105" transform="translate(9.1 0) scale(-1 1)"/>';
-    const lado = (espelho) => `<g${espelho ? ' transform="translate(136 0) scale(-1 1)"' : ''}><g class="enf-asa-bate"${espelho ? ' style="animation-delay:-.15s"' : ''}>${asa}<rect x="-40" y="0" width="22" height="120" fill="url(#${luz})" mask="url(#${forma})" class="enf-asa-reflexo"${espelho ? ' style="animation-delay:-1.2s"' : ''}/></g></g>`;
-    return `<defs>
-        <mask id="${atras}" maskUnits="userSpaceOnUse" x="-60" y="-20" width="256" height="176"><rect x="-60" y="-20" width="256" height="176" fill="#fff"/><circle cx="68" cy="68" r="49.6" fill="#000"/></mask>
-        <mask id="${forma}" maskUnits="userSpaceOnUse" x="-60" y="-20" width="256" height="176">${asa}</mask>
-        <linearGradient id="${luz}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".7"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
-      </defs>
-      <g mask="url(#${atras})">${lado(false)}${lado(true)}</g>`;
+    return asasCelestiais('asa-celestial.webp', '#fff');
   },
 
-
-
+  'asas-celestiais-douradas'() {
+    return asasCelestiais('asa-celestial-dourada.webp', '#fff4c7');
+  },
 
 });
 
