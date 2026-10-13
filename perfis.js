@@ -62,15 +62,24 @@ function aplicarModoKids() {
 const faixaJaPerguntada = new Set();
 let faixaEscolhidaNaJanela = null;
 
-function pedirFaixaDaCriancaSePreciso() {
+let faixaAbrirTrilhasDepois = false;
+
+function precisaDaFaixa(membro) {
+  return !!(servidorTemFaixa && membro && membro.tipo === 'crianca' && !membro.faixa && contaLogada());
+}
+
+function pedirFaixaDaCriancaSePreciso(paraAsTrilhas) {
   const membro = membroAtivo;
-  if (!servidorTemFaixa || !membro || membro.tipo !== 'crianca' || membro.faixa || !contaLogada()) return;
-  if (faixaJaPerguntada.has(membro.id)) return;
+  if (!precisaDaFaixa(membro)) return;
+  if (!paraAsTrilhas && faixaJaPerguntada.has(membro.id)) return;
   const janela = document.getElementById('faixa-modal');
   if (!janela) return;
   faixaJaPerguntada.add(membro.id);
   faixaEscolhidaNaJanela = null;
-  document.getElementById('faixa-modal-texto').textContent = tr('Para as perguntas ficarem certinhas para a idade de {nome}, um adulto precisa escolher a faixa de idade. É só desta vez.', { nome: membro.nome });
+  faixaAbrirTrilhasDepois = !!paraAsTrilhas;
+  document.getElementById('faixa-modal-texto').textContent = paraAsTrilhas
+    ? tr('Para abrir as trilhas, um adulto precisa escolher a faixa de idade de {nome}. É rapidinho!', { nome: membro.nome })
+    : tr('Para as perguntas ficarem certinhas para a idade de {nome}, um adulto precisa escolher a faixa de idade. É só desta vez.', { nome: membro.nome });
   mostrarPassoDaFaixa('chamar');
   janela.classList.add('active');
 }
@@ -109,11 +118,9 @@ function iniciarJanelaDaFaixa() {
       },
     });
   });
-  document.getElementById('faixa-agora-nao').addEventListener('click', async () => {
+  document.getElementById('faixa-agora-nao').addEventListener('click', () => {
+    faixaAbrirTrilhasDepois = false;
     fecharJanelaDaFaixa();
-    if (membroAtivo && membroAtivo.tipo === 'crianca' && !membroAtivo.faixa) {
-      try { await guardarFaixaDoPerfil(membroAtivo, '8a12'); } catch (e) {  }
-    }
   });
   janela.querySelectorAll('.faixa-opcao').forEach((botao) => {
     botao.addEventListener('click', () => {
@@ -132,6 +139,10 @@ function iniciarJanelaDaFaixa() {
     try {
       await guardarFaixaDoPerfil(membroAtivo, faixaEscolhidaNaJanela);
       fecharJanelaDaFaixa();
+      if (faixaAbrirTrilhasDepois) {
+        faixaAbrirTrilhasDepois = false;
+        abrirTrilhas();
+      }
     } catch (e) {
       feedback.textContent = 'Não foi possível salvar agora. Tente de novo.';
     }
@@ -839,6 +850,14 @@ async function carregarTrilhasDaConta() {
       abrirSelecaoDePerfis('trilhas');
       return;
     }
+  }
+
+  if (precisaDaFaixa(membroAtivo)) {
+    slugPendenteDasTrilhas = null;
+    const inicio = document.getElementById('view-home');
+    if (inicio && !inicio.classList.contains('active')) mudarDeView('view-home');
+    pedirFaixaDaCriancaSePreciso(true);
+    return;
   }
 
   mostrarCarregando('Abrindo as trilhas...');

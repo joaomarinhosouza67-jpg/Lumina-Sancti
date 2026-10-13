@@ -5317,8 +5317,21 @@ body.intro-ativa .navbar { backdrop-filter: none; }
 .faixa-passo p { margin: 0; color: var(--text-main); line-height: 1.5; font-size: 0.95rem; }
 .faixa-passo .perfil-faixas { width: 100%; }
 .faixa-passo .licao-botao { width: 100%; }
-.faixa-estrela { width: 56px; height: 56px; color: var(--primary-color); filter: drop-shadow(0 0 12px rgba(var(--primary-rgb), 0.6)); animation: faixaEstrela 2.4s ease-in-out infinite; }
-@keyframes faixaEstrela { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-6px) rotate(8deg); } }
+.faixa-palco { position: relative; width: 104px; height: 104px; display: grid; place-items: center; margin-bottom: 2px; }
+.faixa-raios { position: absolute; inset: -10px; border-radius: 50%; background: repeating-conic-gradient(rgba(240, 201, 90, 0.34) 0deg 5deg, transparent 5deg 22deg); -webkit-mask: radial-gradient(circle, #000 18%, transparent 68%); mask: radial-gradient(circle, #000 18%, transparent 68%); animation: faixaGira 16s linear infinite; }
+.faixa-halo { position: absolute; inset: 16px; border-radius: 50%; background: radial-gradient(circle, rgba(255, 236, 170, 0.6), rgba(212, 175, 55, 0) 70%); animation: faixaHalo 2.6s ease-in-out infinite; }
+.faixa-estrela { position: relative; width: 64px; height: 64px; overflow: visible; filter: drop-shadow(0 6px 12px rgba(212, 175, 55, 0.5)); transform-origin: 50% 88%; animation: faixaPulo 2.6s cubic-bezier(0.3, 0.7, 0.4, 1) infinite; }
+.faixa-cintila { position: absolute; width: 11px; height: 11px; background: #fff3c4; clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); opacity: 0; animation: faixaCintila 2.6s ease-in-out infinite; }
+.faixa-cintila.c1 { top: 14px; left: 6px; }
+.faixa-cintila.c2 { top: 2px; right: 14px; width: 8px; height: 8px; animation-delay: 0.85s; }
+.faixa-cintila.c3 { bottom: 16px; right: 2px; animation-delay: 1.7s; }
+@keyframes faixaGira { to { transform: rotate(360deg); } }
+@keyframes faixaHalo { 0%, 100% { transform: scale(0.85); opacity: 0.6; } 50% { transform: scale(1.12); opacity: 1; } }
+@keyframes faixaPulo { 0%, 100% { transform: translateY(0) scale(1, 1) rotate(0deg); } 12% { transform: translateY(0) scale(1.14, 0.84) rotate(0deg); } 36% { transform: translateY(-16px) scale(0.92, 1.1) rotate(-8deg); } 56% { transform: translateY(-18px) scale(1, 1) rotate(10deg); } 80% { transform: translateY(0) scale(1.1, 0.9) rotate(0deg); } 90% { transform: translateY(-2px) scale(0.97, 1.03) rotate(0deg); } }
+@keyframes faixaCintila { 0%, 100% { opacity: 0; transform: scale(0.3) rotate(0deg); } 50% { opacity: 1; transform: scale(1) rotate(45deg); } }
+.faixa-depois { width: 100%; padding: 12px; border-radius: 14px; border: 1.5px solid rgba(255, 255, 255, 0.16); background: rgba(255, 255, 255, 0.04); color: var(--text-muted); font-family: var(--font-text); font-weight: 700; font-size: 0.98rem; cursor: pointer; transition: var(--transition); }
+.faixa-depois:hover { border-color: rgba(var(--primary-rgb), 0.45); color: var(--text-main); }
+@media (prefers-reduced-motion: reduce) { .faixa-raios, .faixa-halo, .faixa-estrela, .faixa-cintila { animation: none; } .faixa-cintila { opacity: 0.8; } }
 .trilha-bloco .trilha-banner { background: linear-gradient(115deg, rgba(var(--cor-santo-rgb), 0.26) 0%, rgba(var(--cor-santo-rgb), 0.08) 46%, rgba(var(--cor-santo-rgb), 0) 78%), var(--bg-alt); border-color: rgba(var(--cor-santo-rgb), 0.5); box-shadow: inset 4px 0 0 var(--cor-santo); }
 .trilha-bloco .trilha-banner.concluida { box-shadow: inset 4px 0 0 var(--cor-santo), 0 0 24px rgba(var(--cor-santo-rgb), 0.3); }
 .trilha-bloco .trilha-nome, .trilha-bloco .trilha-banner h3 { color: var(--text-main); }
