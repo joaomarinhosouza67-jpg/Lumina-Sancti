@@ -125,7 +125,118 @@ async function verificarAdvertencia() {
   setTimeout(() => novoEntendi.focus(), 50);
 }
 
+const CHAVE_DA_NOVIDADE_ADIADA = 'lumina-sancti-novidade-adiada';
+const CHAVE_DAS_NOVIDADES_VISTAS = 'lumina-sancti-novidades-vistas';
+let novidadeNaTela = false;
+
+function lerGuardado(chave, padrao) {
+  try {
+    const valor = JSON.parse(localStorage.getItem(chave) || 'null');
+    return valor === null ? padrao : valor;
+  } catch (e) {
+    return padrao;
+  }
+}
+
+function guardar(chave, valor) {
+  try {
+    localStorage.setItem(chave, JSON.stringify(valor));
+  } catch (e) {
+    return;
+  }
+}
+
+function diaDeHoje() {
+  const agora = new Date();
+  return `${agora.getFullYear()}-${agora.getMonth() + 1}-${agora.getDate()}`;
+}
+
+function textoNoIdiomaDaNovidade(campo) {
+  const idioma = typeof idiomaAtual !== 'undefined' ? idiomaAtual : 'pt';
+  if (!campo || typeof campo !== 'object') return campo || '';
+  return campo[idioma] || campo.pt || '';
+}
+
+function janelaDaNovidade() {
+  let modal = document.getElementById('novidade-janela');
+  if (modal) return modal;
+  modal = document.createElement('div');
+  modal.id = 'novidade-janela';
+  modal.className = 'search-modal';
+  modal.innerHTML = `
+    <div class="search-modal-content novidade-caixa" role="dialog" aria-modal="true" aria-labelledby="novidade-titulo">
+      <span class="novidade-selo" aria-hidden="true"></span>
+      <p class="novidade-versao" id="novidade-versao"></p>
+      <h3 id="novidade-titulo"></h3>
+      <ul class="novidade-itens" id="novidade-itens"></ul>
+      <div class="novidade-botoes">
+        <button type="button" class="licao-botao" id="novidade-conferi">Conferi!</button>
+        <button type="button" class="faixa-depois" id="novidade-depois">Ver depois</button>
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
+  return modal;
+}
+
+async function verificarNovidade() {
+  if (novidadeNaTela || advertenciaNaTela || typeof supabaseCliente === 'undefined' || !supabaseCliente) return;
+  if (document.body.classList.contains('modo-kids') || document.body.classList.contains('intro-ativa')) return;
+  const inicio = document.getElementById('view-home');
+  if (!inicio || !inicio.classList.contains('active')) return;
+  let novidade = null;
+  try {
+    const { data, error } = await supabaseCliente.rpc('novidade_atual');
+    if (!error) novidade = data;
+  } catch (e) {
+    novidade = null;
+  }
+  if (!novidade || !novidade.id || novidadeNaTela || document.body.classList.contains('modo-kids')) return;
+  if (lerGuardado(CHAVE_DAS_NOVIDADES_VISTAS, []).includes(novidade.id)) return;
+  const adiada = lerGuardado(CHAVE_DA_NOVIDADE_ADIADA, null);
+  if (adiada && adiada.id === novidade.id && adiada.dia === diaDeHoje()) return;
+  const itens = textoNoIdiomaDaNovidade(novidade.itens);
+  if (!Array.isArray(itens) || itens.length === 0) return;
+
+  novidadeNaTela = true;
+  const modal = janelaDaNovidade();
+  modal.querySelector('#novidade-versao').textContent = tr('Versão {v}', { v: novidade.versao });
+  modal.querySelector('#novidade-titulo').textContent = textoNoIdiomaDaNovidade(novidade.titulo) || tr('Novidades');
+  const lista = modal.querySelector('#novidade-itens');
+  lista.innerHTML = '';
+  itens.forEach((texto, i) => {
+    const item = document.createElement('li');
+    item.style.setProperty('--atraso', `${0.15 + i * 0.09}s`);
+    item.textContent = texto;
+    item.setAttribute('translate', 'no');
+    lista.appendChild(item);
+  });
+  const fechar = () => {
+    modal.classList.remove('active');
+    novidadeNaTela = false;
+  };
+  const conferi = modal.querySelector('#novidade-conferi');
+  const novoConferi = conferi.cloneNode(true);
+  conferi.replaceWith(novoConferi);
+  novoConferi.addEventListener('click', async () => {
+    guardar(CHAVE_DAS_NOVIDADES_VISTAS, lerGuardado(CHAVE_DAS_NOVIDADES_VISTAS, []).filter((x) => x !== novidade.id).concat(novidade.id).slice(-30));
+    fechar();
+    if (typeof contaLogada === 'function' && contaLogada()) {
+      try { await supabaseCliente.rpc('novidade_vista', { _id: novidade.id }); } catch (e) {  }
+    }
+  });
+  const depois = modal.querySelector('#novidade-depois');
+  const novoDepois = depois.cloneNode(true);
+  depois.replaceWith(novoDepois);
+  novoDepois.addEventListener('click', () => {
+    guardar(CHAVE_DA_NOVIDADE_ADIADA, { id: novidade.id, dia: diaDeHoje() });
+    fechar();
+  });
+  modal.classList.add('active');
+  setTimeout(() => novoConferi.focus(), 60);
+}
+
 function iniciarAvisos() {
+  setTimeout(verificarNovidade, 7000);
   setTimeout(carregarAvisoGeral, 400);
   setTimeout(verificarAdvertencia, 1500);
   if (typeof supabaseCliente !== 'undefined' && supabaseCliente) {

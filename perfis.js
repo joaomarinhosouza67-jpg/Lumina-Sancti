@@ -711,6 +711,7 @@ function escolherPerfil(membro) {
   }
   else abrirTrilhas(slugPendenteDasTrilhas);
   if (typeof aposEscolherPerfil === 'function') aposEscolherPerfil(membro);
+  if (typeof verificarNovidade === 'function') setTimeout(verificarNovidade, 1500);
 }
 
 function guardarPerfilEscolhido(membro) {
