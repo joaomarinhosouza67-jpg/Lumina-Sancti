@@ -796,7 +796,8 @@ const TEXTOS_TRILHAS = {
     virtude: 'Virtude: {v}',
     conclua_trilha: 'Conclua a trilha de {santo} para abrir esta.',
     missao_rotulo: 'Missão {n}: {titulo}',
-    missao_refazer: ' (concluída — refazer)',
+    missao_refazer: ' (concluída — revisar)',
+    revisao_de: 'Revisão da missão {n} · {titulo}',
     missao_bloqueada: ' (bloqueada)',
     comecar_balao: 'Começar',
     medalha_de: 'Medalha da {m}',
@@ -878,7 +879,8 @@ const TEXTOS_TRILHAS = {
     virtude: 'Virtue: {v}',
     conclua_trilha: 'Finish the trail of {santo} to open this one.',
     missao_rotulo: 'Mission {n}: {titulo}',
-    missao_refazer: ' (completed — play again)',
+    missao_refazer: ' (completed — review)',
+    revisao_de: 'Review of mission {n} · {titulo}',
     missao_bloqueada: ' (locked)',
     comecar_balao: 'Start',
     medalha_de: 'Medal of {m}',
@@ -960,7 +962,8 @@ const TEXTOS_TRILHAS = {
     virtude: 'Virtud: {v}',
     conclua_trilha: 'Termina el sendero de {santo} para abrir este.',
     missao_rotulo: 'Misión {n}: {titulo}',
-    missao_refazer: ' (completada — repetir)',
+    missao_refazer: ' (completada — repasar)',
+    revisao_de: 'Repaso de la misión {n} · {titulo}',
     missao_bloqueada: ' (bloqueada)',
     comecar_balao: 'Empezar',
     medalha_de: 'Medalla de {m}',
@@ -2356,6 +2359,11 @@ async function iniciarLicaoDoServidor(trilha, indice) {
 
   mudarDeView('view-licao');
   renderizarCabecalhoDaMissao(trilha, indice, licao);
+  if (dados.revisao) {
+    licaoAtual.revisao = true;
+    const subtitulo = document.querySelector('.licao-santo-textos small');
+    if (subtitulo) subtitulo.textContent = tt('revisao_de', { n: indice + 1, titulo: licao.titulo });
+  }
   avisarMascote('licao');
   const historia = textoNoIdioma(dados.story);
   if (historia) mostrarHistoriaDaLicao(historia);
