@@ -27,11 +27,19 @@
     }, 1000);
   }
 
-  tela.addEventListener('click', encerrar);
-  window.addEventListener('load', () => {
-    setTimeout(encerrar, Math.max(3900 - (performance.now() - inicio), 700));
+  let carregou = document.readyState !== 'loading';
+  function encerrarQuandoPuder() {
+    if (carregou) encerrar();
+    else tela.classList.add('esperando');
+  }
+  tela.addEventListener('click', encerrarQuandoPuder);
+  document.addEventListener('DOMContentLoaded', () => {
+    carregou = true;
+    if (tela.classList.contains('esperando')) setTimeout(encerrar, 250);
+    else setTimeout(encerrar, Math.max(3900 - (performance.now() - inicio), 700));
   });
-  setTimeout(encerrar, 6000);
+  setTimeout(encerrarQuandoPuder, 6000);
+  setTimeout(encerrar, 25000);
   setTimeout(tocarBrilho, 900);
   document.addEventListener('click', tocarBrilho, { once: true });
 

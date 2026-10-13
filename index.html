@@ -32,7 +32,6 @@
   <meta name="theme-color" content="#0a0e22">
   <meta name="color-scheme" content="dark">
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
 </head>
 <body>
 
@@ -43,6 +42,14 @@
     <div class="intro-brand">Lumina Sancti</div>
     <div class="intro-lema" data-i18n="hero_subtitulo">Luz dos Santos</div>
     <div class="intro-skip-hint">Toque para pular</div>
+    <div class="intro-carregando"><span>Preparando sua jornada...</span><i></i></div>
+  </div>
+
+  <div id="tela-carregando" class="tela-carregando" aria-hidden="true">
+    <div class="tela-carregando-centro">
+      <div class="tela-carregando-sinal"></div>
+      <p class="tela-carregando-texto" id="tela-carregando-texto">Preparando sua jornada...</p>
+    </div>
   </div>
 
   <header id="navbar" class="navbar">
@@ -76,6 +83,7 @@
             <button id="conta-menu-entrar" class="conta-opcao" data-i18n="conta_entrar">Entrar / Criar conta</button>
             <button id="conta-menu-perfil" class="conta-opcao" style="display:none;" data-i18n="conta_perfil">Meu perfil</button>
             <button id="conta-menu-perfis" class="conta-opcao" style="display:none;">Trocar perfil</button>
+            <button id="conta-menu-config-perfis" class="conta-opcao" style="display:none;">Configurações de perfil</button>
             <button id="conta-menu-sair" class="conta-opcao" style="display:none;" data-i18n="conta_sair">Sair</button>
             <button id="conta-menu-sair-kids" class="conta-opcao" style="display:none;">Sair do modo infantil</button>
           </div>
@@ -102,6 +110,15 @@
         <input type="checkbox" id="perfil-editor-autorizo">
         <span>Sou pai, mãe ou responsável por esta criança e autorizo o uso deste perfil.</span>
       </label>
+      <div class="perfil-faixa-bloco" id="perfil-editor-faixa" hidden>
+        <p class="perfil-editor-rotulo">Faixa de idade da criança</p>
+        <div class="perfil-faixas">
+          <button type="button" class="perfil-faixa" data-faixa="ate7">Até 7 anos</button>
+          <button type="button" class="perfil-faixa" data-faixa="8a12">8 a 12 anos</button>
+          <button type="button" class="perfil-faixa" data-faixa="13a17">13 a 17 anos</button>
+        </div>
+        <p class="perfil-faixa-nota">As perguntas das trilhas mudam conforme a idade. O que a criança já fez continua guardado se você mudar depois.</p>
+      </div>
       <p class="perfil-editor-rotulo">Avatar</p>
       <div id="perfil-avatares" class="perfil-avatares"></div>
       <div class="perfil-foto-acoes">
@@ -128,6 +145,29 @@
       <button type="button" id="perfil-editor-salvar" class="licao-botao">Salvar</button>
       <button type="button" id="perfil-editor-excluir" class="perfil-link perfil-link-perigo" hidden>Excluir este perfil</button>
       <p class="auth-feedback" id="perfil-editor-feedback" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <div id="faixa-modal" class="search-modal">
+    <div class="search-modal-content faixa-janela">
+      <div class="faixa-passo" id="faixa-passo-chamar">
+        <svg class="faixa-estrela" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.2l-5.9 3.2 1.3-6.5L2.5 9.3l6.6-.8z" fill="currentColor"/></svg>
+        <h3>Chame um responsável</h3>
+        <p id="faixa-modal-texto">Para as perguntas ficarem certinhas para a idade da criança, um adulto precisa escolher a faixa de idade. É só desta vez.</p>
+        <button type="button" class="licao-botao" id="faixa-sou-responsavel">Sou o responsável</button>
+        <button type="button" class="perfil-link" id="faixa-agora-nao">Agora não</button>
+      </div>
+      <div class="faixa-passo" id="faixa-passo-escolher" hidden>
+        <h3>Qual é a faixa de idade?</h3>
+        <p>As perguntas das trilhas mudam conforme a idade. O que a criança já fez continua guardado.</p>
+        <div class="perfil-faixas">
+          <button type="button" class="faixa-opcao" data-faixa="ate7">Até 7 anos</button>
+          <button type="button" class="faixa-opcao" data-faixa="8a12">8 a 12 anos</button>
+          <button type="button" class="faixa-opcao" data-faixa="13a17">13 a 17 anos</button>
+        </div>
+        <p class="auth-feedback" id="faixa-modal-feedback" aria-live="polite"></p>
+        <button type="button" class="licao-botao" id="faixa-salvar">Salvar</button>
+      </div>
     </div>
   </div>
 
@@ -1128,6 +1168,7 @@
   </svg>
 
   <script src="entrada.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
   <script src="busca.js"></script>
   <script src="busca-idiomas.js"></script>
   <script src="nomes-santos.js"></script>

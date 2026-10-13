@@ -56,6 +56,86 @@ function aplicarModoKids() {
   document.body.classList.toggle('modo-kids', ehCrianca);
   if (typeof atualizarInterfaceDeConta === 'function') atualizarInterfaceDeConta();
   if (eraCrianca !== ehCrianca || ehCrianca) avisarLumiDaTrocaDePerfil();
+  if (ehCrianca) setTimeout(pedirFaixaDaCriancaSePreciso, 700);
+}
+
+const faixaJaPerguntada = new Set();
+let faixaEscolhidaNaJanela = null;
+
+function pedirFaixaDaCriancaSePreciso() {
+  const membro = membroAtivo;
+  if (!servidorTemFaixa || !membro || membro.tipo !== 'crianca' || membro.faixa || !contaLogada()) return;
+  if (faixaJaPerguntada.has(membro.id)) return;
+  const janela = document.getElementById('faixa-modal');
+  if (!janela) return;
+  faixaJaPerguntada.add(membro.id);
+  faixaEscolhidaNaJanela = null;
+  document.getElementById('faixa-modal-texto').textContent = tr('Para as perguntas ficarem certinhas para a idade de {nome}, um adulto precisa escolher a faixa de idade. É só desta vez.', { nome: membro.nome });
+  mostrarPassoDaFaixa('chamar');
+  janela.classList.add('active');
+}
+
+function mostrarPassoDaFaixa(passo) {
+  document.getElementById('faixa-passo-chamar').hidden = passo !== 'chamar';
+  document.getElementById('faixa-passo-escolher').hidden = passo !== 'escolher';
+  document.getElementById('faixa-modal-feedback').textContent = '';
+  document.querySelectorAll('.faixa-opcao').forEach((b) => b.classList.toggle('active', b.dataset.faixa === faixaEscolhidaNaJanela));
+}
+
+function fecharJanelaDaFaixa() {
+  const janela = document.getElementById('faixa-modal');
+  if (janela) janela.classList.remove('active');
+}
+
+async function guardarFaixaDoPerfil(membro, faixa) {
+  const { error } = await supabaseCliente.rpc('perfil_mudar_faixa', { _pid: membro.id, _faixa: faixa });
+  if (error) throw error;
+  membro.faixa = faixa;
+  const naConta = membrosDaConta.find((m) => m.id === membro.id);
+  if (naConta) naConta.faixa = faixa;
+}
+
+function iniciarJanelaDaFaixa() {
+  const janela = document.getElementById('faixa-modal');
+  if (!janela) return;
+  document.getElementById('faixa-sou-responsavel').addEventListener('click', () => {
+    fecharJanelaDaFaixa();
+    abrirPortao({
+      modo: 'verificar',
+      textos: { verificar: ['PIN dos pais', 'Um adulto precisa digitar o PIN dos pais.'] },
+      aoConcluir: () => {
+        mostrarPassoDaFaixa('escolher');
+        janela.classList.add('active');
+      },
+    });
+  });
+  document.getElementById('faixa-agora-nao').addEventListener('click', async () => {
+    fecharJanelaDaFaixa();
+    if (membroAtivo && membroAtivo.tipo === 'crianca' && !membroAtivo.faixa) {
+      try { await guardarFaixaDoPerfil(membroAtivo, '8a12'); } catch (e) {  }
+    }
+  });
+  janela.querySelectorAll('.faixa-opcao').forEach((botao) => {
+    botao.addEventListener('click', () => {
+      faixaEscolhidaNaJanela = botao.dataset.faixa;
+      mostrarPassoDaFaixa('escolher');
+    });
+  });
+  document.getElementById('faixa-salvar').addEventListener('click', async () => {
+    const feedback = document.getElementById('faixa-modal-feedback');
+    if (!faixaEscolhidaNaJanela) {
+      feedback.textContent = 'Escolha uma das faixas de idade.';
+      return;
+    }
+    if (!membroAtivo) return;
+    feedback.textContent = 'Salvando...';
+    try {
+      await guardarFaixaDoPerfil(membroAtivo, faixaEscolhidaNaJanela);
+      fecharJanelaDaFaixa();
+    } catch (e) {
+      feedback.textContent = 'Não foi possível salvar agora. Tente de novo.';
+    }
+  });
 }
 
 function modoInfantilAtivo() {
@@ -375,11 +455,20 @@ function limparPerfilAtivo() {
   avisarLumiDaTrocaDePerfil();
 }
 
+let servidorTemFaixa = false;
+
+function marcarServidorComFaixa() {
+  servidorTemFaixa = true;
+  return {};
+}
+
 function membroDoPerfil(perfil) {
   return {
     id: perfil.id,
     nome: perfil.name,
     tipo: perfil.kind === 'kid' ? 'crianca' : 'adulto',
+    faixa: perfil.kind === 'kid' ? (perfil.faixa_etaria || null) : null,
+    ...(perfil && Object.prototype.hasOwnProperty.call(perfil, 'faixa_etaria') ? marcarServidorComFaixa() : {}),
     avatar: perfil.avatar_key,
     foto_path: perfil.avatar_path || null,
     fe: perfil.faith || 0,
@@ -499,7 +588,7 @@ async function renderizarSelecaoDePerfis(jaCarregados) {
         ${perfisEmModoEdicao ? `<span class="perfil-editar-selo">${icone('lapis')}</span>` : ''}
       </span>
       <span class="perfil-nome">${escaparTexto(m.nome)}</span>
-      ${m.tipo === 'crianca' ? '<span class="perfil-tag">Kids</span>' : ''}
+      ${m.tipo === 'crianca' ? '<span class="perfil-tag">Infantil</span>' : ''}
       ${perfilGuardadoPeloPlano(m) ? '<span class="perfil-tag perfil-tag-plano">Assine para usar</span>' : ''}
       ${perfilTrancado(m) ? `<span class="perfil-cadeado" title="Perfil com PIN" aria-label="Perfil com PIN">${icone('cadeado')}</span>` : ''}
     </button>`).join('');
@@ -550,7 +639,54 @@ async function renderizarSelecaoDePerfis(jaCarregados) {
   if (membrosDaConta.length === 0) abrirEditorDePerfil(null);
 }
 
+let carregandoPendentes = 0;
+let carregandoEspera = null;
+let carregandoLimite = null;
+
+function mostrarCarregando(texto, imediato) {
+  const tela = document.getElementById('tela-carregando');
+  if (!tela) return;
+  carregandoPendentes += 1;
+  const legenda = document.getElementById('tela-carregando-texto');
+  if (legenda) legenda.textContent = tr(texto || 'Preparando sua jornada...');
+  clearTimeout(carregandoLimite);
+  carregandoLimite = setTimeout(() => { carregandoPendentes = 0; esconderCarregando(); }, 15000);
+  if (imediato) {
+    clearTimeout(carregandoEspera);
+    carregandoEspera = null;
+    tela.classList.add('ativa');
+  } else if (!carregandoEspera && !tela.classList.contains('ativa')) {
+    carregandoEspera = setTimeout(() => {
+      carregandoEspera = null;
+      if (carregandoPendentes > 0) tela.classList.add('ativa');
+    }, 220);
+  }
+}
+
+function esconderCarregando() {
+  carregandoPendentes = Math.max(0, carregandoPendentes - 1);
+  if (carregandoPendentes > 0) return;
+  clearTimeout(carregandoEspera);
+  clearTimeout(carregandoLimite);
+  carregandoEspera = null;
+  const tela = document.getElementById('tela-carregando');
+  if (tela) tela.classList.remove('ativa');
+}
+
+function cortinaDeTroca(texto) {
+  mostrarCarregando(texto, true);
+  setTimeout(esconderCarregando, 520);
+}
+
+function abrirConfiguracoesDePerfis() {
+  if (!contaLogada() || modoInfantilAtivo()) return;
+  abrirSelecaoDePerfis('inicio');
+  perfisEmModoEdicao = true;
+  renderizarSelecaoDePerfis();
+}
+
 function escolherPerfil(membro) {
+  cortinaDeTroca(membro && membro.tipo === 'crianca' ? 'Vamos aprender com os santos!' : 'Preparando sua jornada...');
   membroAtivo = membro;
   estadoEmMemoriaDaConta = null;
   guardarPerfilEscolhido(membro);
@@ -705,6 +841,7 @@ async function carregarTrilhasDaConta() {
     }
   }
 
+  mostrarCarregando('Abrindo as trilhas...');
   try {
     const trilhas = await carregarConteudoDoServidor();
     const [resPerfil, resProgresso] = await Promise.all([
@@ -716,7 +853,9 @@ async function carregarTrilhasDaConta() {
     Object.assign(membroAtivo, membroDoPerfil(resPerfil.data));
     estadoEmMemoriaDaConta = estadoDoServidor(membroAtivo, resProgresso.data, trilhas);
     aplicarModoKids();
+    esconderCarregando();
   } catch (e) {
+    esconderCarregando();
     limparPerfilAtivo();
     mostrarAvisoTrilhas('Não foi possível carregar este perfil. Escolha um perfil de novo.');
     abrirSelecaoDePerfis('trilhas');
@@ -767,6 +906,7 @@ async function abrirEditorDePerfil(membro) {
   editorEstado = {
     membro,
     tipo: membro ? membro.tipo : 'adulto',
+    faixa: membro ? (membro.faixa || null) : null,
     avatar: membro ? membro.avatar : 'adulto-estrela',
     fotoBlob: null,
     fotoPrevia: membro ? (membro.fotoUrl || null) : null,
@@ -823,6 +963,9 @@ function renderizarEditor() {
   });
 
   document.getElementById('perfil-editor-consentimento').hidden = !(!e.membro && e.tipo === 'crianca');
+  const blocoDaFaixa = document.getElementById('perfil-editor-faixa');
+  if (blocoDaFaixa) blocoDaFaixa.hidden = e.tipo !== 'crianca' || !servidorTemFaixa;
+  document.querySelectorAll('.perfil-faixa').forEach((b) => b.classList.toggle('active', b.dataset.faixa === e.faixa));
   document.getElementById('perfil-editor-previa').innerHTML = desenharAvatar(e.avatar, e.fotoPrevia, 'grande');
   document.getElementById('perfil-editor-remover-foto').hidden = !e.fotoPrevia;
 }
@@ -901,6 +1044,10 @@ async function salvarPerfilDoEditor() {
     feedback.textContent = 'Para criar um perfil infantil, marque a autorização do responsável.';
     return;
   }
+  if (servidorTemFaixa && e.tipo === 'crianca' && !e.faixa) {
+    feedback.textContent = 'Escolha a faixa de idade da criança.';
+    return;
+  }
 
   botao.disabled = true;
   feedback.textContent = 'Salvando...';
@@ -918,6 +1065,10 @@ async function salvarPerfilDoEditor() {
       });
       if (error) throw error;
       id = data.id;
+    }
+    if (servidorTemFaixa && e.tipo === 'crianca' && e.faixa && (!e.membro || e.membro.faixa !== e.faixa)) {
+      const { error } = await supabaseCliente.rpc('perfil_mudar_faixa', { _pid: id, _faixa: e.faixa });
+      if (error) throw error;
     }
 
     const fotoAntiga = e.membro ? e.membro.foto_path : null;
@@ -1044,6 +1195,7 @@ async function abrirPainelDoPerfil(membroId) {
   conteudo.innerHTML = '<p class="perfis-carregando">Carregando...</p>';
   modal.classList.add('active');
 
+  mostrarCarregando('Abrindo as trilhas...');
   try {
     const trilhas = await carregarConteudoDoServidor();
     const [resPerfil, resProgresso] = await Promise.all([
@@ -1062,7 +1214,7 @@ async function abrirPainelDoPerfil(membroId) {
       <div class="painel-topo">
         ${desenharAvatar(m.avatar, conhecido && conhecido.fotoUrl, 'grande')}
         <h4 class="painel-nome">${escaparTexto(m.nome)}</h4>
-        ${m.tipo === 'crianca' ? '<span class="perfil-tag">Kids</span>' : ''}
+        ${m.tipo === 'crianca' ? '<span class="perfil-tag">Infantil</span>' : ''}
       </div>
       <div class="painel-numeros">
         <div><strong>${icone('estrela')}${m.fe}</strong><span>Fé</span></div>
@@ -1295,6 +1447,15 @@ function iniciarPerfis() {
     });
   });
 
+  document.querySelectorAll('.perfil-faixa').forEach((botao) => {
+    botao.addEventListener('click', () => {
+      if (!editorEstado) return;
+      editorEstado.faixa = botao.dataset.faixa;
+      renderizarEditor();
+    });
+  });
+  iniciarJanelaDaFaixa();
+
   const campoFoto = document.getElementById('perfil-editor-foto');
   if (campoFoto) campoFoto.addEventListener('change', aoEscolherFoto);
 
@@ -1338,6 +1499,8 @@ function iniciarPerfis() {
 
   const trocarPerfil = document.getElementById('conta-menu-perfis');
   if (trocarPerfil) trocarPerfil.addEventListener('click', () => abrirSelecaoDePerfis('inicio'));
+  const configurarPerfis = document.getElementById('conta-menu-config-perfis');
+  if (configurarPerfis) configurarPerfis.addEventListener('click', abrirConfiguracoesDePerfis);
   const sairKids = document.getElementById('conta-menu-sair-kids');
   if (sairKids) sairKids.addEventListener('click', () => sairDoModoInfantil('inicio'));
 

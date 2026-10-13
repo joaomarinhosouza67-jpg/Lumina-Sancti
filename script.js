@@ -2669,6 +2669,7 @@ function atualizarInterfaceDeConta() {
   mostrar('conta-menu-perfil', logado && !infantil);
   mostrar('conta-menu-sair', logado && !infantil);
   mostrar('conta-menu-perfis', logado && !infantil);
+  mostrar('conta-menu-config-perfis', logado && !infantil);
   mostrar('conta-menu-sair-kids', infantil);
 
   const precisaLogin = document.getElementById('lumina-precisa-login');

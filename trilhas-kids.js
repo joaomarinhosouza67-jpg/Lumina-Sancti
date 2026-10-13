@@ -327,7 +327,7 @@ window.ATIVIDADES_KIDS = {
     {"tipo":"multipla","enunciado":"A qual Nossa Senhora o Papa agradeceu por ter sido salvo?","opcoes":["Nossa Senhora de Fátima","Nossa Senhora do Carmo","Nossa Senhora da Luz"],"correta":0,"explicacao":"O ataque aconteceu no dia de Nossa Senhora de Fátima."},
     {"tipo":"vf","enunciado":"Quando ficou velhinho e doente, João Paulo II continuou trabalhando.","correta":true,"explicacao":"Ele mostrou que até a doença pode ser oferecida a Deus com amor."},
     {"tipo":"multipla","enunciado":"O que o povo gritava na despedida de João Paulo II?","opcoes":["Santo já!","Vai embora!","Silêncio!"],"correta":0,"explicacao":"O povo tinha certeza de que ele era um santo."},
-    {"tipo":"vf","enunciado":"João Paulo II foi declarado santo no mesmo dia que o Papa João XXIII.","correta":true,"explicacao":"Foi uma festa com dois Papas santos."},
+    {"tipo":"vf","enunciado":"João Paulo II gostava muito dos jovens e reunia jovens do mundo inteiro para rezar.","correta":true,"explicacao":"Ele criou a Jornada Mundial da Juventude, uma grande festa de fé."},
     {"tipo":"multipla","enunciado":"Qual era a oração preferida de João Paulo II?","opcoes":["O terço","A novena de Natal","A Via-Sacra"],"correta":0,"explicacao":"Ele mesmo disse que o terço era a sua oração preferida."},
     {"tipo":"vf","enunciado":"Perdoar é guardar raiva no coração.","correta":false,"explicacao":"Perdoar é soltar a raiva e deixar Deus curar o coração."}
   ],
@@ -372,7 +372,7 @@ window.ATIVIDADES_KIDS = {
   "judas-1": [
     {"tipo":"multipla","enunciado":"Quantos apóstolos Jesus escolheu?","opcoes":["Doze","Três","Cem"],"correta":0,"explicacao":"Judas Tadeu era um dos doze amigos mais próximos de Jesus."},
     {"tipo":"vf","enunciado":"São Judas Tadeu é o mesmo Judas que traiu Jesus.","correta":false,"explicacao":"São duas pessoas diferentes: Judas Tadeu foi fiel a Jesus até o fim."},
-    {"tipo":"multipla","enunciado":"Com qual apóstolo São Judas Tadeu é festejado no mesmo dia?","opcoes":["São Simão","São Jorge","São João"],"correta":0,"explicacao":"Os dois apóstolos são lembrados juntos."},
+    {"tipo":"multipla","enunciado":"São Judas Tadeu era...","opcoes":["Um dos doze apóstolos de Jesus","Um rei","Um soldado romano"],"correta":0,"explicacao":"Judas Tadeu foi um dos doze amigos que Jesus escolheu."},
     {"tipo":"vf","enunciado":"Na Última Ceia, Judas Tadeu fez uma pergunta a Jesus.","correta":true,"explicacao":"Ele queria entender como Jesus se mostraria aos amigos."},
     {"tipo":"multipla","enunciado":"O que Jesus respondeu a Judas Tadeu?","opcoes":["Que viria morar em quem o ama","Que ia viajar","Que estava cansado"],"correta":0,"explicacao":"Jesus e o Pai fazem morada no coração de quem ama Jesus."},
     {"tipo":"vf","enunciado":"O nome Tadeu ajuda a não confundir os dois Judas.","correta":true,"explicacao":"Assim sabemos que estamos falando do apóstolo fiel."},
@@ -614,7 +614,7 @@ window.ATIVIDADES_KIDS = {
     {"tipo":"multipla","enunciado":"A que horas é a Hora da Misericórdia?","opcoes":["Três da tarde","Meia-noite","Seis da manhã"],"correta":0,"explicacao":"Foi a hora em que Jesus morreu na cruz por nós."},
     {"tipo":"vf","enunciado":"Às três da tarde podemos parar um pouquinho para rezar.","correta":true,"explicacao":"Basta lembrar de Jesus e pedir a misericórdia dele."},
     {"tipo":"multipla","enunciado":"Que festa Jesus pediu a Faustina?","opcoes":["Festa da Divina Misericórdia","Festa da Primavera","Festa da Colheita"],"correta":0,"explicacao":"É uma festa para celebrar o amor de Deus que perdoa."},
-    {"tipo":"vf","enunciado":"A Festa da Misericórdia é no domingo depois da Páscoa.","correta":true,"explicacao":"É uma semana depois do Domingo de Páscoa."},
+    {"tipo":"vf","enunciado":"Jesus pediu a Santa Faustina que mandasse pintar a imagem de Jesus Misericordioso.","correta":true,"explicacao":"Na imagem saem dois raios do coração de Jesus, e embaixo está escrito: Jesus, eu confio em vós!"},
     {"tipo":"vf","enunciado":"Faustina viveu até ficar bem velhinha.","correta":false,"explicacao":"Ela foi para o Céu ainda jovem."},
     {"tipo":"multipla","enunciado":"Como Jesus pediu que Faustina tratasse os outros?","opcoes":["Com misericórdia","Com raiva","Com desprezo"],"correta":0,"explicacao":"Jesus pediu que ela fosse boa e paciente com todos."},
     {"tipo":"vf","enunciado":"Hoje ela é Santa Faustina e reza por nós no Céu.","correta":true,"explicacao":"Podemos pedir que ela nos ensine a confiar em Jesus."},
@@ -649,7 +649,7 @@ window.ATIVIDADES_KIDS = {
   "sebastiao-3": [
     {"tipo":"multipla","enunciado":"De qual cidade do Brasil São Sebastião é padroeiro?","opcoes":["Rio de Janeiro","Manaus","Porto Alegre"],"correta":0,"explicacao":"O nome completo da cidade é São Sebastião do Rio de Janeiro."},
     {"tipo":"vf","enunciado":"No dia de São Sebastião há festa e procissão no Rio de Janeiro.","correta":true,"explicacao":"Muita gente caminha rezando pelas ruas."},
-    {"tipo":"multipla","enunciado":"Em que mês é a festa de São Sebastião?","opcoes":["Janeiro","Julho","Outubro"],"correta":0,"explicacao":"A festa é no dia vinte de janeiro."},
+    {"tipo":"multipla","enunciado":"Mesmo atingido por flechas, São Sebastião continuou...","opcoes":["Firme na fé em Jesus","Com medo de tudo","Bravo com todos"],"correta":0,"explicacao":"Sebastião foi corajoso e nunca deixou de amar Jesus."},
     {"tipo":"vf","enunciado":"São Sebastião é santo de uma cidade só.","correta":false,"explicacao":"Ele é amado por cristãos do mundo inteiro."},
     {"tipo":"vf","enunciado":"São Sebastião é padroeiro dos atletas.","correta":true,"explicacao":"Os atletas pedem a ele força e coragem."},
     {"tipo":"multipla","enunciado":"Pelo que muita gente pede a ajuda de São Sebastião?","opcoes":["Pela saúde","Por doces","Por brinquedos"],"correta":0,"explicacao":"Há muito tempo pedem a ele proteção contra as doenças."},
@@ -689,7 +689,7 @@ window.ATIVIDADES_KIDS = {
     {"tipo":"multipla","enunciado":"O que Mônica pediu aos filhos antes de ir para o Céu?","opcoes":["Que rezassem por ela na Missa","Que fizessem uma festa","Que comprassem uma casa"],"correta":0,"explicacao":"Ela queria que eles se lembrassem dela no altar."},
     {"tipo":"vf","enunciado":"Santo Agostinho esqueceu a mãe depois que ela morreu.","correta":false,"explicacao":"Ele escreveu sobre ela com muito amor num livro famoso."},
     {"tipo":"multipla","enunciado":"De quem Santa Mônica é padroeira?","opcoes":["Das mães","Dos astronautas","Dos dinossauros"],"correta":0,"explicacao":"Ela reza por todas as mães e famílias."},
-    {"tipo":"vf","enunciado":"A festa de Santa Mônica é um dia antes da festa de Santo Agostinho.","correta":true,"explicacao":"Mãe e filho são celebrados juntinhos."},
+    {"tipo":"vf","enunciado":"Santa Mônica é exemplo de mãe que nunca desiste de rezar.","correta":true,"explicacao":"Mônica rezou com amor e paciência até o filho voltar para Deus."},
     {"tipo":"multipla","enunciado":"Por quem podemos rezar como Santa Mônica?","opcoes":["Pela nossa família","Só por nós mesmos","Por ninguém"],"correta":0,"explicacao":"Rezar pela família é um jeito lindo de amar."},
     {"tipo":"vf","enunciado":"Deus escuta as orações das mães.","correta":true,"explicacao":"E escuta também as orações das crianças."},
     {"tipo":"ordenar","enunciado":"Monte a oração:","blocos":["Santa Mônica,","rogai pelas","nossas famílias"],"explicacao":"Podemos pedir que ela reze por quem amamos."}

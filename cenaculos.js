@@ -1407,7 +1407,7 @@ function prepararSeletorDeEmojis() {
   if (seletorDeEmojisPronto) return seletorDeEmojisPronto;
   const painel = document.getElementById('cenaculo-painel-emojis');
   const base = `https://cdn.jsdelivr.net/npm/emoji-picker-element@${VERSAO_DO_SELETOR_DE_EMOJIS}`;
-  painel.innerHTML = '<p class="cenaculo-painel-aviso">Carregando emojis...</p>';
+  painel.innerHTML = '<p class="perfis-carregando">Carregando emojis...</p>';
   seletorDeEmojisPronto = Promise.all([import(`${base}/index.js`), import(`${base}/i18n/pt_BR.js`)])
     .then(([modulo, traducao]) => {
       const seletor = new modulo.Picker({
@@ -1452,7 +1452,7 @@ async function buscarNoGiphy() {
     parametros.set('q', termo);
     parametros.set('lang', 'pt');
   }
-  grade.innerHTML = '<p class="cenaculo-painel-aviso">Carregando...</p>';
+  grade.innerHTML = '<p class="perfis-carregando">Carregando...</p>';
   try {
     const resposta = await fetch(`https://api.giphy.com/v1/${tipo}/${termo ? 'search' : 'trending'}?${parametros}`);
     if (!resposta.ok) throw new Error('giphy');
