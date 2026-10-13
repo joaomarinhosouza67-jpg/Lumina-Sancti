@@ -5306,3 +5306,14 @@ body.intro-ativa .navbar { backdrop-filter: none; }
 .enf-smc-aureola { mix-blend-mode: screen; transform-box: fill-box; transform-origin: center; animation: enfSmcLuz 3s ease-in-out infinite; }
 .enf-smc-espada { mix-blend-mode: screen; transform-box: fill-box; transform-origin: center; animation: enfSmcEspada 2.6s ease-in-out infinite; }
 @keyframes enfSmcEspada { 0%, 100% { transform: scale(0.5) rotate(0deg); opacity: 0.4; } 50% { transform: scale(1.15) rotate(20deg); opacity: 1; } }
+.enf-smn-zoom { transform-box: view-box; transform-origin: 262px 40px; animation: enfSmnZoom 18s ease-in-out infinite alternate; }
+@keyframes enfSmnZoom { from { transform: scale(1); } to { transform: scale(1.04); } }
+.enf-smn-raios { transform-box: view-box; transform-origin: 267.7px 24px; animation: enfSmnRaios 12s ease-in-out infinite alternate; }
+@keyframes enfSmnRaios { from { transform: rotate(-4deg); } to { transform: rotate(4deg); } }
+.enf-smn-luz { transform-box: view-box; transform-origin: 267.7px 24px; animation: enfCeuLuz 4.2s ease-in-out infinite; }
+.enf-smn-gume { opacity: 0; animation: enfSmnGume 4.4s ease-in-out 1s infinite; }
+@keyframes enfSmnGume { 0% { transform: translate(0, 0); opacity: 0; } 8% { opacity: 1; } 30% { transform: translate(7px, -16.8px); opacity: 1; } 38%, 100% { transform: translate(7px, -16.8px); opacity: 0; } }
+.enf-smn-ponta { transform-box: fill-box; transform-origin: center; opacity: 0; animation: enfSmnPonta 4.4s ease-in-out 1s infinite; }
+@keyframes enfSmnPonta { 0%, 26% { transform: scale(0.3) rotate(0deg); opacity: 0; } 34% { transform: scale(1.3) rotate(30deg); opacity: 1; } 50%, 100% { transform: scale(0.3) rotate(60deg); opacity: 0; } }
+.enf-smn-pena { opacity: 0; animation: enfSmnPena var(--d, 9s) ease-in-out var(--a, 0s) infinite; }
+@keyframes enfSmnPena { 0% { transform: translate(0, 0) rotate(0deg); opacity: 0; } 12% { opacity: 0.95; } 50% { transform: translate(-14px, 16px) rotate(28deg); } 85% { opacity: 0.8; } 100% { transform: translate(-26px, 36px) rotate(-8deg); opacity: 0; } }

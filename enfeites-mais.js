@@ -9,7 +9,7 @@ ENFEITES.moldura.push(
   { id: 'luz-divina', nome: 'Luz divina', texto: 'Feixes de luz dando a volta', criancas: true },
 );
 ENFEITES.faixa.push(
-  { id: 'sao-miguel-faixa', nome: 'São Miguel Arcanjo', texto: 'O arcanjo de espada erguida rasga as nuvens', criancas: true, exclusivo: true },
+  { id: 'sao-miguel-faixa', nome: 'São Miguel Arcanjo', texto: 'O arcanjo de espada e escudo sobre as nuvens de luz', criancas: true, exclusivo: true },
   { id: 'jardim-do-eden', nome: 'Jardim do Éden', texto: 'Árvores, flores e borboletas', criancas: true },
   { id: 'arca-de-noe', nome: 'Arca de Noé', texto: 'A arca nas ondas debaixo do arco-íris', criancas: true },
   { id: 'fundo-do-mar', nome: 'Fundo do mar', texto: 'Peixinhos e bolhas', criancas: true },
@@ -50,20 +50,6 @@ function asaElegante() {
     + cobertas.map(([a, L]) => penaLonga(L, a, 'pk', '#b4c3da', 1.3)).join('');
 }
 
-function membro(x1, y1, x2, y2, w1, w2, cor, bojo) {
-  const dx = x2 - x1;
-  const dy = y2 - y1;
-  const L = Math.hypot(dx, dy) || 1;
-  const nx = -dy / L;
-  const ny = dx / L;
-  const mx = (x1 + x2) / 2;
-  const my = (y1 + y2) / 2;
-  const b = bojo || 1.2;
-  const m = Math.max(w1, w2) / 2;
-  const p = (x, y) => `${n1(x)} ${n1(y)}`;
-  return `<circle cx="${n1(x1)}" cy="${n1(y1)}" r="${n1(w1 / 2)}" fill="${cor}"/><circle cx="${n1(x2)}" cy="${n1(y2)}" r="${n1(w2 / 2)}" fill="${cor}"/><path d="M${p(x1 + nx * w1 / 2, y1 + ny * w1 / 2)}Q${p(mx + nx * m * b, my + ny * m * b)} ${p(x2 + nx * w2 / 2, y2 + ny * w2 / 2)}A${n1(w2 / 2)} ${n1(w2 / 2)} 0 0 1 ${p(x2 - nx * w2 / 2, y2 - ny * w2 / 2)}Q${p(mx - nx * m * 1.05, my - ny * m * 1.05)} ${p(x1 - nx * w1 / 2, y1 - ny * w1 / 2)}A${n1(w1 / 2)} ${n1(w1 / 2)} 0 0 1 ${p(x1 + nx * w1 / 2, y1 + ny * w1 / 2)}Z" fill="${cor}"/>`;
-}
-
 const DEFS_DO_ARCANJO = `<defs>
   <linearGradient id="ou" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff6cf"/><stop offset=".22" stop-color="#eebf4a"/><stop offset=".42" stop-color="#8a5a0a"/><stop offset=".6" stop-color="#f7d774"/><stop offset=".8" stop-color="#b07a12"/><stop offset="1" stop-color="#5c3a04"/></linearGradient>
   <linearGradient id="oc" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fffbea"/><stop offset=".5" stop-color="#f5cf5a"/><stop offset="1" stop-color="#9a6a0e"/></linearGradient>
@@ -101,11 +87,6 @@ function pecaDoArcanjo(chave, caixa, desenho) {
   return `<image href="${PECAS_DO_ARCANJO[chave]}" x="${x}" y="${y}" width="${w}" height="${h}"/>`;
 }
 
-function corpoDaNuvem(grad, base) {
-  const bolas = [[-28, 6, 4.5], [-20, 3, 6.5], [-10, -1, 8.5], [2, -3, 9.5], [14, -1, 8], [24, 3, 6], [32, 6, 4], [-4, 5, 7], [8, 5, 7]];
-  return `<rect x="-32" y="6" width="68" height="8" rx="4" fill="${base}"/>${bolas.map(([bx, by, r]) => `<circle cx="${bx}" cy="${by}" r="${r}" fill="url(#${grad})"/>`).join('')}`;
-}
-
 function nuvemFofa(x, y, escala, peca, d, a) {
   return `<g class="enf-nuvem" style="--d:${d}s;--a:-${a}s"><g transform="translate(${x} ${y}) scale(${escala})">${peca}</g></g>`;
 }
@@ -139,53 +120,6 @@ const PECAS_DA_MOLDURA_DO_ARCANJO = {
     <g stroke="#fde68a" stroke-width=".4" opacity=".55">${[0, 30, 60, 90, 120, 150].map((a) => `<path d="M0 0L${n1(Math.cos((a * Math.PI) / 180) * 10)} ${n1(Math.sin((a * Math.PI) / 180) * 10)}M0 0L${n1(-Math.cos((a * Math.PI) / 180) * 10)} ${n1(-Math.sin((a * Math.PI) / 180) * 10)}"/>`).join('')}</g>
     <path d="M-1.4 -9H1.4V-2.8H6.4V0H1.4V10.5H-1.4V0H-6.4V-2.8H-1.4Z" fill="url(#oc)" stroke="#5c3a04" stroke-width=".35"/>
     <path d="M-10.5 -10.5H10.5V-5C4 -7.5 -4 -7.5 -10.5 -3Z" fill="#fff" opacity=".18"/>`,
-};
-
-const PECAS_DA_FAIXA_DO_ARCANJO = {
-  raios: () => `<g fill="url(#ra)">${[-150, -128, -104, -82, -58, -36, -12, 14, 38, 62, 90, 118, 142, 166].map((a, i) => {
-    const r = (a * Math.PI) / 180;
-    const abertura = (i % 3 === 0 ? 5 : 3) * (Math.PI / 180);
-    return `<path d="M0 0L${n1(Math.cos(r - abertura) * 260)} ${n1(Math.sin(r - abertura) * 260)}L${n1(Math.cos(r + abertura) * 260)} ${n1(Math.sin(r + abertura) * 260)}Z"/>`;
-  }).join('')}</g>`,
-  nuvemEscura: () => corpoDaNuvem('te', '#121a33'),
-  nuvemClara: () => corpoDaNuvem('nl', '#c47a33'),
-  asa: () => asaElegante(),
-  capa: () => `<path d="M-6 -18.6C-11 -18 -16.5 -14 -19.5 -7C-22 -1 -24 6 -27.5 10.5C-22.5 11 -18.2 8.2 -15.6 4.6C-15 9.2 -16.6 13.8 -19.4 17.4C-13.6 16.4 -9.6 11 -8 5C-7 0 -6.6 -6 -5.4 -12Z" fill="url(#cf)" stroke="#6b1414" stroke-width=".35"/>
-    <path d="M-9.6 -14C-13 -8 -14.8 -2 -15.6 4.6M-7.8 -9C-9.6 -2 -10.6 4 -12.6 9.6" fill="none" stroke="#8f1d1d" stroke-width=".55" opacity=".75"/>
-    <path d="M-7.4 -17.6C-12 -16 -15.8 -11 -18 -5.6" fill="none" stroke="#ffc4b9" stroke-width=".45" opacity=".9"/>`,
-  corpo: () => `<path d="M7.4 -18.6C11.6 -17.6 14.4 -13.6 15 -8.6C15.6 -4 14.2 0 13.4 3C12.4 -.6 10.6 -3.6 8.4 -5.6C9.4 -9 8.8 -13.6 7.4 -18.6Z" fill="url(#cf)" stroke="#6b1414" stroke-width=".35"/>
-    ${membro(3.6, 5.6, 6.8, 15.6, 3.9, 2.8, 'url(#pe)', 1.25)}${membro(6.8, 15.6, 9.6, 24.2, 2.8, 1.9, 'url(#pe)', 1.3)}
-    <path d="M8.6 24L13 25.2Q13.8 26.6 12.2 27.1L8.2 26.6Z" fill="#a16207"/><path d="M7.9 21.2Q9 20.6 10.1 21.4M8.4 23.2Q9.4 22.6 10.5 23.3" fill="none" stroke="#b7862b" stroke-width=".4"/>
-    ${membro(-2.6, 5.6, -6.6, 16.2, 4, 2.9, 'url(#pe)', 1.25)}${membro(-6.6, 16.2, -8, 26.2, 2.9, 1.9, 'url(#pe)', 1.3)}
-    <path d="M-8.8 25.8L-13 27.4Q-13.2 28.9 -11.2 28.9L-6.2 28.4L-6.6 25.9Z" fill="#a16207"/><path d="M-8.8 22.6Q-7.6 22 -6.4 22.8M-8.9 24.6Q-7.7 24 -6.5 24.8" fill="none" stroke="#b7862b" stroke-width=".4"/>
-    <path d="M-4.6 -3.4H5.8L9.4 6.4Q8 7.8 6.4 6.6Q5 8.2 3.4 6.8Q1.8 8.4 .4 6.8Q-1.2 8.4 -2.6 6.8Q-4 8.2 -5.6 6.6Q-7 7.6 -8.2 6.4Z" fill="url(#sa)" stroke="#7b8db0" stroke-width=".3"/>
-    <path d="M-2 -3V6.6M1.2 -3V6.9M4 -3V6.6M-4.8 -2V6.2M6.8 -2V6.2" stroke="#8a9bbd" stroke-width=".3"/>
-    <path d="M-6.4 -18.4C-7.4 -12 -6 -7.2 -4.2 -3.6H5.4C7 -7.2 8.2 -12 7.2 -18.4C3.2 -19.8 -2.4 -19.8 -6.4 -18.4Z" fill="url(#ac)" stroke="#26375c" stroke-width=".35"/>
-    <path d="M-4 -14Q.6 -12 5 -14M.6 -11.4V-5M-3 -8.6Q.6 -7.4 4.2 -8.6" fill="none" stroke="#3b5179" stroke-width=".35" opacity=".8"/>
-    <path d="M-5.2 -17C-3 -18.2 0 -18.4 2 -18" fill="none" stroke="#ffffff" stroke-width=".5" opacity=".8"/>
-    <path d="M-6 -17.5L5.4 -4.4L4 -3.4L-6.8 -15.4Z" fill="#f9a8a0" stroke="#c2413b" stroke-width=".25"/>
-    <path d="M-4.4 -4.6H5.6V-3H-4.4Z" fill="url(#ou)"/>
-    ${membro(7.6, -17, 10.6, -10, 3, 2.4, 'url(#pe)', 1.3)}${membro(10.6, -10, 12.4, -3.8, 2.4, 1.8, 'url(#pe)', 1.2)}
-    ${membro(11.3, -7.6, 12.1, -5, 2.3, 2.1, 'url(#br)', 1)}<circle cx="12.5" cy="-3.4" r="1.15" fill="url(#pe)"/>
-    <ellipse cx="8" cy="-18.2" rx="2.7" ry="2.1" fill="url(#sa)" stroke="#7b8db0" stroke-width=".3"/>
-    <path d="M-.8 -21H2V-18.4H-.8Z" fill="#d89b70"/>
-    <ellipse cx=".6" cy="-24" rx="3" ry="3.6" fill="url(#pe)"/>
-    <path d="M-3.6 -24.2C-4.8 -29 -1.6 -31.2 1 -30.8C4.2 -31 6 -28 4.6 -24.4C4.2 -26.6 2.6 -27.8 1 -27.6C-1 -28 -2.8 -26.8 -3.6 -24.2Z" fill="url(#cb)"/><circle cx="-4.2" cy="-27.4" r="1.2" fill="url(#cb)"/><circle cx="5" cy="-27.8" r="1.1" fill="url(#cb)"/><circle cx=".2" cy="-31.2" r="1.3" fill="url(#cb)"/><circle cx="4.8" cy="-23.4" r=".9" fill="url(#cb)"/>
-    <circle cx="-3.6" cy="-25.6" r="1.3" fill="url(#cb)"/><circle cx="4.6" cy="-25.8" r="1.25" fill="url(#cb)"/><circle cx="-2.4" cy="-29.2" r="1.3" fill="url(#cb)"/><circle cx="2.8" cy="-30" r="1.25" fill="url(#cb)"/><circle cx="-3.9" cy="-23" r="1" fill="url(#cb)"/>
-    <path d="M-.9 -24.5Q0 -25.1 .9 -24.6M1.9 -24.6Q2.8 -25.1 3.6 -24.5" fill="none" stroke="#8a5a1c" stroke-width=".32"/>
-    <ellipse cx="0" cy="-23.4" rx=".55" ry=".34" fill="#2b1d12"/><ellipse cx="2.7" cy="-23.4" rx=".55" ry=".34" fill="#2b1d12"/>
-    <path d="M1.4 -23.2L1.1 -22L1.7 -21.9" fill="none" stroke="#b9774f" stroke-width=".25"/>
-    <path d="M.7 -20.9Q1.4 -20.6 2.1 -20.9" fill="none" stroke="#b4533c" stroke-width=".32"/>
-    <ellipse cx="-.6" cy="-22" rx=".8" ry=".45" fill="#f08a7a" opacity=".35"/><ellipse cx="3.4" cy="-22" rx=".7" ry=".4" fill="#f08a7a" opacity=".35"/>
-    <ellipse cx="-6.4" cy="-17.2" rx="2.8" ry="2.2" fill="url(#ac)" stroke="#26375c" stroke-width=".3"/>
-    ${membro(-6.6, -17.2, -10.6, -24.6, 3.1, 2.5, 'url(#pe)', 1.3)}${membro(-10.6, -24.6, -12.4, -31, 2.5, 1.9, 'url(#pe)', 1.2)}
-    ${membro(-11.3, -27.4, -12, -29.8, 2.4, 2.2, 'url(#br)', 1)}
-    <ellipse cx="-7.6" cy="-18.8" rx="2.5" ry="1.9" fill="url(#sa)" stroke="#7b8db0" stroke-width=".3"/>`,
-  espada: () => `<path d="M-.95 -2V-27.4L0 -30.6L.95 -27.4V-2Z" fill="url(#la)" stroke="#0c4a6e" stroke-width=".2"/>
-    <path d="M0 -3V-27" stroke="#f0f9ff" stroke-width=".35"/>
-    <path d="M-.55 -1H.55V3H-.55Z" fill="#7c2d12"/><circle cx="0" cy="3.7" r=".85" fill="url(#ou)"/>
-    <path d="M-4.2 -1.6C-2 -2.7 2 -2.7 4.2 -1.6C2 -.6 -2 -.6 -4.2 -1.6Z" fill="url(#ou)" stroke="#5c3a04" stroke-width=".2"/>
-    <circle cx="0" cy="-1.6" r=".6" fill="#e11d48"/>`,
 };
 
 Object.assign(MOLDURAS, {
@@ -226,50 +160,46 @@ Object.assign(MOLDURAS, {
 
 Object.assign(FAIXAS, {
   'sao-miguel-faixa'() {
-    const g = { ceu: idDoEnfeite('ceu'), gloria: idDoEnfeite('gloria'), halo: idDoEnfeite('halo'), brilhoLamina: idDoEnfeite('brilho-lamina') };
-    const P = PECAS_DA_FAIXA_DO_ARCANJO;
-    const escura = pecaDoArcanjo('f-nuvem-escura', [-38, -20, 76, 36], P.nuvemEscura);
-    const clara = pecaDoArcanjo('f-nuvem-clara', [-38, -20, 76, 36], P.nuvemClara);
-    const asaPeca = pecaDoArcanjo('f-asa', [-56, -76, 62, 86], P.asa);
-    const asa = (x, espelho) => `<g transform="translate(${x} -15)${espelho ? ' scale(-1 1)' : ''}"><g class="enf-asa-sm"><g transform="rotate(-12) scale(.52)">${asaPeca}</g></g></g>`;
-    let elos = '';
-    for (let i = 0; i < 8; i += 1) elos += `<ellipse cx="${n1(i * 0.45)}" cy="${n1(1.2 + i * 1.9)}" rx="${i % 2 ? 0.45 : 0.95}" ry="${i % 2 ? 0.95 : 0.55}" fill="none" stroke="#9ca3af" stroke-width=".42"/>`;
-    const sorteio = sorteioFixo(31);
-    let brasas = '';
-    for (let i = 0; i < 14; i += 1) brasas += `<circle cx="${n1(180 + sorteio() * 140)}" cy="${n1(70 + sorteio() * 12)}" r="${n1(0.35 + sorteio() * 0.6)}" fill="${i % 3 ? '#fde68a' : '#ffffff'}" class="enf-sobe-lento" style="--d:${n1(4 + sorteio() * 4)}s;--a:-${n1(sorteio() * 8)}s"/>`;
-    const pena = pecaDoArcanjo('f-pena', [-17, -5, 18, 10], () => penaFina(16, 3.6, 0, 'pc', '#a3b1c9', 0));
-    const penasCaindo = [[214, -6, 0], [292, -10, 2.4], [178, -4, 4.6]].map(([x, y, a]) => `<g transform="translate(${x} ${y})"><g class="enf-cai-longo" style="--d:8s;--a:-${a}s"><g transform="rotate(60) scale(.45)">${pena}</g></g></g>`).join('');
+    const escurece = idDoEnfeite('smn-e');
+    const raio = idDoEnfeite('smn-r');
+    const brilho = idDoEnfeite('smn-b');
+    const aro = idDoEnfeite('smn-a');
+    const lx = 267.7;
+    const ly = 24;
+    const raios = [-172, -150, -128, -108, -90, -72, -52, -32, -12, 8, 168].map((a, i) => {
+      const r = (a * Math.PI) / 180;
+      const abre = 0.035 + (i % 3) * 0.015;
+      const L = 220;
+      return `<path d="M${lx} ${ly}L${n1(lx + Math.cos(r - abre) * L)} ${n1(ly + Math.sin(r - abre) * L)}L${n1(lx + Math.cos(r + abre) * L)} ${n1(ly + Math.sin(r + abre) * L)}Z" fill="url(#${raio})" class="enf-ceu-raio" style="--a:${(-i * 0.55).toFixed(2)}s"/>`;
+    }).join('');
+    const estrelas = ESTRELAS_DE_SAO_MIGUEL.filter((e) => e.x < 200 && e.y < 36).map((e) => `<circle cx="${e.x}" cy="${e.y}" r="${e.r}" fill="${e.dourada ? '#fde68a' : '#fff'}" class="enf-smc-estrela" style="--d:${e.d}s;--a:-${e.a}s"/>`).join('');
+    const faiscas = [[246, 40, 0.8, 0, 4.2], [286, 44, 0.7, 1.2, 3.8], [262, 58, 0.9, 2.2, 4.6], [298, 30, 0.6, 0.6, 3.6], [236, 62, 0.7, 3, 4.4], [276, 66, 0.8, 1.7, 4], [228, 30, 0.6, 2.6, 3.4], [306, 56, 0.7, 0.3, 5]]
+      .map(([x, y, r, a, d]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#fff3c4" class="enf-ceu-faisca" style="--a:-${a}s;--d:${d}s"/>`).join('');
+    const pena = 'M0 0C1.2 -1.1 3.6 -1.3 5.4 -.5C3.8 .3 1.6 .6 0 0Z';
+    const penas = [[226, 18, 0, 9], [300, 12, 3.2, 10], [214, 40, 6.1, 8.5]].map(([x, y, a, d]) => `<g transform="translate(${x} ${y})"><g class="enf-smn-pena" style="--a:-${a}s;--d:${d}s"><path d="${pena}" fill="#fffaf0" opacity=".9"/><path d="M0 0L5.2 -.45" stroke="#e7d6b3" stroke-width=".18"/></g></g>`).join('');
     return `<defs>
-      <linearGradient id="${g.ceu}" x1="0" y1="0" x2=".35" y2="1"><stop offset="0" stop-color="#050816"/><stop offset=".55" stop-color="#121a42"/><stop offset="1" stop-color="#1f2a5a"/></linearGradient>
-      <radialGradient id="${g.gloria}" gradientUnits="userSpaceOnUse" cx="252" cy="26" r="150"><stop offset="0" stop-color="#fffaf0" stop-opacity="1"/><stop offset=".12" stop-color="#fde68a" stop-opacity=".85"/><stop offset=".32" stop-color="#f59e0b" stop-opacity=".35"/><stop offset=".6" stop-color="#9a3412" stop-opacity=".12"/><stop offset="1" stop-color="#1f2a5a" stop-opacity="0"/></radialGradient>
-      <radialGradient id="${g.halo}" cx="50%" cy="50%" r="50%"><stop offset=".55" stop-color="#fde68a" stop-opacity="0"/><stop offset=".8" stop-color="#fde68a" stop-opacity=".9"/><stop offset="1" stop-color="#fde68a" stop-opacity="0"/></radialGradient>
-      <linearGradient id="${g.brilhoLamina}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7dd3fc" stop-opacity="0"/><stop offset=".5" stop-color="#e0f2fe" stop-opacity=".85"/><stop offset="1" stop-color="#7dd3fc" stop-opacity="0"/></linearGradient>
-    </defs>
-    <rect width="320" height="80" fill="url(#${g.ceu})"/>
-    <rect width="320" height="80" fill="url(#${g.gloria})" class="enf-respira" style="--d:4.5s"/>
-    <g transform="translate(252 26)"><g class="enf-raios-sm">${pecaDoArcanjo('f-raios', [-262, -262, 524, 524], P.raios)}</g></g>
-    ${nuvemFofa(130, 70, 1.5, escura, 34, 0)}${nuvemFofa(196, 80, 1.7, escura, 40, 8)}${nuvemFofa(76, 76, 1.3, escura, 30, 16)}
-    <g class="enf-relampago"><path d="M156 46L150 58L155.5 58L148 72" fill="none" stroke="#93c5fd" stroke-width="3.2" opacity=".35"/><path d="M156 46L150 58L155.5 58L148 72" fill="none" stroke="#f0f9ff" stroke-width="1"/></g>
-    <g class="enf-relampago" style="--a:-3.4s"><path d="M98 50L94 60L98.5 60L93 70" fill="none" stroke="#93c5fd" stroke-width="2.6" opacity=".35"/><path d="M98 50L94 60L98.5 60L93 70" fill="none" stroke="#f0f9ff" stroke-width=".8"/></g>
-    ${penasCaindo}
-    <g transform="translate(252 46) scale(.78)"><g class="enf-flutua">
-      ${asa(-2, false)}${asa(3, true)}
-      <g transform="translate(-6 -18.6)"><g class="enf-capa-sm"><g transform="translate(6 18.6)">${pecaDoArcanjo('f-capa', [-29, -20, 25, 39], P.capa)}</g></g></g>
-      <ellipse cx=".6" cy="-25.2" rx="5.6" ry="5.6" fill="url(#${g.halo})" class="enf-respira" style="--d:2.4s"/>
-      ${pecaDoArcanjo('f-corpo', [-16, -34, 34, 66], P.corpo)}
-      <g transform="translate(12.4 -3.6)"><g class="enf-corrente">${elos}</g></g>
-      <g transform="translate(-12.5 -31.8) rotate(-30)">
-        <path d="M-5.6 1V-30L0 -41L5.6 -30V1Z" fill="url(#${g.brilhoLamina})" class="enf-respira" style="--d:1.5s"/>
-        <path d="M-2.6 0V-29L0 -35L2.6 -29V0Z" fill="url(#${g.brilhoLamina})"/>
-        ${pecaDoArcanjo('f-espada', [-5, -32, 10, 37], P.espada)}
-        <g class="enf-brilho-lamina"><path d="M0 -2.4C.18 -.4 .36 -.18 2.4 0C.36 .18 .18 .4 0 2.4C-.18 .4 -.36 .18 -2.4 0C-.36 -.18 -.18 -.4 0 -2.4Z" fill="#fff"/></g>
+        <linearGradient id="${escurece}" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="118" y2="0"><stop offset="0" stop-color="#050a1e" stop-opacity=".88"/><stop offset=".55" stop-color="#050a1e" stop-opacity=".5"/><stop offset="1" stop-color="#050a1e" stop-opacity="0"/></linearGradient>
+        <radialGradient id="${raio}" gradientUnits="userSpaceOnUse" cx="${lx}" cy="${ly}" r="220"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".1" stop-color="#fff" stop-opacity=".5"/><stop offset=".35" stop-color="#ffe7a8" stop-opacity=".24"/><stop offset="1" stop-color="#ffcf70" stop-opacity="0"/></radialGradient>
+        <radialGradient id="${brilho}"><stop offset="0" stop-color="#fff"/><stop offset=".25" stop-color="#fff4d0" stop-opacity=".85"/><stop offset=".6" stop-color="#ffd27a" stop-opacity=".28"/><stop offset="1" stop-color="#ffc04a" stop-opacity="0"/></radialGradient>
+        <radialGradient id="${aro}"><stop offset=".3" stop-color="#fff4d0" stop-opacity="0"/><stop offset=".62" stop-color="#ffd27a" stop-opacity=".38"/><stop offset="1" stop-color="#ffc04a" stop-opacity="0"/></radialGradient>
+      </defs>
+      <rect width="320" height="80" fill="#0a1230"/>
+      <g class="enf-smn-zoom">
+        <image href="sao-miguel-nuvens.webp" x="106.7" width="213.3" height="80" preserveAspectRatio="none" transform="translate(213.9 0) scale(-1 1)"/>
+        <image href="sao-miguel-nuvens.webp" x="106.7" width="213.3" height="80" preserveAspectRatio="none"/>
       </g>
-      <circle cx="-12.5" cy="-31.8" r="1.35" fill="#eab489"/>
-    </g></g>
-    ${nuvemFofa(250, 75.5, 1.05, clara, 26, 0)}${nuvemFofa(292, 80, 0.95, clara, 22, 6)}${nuvemFofa(206, 82, 0.9, clara, 30, 11)}
-    ${brasas}
-    ${faisca(233, 4, 4.2, '#ffffff', 0.4)}${faisca(196, 20, 2.2, '#fef9c3', 1.2)}${faisca(306, 16, 2.4, '#fef9c3', 2)}${faisca(286, 46, 1.8, '#fef9c3', 0.9)}`;
+      <rect x="0" width="120" height="80" fill="url(#${escurece})"/>
+      ${estrelas}
+      <g class="enf-ceu-tela">
+        <g class="enf-smn-raios">${raios}</g>
+        <circle cx="${lx}" cy="${ly}" r="44" fill="url(#${aro})" class="enf-smn-luz"/>
+        <g class="enf-smn-gume"><ellipse cx="253.9" cy="17.6" rx="1.1" ry="3" transform="rotate(22 253.9 17.6)" fill="url(#${brilho})"/></g>
+        <path d="M260.9 -4.2Q261.5 .2 266 .8Q261.5 1.4 260.9 5.8Q260.3 1.4 255.8 .8Q260.3 .2 260.9 -4.2Z" fill="#fffbeb" class="enf-smn-ponta"/>
+        ${faiscas}
+      </g>
+      ${penas}`;
   },
+
 
 });
 
