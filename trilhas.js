@@ -798,6 +798,11 @@ const TEXTOS_TRILHAS = {
     missao_rotulo: 'Missão {n}: {titulo}',
     missao_refazer: ' (concluída — revisar)',
     revisao_de: 'Revisão da missão {n} · {titulo}',
+    revisar_feita: 'Missão concluída',
+    revisar_titulo: 'Missão {n} · {titulo}',
+    revisar_texto: 'Revise com perguntas novas e ganhe mais Fé.',
+    revisar_botao: 'Revisar',
+    revisar_fe: '+{n} Fé',
     missao_bloqueada: ' (bloqueada)',
     comecar_balao: 'Começar',
     medalha_de: 'Medalha da {m}',
@@ -881,6 +886,11 @@ const TEXTOS_TRILHAS = {
     missao_rotulo: 'Mission {n}: {titulo}',
     missao_refazer: ' (completed — review)',
     revisao_de: 'Review of mission {n} · {titulo}',
+    revisar_feita: 'Mission complete',
+    revisar_titulo: 'Mission {n} · {titulo}',
+    revisar_texto: 'Review with new questions and earn more Faith.',
+    revisar_botao: 'Review',
+    revisar_fe: '+{n} Faith',
     missao_bloqueada: ' (locked)',
     comecar_balao: 'Start',
     medalha_de: 'Medal of {m}',
@@ -964,6 +974,11 @@ const TEXTOS_TRILHAS = {
     missao_rotulo: 'Misión {n}: {titulo}',
     missao_refazer: ' (completada — repasar)',
     revisao_de: 'Repaso de la misión {n} · {titulo}',
+    revisar_feita: 'Misión cumplida',
+    revisar_titulo: 'Misión {n} · {titulo}',
+    revisar_texto: 'Repasa con preguntas nuevas y gana más Fe.',
+    revisar_botao: 'Repasar',
+    revisar_fe: '+{n} Fe',
     missao_bloqueada: ' (bloqueada)',
     comecar_balao: 'Empezar',
     medalha_de: 'Medalla de {m}',
@@ -1426,7 +1441,7 @@ const SANTIDADE_MAXIMA = 15;
 const MINUTOS_PARA_RENOVAR_SANTIDADE = 30;
 const FE_BASE_LICAO = 10;
 const FE_POR_ACERTO_DE_PRIMEIRA = 5;
-const FE_REVISAO = 5;
+const FE_REVISAO = 10;
 const CHAVE_PROGRESSO_TRILHAS = 'lumina-sancti-trilhas-v1';
 
 function perfilEhInfantil() {
@@ -1683,7 +1698,15 @@ function renderizarTrilhas() {
   }).join('');
 
   lista.querySelectorAll('.no-licao').forEach((botao) => {
-    botao.addEventListener('click', () => abrirNoDaTrilha(botao.dataset.trilha, Number(botao.dataset.indice)));
+    botao.addEventListener('click', (evento) => {
+      if (botao.classList.contains('concluida')) {
+        evento.stopPropagation();
+        abrirBalaoDeRevisao(botao);
+        return;
+      }
+      fecharBalaoDeRevisao();
+      abrirNoDaTrilha(botao.dataset.trilha, Number(botao.dataset.indice));
+    });
   });
   lista.querySelectorAll('.trilha-ler').forEach((botao) => {
     botao.addEventListener('click', () => showDetail(botao.dataset.santo));
@@ -1723,6 +1746,68 @@ function renderizarPlacarDasTrilhas(estado) {
     <div class="stat stat-ofensiva${estado.ofensiva > 0 ? ' acesa' : ''}"><span class="stat-icone">${icone('chama')}</span><span class="stat-valor">${estado.ofensiva}</span><small>${tt('ofensiva')}</small></div>
     <div class="stat stat-santidade${porcento <= 20 ? ' baixa' : ''}"><span class="stat-icone">${icone('pomba')}</span><span class="stat-valor">${santidadeTexto}</span><small>${tt('santidade')}</small><span class="stat-barra" aria-hidden="true"><span style="width:${porcento}%"></span></span></div>
   `;
+}
+
+function fecharBalaoDeRevisao() {
+  document.querySelectorAll('.no-revisar').forEach((balao) => {
+    const dono = balao.closest('.no-wrapper');
+    if (dono) dono.classList.remove('com-revisar');
+    balao.remove();
+  });
+  document.removeEventListener('click', fecharBalaoAoClicarFora, true);
+  document.removeEventListener('keydown', fecharBalaoComEsc);
+}
+
+function fecharBalaoAoClicarFora(evento) {
+  if (evento.target.closest('.no-revisar') || evento.target.closest('.no-licao.concluida')) return;
+  fecharBalaoDeRevisao();
+}
+
+function fecharBalaoComEsc(evento) {
+  if (evento.key === 'Escape') fecharBalaoDeRevisao();
+}
+
+function abrirBalaoDeRevisao(botao) {
+  const lugar = botao.closest('.no-wrapper');
+  if (!lugar) return;
+  const jaAberto = lugar.querySelector('.no-revisar');
+  fecharBalaoDeRevisao();
+  if (jaAberto) return;
+  const trilha = trilhasEmUso().find((t) => t.slug === botao.dataset.trilha);
+  const indice = Number(botao.dataset.indice);
+  if (!trilha || !trilha.licoes[indice]) return;
+  const fe = FE_REVISAO;
+  const balao = document.createElement('div');
+  balao.className = 'no-revisar';
+  balao.setAttribute('role', 'dialog');
+  balao.innerHTML = `
+    <span class="no-revisar-selo">${icone('check')} ${tt('revisar_feita')}</span>
+    <strong class="no-revisar-titulo">${tt('revisar_titulo', { n: indice + 1, titulo: trilha.licoes[indice].titulo })}</strong>
+    <p class="no-revisar-texto">${tt('revisar_texto')}</p>
+    <button type="button" class="no-revisar-botao">
+      <span>${tt('revisar_botao')}</span>
+      <span class="no-revisar-fe">${estrelaDaFe('pequena')} ${tt('revisar_fe', { n: fe })}</span>
+    </button>`;
+  lugar.classList.add('com-revisar');
+  lugar.appendChild(balao);
+  balao.querySelector('.no-revisar-botao').addEventListener('click', (evento) => {
+    evento.stopPropagation();
+    fecharBalaoDeRevisao();
+    abrirNoDaTrilha(trilha.slug, indice);
+  });
+  setTimeout(() => {
+    document.addEventListener('click', fecharBalaoAoClicarFora, true);
+    document.addEventListener('keydown', fecharBalaoComEsc);
+  }, 0);
+  const caixa = balao.getBoundingClientRect();
+  const largura = document.documentElement.clientWidth;
+  const meio = (caixa.left + caixa.right) / 2;
+  const metade = balao.offsetWidth / 2;
+  let desvio = 0;
+  if (meio + metade > largura - 12) desvio = largura - 12 - (meio + metade);
+  if (meio - metade + desvio < 12) desvio = 12 - (meio - metade);
+  if (desvio) balao.style.setProperty('--desvio', `${Math.round(desvio)}px`);
+  if (caixa.bottom > window.innerHeight - 12 && balao.scrollIntoView) balao.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 function abrirNoDaTrilha(slugTrilha, indice) {
@@ -1826,7 +1911,7 @@ function renderizarCabecalhoDaMissao(trilha, indice, licao) {
 
 function mostrarGastoDeSantidade() {
   const lugar = document.querySelector('.licao-santidade');
-  if (!lugar || perfilEhInfantil()) return;
+  if (!lugar || perfilEhInfantil() || (typeof contaComSantidadeInfinita === 'function' && contaComSantidadeInfinita())) return;
   lugar.classList.remove('gastou');
   void lugar.offsetWidth;
   lugar.classList.add('gastou');
@@ -1847,7 +1932,7 @@ function atualizarTopoDaLicao() {
     barra.style.width = `${Math.round((feitas / licaoAtual.total) * 100)}%`;
   }
   if (santidadeEl) {
-    if (perfilEhInfantil()) {
+    if (perfilEhInfantil() || (typeof contaComSantidadeInfinita === 'function' && contaComSantidadeInfinita())) {
       santidadeEl.textContent = '∞';
     } else {
       const estado = carregarProgressoTrilhas();
