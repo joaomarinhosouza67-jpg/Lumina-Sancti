@@ -3909,81 +3909,7 @@ function efeitoIntervencaoAngelical(w, h, foco) {
 efeitoIntervencaoAngelical.usaMargem = true;
 efeitoIntervencaoAngelical.duracao = 6800;
 
-function penaPendente(x0, y0, x1, y1, largura, curva, grad, linha) {
-  const dx = x1 - x0;
-  const dy = y1 - y0;
-  const L = Math.hypot(dx, dy) || 1;
-  const nx = -dy / L;
-  const ny = dx / L;
-  const p = (t, lado) => {
-    const bojo = largura * 1.22 * Math.pow(Math.sin(Math.PI * Math.pow(t, 0.62)), 1.1);
-    const torce = Math.sin(Math.PI * t) * curva;
-    return [x0 + dx * t + nx * (lado * bojo / 2 + torce), y0 + dy * t + ny * (lado * bojo / 2 + torce)];
-  };
-  const a = [];
-  const b = [];
-  for (let i = 0; i <= 22; i += 1) {
-    const t = i / 22;
-    a.push(p(t, 1));
-    b.push(p(t, -1));
-  }
-  const pts = a.concat(b.reverse()).map(([x, y]) => `${n1(x)} ${n1(y)}`);
-  const haste = [0.04, 0.5, 0.96].map((t) => p(t, 0)).map(([x, y]) => `${n1(x)} ${n1(y)}`);
-  const sombra = [];
-  for (let i = 0; i <= 14; i += 1) sombra.push(p(i / 14, -0.55));
-  const corpo = `M${pts.join('L')}Z`;
-  return `<path d="${corpo}" fill="#8781c6" opacity=".34" transform="translate(.7 1.1)"/>`
-    + `<path d="${corpo}" fill="url(#${grad})" stroke="#ffffff" stroke-width=".45" stroke-opacity=".85"/>`
-    + `<path d="M${sombra.map(([x, y]) => `${n1(x)} ${n1(y)}`).join('L')}" fill="none" stroke="${linha}" stroke-width="1.3" opacity=".38"/>`
-    + `<path d="M${haste[0]}Q${haste[1]} ${haste[2]}" fill="none" stroke="#ffffff" stroke-width=".5" opacity=".7"/>`;
-}
-
-function asaPendente() {
-  const pena = (a, b, l, c, g, linha) => penaPendente(a[0], a[1], b[0], b[1], l, c, g, linha);
-  const longas = [
-    [[6, 40], [16, 96], 14, 4.2],
-    [[8, 40], [23, 119], 14, 3.6],
-    [[11, 41], [28, 112], 13.5, 2.4],
-    [[17, 43], [50, 123], 8.5, -1],
-    [[14, 42], [33, 108], 12.5, 1.2],
-    [[20, 44], [31, 96], 11, 0.2],
-    [[22, 45], [30, 80], 10, -0.4],
-    [[16, 42], [52, 66], 8.5, -1.6],
-  ].map(([a, b, l, c]) => pena(a, b, l, c, 'pp1', '#8e89cc')).join('');
-  const massa = '<path d="M6 42C7 37 9 32 12 28C15 23 19 16 23 9.5C25 13 28 18 33 23C30 30 27 37 24 42C20 44 13 45 9 45C7 44 6 43 6 42Z" fill="url(#pp3)"/>';
-  const pontas = [
-    [[21, 39], [1.5, 32], 8, 1.6],
-    [[22, 32], [8.6, 18.4], 8, 1.4],
-    [[28, 30], [23.3, 8.6], 9.5, -0.8],
-  ].map(([a, b, l, c]) => pena(a, b, l, c, 'pp3', '#a7a2d8')).join('');
-  const fileira2 = [
-    [[5, 37], [13, 57], 10, 1.4],
-    [[8, 32], [18, 55], 10.5, 1.2],
-    [[12, 27], [23, 53], 10.5, 1],
-    [[16, 24], [27, 50], 10, 0.6],
-    [[20, 22], [29, 44], 9, 0.2],
-  ].map(([a, b, l, c]) => pena(a, b, l, c, 'pp3', '#aaa5da')).join('');
-  const fileira1 = [
-    [[7, 28], [12, 44], 9, 1],
-    [[10, 24], [17, 42], 9, 0.8],
-    [[14, 20], [21, 40], 9, 0.6],
-    [[18, 16], [25, 36], 8.5, 0.4],
-    [[22, 13], [28, 30], 7.5, 0],
-  ].map(([a, b, l, c]) => pena(a, b, l, c, 'pp3', '#b4afe0')).join('');
-  const tudo = longas + massa + fileira2 + fileira1 + pontas;
-  return `<defs>
-      <linearGradient id="pp1" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#bdb8ea"/><stop offset=".28" stop-color="#ffffff"/><stop offset=".72" stop-color="#f6f5fe"/><stop offset="1" stop-color="#aaa5df"/></linearGradient>
-      <linearGradient id="pp3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#f7f6fe"/><stop offset="1" stop-color="#d6d3f3"/></linearGradient>
-      <filter id="ppg" x="-50%" y="-20%" width="200%" height="140%"><feGaussianBlur stdDeviation="1.5"/></filter>
-      <filter id="pps" x="-30%" y="-10%" width="160%" height="120%"><feGaussianBlur stdDeviation="1.1"/></filter>
-      <filter id="ppl" x="-30%" y="-10%" width="160%" height="120%"><feGaussianBlur stdDeviation=".6"/></filter>
-    </defs>
-    <g filter="url(#ppg)" opacity=".8"><g fill="#f3efff" stroke="#f3efff" stroke-width="2.4">${(longas + massa + fileira2 + pontas).replace(/<path[^>]*filter="url\(#pp[sl]\)"[^>]*\/>/g, '').replace(/url\(#pp[13]\)/g, '#f3efff')}</g></g>
-    ${tudo}`;
-}
-
 Object.assign(PECAS_PREMIUM, {
-  asaPendente,
   joiaDoSol: desenhoDaJoiaDoSol,
   filigrana: desenhoDaFiligrana,
 });
@@ -4014,14 +3940,20 @@ Object.assign(MOLDURAS, {
   },
 
   'asas-celestiais'() {
-    const asa = pecaPremium('asa-pendente-v2', [-8, -10, 78, 150], PECAS_PREMIUM.asaPendente);
-    const mascara = idDoEnfeite('ac-mascara');
-    return `<defs><linearGradient id="${mascara}-g" gradientUnits="userSpaceOnUse" x1="0" y1="18" x2="0" y2="118"><stop offset=".36" stop-color="#000"/><stop offset=".6" stop-color="#fff"/></linearGradient><mask id="${mascara}" maskUnits="userSpaceOnUse" x="-20" y="-20" width="176" height="176"><rect x="-20" y="-20" width="176" height="176" fill="#fff"/><circle cx="68" cy="68" r="50.2" fill="url(#${mascara}-g)"/></mask></defs>
-      <g mask="url(#${mascara})">
-        <g><g class="enf-asa-bate">${asa}</g></g>
-        <g transform="translate(136 0) scale(-1 1)"><g class="enf-asa-bate">${asa}</g></g>
-      </g>`;
+    const atras = idDoEnfeite('ac-atras');
+    const forma = idDoEnfeite('ac-forma');
+    const luz = idDoEnfeite('ac-luz');
+    const asa = '<image href="asa-celestial.webp" x="-21.4" y="6.2" width="52" height="105" transform="translate(9.1 0) scale(-1 1)"/>';
+    const lado = (espelho) => `<g${espelho ? ' transform="translate(136 0) scale(-1 1)"' : ''}><g class="enf-asa-bate"${espelho ? ' style="animation-delay:-.15s"' : ''}>${asa}<rect x="-40" y="0" width="22" height="120" fill="url(#${luz})" mask="url(#${forma})" class="enf-asa-reflexo"${espelho ? ' style="animation-delay:-1.2s"' : ''}/></g></g>`;
+    return `<defs>
+        <mask id="${atras}" maskUnits="userSpaceOnUse" x="-60" y="-20" width="256" height="176"><rect x="-60" y="-20" width="256" height="176" fill="#fff"/><circle cx="68" cy="68" r="49.6" fill="#000"/></mask>
+        <mask id="${forma}" maskUnits="userSpaceOnUse" x="-60" y="-20" width="256" height="176">${asa}</mask>
+        <linearGradient id="${luz}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".7"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+      </defs>
+      <g mask="url(#${atras})">${lado(false)}${lado(true)}</g>`;
   },
+
+
 
 
 });

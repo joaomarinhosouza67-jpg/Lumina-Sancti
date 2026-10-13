@@ -5270,5 +5270,7 @@ body.intro-ativa .navbar { backdrop-filter: none; }
 .enf-brilho-desce { animation: enfBrilhoDesce 3.6s ease-in-out infinite; }
 @keyframes enfFiapo { 0%, 100% { opacity: 0.2; transform: translate(0, -2px); } 50% { opacity: 1; transform: translate(-2px, 2px); } }
 @keyframes enfBrilhoDesce { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: 0.6; } 70% { opacity: 0.4; } 100% { transform: translateY(130px); opacity: 0; } }
-.enf-asa-bate { transform-box: view-box; transform-origin: 27px 28px; animation: enfAsaBate 2.8s ease-in-out infinite; }
-@keyframes enfAsaBate { 0%, 100% { transform: rotate(4deg); } 45% { transform: rotate(-11deg); } 60% { transform: rotate(-11deg); } }
+.enf-asa-bate { transform-box: view-box; transform-origin: 24px 44px; animation: enfAsaBate 3.2s ease-in-out infinite; }
+@keyframes enfAsaBate { 0%, 100% { transform: rotate(0deg) scale(1); } 40% { transform: rotate(7deg) scale(1.02); } 55% { transform: rotate(7deg) scale(1.02); } }
+.enf-asa-reflexo { animation: enfAsaReflexo 4.4s ease-in-out infinite; }
+@keyframes enfAsaReflexo { 0% { transform: translate(0, -10px) skewX(18deg); opacity: 0; } 15% { opacity: 1; } 55% { transform: translate(70px, 20px) skewX(18deg); opacity: 0.9; } 70%, 100% { transform: translate(70px, 20px) skewX(18deg); opacity: 0; } }
