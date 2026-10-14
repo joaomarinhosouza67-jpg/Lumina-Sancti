@@ -29,14 +29,15 @@ const REGRAS_DOS_CENACULOS = `
     <li>Os Cenáculos são só para adultos (18 anos ou mais). Perfis infantis não têm acesso.</li>
     <li>Trate todos com respeito e caridade. Não é permitido xingar, ofender, discriminar, espalhar mentiras, fazer propaganda, pedir dinheiro ou enviar conteúdo impróprio.</li>
     <li>As conversas não são secretas: a equipe do Lumina Sancti (criadores e programadores) pode ler as mensagens e ouvir os áudios dos cenáculos, para proteger os participantes e investigar denúncias.</li>
-    <li>Se alguém desrespeitar as regras, denuncie a mensagem ou bloqueie a pessoa. A equipe pode apagar mensagens e suspender contas, por um tempo ou por tempo indeterminado, enquanto investiga.</li>
-    <li>Uma conta suspensa não pode escrever nos cenáculos nem usar as trilhas, mas nada dela é apagado.</li>
+    <li>Se alguém desrespeitar as regras, denuncie a mensagem ou bloqueie a pessoa. A equipe pode apagar mensagens e suspender um perfil ou a conta inteira, por um tempo ou por tempo indeterminado, enquanto investiga.</li>
+    <li>Um perfil suspenso não pode escrever nos cenáculos nem usar as trilhas, mas nada dele é apagado. Quando a conta inteira é suspensa, isso vale para todos os perfis dela.</li>
     <li>As reuniões por vídeo acontecem no Google Meet, fora do Lumina Sancti. O Lumina Sancti não grava, não guarda e não se responsabiliza pelo que acontece nas chamadas do Meet.</li>
     <li>Não compartilhe dados pessoais seus ou de outras pessoas (endereço, documentos, telefone), principalmente de crianças.</li>
   </ol>`;
 
 const ERROS_DO_CENACULO = {
   account_suspended: 'Sua conta está suspensa. Enquanto isso, os Cenáculos e as trilhas ficam parados, mas nada é apagado.',
+  profile_suspended: 'Este perfil está suspenso. Enquanto isso, os Cenáculos e as trilhas ficam parados para ele, mas nada é apagado.',
   somente_adultos: 'Os Cenáculos são só para perfis de adultos.',
   regras_nao_aceitas: 'Para continuar, marque que você aceita as regras.',
   convite_invalido: 'Este convite não vale mais. Peça um link novo a quem organiza o cenáculo.',
@@ -107,7 +108,7 @@ let ultimaConferenciaDeSuspensao = 0;
 async function chamarCenaculo(nome, argumentos) {
   const { data, error } = await supabaseCliente.rpc(nome, argumentos || {});
   if (error) {
-    if (String(error.message || '').includes('account_suspended') && Date.now() - ultimaConferenciaDeSuspensao > 5000) {
+    if (/account_suspended|profile_suspended/.test(String(error.message || '')) && Date.now() - ultimaConferenciaDeSuspensao > 5000) {
       ultimaConferenciaDeSuspensao = Date.now();
       atualizarSituacaoDaConta();
     }
@@ -195,7 +196,7 @@ async function atualizarSituacaoDaConta() {
   }
   try {
     const [suspensao, equipe] = await Promise.all([
-      supabaseCliente.rpc('minha_suspensao'),
+      supabaseCliente.rpc('minha_suspensao', { _pid: (typeof membroAtivo !== 'undefined' && membroAtivo && membroAtivo.id) || null }),
       supabaseCliente.rpc('equipe_membro'),
     ]);
     suspensaoAtual = suspensao && !suspensao.error && suspensao.data ? suspensao.data : null;
@@ -221,12 +222,15 @@ function textoDaSuspensao() {
 
 function mostrarAvisoDeSuspensao() {
   const motivo = suspensaoAtual && suspensaoAtual.motivo ? `<p class="cenaculo-suspensao-motivo">${tr('Motivo:')} <span translate="no">${escaparTexto(suspensaoAtual.motivo)}</span></p>` : '';
-  const corpo = janelaDoCenaculo('Sua conta está suspensa', `
+  const soPerfil = !!(suspensaoAtual && suspensaoAtual.so_perfil);
+  const nomeDoPerfil = soPerfil ? `<span translate="no">${escaparTexto(suspensaoAtual.perfil || '')}</span>` : '';
+  const corpo = janelaDoCenaculo(soPerfil ? 'Este perfil está suspenso' : 'Sua conta está suspensa', `
     <div class="cenaculo-suspensao">
-      <p>${tr('Sua conta está suspensa {quando}.', { quando: textoDaSuspensao() })}</p>
+      <p>${soPerfil ? tr('O perfil {nome} está suspenso {quando}.', { nome: nomeDoPerfil, quando: textoDaSuspensao() }) : tr('Sua conta está suspensa {quando}.', { quando: textoDaSuspensao() })}</p>
       ${motivo}
-      <p>Enquanto isso, os Cenáculos e as trilhas ficam parados. Você pode continuar vendo a vida dos santos, as orações e o terço.</p>
-      <p>Nada foi apagado: suas trilhas, medalhas e sequência continuam guardadas e voltam quando a suspensão acabar.</p>
+      ${soPerfil
+        ? '<p>Enquanto isso, este perfil não usa os Cenáculos nem as trilhas. Os outros perfis da sua conta continuam normais.</p><p>Nada foi apagado: as trilhas, medalhas e a sequência deste perfil continuam guardadas e voltam quando a suspensão acabar.</p>'
+        : '<p>Enquanto isso, os Cenáculos e as trilhas ficam parados. Você pode continuar vendo a vida dos santos, as orações e o terço.</p><p>Nada foi apagado: suas trilhas, medalhas e sequência continuam guardadas e voltam quando a suspensão acabar.</p>'}
       <p class="cenaculo-suspensao-contato">Dúvidas? <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a></p>
       <button type="button" class="licao-botao" id="cenaculo-suspensao-ok">Entendi</button>
     </div>`);
@@ -787,17 +791,58 @@ function ehConversaADois() {
   return !!cenaculoAberto && cenaculoAberto.tipo === 'conversa';
 }
 
+let observadorDoFundo = null;
+
+function ajustarFotoDeFundo(lugar) {
+  const proporcao = Number(lugar.dataset.proporcaoDaFoto || 0);
+  if (!proporcao || !lugar.clientWidth || !lugar.clientHeight) return;
+  const caixa = lugar.clientWidth / lugar.clientHeight;
+  lugar.classList.toggle('fundo-foto-inteira', Math.abs(Math.log(proporcao / caixa)) > 0.3);
+}
+
+function medirFotoDeFundo(lugar, url, comPermissao) {
+  const imagem = new Image();
+  if (comPermissao) imagem.crossOrigin = 'anonymous';
+  imagem.onload = () => {
+    if (!lugar.classList.contains('fundo-foto')) return;
+    const proporcao = imagem.naturalWidth / Math.max(1, imagem.naturalHeight);
+    lugar.dataset.proporcaoDaFoto = String(proporcao);
+    if (comPermissao) {
+      try {
+        const tela = document.createElement('canvas');
+        tela.width = 32;
+        tela.height = Math.max(1, Math.round(32 / proporcao));
+        tela.getContext('2d').drawImage(imagem, 0, 0, tela.width, tela.height);
+        lugar.style.setProperty('--fundo-foto-borrada', `url("${tela.toDataURL('image/jpeg', 0.7)}")`);
+      } catch (e) {
+        lugar.style.removeProperty('--fundo-foto-borrada');
+      }
+    }
+    ajustarFotoDeFundo(lugar);
+  };
+  imagem.onerror = () => { if (comPermissao) medirFotoDeFundo(lugar, url, false); };
+  imagem.src = url;
+  if (!observadorDoFundo && typeof ResizeObserver === 'function') {
+    observadorDoFundo = new ResizeObserver(() => ajustarFotoDeFundo(lugar));
+    observadorDoFundo.observe(lugar);
+  }
+}
+
 function aplicarFundo(nome) {
   const lugar = document.getElementById('cenaculo-mensagens');
   if (!lugar) return;
   FUNDOS_DA_CONVERSA.forEach((f) => lugar.classList.remove(`fundo-${f.id}`));
-  lugar.classList.remove('fundo-foto');
+  lugar.classList.remove('fundo-foto', 'fundo-foto-inteira');
   lugar.style.removeProperty('--fundo-foto');
+  lugar.style.removeProperty('--fundo-foto-borrada');
+  delete lugar.dataset.proporcaoDaFoto;
   const pessoal = typeof fundoPessoal === 'function' ? fundoPessoal() : null;
   if (pessoal && pessoal.foto && typeof enderecoDoFundoPessoal === 'function') {
     lugar.classList.add('fundo-foto');
     enderecoDoFundoPessoal(pessoal.foto).then((url) => {
-      if (url && lugar.classList.contains('fundo-foto')) lugar.style.setProperty('--fundo-foto', `url("${url}")`);
+      if (!url || !lugar.classList.contains('fundo-foto')) return;
+      lugar.style.setProperty('--fundo-foto', `url("${url}")`);
+      medirFotoDeFundo(lugar, url, true);
     });
     return;
   }

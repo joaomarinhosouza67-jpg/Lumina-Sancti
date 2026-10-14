@@ -1622,6 +1622,7 @@ function renderizarTrilhas() {
   salvarProgressoTrilhas(estado);
 
   renderizarPlacarDasTrilhas(estado);
+  carregarFeDaRevisao();
   const trilhas = trilhasEmUso();
 
   const deslocamentos = ['desloc-0', 'desloc-d', 'desloc-0', 'desloc-e'];
@@ -1748,6 +1749,19 @@ function renderizarPlacarDasTrilhas(estado) {
   `;
 }
 
+let feDaRevisaoNaConta = FE_REVISAO;
+let feDaRevisaoPedida = false;
+
+function carregarFeDaRevisao() {
+  if (feDaRevisaoPedida || !modoConta() || typeof supabaseCliente === 'undefined' || !supabaseCliente) return;
+  feDaRevisaoPedida = true;
+  supabaseCliente.from('app_config').select('value').eq('key', 'faith_repeat_reward').maybeSingle().then(({ data }) => {
+    if (!data || data.value === null || data.value === undefined) return;
+    const valor = Number(data.value);
+    if (Number.isFinite(valor) && valor >= 0) feDaRevisaoNaConta = valor;
+  }).catch(() => { feDaRevisaoPedida = false; });
+}
+
 function fecharBalaoDeRevisao() {
   document.querySelectorAll('.no-revisar').forEach((balao) => {
     const dono = balao.closest('.no-wrapper');
@@ -1776,7 +1790,7 @@ function abrirBalaoDeRevisao(botao) {
   const trilha = trilhasEmUso().find((t) => t.slug === botao.dataset.trilha);
   const indice = Number(botao.dataset.indice);
   if (!trilha || !trilha.licoes[indice]) return;
-  const fe = FE_REVISAO;
+  const fe = modoConta() && trilha.servidor ? feDaRevisaoNaConta : FE_REVISAO;
   const balao = document.createElement('div');
   balao.className = 'no-revisar';
   balao.setAttribute('role', 'dialog');
@@ -2385,6 +2399,7 @@ function converterPerguntaDoServidor(q) {
 function mensagemDeErroDaLicao(erro) {
   const texto = String((erro && erro.message) || '');
   if (texto.includes('account_suspended')) return 'Sua conta está suspensa. Enquanto isso, as trilhas ficam paradas, mas nada do seu progresso é apagado.';
+  if (texto.includes('profile_suspended')) return 'Este perfil está suspenso. Enquanto isso, as trilhas ficam paradas para ele, mas nada do progresso é apagado. Os outros perfis da conta continuam normais.';
   if (texto.includes('santidade_insuficiente')) {
     const estado = estadoEmMemoriaDaConta || carregarProgressoTrilhas();
     const min = estado && Number.isFinite(estado.santidadeMarcadaEm) ? minutosParaProximaSantidade(estado) : MINUTOS_PARA_RENOVAR_SANTIDADE;

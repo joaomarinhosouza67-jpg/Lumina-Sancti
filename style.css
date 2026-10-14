@@ -3824,6 +3824,16 @@ body:has(#view-cenaculos.active) .site-footer { display: none; }
   background-size: cover;
   background-position: center;
 }
+.fundo-foto.fundo-foto-inteira {
+  background-image:
+    linear-gradient(rgba(2, 6, 23, 0.32), rgba(2, 6, 23, 0.32)),
+    var(--fundo-foto, none),
+    linear-gradient(rgba(2, 6, 23, 0.55), rgba(2, 6, 23, 0.55)),
+    var(--fundo-foto-borrada, var(--fundo-foto, none));
+  background-size: auto, contain, auto, cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
 
 .perfil-publico-capa {
   background:
