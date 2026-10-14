@@ -1637,7 +1637,28 @@ body.modo-kids #lumi-mapa { margin: 4px 0 18px; }
 .lumi[data-rosto="sono"] .lumi-olhos-fechados,
 .lumi[data-rosto="sono"] .lumi-boca-sono,
 .lumi[data-rosto="sono"] .lumi-zzz,
+.lumi[data-rosto="triste"] .lumi-olhos-tristes,
+.lumi[data-rosto="triste"] .lumi-boca-triste,
+.lumi[data-rosto="triste"] .lumi-lagrima,
 .lumi[data-estado="concluiu"] .lumi-faiscas { display: inline; }
+.lumi-lagrima { display: none; fill: #93c5fd; stroke: #60a5fa; stroke-width: 0.6; transform-box: view-box; transform-origin: 46.5px 70px; }
+.lumi-olhos-tristes ellipse { fill: #2b1d05; }
+.lumi-sobrancelha, .lumi-boca-triste { fill: none; stroke: #2b1d05; stroke-width: 2.4; stroke-linecap: round; }
+.lumi[data-rosto="triste"] .lumi-lagrima { animation: lumiLagrima 2.6s ease-in infinite; }
+.lumi[data-estado="triste"] .lumi-corpo-todo { animation: lumiTriste 3.6s ease-in-out infinite; }
+@keyframes lumiLagrima { 0%, 25% { transform: translateY(0) scale(0.4); opacity: 0; } 40% { transform: translateY(0) scale(1); opacity: 1; } 90% { transform: translateY(12px) scale(1); opacity: 0.9; } 100% { transform: translateY(15px) scale(0.8); opacity: 0; } }
+@keyframes lumiTriste { 0%, 100% { transform: translateY(3px) rotate(-2deg); } 50% { transform: translateY(5px) rotate(2deg); } }
+
+.sair-licao { max-width: 400px; text-align: center; padding: 26px 22px 22px; }
+.sair-licao-lumi { display: flex; justify-content: center; margin-bottom: 6px; }
+.sair-licao-lumi .lumi { width: 108px; height: 126px; cursor: default; }
+.sair-licao h2 { margin: 0 0 8px; font-family: var(--font-title); font-size: 1.35rem; color: var(--text-main, #fff); }
+.sair-licao-texto { margin: 0 0 20px; color: var(--text-muted); line-height: 1.5; }
+.sair-licao-botoes { display: flex; flex-direction: column; gap: 10px; }
+.sair-licao-botoes .licao-botao { width: 100%; }
+.sair-licao-sair { width: 100%; padding: 13px 16px; border-radius: 14px; border: 1px solid rgba(248, 113, 113, 0.5); background: transparent; color: #fca5a5; font: inherit; font-weight: 700; cursor: pointer; transition: background 0.15s ease; }
+.sair-licao-sair:hover { background: rgba(248, 113, 113, 0.12); }
+@media (prefers-reduced-motion: reduce) { .lumi[data-rosto="triste"] .lumi-lagrima, .lumi[data-estado="triste"] .lumi-corpo-todo { animation: none; } .lumi[data-rosto="triste"] .lumi-lagrima { opacity: 1; } }
 
 .lumi-corpo-todo, .lumi-braco, .lumi-perna, .lumi-olhos-abertos, .lumi-faisca, .lumi-zzz text { transform-box: view-box; }
 .lumi-corpo-todo { transform-origin: 60px 118px; }

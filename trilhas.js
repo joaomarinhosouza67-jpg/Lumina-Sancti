@@ -834,7 +834,10 @@ const TEXTOS_TRILHAS = {
     santidade_renova: 'Ela se renova sozinha, 1 a cada {intervalo} minutos — a próxima chega em {min} min.',
     ler_enquanto: 'Enquanto isso, ler a história de {santo}',
     voltar_trilhas: 'Voltar às trilhas',
-    sair_confirmar: 'Sair agora? O progresso desta missão não será salvo.',
+    sair_titulo: 'Quer mesmo sair desta missão?',
+    sair_texto: 'Se sair agora, você perde o progresso e a Fé desta missão.',
+    sair_continuar: 'Continuar a missão',
+    sair_sair: 'Sair da missão',
     insignias_titulo: 'Minhas medalhas',
     insignias_resumo: '{feitas} de {total} medalhas. Conclua todas as missões de um santo para ganhar a dele.',
     conquistada: 'Conquistada',
@@ -922,7 +925,10 @@ const TEXTOS_TRILHAS = {
     santidade_renova: 'It renews by itself, 1 point every {intervalo} minutes — the next one arrives in {min} min.',
     ler_enquanto: 'Meanwhile, read the story of {santo}',
     voltar_trilhas: 'Back to the trails',
-    sair_confirmar: 'Leave now? Your progress in this mission will not be saved.',
+    sair_titulo: 'Do you really want to leave this mission?',
+    sair_texto: 'If you leave now, you lose the progress and the Faith from this mission.',
+    sair_continuar: 'Keep going',
+    sair_sair: 'Leave the mission',
     insignias_titulo: 'My medals',
     insignias_resumo: '{feitas} of {total} medals. Finish all the missions of a saint to earn that medal.',
     conquistada: 'Earned',
@@ -1010,7 +1016,10 @@ const TEXTOS_TRILHAS = {
     santidade_renova: 'Se renueva sola, 1 punto cada {intervalo} minutos — el próximo llega en {min} min.',
     ler_enquanto: 'Mientras tanto, leer la historia de {santo}',
     voltar_trilhas: 'Volver a los senderos',
-    sair_confirmar: '¿Salir ahora? El progreso de esta misión no se guardará.',
+    sair_titulo: '¿De verdad quieres salir de esta misión?',
+    sair_texto: 'Si sales ahora, pierdes el progreso y la Fe de esta misión.',
+    sair_continuar: 'Seguir con la misión',
+    sair_sair: 'Salir de la misión',
     insignias_titulo: 'Mis medallas',
     insignias_resumo: '{feitas} de {total} medallas. Termina todas las misiones de un santo para ganar su medalla.',
     conquistada: 'Conseguida',
@@ -2278,10 +2287,60 @@ function mostrarFimSemSantidade() {
   prepararRodapeDaLicao(tt('voltar_trilhas'), true);
 }
 
+function fecharJanelaDeSairDaLicao() {
+  const modal = document.getElementById('sair-licao-modal');
+  if (modal) modal.classList.remove('active');
+  document.removeEventListener('keydown', escParaContinuarNaLicao);
+}
+
+function escParaContinuarNaLicao(evento) {
+  if (evento.key === 'Escape') fecharJanelaDeSairDaLicao();
+}
+
+function perguntarSeSaiDaLicao() {
+  let modal = document.getElementById('sair-licao-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'sair-licao-modal';
+    modal.className = 'search-modal';
+    modal.innerHTML = `
+      <div class="search-modal-content sair-licao" role="dialog" aria-modal="true" aria-labelledby="sair-licao-titulo">
+        <div class="sair-licao-lumi"></div>
+        <h2 id="sair-licao-titulo"></h2>
+        <p class="sair-licao-texto"></p>
+        <div class="sair-licao-botoes">
+          <button type="button" class="licao-botao" id="sair-licao-continuar"></button>
+          <button type="button" class="sair-licao-sair" id="sair-licao-sair"></button>
+        </div>
+      </div>`;
+    document.body.appendChild(modal);
+    modal.querySelector('#sair-licao-continuar').addEventListener('click', fecharJanelaDeSairDaLicao);
+    modal.querySelector('#sair-licao-sair').addEventListener('click', () => {
+      fecharJanelaDeSairDaLicao();
+      sairDaLicao(false);
+    });
+    modal.addEventListener('click', (evento) => { if (evento.target === modal) fecharJanelaDeSairDaLicao(); });
+  }
+  const lugarDaLumi = modal.querySelector('.sair-licao-lumi');
+  lugarDaLumi.innerHTML = typeof desenhoDaLumi === 'function'
+    ? `<div class="lumi" data-estado="triste" data-rosto="triste" data-bracos="baixo">${desenhoDaLumi()}</div>`
+    : '';
+  modal.querySelector('#sair-licao-titulo').textContent = tt('sair_titulo');
+  modal.querySelector('.sair-licao-texto').textContent = tt('sair_texto');
+  modal.querySelector('#sair-licao-continuar').textContent = tt('sair_continuar');
+  modal.querySelector('#sair-licao-sair').textContent = tt('sair_sair');
+  modal.classList.add('active');
+  document.addEventListener('keydown', escParaContinuarNaLicao);
+  setTimeout(() => {
+    const continuar = modal.querySelector('#sair-licao-continuar');
+    if (continuar) continuar.focus();
+  }, 60);
+}
+
 function sairDaLicao(perguntarAntes) {
   if (perguntarAntes && licaoAtual && !licaoAtual.finalizada) {
-    const confirmou = confirm(tt('sair_confirmar'));
-    if (!confirmou) return;
+    perguntarSeSaiDaLicao();
+    return;
   }
   avisarMascote('saiu');
   const slug = licaoAtual ? licaoAtual.trilha.slug : null;

@@ -285,6 +285,16 @@ function desenhoDaLumi() {
           </g>
           <path class="lumi-boca lumi-boca-quase" d="M53.5 74.5 Q56.75 71.5 60 74.5 Q63.25 77.5 66.5 74.5"/>
           <ellipse class="lumi-boca lumi-boca-sono" cx="60" cy="74" rx="2.5" ry="3"/>
+          <g class="lumi-olhos lumi-olhos-tristes">
+            <path class="lumi-sobrancelha" d="M44 53.5 Q49 52.5 54.5 49.5"/>
+            <path class="lumi-sobrancelha" d="M65.5 49.5 Q71 52.5 76 53.5"/>
+            <ellipse cx="50" cy="61" rx="4.1" ry="5"/>
+            <ellipse cx="70" cy="61" rx="4.1" ry="5"/>
+            <circle class="lumi-brilho-olho" cx="51.4" cy="59" r="1.5"/>
+            <circle class="lumi-brilho-olho" cx="71.4" cy="59" r="1.5"/>
+          </g>
+          <path class="lumi-boca lumi-boca-triste" d="M53.5 76.5 Q60 70.5 66.5 76.5"/>
+          <path class="lumi-lagrima" d="M46.5 66.5 C44.8 69.4 43.8 71.1 43.8 72.4 A2.7 2.7 0 0 0 49.2 72.4 C49.2 71.1 48.2 69.4 46.5 66.5 Z"/>
         </g>
       </g>
       <g class="lumi-zzz">
