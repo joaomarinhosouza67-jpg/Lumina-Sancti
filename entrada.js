@@ -159,8 +159,8 @@
   }
 
   function montar() {
-    const w = window.innerWidth;
-    const h = window.innerHeight;
+    const w = Math.max(1, window.innerWidth || 0);
+    const h = Math.max(1, window.innerHeight || 0);
     const dpr = Math.min(window.devicePixelRatio || 1, w < 700 ? 1.5 : 2);
     tela2d.width = Math.round(w * dpr);
     tela2d.height = Math.round(h * dpr);
