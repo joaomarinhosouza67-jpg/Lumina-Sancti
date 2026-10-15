@@ -1,4 +1,4 @@
-const CACHE_NOME = 'lumina-sancti-1.22.35';
+const CACHE_NOME = 'lumina-sancti-1.22.36';
 const ARQUIVOS_ESSENCIAIS = [
   './',
   './index.html',

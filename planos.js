@@ -96,6 +96,7 @@ function textoDaAssinatura() {
   const nome = NOMES_DOS_PLANOS[assinatura.plano] || nomeDoPlanoAtual();
   const periodo = assinatura.periodo === 'anual' ? tr('anual') : tr('mensal');
   const fim = dataCurta(assinatura.periodo_fim);
+  if (assinatura.origem === 'cortesia') return fim ? tr('Plano {nome}, um presente da equipe do Lumina Sancti, até {fim}.', { nome: tr(nome), fim }) : tr('Plano {nome}, um presente da equipe do Lumina Sancti.', { nome: tr(nome) });
   if (assinatura.status === 'past_due') return tr('Plano {nome} ({periodo}). Não conseguimos cobrar o seu cartão. Atualize a forma de pagamento para não perder o plano.', { nome: tr(nome), periodo });
   if (assinatura.cancela_no_fim) return tr('Plano {nome} ({periodo}). A assinatura foi cancelada e vale até {fim}. Depois disso, a conta volta ao plano Gratuito.', { nome: tr(nome), periodo, fim });
   return fim ? tr('Plano {nome} ({periodo}). Renova em {fim}.', { nome: tr(nome), periodo, fim }) : tr('Plano {nome} ({periodo}).', { nome: tr(nome), periodo });
@@ -105,6 +106,7 @@ function resumoDoPlanoNoPerfil() {
   const assinatura = estadoDaAssinatura && estadoDaAssinatura.assinatura;
   if (assinatura && assinatura.vale) {
     const fim = dataCurta(assinatura.periodo_fim);
+    if (assinatura.origem === 'cortesia') return fim ? tr('Presente da equipe, até {fim}', { fim }) : 'Presente da equipe';
     if (assinatura.status === 'past_due') return 'Pagamento pendente. Toque para resolver';
     if (assinatura.cancela_no_fim) return fim ? tr('Cancelado, vale até {fim}', { fim }) : tr('Cancelado');
     const tipo = assinatura.periodo === 'anual' ? tr('Anual') : tr('Mensal');
@@ -131,6 +133,10 @@ function atualizarRodapeDosPlanos() {
   }
   const doGooglePlay = estadoDaAssinatura.assinatura.origem === 'google_play';
   situacao.hidden = false;
+  if (estadoDaAssinatura.assinatura.origem === 'cortesia') {
+    situacao.innerHTML = `<p>${escaparTexto(texto)}</p><small>Você não paga nada por este plano.</small>`;
+    return;
+  }
   situacao.innerHTML = `
     <p>${escaparTexto(texto)}</p>
     <button type="button" class="filter-btn active" id="planos-gerenciar">${doGooglePlay ? 'Gerenciar na Google Play' : 'Gerenciar assinatura'}</button>
