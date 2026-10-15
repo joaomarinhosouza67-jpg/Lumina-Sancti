@@ -5439,3 +5439,65 @@ body:has(#view-perfis.active) .nav-right-actions { margin-left: auto; }
 .no-revisar-fe .fe-estrela .icone { filter: none; }
 @keyframes revisarAbre { from { opacity: 0; transform: translateX(calc(-50% + var(--desvio, 0px))) translateY(-8px) scale(0.92); } to { opacity: 1; transform: translateX(calc(-50% + var(--desvio, 0px))) translateY(0) scale(1); } }
 @media (prefers-reduced-motion: reduce) { .no-revisar { animation: none; } }
+
+.presente-janela-caixa { max-width: 440px; padding: 22px 22px 20px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; max-height: 90vh; overflow-y: auto; }
+.presente-janela-caixa { background-image: radial-gradient(120% 50% at 50% 0%, rgba(var(--primary-rgb), 0.12), transparent 60%); border-color: rgba(var(--primary-rgb), 0.45); }
+.presente-palco { position: relative; width: 220px; height: 220px; margin: -10px 0 -6px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.presente-palco.aberto { cursor: default; }
+.presente-svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.presente-luz { fill: url(#presente-brilho); opacity: 0.75; transform-box: view-box; transform-origin: 120px 132px; animation: presenteLuz 2.8s ease-in-out infinite; }
+.presente-sombra-chao { fill: url(#presente-chao); transform-box: view-box; transform-origin: 122px 207px; animation: presenteSombra 3.2s ease-in-out infinite; }
+.presente-cintila { fill: #fde68a; opacity: 0; transform-box: fill-box; transform-origin: center; animation: presenteCintila 2.4s ease-in-out infinite; }
+.presente-flutua { transform-box: view-box; animation: presenteFlutua 3.2s ease-in-out infinite; }
+.presente-caixa-toda { transform-box: view-box; transform-origin: 120px 196px; animation: presenteBalanca 3.6s ease-in-out infinite; }
+.presente-reflexo { fill: #fff; opacity: 0.16; animation: presenteReflexo 4.2s ease-in-out infinite; }
+.presente-feixe { fill: url(#presente-feixe); opacity: 0; transform-box: view-box; transform-origin: 120px 124px; transform: scaleY(0.15); }
+.presente-boca { fill: url(#presente-dentro); }
+.presente-estrela { opacity: 0; transform-box: fill-box; transform-origin: center; transform: translateY(0) scale(0.3); }
+.presente-estrela-giro { transform-box: fill-box; transform-origin: center; }
+.presente-raios { opacity: 0; transform-box: view-box; transform-origin: 120px 118px; transform: scale(0.3); }
+.presente-raios path { fill: url(#presente-raio); }
+.presente-raios-giro { transform-box: view-box; transform-origin: 120px 118px; animation: presenteGira 24s linear infinite; }
+.presente-faisca { fill: #fde68a; opacity: 0; transform-box: view-box; }
+.presente-tampa { transform-box: view-box; transform-origin: 120px 115px; transition: transform 0.75s cubic-bezier(0.2, 0.9, 0.3, 1.15), opacity 0.75s ease; }
+.presente-palco:not(.aberto):hover .presente-caixa-toda { animation-duration: 1.2s; }
+.presente-palco.abrindo .presente-flutua { animation: none; }
+.presente-palco.abrindo .presente-caixa-toda { animation: presenteTreme 0.11s linear infinite; }
+.presente-palco.abrindo .presente-tampa { transform: translateY(-4px); }
+.presente-palco.aberto .presente-caixa-toda { animation: none; }
+.presente-palco.aberto .presente-tampa { transform: translate(-14px, -120px) rotate(-30deg); opacity: 0; }
+.presente-palco.aberto .presente-feixe { opacity: 0.9; transform: scaleY(1); transition: transform 0.7s ease 0.05s, opacity 0.7s ease 0.05s; }
+.presente-palco.aberto .presente-estrela { opacity: 1; transform: translateY(-92px) scale(1); transition: transform 1.1s cubic-bezier(0.2, 0.9, 0.3, 1.25) 0.2s, opacity 0.5s ease 0.2s; }
+.presente-palco.aberto .presente-estrela-giro { animation: presenteEstrela 3s ease-in-out 1.3s infinite; }
+.presente-palco.aberto .presente-raios { opacity: 0.85; transform: scale(1); transition: transform 0.8s ease 0.15s, opacity 0.8s ease 0.15s; }
+.presente-palco.aberto .presente-luz { opacity: 1; transform: scale(1.18); animation: none; transition: transform 0.6s ease, opacity 0.6s ease; }
+.presente-palco.aberto .presente-faisca { animation: presenteFaisca 1.4s ease-out forwards; }
+.presente-palco.aberto .presente-reflexo { animation: none; opacity: 0; }
+.presente-janela-caixa.aberta h3 { color: var(--primary-color); }
+.presente-itens li { animation: presenteItem 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2) both; animation-delay: var(--atraso, 0s); }
+.presente-confete { position: absolute; left: 50%; top: 40%; width: 8px; height: 12px; border-radius: 2px; opacity: 0; pointer-events: none; animation: presenteConfete var(--duracao, 2s) cubic-bezier(0.25, 0.6, 0.45, 1) forwards; animation-delay: var(--atraso, 0s); }
+.presente-confete.redondo { width: 8px; height: 8px; border-radius: 50%; }
+.presente-confete.fita { width: 4px; height: 15px; border-radius: 2px; }
+.presente-confete.estrela { width: 13px; height: 13px; border-radius: 0; clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
+.presente-janela-caixa h3 { margin: 0; font-family: var(--font-title); font-size: 1.45rem; color: var(--text-main); }
+.presente-mensagem { margin: 0 0 6px; color: var(--text-muted); line-height: 1.55; white-space: pre-wrap; }
+.presente-revelado { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.presente-ganhou { margin: 0; font-weight: 700; color: var(--primary-color); }
+.presente-prazo { margin: 0; font-size: 0.92rem; color: var(--text-muted); }
+.presente-compartilhar-caixa { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.presente-imagem { width: 100%; max-width: 240px; border-radius: 14px; border: 1px solid rgba(var(--primary-rgb), 0.35); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35); }
+.presente-compartilhar-botoes { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+.presente-compartilhar-botoes a, .presente-compartilhar-botoes button { width: 100%; text-align: center; text-decoration: none; box-sizing: border-box; display: block; }
+@keyframes presenteLuz { 0%, 100% { transform: scale(0.92); opacity: 0.6; } 50% { transform: scale(1.06); opacity: 0.95; } }
+@keyframes presenteSombra { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(0.86); opacity: 0.7; } }
+@keyframes presenteFlutua { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+@keyframes presenteCintila { 0%, 100% { opacity: 0; transform: scale(0.4) rotate(0deg); } 45% { opacity: 1; transform: scale(1.15) rotate(45deg); } 70% { opacity: 0.2; transform: scale(0.7) rotate(70deg); } }
+@keyframes presenteBalanca { 0%, 72%, 100% { transform: rotate(0); } 77% { transform: rotate(-6deg); } 82% { transform: rotate(6deg); } 87% { transform: rotate(-4deg); } 92% { transform: rotate(2.5deg); } 96% { transform: rotate(-1deg); } }
+@keyframes presenteTreme { 0%, 100% { transform: translateX(0) rotate(0); } 25% { transform: translateX(-3px) rotate(-4deg); } 75% { transform: translateX(3px) rotate(4deg); } }
+@keyframes presenteReflexo { 0%, 55% { transform: skewX(-18deg) translateX(0); } 85%, 100% { transform: skewX(-18deg) translateX(170px); } }
+@keyframes presenteGira { to { transform: rotate(360deg); } }
+@keyframes presenteEstrela { 0%, 100% { transform: rotate(0) scale(1); } 50% { transform: rotate(12deg) scale(1.08); } }
+@keyframes presenteFaisca { 0% { opacity: 0; transform: translate(0, 0) scale(0.3); } 25% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.1); } }
+@keyframes presenteItem { from { opacity: 0; transform: translateY(10px) scale(0.96); } to { opacity: 1; transform: none; } }
+@keyframes presenteConfete { 0% { opacity: 1; transform: translate(-50%, 0) rotate(0); } 30% { opacity: 1; transform: translate(calc(-50% + var(--meio-x)), var(--sobe)) rotate(calc(var(--giro) * 0.4)); } 100% { opacity: 0; transform: translate(calc(-50% + var(--x)), var(--y)) rotate(var(--giro)); } }
+@media (prefers-reduced-motion: reduce) { .presente-luz, .presente-sombra-chao, .presente-cintila, .presente-flutua, .presente-caixa-toda, .presente-reflexo, .presente-raios-giro, .presente-palco.abrindo .presente-caixa-toda, .presente-palco.aberto .presente-estrela-giro { animation: none; } .presente-cintila { opacity: 0.6; } .presente-confete { display: none; } }

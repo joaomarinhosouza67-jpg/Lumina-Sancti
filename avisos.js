@@ -179,7 +179,7 @@ function janelaDaNovidade() {
 }
 
 async function verificarNovidade() {
-  if (novidadeNaTela || advertenciaNaTela || typeof supabaseCliente === 'undefined' || !supabaseCliente) return;
+  if (novidadeNaTela || advertenciaNaTela || (typeof presenteNaTela !== 'undefined' && presenteNaTela) || typeof supabaseCliente === 'undefined' || !supabaseCliente) return;
   if (document.body.classList.contains('modo-kids') || document.body.classList.contains('intro-ativa')) return;
   const inicio = document.getElementById('view-home');
   if (!inicio || !inicio.classList.contains('active')) return;
@@ -190,7 +190,7 @@ async function verificarNovidade() {
   } catch (e) {
     novidade = null;
   }
-  if (!novidade || !novidade.id || novidadeNaTela || document.body.classList.contains('modo-kids')) return;
+  if (!novidade || !novidade.id || novidadeNaTela || (typeof presenteNaTela !== 'undefined' && presenteNaTela) || document.body.classList.contains('modo-kids')) return;
   if (lerGuardado(CHAVE_DAS_NOVIDADES_VISTAS, []).includes(novidade.id)) return;
   const adiada = lerGuardado(CHAVE_DA_NOVIDADE_ADIADA, null);
   if (adiada && adiada.id === novidade.id && adiada.dia === diaDeHoje()) return;

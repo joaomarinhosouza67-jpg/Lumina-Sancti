@@ -4782,6 +4782,10 @@ function iniciarPaginaDePadroeiro() {
 }
 
 async function compartilharSite() {
+  if (typeof compartilharLuminaSancti === 'function') {
+    await compartilharLuminaSancti(null);
+    return;
+  }
   const dados = {
     title: 'Lumina Sancti — Luz dos Santos',
     text: 'Descubra a vida, a fé e o legado dos santos, beatos, doutores da Igreja e anjos no Lumina Sancti.',
