@@ -304,13 +304,14 @@ function telaDePerfisNaFrente() {
 }
 
 let acaoDoLink = '';
+let conversaDoLink = 0;
 
 function executarAcaoDoLink() {
   const acao = acaoDoLink;
   if (!acao) return;
   acaoDoLink = '';
   setTimeout(() => {
-    if (acao === 'suporte' && typeof abrirSuporte === 'function') abrirSuporte();
+    if (acao === 'suporte' && typeof abrirSuporte === 'function') abrirSuporte(conversaDoLink || undefined);
     else if (acao === 'presente' && typeof abrirPresentePeloLink === 'function') abrirPresentePeloLink();
   }, 600);
 }
@@ -332,11 +333,18 @@ function esperarPerfilParaAbrir() {
 
 function abrirPeloEnderecoDoLembrete() {
   let destino = '';
-  try { destino = new URLSearchParams(window.location.search).get('abrir') || ''; } catch (e) { destino = ''; }
+  let conversa = '';
+  try {
+    const parametros = new URLSearchParams(window.location.search);
+    destino = parametros.get('abrir') || '';
+    conversa = parametros.get('conversa') || '';
+  } catch (e) { destino = ''; }
   if (!destino) return;
+  conversaDoLink = Number(conversa) > 0 ? Number(conversa) : 0;
   try {
     const url = new URL(window.location.href);
     url.searchParams.delete('abrir');
+    url.searchParams.delete('conversa');
     history.replaceState(null, '', url.pathname + url.search + url.hash);
   } catch (e) {  }
   if (destino === 'presente' || destino === 'suporte') {
