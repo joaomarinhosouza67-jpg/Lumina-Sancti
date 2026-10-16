@@ -157,6 +157,22 @@ function textoNoIdiomaDaNovidade(campo) {
   return campo[idioma] || campo.pt || '';
 }
 
+const DESTINOS_DA_NOVIDADE = {
+  trilhas: 'Ver as trilhas',
+  terco: 'Abrir o terço',
+  oracoes: 'Ver as orações',
+  cenaculos: 'Abrir os Cenáculos',
+  comunidade: 'Ver a Comunidade',
+};
+
+function irParaDestinoDaNovidade(destino) {
+  if (destino === 'trilhas' && typeof abrirTrilhas === 'function') abrirTrilhas();
+  else if (destino === 'terco') mudarDeView('view-terco');
+  else if (destino === 'oracoes') mudarDeView('view-oracoes');
+  else if (destino === 'cenaculos' && typeof abrirCenaculos === 'function') abrirCenaculos();
+  else if (destino === 'comunidade' && typeof abrirComunidade === 'function') abrirComunidade();
+}
+
 function janelaDaNovidade() {
   let modal = document.getElementById('novidade-janela');
   if (modal) return modal;
@@ -214,12 +230,16 @@ async function verificarNovidade() {
     modal.classList.remove('active');
     novidadeNaTela = false;
   };
+  const destino = DESTINOS_DA_NOVIDADE[novidade.destino] ? novidade.destino : (novidade.destino === 'nenhum' ? '' : 'trilhas');
   const conferi = modal.querySelector('#novidade-conferi');
   const novoConferi = conferi.cloneNode(true);
   conferi.replaceWith(novoConferi);
+  novoConferi.textContent = destino ? tr(DESTINOS_DA_NOVIDADE[destino]) : tr('Conferi!');
+  novoConferi.classList.toggle('novidade-ir', !!destino);
   novoConferi.addEventListener('click', async () => {
     guardar(CHAVE_DAS_NOVIDADES_VISTAS, lerGuardado(CHAVE_DAS_NOVIDADES_VISTAS, []).filter((x) => x !== novidade.id).concat(novidade.id).slice(-30));
     fechar();
+    if (destino) setTimeout(() => irParaDestinoDaNovidade(destino), 150);
     if (typeof contaLogada === 'function' && contaLogada()) {
       try { await supabaseCliente.rpc('novidade_vista', { _id: novidade.id }); } catch (e) {  }
     }

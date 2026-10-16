@@ -2683,7 +2683,7 @@ function atualizarInterfaceDeConta() {
 function mudarDeView(idNovaView, opcoes) {
   if (typeof paginaSoParaAdultos === 'function' && paginaSoParaAdultos(idNovaView)) return;
   if (typeof paginaBloqueadaPelaSuspensao === 'function' && paginaBloqueadaPelaSuspensao(idNovaView)) return;
-  const todasAsViews = ['view-home', 'view-detail', 'view-ia', 'view-auth', 'view-perfil', 'view-privacidade', 'view-oracoes', 'view-leitura', 'view-terco', 'view-padroeiro', 'view-trilhas', 'view-licao', 'view-perfis', 'view-ranking', 'view-planos', 'view-termos', 'view-completar', 'view-cenaculos', 'view-cenaculo', 'view-comunidade', 'view-cursos'];
+  const todasAsViews = ['view-home', 'view-detail', 'view-ia', 'view-auth', 'view-perfil', 'view-privacidade', 'view-oracoes', 'view-leitura', 'view-terco', 'view-padroeiro', 'view-trilhas', 'view-licao', 'view-perfis', 'view-ranking', 'view-planos', 'view-termos', 'view-completar', 'view-cenaculos', 'view-cenaculo', 'view-comunidade', 'view-cursos', 'view-suporte'];
   const viewAtual = todasAsViews.map(id => document.getElementById(id)).find(v => v && v.classList.contains('active'));
   if (idNovaView !== 'view-licao' && typeof pararVozInfantil === 'function') pararVozInfantil(false);
   const catalogoInterno = idNovaView === 'view-home' && Boolean(opcoes && opcoes.catalogoInterno);

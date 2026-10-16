@@ -884,6 +884,18 @@ async function renderizarMeuPerfil() {
           </button>
         </div>
       </section>
+      ${adulto ? `
+      <section class="perfil-secao">
+        <h4 class="perfil-secao-titulo">Ajuda</h4>
+        <div class="ajustes-lista">
+          <button type="button" class="ajuste" id="meu-perfil-suporte">
+            <span class="ajuste-icone">${iconeDoCenaculo('ajuda')}</span>
+            <span class="ajuste-textos"><strong>Fale com a equipe</strong><small>Dúvidas, problemas e sugestões</small></span>
+            <span class="aviso-suporte" data-aviso-suporte hidden></span>
+            ${iconeDoCenaculo('seta-direita')}
+          </button>
+        </div>
+      </section>` : ''}
       ${!perfil || adulto ? `
       <section class="perfil-secao">
         <h4 class="perfil-secao-titulo">Assinatura</h4>
@@ -910,6 +922,8 @@ async function renderizarMeuPerfil() {
   ligar('meu-perfil-insignias', () => { if (typeof abrirInsignias === 'function') abrirInsignias(); });
   ligar('meu-perfil-plano', () => { if (typeof abrirPlanos === 'function') abrirPlanos(); });
   ligar('meu-perfil-enfeites', () => { if (typeof abrirEnfeitesDoPerfil === 'function') abrirEnfeitesDoPerfil(); });
+  ligar('meu-perfil-suporte', () => { if (typeof abrirSuporte === 'function') abrirSuporte(); });
+  if (adulto && typeof atualizarAvisoDoSuporte === 'function') atualizarAvisoDoSuporte();
   if (perfil && typeof enfeitarMeuPerfil === 'function') enfeitarMeuPerfil();
   if (adulto && typeof preencherResumoSocial === 'function') preencherResumoSocial(lugar.querySelector('#meu-perfil-social'), perfil.id);
   ligar('meu-perfil-lembretes', () => { if (typeof abrirAjustesDosLembretes === 'function') abrirAjustesDosLembretes(); });

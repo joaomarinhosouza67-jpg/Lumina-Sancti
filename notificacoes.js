@@ -298,6 +298,38 @@ async function atualizarResumoDosLembretes() {
   if (resumo.isConnected) resumo.textContent = ligados.length ? ligados.join(' e ') : 'Desligados';
 }
 
+function telaDePerfisNaFrente() {
+  const tela = document.getElementById('view-perfis');
+  return !!tela && tela.classList.contains('active') && getComputedStyle(tela).display !== 'none';
+}
+
+let acaoDoLink = '';
+
+function executarAcaoDoLink() {
+  const acao = acaoDoLink;
+  if (!acao) return;
+  acaoDoLink = '';
+  setTimeout(() => {
+    if (acao === 'suporte' && typeof abrirSuporte === 'function') abrirSuporte();
+    else if (acao === 'presente' && typeof abrirPresentePeloLink === 'function') abrirPresentePeloLink();
+  }, 600);
+}
+
+function esperarPerfilParaAbrir() {
+  let tentativas = 0;
+  let prontoAntes = false;
+  const tentar = () => {
+    if (!acaoDoLink) return;
+    tentativas += 1;
+    const logado = typeof contaLogada === 'function' && contaLogada();
+    const pronto = logado && typeof membroAtivo !== 'undefined' && membroAtivo && !document.body.classList.contains('intro-ativa') && !telaDePerfisNaFrente();
+    if ((pronto && prontoAntes) || (tentativas > 8 && !logado) || tentativas > 120) { executarAcaoDoLink(); return; }
+    prontoAntes = pronto;
+    setTimeout(tentar, 1500);
+  };
+  setTimeout(tentar, 2500);
+}
+
 function abrirPeloEnderecoDoLembrete() {
   let destino = '';
   try { destino = new URLSearchParams(window.location.search).get('abrir') || ''; } catch (e) { destino = ''; }
@@ -307,6 +339,12 @@ function abrirPeloEnderecoDoLembrete() {
     url.searchParams.delete('abrir');
     history.replaceState(null, '', url.pathname + url.search + url.hash);
   } catch (e) {  }
+  if (destino === 'presente' || destino === 'suporte') {
+    if (destino === 'presente') { try { sessionStorage.removeItem('lumina-sancti-presente-adiado'); } catch (e) {  } }
+    acaoDoLink = destino;
+    esperarPerfilParaAbrir();
+    return;
+  }
   setTimeout(() => {
     if (destino === 'misericordia' && typeof abrirTerco === 'function') abrirTerco('misericordia');
     else if (destino === 'trilhas' && typeof abrirTrilhas === 'function') abrirTrilhas();

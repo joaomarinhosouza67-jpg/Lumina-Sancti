@@ -345,7 +345,7 @@ async function verificarPresente() {
   palco.innerHTML = desenhoDoPresente();
   modal.querySelector('.presente-janela-caixa').classList.remove('aberta');
   modal.querySelector('#presente-titulo').textContent = tr('Você ganhou um presente!');
-  modal.querySelector('.presente-mensagem').textContent = infantil ? tr('A equipe do Lumina Sancti mandou um presente para você!') : (presente.mensagem || '');
+  modal.querySelector('.presente-mensagem').textContent = infantil ? tr('Obrigado por aprender com o Lumina Sancti! Como agradecimento, a equipe mandou um presente para você!') : (presente.mensagem || '');
   modal.querySelector('.presente-revelado').hidden = true;
   modal.querySelector('.presente-compartilhar-caixa').hidden = true;
   const abrir = modal.querySelector('#presente-abrir');
@@ -361,6 +361,24 @@ async function verificarPresente() {
   depois.textContent = tr('Abrir depois');
   modal.classList.add('active');
   setTimeout(() => abrir.focus(), 60);
+}
+
+function abrirPresentePeloLink() {
+  try { sessionStorage.removeItem(CHAVE_DO_PRESENTE_ADIADO); } catch (e) {  }
+  let tentativas = 0;
+  const tentar = async () => {
+    tentativas += 1;
+    if (presenteNaTela) return;
+    const pronto = typeof contaLogada === 'function' && contaLogada() && typeof membroAtivo !== 'undefined' && membroAtivo && !document.body.classList.contains('intro-ativa') && !(typeof telaDePerfisNaFrente === 'function' && telaDePerfisNaFrente());
+    if (pronto) {
+      const licao = document.getElementById('view-licao');
+      if (licao && licao.classList.contains('active')) return;
+      await verificarPresente();
+      if (presenteNaTela || tentativas > 3) return;
+    }
+    if (tentativas < 120) setTimeout(tentar, 1000);
+  };
+  tentar();
 }
 
 function iniciarPresentes() {
