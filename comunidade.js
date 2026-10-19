@@ -166,6 +166,7 @@ function cartaoDaPostagem(p) {
 function mensagemDaComunidade(erro) {
   const texto = String((erro && erro.message) || erro || '');
   if (texto.includes('marco_invalido')) return 'Esse marco ainda não foi conquistado.';
+  if (texto.includes('comunidade_pausada')) return 'As publicações da Comunidade estão em pausa por alguns minutos. Tente de novo daqui a pouco.';
   if (texto.includes('muitos_marcos')) return 'Você já postou muitos marcos hoje. Tente de novo amanhã.';
   if (texto.includes('muitos_seguindo')) return 'Você já seguiu muitas pessoas hoje. Tente de novo amanhã.';
   if (texto.includes('perfil_bloqueado')) return 'Não é possível seguir essa pessoa.';

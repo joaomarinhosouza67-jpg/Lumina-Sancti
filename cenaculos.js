@@ -44,6 +44,8 @@ const ERROS_DO_CENACULO = {
   removido_do_cenaculo: 'Você foi removido deste cenáculo e não pode entrar de novo.',
   cenaculo_cheio: 'Este cenáculo já está cheio (200 pessoas).',
   muitas_mensagens: 'Você mandou muitas mensagens seguidas. Espere um minutinho.',
+  cenaculos_pausados: 'As mensagens dos Cenáculos estão em pausa por alguns minutos. Tente de novo daqui a pouco.',
+  palavra_bloqueada: 'Essa mensagem tem uma palavra que não é permitida nos Cenáculos. Reescreva e tente de novo.',
   link_meet_invalido: 'Cole o link do Google Meet, parecido com https://meet.google.com/abc-defg-hij',
   data_no_passado: 'Escolha uma data e hora que ainda não passaram.',
   limite_de_cenaculos: 'Você já criou 10 cenáculos, que é o máximo.',

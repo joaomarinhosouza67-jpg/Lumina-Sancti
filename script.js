@@ -2712,6 +2712,15 @@ function mudarDeView(idNovaView, opcoes) {
   }
 }
 
+async function cadastrosFechados() {
+  try {
+    const { data, error } = await supabaseCliente.from('app_config').select('value').eq('key', 'cadastros_abertos').maybeSingle();
+    return !error && data && data.value === false;
+  } catch (e) {
+    return false;
+  }
+}
+
 function irParaLogin() {
   mostrarFormularioDeLogin('entrar');
   mudarDeView('view-auth');
@@ -2934,6 +2943,10 @@ function iniciarPaginaDeAutenticacao() {
     const captchaToken = tokenDoCaptcha('cadastrar');
     if (captchaToken === null) { avisoDeLogin('Confirme que você não é um robô.', 'erro'); return; }
     avisoDeLogin('Criando sua conta...');
+    if (await cadastrosFechados()) {
+      avisoDeLogin('Os cadastros novos estão pausados por alguns minutos. Tente de novo mais tarde.', 'erro');
+      return;
+    }
     const instalacao = idDaInstalacao();
     if (await aparelhoJaTemConta(instalacao)) {
       avisoDeLogin('Este aparelho já tem uma conta do Lumina Sancti. Entre com ela na aba Entrar.', 'erro');
