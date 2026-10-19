@@ -309,6 +309,8 @@
         </div>
       </section>
 
+      <section class="frase-do-dia-inicio container" id="frase-do-dia" aria-label="Frase do dia"></section>
+
       <section class="santo-do-dia container" id="santo-do-dia">
       </section>
 
@@ -608,8 +610,15 @@
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
           <span data-i18n="voltar_inicio">Voltar para o início</span>
         </button>
-        <h2 class="section-title" style="text-align:left; margin: 10px 0 4px;">Orações do dia a dia</h2>
-        <div class="title-divider" style="margin: 0 0 24px;"></div>
+        <header class="oracoes-topo">
+          <h2 class="section-title">Orações do dia a dia</h2>
+          <p class="oracoes-sub">Mais de 90 orações da Igreja em português, inglês e espanhol, para cada momento da vida.</p>
+        </header>
+
+        <div class="oracoes-destaques">
+          <article id="oracao-do-dia" class="oracao-do-dia"></article>
+          <div id="frase-do-dia-oracoes" class="oracoes-frase"></div>
+        </div>
 
         <div class="busca-oracao">
           <label for="oracao-busca" class="busca-oracao-rotulo">Para que você quer rezar?</label>
@@ -621,7 +630,7 @@
           <div id="oracao-resultado" class="oracao-resultado" aria-live="polite"></div>
         </div>
 
-        <h3 class="oracoes-subtitulo">Todas as orações</h3>
+        <nav id="oracoes-categorias" class="oracoes-categorias" aria-label="Temas das orações"></nav>
         <div id="lista-oracoes" class="lista-oracoes"></div>
       </div>
     </section>
@@ -1219,6 +1228,8 @@
   <script src="medalhas.js"></script>
   <script src="telas-idioma.js"></script>
   <script src="script.js"></script>
+  <script src="oracoes-dados.js"></script>
+  <script src="oracoes.js"></script>
   <script src="trilhas.js"></script>
   <script src="perfis.js"></script>
   <script src="mascote.js"></script>

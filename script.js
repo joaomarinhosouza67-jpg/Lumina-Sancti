@@ -3609,6 +3609,7 @@ function verificarViradaDoDia() {
   if (diaAgora !== ultimoDiaExibido) {
     ultimoDiaExibido = diaAgora;
     renderSantoDoDia();
+    if (typeof redesenharBibliotecaDeOracoes === 'function') redesenharBibliotecaDeOracoes();
   }
 }
 
@@ -3876,6 +3877,7 @@ function showDetail(id) {
       <div class="bio-text">
         ${textos.texto}
       </div>
+      <div class="bio-oracao-e-frases" id="bio-oracao-e-frases"></div>
       ${trilhaDoSanto ? `
       <button class="btn-ask-ai btn-fazer-trilha" id="btn-fazer-trilha">
         <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-trilha"></use></svg>
@@ -3888,6 +3890,7 @@ function showDetail(id) {
     `;
 
     ligarBotaoOuvir(santo);
+    if (typeof preencherOracaoEFrasesDoSanto === 'function') preencherOracaoEFrasesDoSanto(santo, document.getElementById('bio-oracao-e-frases'));
 
     const btnFazerTrilha = document.getElementById('btn-fazer-trilha');
     if (btnFazerTrilha && trilhaDoSanto) {
@@ -4333,6 +4336,10 @@ function mostrarResultadoDaBuscaDeOracao(consulta) {
 function iniciarPaginaDeOracoes() {
   const container = document.getElementById('lista-oracoes');
   if (!container) return;
+  if (typeof iniciarBibliotecaDeOracoes === 'function') {
+    iniciarBibliotecaDeOracoes();
+    return;
+  }
 
   container.innerHTML = ORACOES.map((o, i) => htmlDaOracao(o, i, null)).join('');
   ligarItensDeOracao(container);
@@ -4700,20 +4707,24 @@ function buscarPadroeiro(termo) {
   return temas;
 }
 
-function cartaoDePadroeiro(santo, prefixo) {
+function cartaoDePadroeiro(santo, prefixo, tema) {
   const textos = textoDoSanto(santo);
   const festa = festaPorExtenso(santo.festa);
+  const rezar = typeof botaoDeRezarAoSanto === 'function' ? botaoDeRezarAoSanto(santo, tema) : '';
   return `
-    <button type="button" class="padroeiro-cartao" data-santo="${santo.id}">
-      <span class="padroeiro-foto" id="${prefixo}-${santo.id}">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-aureola"></use></svg>
+    <div class="padroeiro-cartao${rezar ? ' com-oracao' : ''}" data-santo="${santo.id}" role="button" tabindex="0">
+      <span class="padroeiro-cartao-topo">
+        <span class="padroeiro-foto" id="${prefixo}-${santo.id}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-aureola"></use></svg>
+        </span>
+        <span class="padroeiro-textos">
+          <span class="padroeiro-nome">${textos.nome}</span>
+          <span class="padroeiro-resumo">${textos.resumo}</span>
+          ${festa ? `<span class="padroeiro-festa">${tr('Festa: {data}', { data: festa })}</span>` : ''}
+        </span>
       </span>
-      <span class="padroeiro-textos">
-        <span class="padroeiro-nome">${textos.nome}</span>
-        <span class="padroeiro-resumo">${textos.resumo}</span>
-        ${festa ? `<span class="padroeiro-festa">${tr('Festa: {data}', { data: festa })}</span>` : ''}
-      </span>
-    </button>`;
+      ${rezar}
+    </div>`;
 }
 
 let temaEscolhidoDoPadroeiro = null;
@@ -4785,12 +4796,16 @@ function mostrarResultadosDoPadroeiro(valor) {
   resultados.innerHTML = grupos.map((grupo, g) => `
     <section class="padroeiro-grupo">
       <h3 class="padroeiro-grupo-titulo">${grupo.rotulo}</h3>
-      <div class="padroeiro-lista">${grupo.santos.map((santo) => cartaoDePadroeiro(santo, `padroeiro-foto-${g}`)).join('')}</div>
+      <div class="padroeiro-lista">${grupo.santos.map((santo) => cartaoDePadroeiro(santo, `padroeiro-foto-${g}`, grupo.rotulo)).join('')}</div>
     </section>`).join('');
 
   resultados.querySelectorAll('.padroeiro-cartao').forEach((cartao) => {
     cartao.addEventListener('click', () => showDetail(cartao.dataset.santo));
+    cartao.addEventListener('keydown', (e) => {
+      if (e.target === cartao && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); showDetail(cartao.dataset.santo); }
+    });
   });
+  if (typeof ligarBotoesDeRezarAoSanto === 'function') ligarBotoesDeRezarAoSanto(resultados);
   grupos.forEach((grupo, g) => grupo.santos.forEach((santo) => {
     buscarImagemSanto(santo).then((imgUrl) => {
       const foto = document.getElementById(`padroeiro-foto-${g}-${santo.id}`);
