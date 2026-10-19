@@ -1,4 +1,4 @@
-const CACHE_NOME = 'lumina-sancti-1.22.40';
+const CACHE_NOME = 'lumina-sancti-1.22.41';
 const ARQUIVOS_ESSENCIAIS = [
   './',
   './index.html',
@@ -56,6 +56,9 @@ self.addEventListener('activate', (evento) => {
 self.addEventListener('fetch', (evento) => {
   const url = new URL(evento.request.url);
   if (evento.request.method !== 'GET' || url.origin !== self.location.origin) {
+    return;
+  }
+  if (evento.request.headers.has('range') || url.pathname.endsWith('.webm')) {
     return;
   }
   evento.respondWith(

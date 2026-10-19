@@ -427,11 +427,18 @@
     </section>
 
     <section id="view-auth" class="view">
+      <div class="auth-fundo" aria-hidden="true">
+        <div class="auth-quadro">
+          <video class="auth-video" id="auth-video" muted loop playsinline preload="none" disablepictureinpicture disableremoteplayback></video>
+        </div>
+      </div>
       <div class="container auth-container">
         <button class="btn-back" id="btn-back-auth">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
           <span data-i18n="voltar_inicio">Voltar para o início</span>
         </button>
+
+        <div class="auth-ceu" aria-hidden="true"></div>
 
         <div class="auth-card">
           <div class="auth-marca">
@@ -486,7 +493,7 @@
           <form id="auth-form-codigo" class="auth-form" style="display:none;">
             <p class="auth-codigo-desc" data-i18n="conta_codigo_desc">Enviamos um código de 6 dígitos para o seu e-mail. Digite-o abaixo para confirmar sua conta.</p>
             <label for="codigo-confirmacao" data-i18n="conta_codigo_label">Código de confirmação</label>
-            <input type="text" id="codigo-confirmacao" class="auth-codigo" inputmode="numeric" pattern="[0-9]*" maxlength="6" required autocomplete="one-time-code">
+            <input type="text" id="codigo-confirmacao" class="auth-codigo" inputmode="numeric" pattern="[0-9]*" maxlength="6" required autocomplete="one-time-code" placeholder="000000">
             <button type="submit" class="auth-botao" data-i18n="conta_codigo_botao">Confirmar código</button>
             <button type="button" id="reenviar-codigo-btn" class="auth-link" data-i18n="conta_reenviar">Reenviar código</button>
           </form>
@@ -503,7 +510,7 @@
           <form id="auth-form-nova-senha" class="auth-form" style="display:none;">
             <p class="auth-codigo-desc" id="nova-senha-desc"></p>
             <label for="recuperar-codigo" data-i18n="conta_codigo_label">Código de confirmação</label>
-            <input type="text" id="recuperar-codigo" class="auth-codigo" inputmode="numeric" pattern="[0-9]*" maxlength="6" required autocomplete="one-time-code">
+            <input type="text" id="recuperar-codigo" class="auth-codigo" inputmode="numeric" pattern="[0-9]*" maxlength="6" required autocomplete="one-time-code" placeholder="000000">
             <label for="nova-senha" data-i18n="conta_nova_senha">Nova senha</label>
             <div class="auth-senha">
               <input type="password" id="nova-senha" required minlength="8" autocomplete="new-password">
@@ -515,6 +522,7 @@
           </form>
 
           <p class="auth-feedback" id="auth-feedback" aria-live="polite"></p>
+          <p class="auth-seguro"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Seus dados ficam protegidos. Nunca pedimos sua senha por e-mail ou mensagem.</span></p>
         </div>
       </div>
     </section>

@@ -2696,6 +2696,7 @@ function mudarDeView(idNovaView, opcoes) {
     document.body.classList.toggle('catalogo-interno', catalogoInterno);
     if (typeof aplicarTemaDaPagina === 'function') aplicarTemaDaPagina(idNovaView);
     if (typeof atualizarBarraDoApp === 'function') atualizarBarraDoApp(idNovaView);
+    fundoDoLogin(idNovaView);
     const proxima = document.getElementById(idNovaView);
     if (proxima) {
       proxima.style.display = 'block';
@@ -2710,6 +2711,27 @@ function mudarDeView(idNovaView, opcoes) {
   } else {
     trocar();
   }
+}
+
+function fundoDoLogin(idDaView) {
+  const video = document.getElementById('auth-video');
+  if (!video) return;
+  if (typeof video.play !== 'function') return;
+  if (idDaView !== 'view-auth') {
+    if (!video.paused) video.pause();
+    return;
+  }
+  const semMovimento = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const economia = navigator.connection && navigator.connection.saveData;
+  const toca = typeof video.canPlayType === 'function' && video.canPlayType('video/webm; codecs="vp9"');
+  if (semMovimento || economia || !toca) return;
+  if (!video.dataset.ligado) {
+    video.dataset.ligado = '1';
+    video.addEventListener('playing', () => video.classList.add('tocando'));
+    video.src = window.matchMedia('(max-width: 900px)').matches ? 'fundo-login-pequeno.webm' : 'fundo-login.webm';
+  }
+  const tocando = video.play();
+  if (tocando && typeof tocando.catch === 'function') tocando.catch(() => {});
 }
 
 async function cadastrosFechados() {
