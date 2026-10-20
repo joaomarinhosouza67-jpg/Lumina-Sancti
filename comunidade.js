@@ -720,7 +720,8 @@ async function carregarPedidosRecebidos() {
 }
 
 function atualizarSelosDePedidos() {
-  const total = pedidosRecebidos.length;
+  const mensagens = typeof totalDeMensagensNaoLidas === 'number' ? totalDeMensagensNaoLidas : 0;
+  const total = pedidosRecebidos.length + mensagens;
   document.querySelectorAll('#barra-app [data-destino="cenaculos"], #nav-cenaculos').forEach((botao) => {
     let selo = botao.querySelector('.selo-de-pedidos');
     if (!total) {

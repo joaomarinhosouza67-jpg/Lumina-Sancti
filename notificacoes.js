@@ -3,7 +3,9 @@ const CHAVE_PERGUNTOU_OFENSIVA = 'lumina-sancti-perguntou-ofensiva';
 const LEMBRETES = {
   misericordia: { nome: 'Hora da Misericórdia', texto: 'Todo dia às 15h, um convite para rezar o Terço da Misericórdia.', icone: 'misericordia' },
   ofensiva: { nome: 'Não perca sua ofensiva', texto: 'Só nos dias em que você ainda não fez a missão.', icone: 'chama' },
+  mensagens: { nome: 'Mensagens novas', texto: 'Quando alguém mandar mensagem numa conversa ou num Cenáculo.', icone: 'conversa' },
 };
+const CHAVE_PERGUNTOU_MENSAGENS = 'lumina-sancti-perguntou-mensagens';
 const OFENSIVA_PADRAO = { modo: 'uma', hora: 20 };
 const PRIMEIRA_HORA_DA_OFENSIVA = 8;
 const ULTIMA_HORA_DA_OFENSIVA = 22;
@@ -75,17 +77,18 @@ async function inscricaoDoAparelho(criar) {
 }
 
 async function lembretesDoAparelho() {
+  const nada = () => Object.assign({ misericordia: false, ofensiva: false, mensagens: false }, OFENSIVA_PADRAO);
   if (!notificacoesSuportadas() || Notification.permission !== 'granted' || typeof contaLogada !== 'function' || !contaLogada()) {
-    return Object.assign({ misericordia: false, ofensiva: false }, OFENSIVA_PADRAO);
+    return nada();
   }
   try {
     const inscricao = await inscricaoDoAparelho(false);
-    if (!inscricao) return Object.assign({ misericordia: false, ofensiva: false }, OFENSIVA_PADRAO);
+    if (!inscricao) return nada();
     const { data, error } = await supabaseCliente.rpc('notificacoes_minhas', { _endpoint: inscricao.endpoint });
-    if (error || !data) return Object.assign({ misericordia: false, ofensiva: false }, OFENSIVA_PADRAO);
-    return Object.assign({ misericordia: !!data.misericordia, ofensiva: !!data.ofensiva }, horarioDaOfensiva(data));
+    if (error || !data) return nada();
+    return Object.assign({ misericordia: !!data.misericordia, ofensiva: !!data.ofensiva, mensagens: !!data.mensagens }, horarioDaOfensiva(data));
   } catch (e) {
-    return Object.assign({ misericordia: false, ofensiva: false }, OFENSIVA_PADRAO);
+    return nada();
   }
 }
 
@@ -94,14 +97,14 @@ async function mudarLembretes(novos) {
   if (!perfil) throw new Error('somente_adultos');
   const problema = textoDoProblemaDeNotificacao();
   if (problema) throw new Error(problema);
-  const ligar = !!(novos.misericordia || novos.ofensiva);
+  const ligar = !!(novos.misericordia || novos.ofensiva || novos.mensagens);
   if (ligar && Notification.permission !== 'granted') {
     const resposta = await Notification.requestPermission();
-    if (resposta !== 'granted') throw new Error('Sem a sua permissão o celular não mostra os lembretes. Se mudar de ideia, libere as notificações nas configurações.');
+    if (resposta !== 'granted') throw new Error('Sem a sua permissão este aparelho não mostra os avisos. Se mudar de ideia, libere as notificações nas configurações.');
   }
   const horario = horarioDaOfensiva({ ofensiva_modo: novos.modo, ofensiva_hora: novos.hora });
   const inscricao = await inscricaoDoAparelho(ligar);
-  if (!inscricao) return Object.assign({ misericordia: false, ofensiva: false }, horario);
+  if (!inscricao) return Object.assign({ misericordia: false, ofensiva: false, mensagens: false }, horario);
   const dados = inscricao.toJSON();
   const { data, error } = await supabaseCliente.rpc('notificacoes_salvar', {
     _pid: perfil.id,
@@ -113,13 +116,14 @@ async function mudarLembretes(novos) {
     _ofensiva_modo: horario.modo,
     _ofensiva_hora: horario.hora,
     _idioma: typeof idiomaAtual !== 'undefined' ? idiomaAtual : 'pt',
+    _mensagens: !!novos.mensagens,
   });
   if (error) throw error;
   if (!ligar) {
     try { await inscricao.unsubscribe(); } catch (e) {  }
   }
   const salvo = data || {};
-  return Object.assign({ misericordia: !!salvo.misericordia, ofensiva: !!salvo.ofensiva }, horarioDaOfensiva(data ? salvo : { ofensiva_modo: horario.modo, ofensiva_hora: horario.hora }));
+  return Object.assign({ misericordia: !!salvo.misericordia, ofensiva: !!salvo.ofensiva, mensagens: !!salvo.mensagens }, horarioDaOfensiva(data ? salvo : { ofensiva_modo: horario.modo, ofensiva_hora: horario.hora }));
 }
 
 function mensagemDosLembretes(erro) {
@@ -137,8 +141,8 @@ function convidarParaLembrete(tipo) {
       <span class="lembrete-convite-icone lembrete-${tipo}">${typeof icone === 'function' ? icone(info.icone) : ''}</span>
       <h3>${misericordia ? 'Quer um lembrete às 15h?' : 'Quer ajuda para não perder a sequência?'}</h3>
       <p>${misericordia
-        ? 'Todo dia, às 3 da tarde, o Lumina Sancti avisa no seu celular: "Hoje é a Hora da Misericórdia, reze o terço com a gente".'
-        : 'Se você ainda não tiver feito a missão do dia, às 20h chega um aviso no celular para você não perder a sua ofensiva. Depois dá para mudar o horário ou receber de meia em meia hora até fazer, em Meu perfil, na opção Notificações.'}</p>
+        ? 'Todo dia, às 3 da tarde, o Lumina Sancti avisa neste aparelho: "Hoje é a Hora da Misericórdia, reze o terço com a gente".'
+        : 'Se você ainda não tiver feito a missão do dia, às 20h chega um aviso neste aparelho para você não perder a sua ofensiva. Depois dá para mudar o horário ou receber de meia em meia hora até fazer, em Meu perfil, na opção Notificações.'}</p>
       <div class="marco-convite-botoes">
         <button type="button" class="licao-botao" id="lembrete-sim">Sim, me lembre</button>
         <button type="button" class="marco-convite-nao" id="lembrete-nao">Agora não</button>
@@ -181,6 +185,47 @@ async function oferecerLembreteDaMisericordia() {
   setTimeout(() => convidarParaLembrete('misericordia'), 900);
 }
 
+async function oferecerAvisoDeMensagens() {
+  const faixa = document.getElementById('cenaculos-aviso-mensagens');
+  if (!faixa) return false;
+  if (!(await podePerguntarSobreLembrete(CHAVE_PERGUNTOU_MENSAGENS, 'mensagens'))) {
+    faixa.hidden = true;
+    return false;
+  }
+  faixa.innerHTML = `
+    <span class="aviso-mensagens-icone">${typeof icone === 'function' ? icone('sino') : ''}</span>
+    <span class="aviso-mensagens-textos">
+      <strong>Receba aviso de mensagens novas</strong>
+      <small>Neste aparelho, no celular ou no computador, mesmo com o site fechado.</small>
+      <small class="aviso-mensagens-erro" id="mensagens-aviso" aria-live="polite"></small>
+    </span>
+    <button type="button" class="aviso-mensagens-ligar" id="mensagens-sim">Ligar avisos</button>
+    <button type="button" class="aviso-mensagens-fechar" id="mensagens-nao" aria-label="Agora não"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg></button>`;
+  faixa.hidden = false;
+  faixa.querySelector('#mensagens-nao').addEventListener('click', () => {
+    guardarMarca(CHAVE_PERGUNTOU_MENSAGENS);
+    faixa.hidden = true;
+  });
+  faixa.querySelector('#mensagens-sim').addEventListener('click', async (evento) => {
+    const botao = evento.currentTarget;
+    const aviso = faixa.querySelector('#mensagens-aviso');
+    botao.disabled = true;
+    botao.textContent = tr('Ligando...');
+    try {
+      const atuais = await lembretesDoAparelho();
+      await mudarLembretes(Object.assign({}, atuais, { mensagens: true }));
+      guardarMarca(CHAVE_PERGUNTOU_MENSAGENS);
+      faixa.innerHTML = `<span class="aviso-mensagens-icone">${typeof icone === 'function' ? icone('sino') : ''}</span><span class="aviso-mensagens-textos"><strong>${tr('Pronto! Quando chegar mensagem, você recebe um aviso neste aparelho.')}</strong></span>`;
+      setTimeout(() => { faixa.hidden = true; }, 3500);
+    } catch (erro) {
+      botao.disabled = false;
+      botao.textContent = tr('Ligar avisos');
+      aviso.textContent = mensagemDosLembretes(erro);
+    }
+  });
+  return true;
+}
+
 async function oferecerLembreteDaOfensiva() {
   if (!(await podePerguntarSobreLembrete(CHAVE_PERGUNTOU_OFENSIVA, 'ofensiva'))) return false;
   guardarMarca(CHAVE_PERGUNTOU_OFENSIVA);
@@ -194,7 +239,7 @@ async function abrirAjustesDosLembretes() {
   const problema = textoDoProblemaDeNotificacao();
   const atuais = await lembretesDoAparelho();
   corpo.innerHTML = `
-    <p class="cenaculo-explica">Os lembretes chegam como notificação neste aparelho. Você pode desligar quando quiser.</p>
+    <p class="cenaculo-explica">Os avisos chegam como notificação neste aparelho, no celular ou no computador. Ligue em cada aparelho que você usa. Você pode desligar quando quiser.</p>
     ${problema ? `<p class="lembrete-problema">${problema}</p>` : ''}
     <div class="lembretes-lista">
       ${Object.keys(LEMBRETES).map((tipo) => `
@@ -249,7 +294,7 @@ async function abrirAjustesDosLembretes() {
     caixa.addEventListener('change', () => {
       const tipo = caixa.dataset.tipo;
       salvar(Object.assign({}, estado, { [tipo]: caixa.checked }),
-        () => (caixa.checked ? 'Lembrete ligado.' : 'Lembrete desligado.'),
+        () => (caixa.checked ? 'Aviso ligado.' : 'Aviso desligado.'),
         () => { caixa.checked = !caixa.checked; });
     });
   });
@@ -294,7 +339,11 @@ async function atualizarResumoDosLembretes() {
   const resumo = document.getElementById('meu-perfil-lembretes-resumo');
   if (!resumo) return;
   const atuais = await lembretesDoAparelho();
-  const ligados = Object.keys(LEMBRETES).filter((t) => atuais[t]).map((t) => (t === 'misericordia' ? tr('Misericórdia às 15h') : resumoDaOfensiva(atuais.modo, atuais.hora)));
+  const ligados = Object.keys(LEMBRETES).filter((t) => atuais[t]).map((t) => {
+    if (t === 'misericordia') return tr('Misericórdia às 15h');
+    if (t === 'mensagens') return tr('Mensagens');
+    return resumoDaOfensiva(atuais.modo, atuais.hora);
+  });
   if (resumo.isConnected) resumo.textContent = ligados.length ? ligados.join(' e ') : 'Desligados';
 }
 
@@ -305,6 +354,7 @@ function telaDePerfisNaFrente() {
 
 let acaoDoLink = '';
 let conversaDoLink = 0;
+let cenaculoDoLink = '';
 
 function executarAcaoDoLink() {
   const acao = acaoDoLink;
@@ -313,6 +363,7 @@ function executarAcaoDoLink() {
   setTimeout(() => {
     if (acao === 'suporte' && typeof abrirSuporte === 'function') abrirSuporte(conversaDoLink || undefined);
     else if (acao === 'presente' && typeof abrirPresentePeloLink === 'function') abrirPresentePeloLink();
+    else if (acao === 'cenaculo' && typeof abrirCenaculoPeloLink === 'function') abrirCenaculoPeloLink(cenaculoDoLink);
   }, 600);
 }
 
@@ -334,20 +385,24 @@ function esperarPerfilParaAbrir() {
 function abrirPeloEnderecoDoLembrete() {
   let destino = '';
   let conversa = '';
+  let idDoCenaculo = '';
   try {
     const parametros = new URLSearchParams(window.location.search);
     destino = parametros.get('abrir') || '';
     conversa = parametros.get('conversa') || '';
+    idDoCenaculo = parametros.get('id') || '';
   } catch (e) { destino = ''; }
   if (!destino) return;
   conversaDoLink = Number(conversa) > 0 ? Number(conversa) : 0;
+  cenaculoDoLink = /^[0-9a-f-]{36}$/.test(idDoCenaculo) ? idDoCenaculo : '';
   try {
     const url = new URL(window.location.href);
     url.searchParams.delete('abrir');
     url.searchParams.delete('conversa');
+    url.searchParams.delete('id');
     history.replaceState(null, '', url.pathname + url.search + url.hash);
   } catch (e) {  }
-  if (destino === 'presente' || destino === 'suporte') {
+  if (destino === 'presente' || destino === 'suporte' || (destino === 'cenaculo' && cenaculoDoLink)) {
     if (destino === 'presente') { try { sessionStorage.removeItem('lumina-sancti-presente-adiado'); } catch (e) {  } }
     acaoDoLink = destino;
     esperarPerfilParaAbrir();

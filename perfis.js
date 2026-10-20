@@ -718,6 +718,7 @@ function escolherPerfil(membro) {
   if (typeof verificarPresente === 'function') setTimeout(verificarPresente, 900);
   if (typeof verificarNovidade === 'function') setTimeout(verificarNovidade, 1800);
   if (typeof atualizarAvisoDoSuporte === 'function') setTimeout(atualizarAvisoDoSuporte, 1200);
+  if (typeof atualizarMensagensNaoLidas === 'function') setTimeout(atualizarMensagensNaoLidas, 1500);
   if (typeof executarAcaoDoLink === 'function') executarAcaoDoLink();
 }
 

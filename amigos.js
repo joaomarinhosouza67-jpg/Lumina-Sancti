@@ -471,6 +471,14 @@ function blocoDaComparacao(dados, fotoDoOutro) {
     </section>`;
 }
 
+function seloDeNaoLidasDoPerfil(perfilId) {
+  if (typeof ultimaListaDeCenaculos === 'undefined' || !Array.isArray(ultimaListaDeCenaculos)) return '';
+  const conversa = ultimaListaDeCenaculos.find((c) => c.tipo === 'conversa' && c.outro && c.outro.perfil_id === perfilId);
+  const novas = conversa ? Math.max(0, Number(conversa.nao_lidas || 0)) : 0;
+  if (!novas) return '';
+  return `<span class="cenaculo-nao-lidas perfil-acao-selo" aria-label="${escaparTexto(tr(novas === 1 ? '1 mensagem nova' : '{n} mensagens novas', { n: novas }))}">${novas > 99 ? '99+' : novas}</span>`;
+}
+
 function acoesDoPerfil(dados) {
   const nome = escaparTexto(primeiroNome(dados.nome));
   if (dados.eu) {
@@ -482,7 +490,7 @@ function acoesDoPerfil(dados) {
   if (dados.contato) {
     return `
       <div class="perfil-acoes">
-        <button type="button" class="perfil-acao" id="perfil-publico-conversar">${iconeDoCenaculo('conversa')}<span>Conversar</span></button>
+        <button type="button" class="perfil-acao" id="perfil-publico-conversar">${iconeDoCenaculo('conversa')}<span>Conversar</span>${seloDeNaoLidasDoPerfil(dados.perfil_id)}</button>
         <button type="button" class="perfil-acao" id="perfil-publico-audio">${iconeDoCenaculo('microfone')}<span>Áudio</span></button>
       </div>`;
   }

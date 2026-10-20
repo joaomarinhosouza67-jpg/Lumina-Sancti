@@ -592,6 +592,13 @@
           <li>Wikipédia (Wikimedia), Google Fonts e jsDelivr: fotos dos santos, letras do site, partes do código e a lista de emojis, carregadas diretamente pelo seu navegador.</li>
         </ul>
 
+        <h3>Fotos dos santos</h3>
+        <p>As fotos e pinturas dos santos vêm do Wikimedia Commons e são de domínio público ou de licenças livres. Para os santos que ainda não têm foto livre, o próprio Lumina Sancti fez um desenho. As fotos que pedem crédito estão listadas abaixo.</p>
+        <details class="creditos-fotos">
+          <summary>Ver os créditos das fotos</summary>
+          <ul id="creditos-das-fotos"></ul>
+        </details>
+
         <h3>Seus direitos</h3>
         <p>Pela Lei Geral de Proteção de Dados (LGPD), você pode pedir para ver, corrigir ou apagar seus dados. Você mesmo pode apagar tudo em Meu perfil, na opção "Excluir minha conta", ou nos escrever em <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a>.</p>
 
@@ -673,14 +680,17 @@
           <span data-i18n="voltar_inicio">Voltar para o início</span>
         </button>
         <header class="cursos-topo">
-          <p class="cursos-selo">Em breve</p>
+          <p class="cursos-selo" id="cursos-selo">Em breve</p>
           <h2 class="section-title">Cursos de aprofundamento</h2>
           <div class="title-divider"></div>
           <p class="cursos-intro">Para quem quer ir mais fundo na fé. Os cursos vão liberar páginas de aprofundamento sobre vários temas da vida cristã, com explicações simples, o que a Igreja ensina e como viver isso no dia a dia.</p>
           <p class="cursos-intro">Cada curso vai liberando as páginas aos poucos, no seu ritmo, sempre com base na Bíblia, no Catecismo e no exemplo dos santos.</p>
         </header>
 
-        <h3 class="cursos-subtitulo">Temas que vão chegar</h3>
+        <div id="cursos-catalogo-caixa">
+        <div id="cursos-catalogo" class="cursos-catalogo"></div>
+
+        <h3 class="cursos-subtitulo" id="cursos-em-breve-titulo">Temas que vão chegar</h3>
         <ul class="cursos-lista">
           <li class="curso-item">
             <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-aliancas"></use></svg>
@@ -732,7 +742,10 @@
           </li>
         </ul>
 
-        <p class="cursos-enquanto"><span>Enquanto os cursos não chegam, continue aprendendo nas Trilhas dos Santos.</span> <button type="button" class="cursos-link" id="cursos-ir-trilhas">Ir para as Trilhas</button></p>
+        <p class="cursos-enquanto" id="cursos-enquanto"><span>Enquanto os cursos não chegam, continue aprendendo nas Trilhas dos Santos.</span> <button type="button" class="cursos-link" id="cursos-ir-trilhas">Ir para as Trilhas</button></p>
+        </div>
+        <div id="curso-pagina" class="curso-pagina" hidden></div>
+        <div id="aula-pagina" class="aula-pagina" hidden></div>
       </div>
     </section>
 
@@ -1030,6 +1043,7 @@
             <button type="button" class="cenaculos-filtro" data-filtro="conversas" role="tab">Conversas</button>
             <button type="button" class="cenaculos-filtro" data-filtro="grupos" role="tab">Cenáculos</button>
           </div>
+          <div id="cenaculos-aviso-mensagens" class="cenaculos-aviso-mensagens" hidden></div>
           <div id="cenaculos-pedidos" class="cenaculos-pedidos" hidden></div>
           <div id="cenaculos-lista" class="cenaculos-lista"></div>
           <button type="button" class="cenaculos-fab" id="cenaculo-conversa-btn" aria-label="Nova conversa"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-conversa-mais"></use></svg></button>
@@ -1227,9 +1241,11 @@
   <script src="liturgia.js"></script>
   <script src="medalhas.js"></script>
   <script src="telas-idioma.js"></script>
+  <script src="fotos-santos.js"></script>
   <script src="script.js"></script>
   <script src="oracoes-dados.js"></script>
   <script src="oracoes.js"></script>
+  <script src="cursos.js"></script>
   <script src="trilhas.js"></script>
   <script src="perfis.js"></script>
   <script src="mascote.js"></script>

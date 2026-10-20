@@ -1,4 +1,4 @@
-const CACHE_NOME = 'lumina-sancti-1.22.42';
+const CACHE_NOME = 'lumina-sancti-1.22.43';
 const ARQUIVOS_ESSENCIAIS = [
   './',
   './index.html',
@@ -10,9 +10,11 @@ const ARQUIVOS_ESSENCIAIS = [
   './liturgia.js',
   './medalhas.js',
   './telas-idioma.js',
+  './fotos-santos.js',
   './script.js',
   './oracoes-dados.js',
   './oracoes.js',
+  './cursos.js',
   './trilhas.js',
   './perfis.js',
   './mascote.js',
@@ -29,6 +31,8 @@ const ARQUIVOS_ESSENCIAIS = [
   './avisos.js',
   './presentes.js',
   './suporte.js',
+  './santos/chiara-luce.svg',
+  './santos/albertina-berkenbrock.svg',
   './favicon.svg',
   './favicon-48.png',
   './badge-estrela.png',
@@ -87,14 +91,25 @@ self.addEventListener('push', (evento) => {
   }
   const titulo = dados.titulo || 'Lumina Sancti';
   const endereco = typeof dados.url === 'string' && dados.url.startsWith('/') ? dados.url : '/';
+  const ehMensagem = typeof dados.tag === 'string' && dados.tag.startsWith('lumina-conversa-');
   evento.waitUntil(
-    self.registration.showNotification(titulo, {
-      body: dados.texto || '',
-      icon: './icon-192.png',
-      badge: './badge-estrela.png',
-      tag: dados.tag || 'lumina-sancti',
-      renotify: true,
-      data: { url: endereco },
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((janelas) => {
+      janelas.forEach((janela) => {
+        try { janela.postMessage({ tipo: 'lumina-aviso', mensagem: ehMensagem, tag: dados.tag || '' }); } catch (e) {}
+      });
+      if (ehMensagem && self.navigator && typeof self.navigator.setAppBadge === 'function') {
+        self.navigator.setAppBadge().catch(() => {});
+      }
+      const olhando = janelas.some((janela) => janela.focused && janela.visibilityState === 'visible');
+      if (ehMensagem && olhando) return undefined;
+      return self.registration.showNotification(titulo, {
+        body: dados.texto || '',
+        icon: './icon-192.png',
+        badge: './badge-estrela.png',
+        tag: dados.tag || 'lumina-sancti',
+        renotify: true,
+        data: { url: endereco },
+      });
     })
   );
 });

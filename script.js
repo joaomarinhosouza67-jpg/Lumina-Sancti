@@ -2009,21 +2009,6 @@ async function resumoWiki(titulo) {
   }
 }
 
-async function titulosProximosWiki(termo) {
-  if (!termo) return [];
-  try {
-    const consulta = `${termo} santo católico`;
-    const url = `https://pt.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(consulta)}&srlimit=5&format=json&origin=*`;
-    const resp = await fetch(url);
-    if (!resp.ok) return [];
-    const dados = await resp.json();
-    const achados = dados && dados.query && dados.query.search;
-    return Array.isArray(achados) ? achados.map((r) => r.title) : [];
-  } catch (e) {
-    return [];
-  }
-}
-
 function htmlDaFoto(url, nome, classe) {
   const endereco = String(url).replace(/"/g, '&quot;');
   const alt = String(nome).replace(/"/g, '&quot;');
@@ -2031,39 +2016,32 @@ function htmlDaFoto(url, nome, classe) {
          `<img src="${endereco}" alt="${alt}" class="${classe}" loading="lazy">`;
 }
 
-async function buscarImagemSanto(santo) {
+async function buscarImagemSanto(santo, grande) {
   if (santo.imgUrl) return santo.imgUrl;
+  const fixa = typeof enderecoDaFotoDoSanto === 'function' ? enderecoDaFotoDoSanto(santo.id, grande) : null;
+  if (fixa) return fixa;
   if (cacheImagens[santo.id] !== undefined) return cacheImagens[santo.id];
-
-  const termoPrincipal = santo.wiki || nomeSemTitulo(santo);
-  const nomeLimpo = nomeSemTitulo(santo);
-  let imagem = null;
-
-  imagem = await resumoWiki(termoPrincipal);
-
-  if (!imagem) {
-    const candidatos = await titulosProximosWiki(termoPrincipal);
-    for (const candidato of candidatos) {
-      if (candidato && candidato !== termoPrincipal) {
-        imagem = await resumoWiki(candidato);
-        if (imagem) break;
-      }
-    }
-  }
-
-  if (!imagem && nomeLimpo && nomeLimpo !== termoPrincipal) {
-    const candidatos2 = await titulosProximosWiki(nomeLimpo);
-    for (const candidato of candidatos2) {
-      if (candidato) {
-        imagem = await resumoWiki(candidato);
-        if (imagem) break;
-      }
-    }
-  }
-
+  const imagem = await resumoWiki(santo.wiki || nomeSemTitulo(santo));
   cacheImagens[santo.id] = imagem;
   return imagem;
 }
+
+function tentarFotoDeNovo(evento) {
+  const img = evento.target;
+  if (!(img instanceof HTMLImageElement) || !/upload\.wikimedia\.org/.test(img.src)) return;
+  if (!img.matches('.card-img, .bio-img, .padroeiro-img, .foto-fundo')) return;
+  if (img.dataset.tentou) {
+    const caixa = img.parentElement;
+    if (caixa && img.classList.contains('foto-fundo')) { img.remove(); return; }
+    if (caixa) caixa.innerHTML = '<svg class="card-img-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-aureola"></use></svg>';
+    return;
+  }
+  img.dataset.tentou = '1';
+  const original = img.src;
+  setTimeout(() => { img.src = `${original}${original.includes('?') ? '&' : '?'}de-novo=1`; }, 2500);
+}
+
+document.addEventListener('error', tentarFotoDeNovo, true);
 
 const cardsGrid = document.getElementById('cards-grid');
 const filterBtns = document.querySelectorAll('.filter-btn[data-filter]');
@@ -2686,6 +2664,7 @@ function mudarDeView(idNovaView, opcoes) {
   const todasAsViews = ['view-home', 'view-detail', 'view-ia', 'view-auth', 'view-perfil', 'view-privacidade', 'view-oracoes', 'view-leitura', 'view-terco', 'view-padroeiro', 'view-trilhas', 'view-licao', 'view-perfis', 'view-ranking', 'view-planos', 'view-termos', 'view-completar', 'view-cenaculos', 'view-cenaculo', 'view-comunidade', 'view-cursos', 'view-suporte'];
   const viewAtual = todasAsViews.map(id => document.getElementById(id)).find(v => v && v.classList.contains('active'));
   if (idNovaView !== 'view-licao' && typeof pararVozInfantil === 'function') pararVozInfantil(false);
+  if (idNovaView !== 'view-cursos' && typeof pararVideoDoCurso === 'function') pararVideoDoCurso();
   const catalogoInterno = idNovaView === 'view-home' && Boolean(opcoes && opcoes.catalogoInterno);
 
   const trocar = () => {
@@ -3914,7 +3893,7 @@ function showDetail(id) {
       });
     }
 
-    buscarImagemSanto(santo).then(imgUrl => {
+    buscarImagemSanto(santo, true).then(imgUrl => {
       const bioImgWrapper = document.getElementById('bio-img-wrapper');
       if (imgUrl) {
         bioImgWrapper.innerHTML = htmlDaFoto(imgUrl, santo.nome, 'bio-img');
@@ -4876,7 +4855,7 @@ function iniciarNavegacaoDoMenuLateral() {
   const navCursos = document.getElementById('nav-cursos');
   const voltarDosCursos = document.getElementById('btn-back-cursos');
   const cursosParaTrilhas = document.getElementById('cursos-ir-trilhas');
-  if (navCursos) navCursos.addEventListener('click', () => { closeSidebar(); mudarDeView('view-cursos'); });
+  if (navCursos) navCursos.addEventListener('click', () => { closeSidebar(); if (typeof abrirCursos === 'function') abrirCursos(); else mudarDeView('view-cursos'); });
   if (voltarDosCursos) voltarDosCursos.addEventListener('click', () => mudarDeView('view-home'));
   if (cursosParaTrilhas) cursosParaTrilhas.addEventListener('click', () => { if (typeof abrirTrilhas === 'function') abrirTrilhas(); });
 }

@@ -86,6 +86,9 @@ let temporizadorDoGiphy = null;
 let seletorDeEmojisPronto = null;
 let temporizadorDoNome = null;
 let fotoDoGrupoUrl = '';
+let totalDeMensagensNaoLidas = 0;
+let temporizadorDoLido = null;
+let tituloOriginalDaPagina = '';
 let ultimaListaDeCenaculos = null;
 let fotosDaUltimaLista = {};
 let filtroDaLista = 'tudo';
@@ -325,6 +328,7 @@ function abrirCenaculos() {
   if (typeof closeSidebar === 'function') closeSidebar();
   mostrarListaDeCenaculos();
   garantirAceite();
+  if (typeof oferecerAvisoDeMensagens === 'function') oferecerAvisoDeMensagens();
 }
 
 function telaGrande() {
@@ -464,6 +468,75 @@ function marcarConversaAtivaNaLista() {
   });
 }
 
+function naoLidasDaConversa(c) {
+  if (!c || (cenaculoAberto && cenaculoAberto.id === c.id && !document.hidden)) return 0;
+  return Math.max(0, Number(c.nao_lidas || 0));
+}
+
+function marcarAppComNaoLidas() {
+  const pedidos = typeof pedidosRecebidos !== 'undefined' && Array.isArray(pedidosRecebidos) ? pedidosRecebidos.length : 0;
+  const total = totalDeMensagensNaoLidas + pedidos;
+  if (!tituloOriginalDaPagina) tituloOriginalDaPagina = document.title.replace(/^\(\d+\+?\)\s*/, '');
+  document.title = totalDeMensagensNaoLidas > 0 ? `(${totalDeMensagensNaoLidas > 99 ? '99+' : totalDeMensagensNaoLidas}) ${tituloOriginalDaPagina}` : tituloOriginalDaPagina;
+  try {
+    if (total > 0 && typeof navigator.setAppBadge === 'function') navigator.setAppBadge(total).catch(() => {});
+    else if (total === 0 && typeof navigator.clearAppBadge === 'function') navigator.clearAppBadge().catch(() => {});
+  } catch (e) {
+  }
+  if (typeof atualizarSelosDePedidos === 'function') atualizarSelosDePedidos();
+}
+
+async function atualizarMensagensNaoLidas() {
+  const perfil = perfilAdultoAtivo();
+  if (!perfil || typeof contaLogada !== 'function' || !contaLogada() || (typeof modoInfantilAtivo === 'function' && modoInfantilAtivo())) {
+    if (totalDeMensagensNaoLidas) { totalDeMensagensNaoLidas = 0; marcarAppComNaoLidas(); }
+    return;
+  }
+  try {
+    const dados = await chamarCenaculo('cenaculo_nao_lidas', { _pid: perfil.id });
+    const novo = Math.max(0, Number((dados && dados.total) || 0));
+    const mudou = novo !== totalDeMensagensNaoLidas;
+    totalDeMensagensNaoLidas = novo;
+    marcarAppComNaoLidas();
+    const lista = document.getElementById('cenaculos-lista');
+    if (mudou && lista && lista.offsetParent !== null) carregarListaDeCenaculos(true);
+  } catch (e) {
+  }
+}
+
+async function marcarConversaComoLida(idDoCenaculo) {
+  const perfil = perfilAdultoAtivo();
+  if (!perfil || !idDoCenaculo) return;
+  try {
+    await chamarCenaculo('cenaculo_marcar_lido', { _pid: perfil.id, _cid: idDoCenaculo });
+  } catch (e) {
+    return;
+  }
+  const item = (ultimaListaDeCenaculos || []).find((c) => c.id === idDoCenaculo);
+  if (item) item.nao_lidas = 0;
+  const botao = document.querySelector(`.cenaculo-cartao[data-cenaculo="${idDoCenaculo}"]`);
+  if (botao) {
+    botao.classList.remove('tem-novas');
+    const selo = botao.querySelector('.cenaculo-nao-lidas');
+    if (selo) selo.remove();
+  }
+  atualizarMensagensNaoLidas();
+}
+
+function agendarLeituraDaConversa() {
+  clearTimeout(temporizadorDoLido);
+  temporizadorDoLido = setTimeout(() => {
+    if (cenaculoAberto && cenaculoAberto.id && !document.hidden) marcarConversaComoLida(cenaculoAberto.id);
+  }, 1200);
+}
+
+async function abrirCenaculoPeloLink(idDoCenaculo) {
+  if (!idDoCenaculo) return;
+  abrirCenaculos();
+  if (!perfilAdultoAtivo() || (typeof contaLogada === 'function' && !contaLogada())) return;
+  setTimeout(() => abrirConversa(idDoCenaculo), 500);
+}
+
 function renderizarListaDeCenaculos(cenaculos, fotos) {
   const lista = document.getElementById('cenaculos-lista');
   if (!lista) return;
@@ -490,8 +563,9 @@ function renderizarListaDeCenaculos(cenaculos, fotos) {
   lista.innerHTML = visiveis.map((c) => {
     const conversa = c.tipo === 'conversa';
     const faixa = conversa && typeof faixaDaLinhaDaConversa === 'function' ? faixaDaLinhaDaConversa(c.outro) : '';
+    const novas = naoLidasDaConversa(c);
     return `
-    <button type="button" class="cenaculo-cartao${conversa ? ' conversa' : ''}${faixa ? ' com-faixa' : ''}" data-cenaculo="${c.id}">
+    <button type="button" class="cenaculo-cartao${conversa ? ' conversa' : ''}${faixa ? ' com-faixa' : ''}${novas ? ' tem-novas' : ''}" data-cenaculo="${c.id}">
       ${faixa}
       ${iconeDaLista(c, enderecos)}
       <span class="cenaculo-cartao-textos">
@@ -499,7 +573,10 @@ function renderizarListaDeCenaculos(cenaculos, fotos) {
           <strong translate="no">${escaparTexto(nomeDaConversa(c))}</strong>
           <span class="cenaculo-cartao-hora">${horaNaLista(c.ultima ? c.ultima.quando : c.atividade)}</span>
         </span>
-        <small>${resumoDaUltimaMensagem(c.ultima, conversa)}</small>
+        <span class="cenaculo-cartao-linha cenaculo-cartao-previa">
+          <small>${resumoDaUltimaMensagem(c.ultima, conversa)}</small>
+          ${novas ? `<span class="cenaculo-nao-lidas" aria-label="${escaparTexto(tr(novas === 1 ? '1 mensagem nova' : '{n} mensagens novas', { n: novas }))}">${novas > 99 ? '99+' : novas}</span>` : ''}
+        </span>
         ${c.encontro ? `<small class="cenaculo-cartao-encontro">${iconeDoCenaculo('video')} <span translate="no">${escaparTexto(c.encontro.titulo)}:</span> ${formatarEncontro(c.encontro.quando)}</small>` : ''}
       </span>
     </button>`;
@@ -756,6 +833,7 @@ async function abrirConversa(idDoCenaculo) {
     renderizarCabecalhoDaConversa();
     renderizarMensagens(true);
     ouvirMensagensNovas();
+    marcarConversaComoLida(idDoCenaculo);
   } catch (erro) {
     document.getElementById('cenaculo-nome').textContent = 'Cenáculo';
     document.getElementById('cenaculo-mensagens').innerHTML = `<p class="not-found-msg">${mensagemDoCenaculo(erro)}</p>`;
@@ -1338,6 +1416,7 @@ function ouvirMensagensNovas() {
           juntarMensagem(mudanca.new);
           agendarAtualizacaoDaLista();
           renderizarMensagens(false);
+          if (nova) agendarLeituraDaConversa();
           if (nova && !membroDoCenaculo(mudanca.new.perfil_id)) recarregarMembros();
         })
         .subscribe();
@@ -1374,6 +1453,7 @@ async function buscarMensagensRecentes() {
     if (JSON.stringify(mensagensDoCenaculo) !== antes) {
       renderizarMensagens(false);
       agendarAtualizacaoDaLista();
+      agendarLeituraDaConversa();
     }
   } catch (e) {
   }
@@ -2160,7 +2240,7 @@ function irPelaBarra(destino) {
   else if (destino === 'cenaculos') abrirCenaculos();
   else if (destino === 'comunidade' && typeof abrirComunidade === 'function') abrirComunidade();
   else if (destino === 'oracoes') mudarDeView('view-oracoes');
-  else if (destino === 'cursos') mudarDeView('view-cursos');
+  else if (destino === 'cursos') { if (typeof abrirCursos === 'function') abrirCursos(); else mudarDeView('view-cursos'); }
   else if (destino === 'conta') {
     if (typeof contaLogada !== 'function' || !contaLogada()) { if (typeof irParaLogin === 'function') irParaLogin(); }
     else if (typeof modoInfantilAtivo === 'function' && modoInfantilAtivo()) { if (typeof sairDoModoInfantil === 'function') sairDoModoInfantil('inicio'); }
@@ -2281,4 +2361,23 @@ function iniciarCenaculos() {
 document.addEventListener('DOMContentLoaded', () => {
   if (typeof rodarComSeguranca === 'function') rodarComSeguranca('cenáculos', iniciarCenaculos);
   else iniciarCenaculos();
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(atualizarMensagensNaoLidas, 4000);
+  setInterval(() => { if (!document.hidden) atualizarMensagensNaoLidas(); }, 30000);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) return;
+    atualizarMensagensNaoLidas();
+    if (cenaculoAberto && cenaculoAberto.id) agendarLeituraDaConversa();
+  });
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('message', (evento) => {
+      const dados = evento.data || {};
+      if (dados.tipo !== 'lumina-aviso' || !dados.mensagem) return;
+      atualizarMensagensNaoLidas();
+      if (cenaculoAberto && cenaculoAberto.id && dados.tag === `lumina-conversa-${cenaculoAberto.id}`) buscarMensagensRecentes();
+      else agendarAtualizacaoDaLista();
+    });
+  }
 });
