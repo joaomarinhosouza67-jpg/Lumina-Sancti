@@ -2693,13 +2693,18 @@ function mudarDeView(idNovaView, opcoes) {
 }
 
 function fundoDoLogin(idDaView) {
-  const video = document.getElementById('auth-video');
-  if (!video) return;
-  if (typeof video.play !== 'function') return;
-  if (idDaView !== 'view-auth') {
-    if (!video.paused) video.pause();
-    return;
-  }
+  [['view-auth', 'auth-video'], ['view-perfis', 'perfis-video']].forEach(([idDaTela, idDoVideo]) => {
+    const video = document.getElementById(idDoVideo);
+    if (!video || typeof video.play !== 'function') return;
+    if (idDaView !== idDaTela) {
+      if (!video.paused) video.pause();
+      return;
+    }
+    tocarVideoDeFundo(video);
+  });
+}
+
+function tocarVideoDeFundo(video) {
   const semMovimento = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const economia = navigator.connection && navigator.connection.saveData;
   const toca = typeof video.canPlayType === 'function' && video.canPlayType('video/webm; codecs="vp9"');

@@ -5772,6 +5772,43 @@ body.modo-kids #nav-suporte, body.modo-kids .footer-suporte { display: none; }
   .auth-video { display: none; }
 }
 
+#view-perfis { position: relative; }
+.perfis-fundo { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; background: #05060d; }
+.perfis-quadro { position: absolute; inset: 0; background: url('fundo-login.jpg') 76% 50% / cover no-repeat; }
+.perfis-video { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 76% 50%; opacity: 0; transition: opacity 1.4s ease; }
+.perfis-video.tocando { opacity: 1; }
+.perfis-fundo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 62% 58% at 50% 54%, rgba(5, 7, 18, 0.62) 0%, rgba(5, 7, 18, 0.46) 55%, rgba(5, 7, 18, 0.2) 100%),
+    linear-gradient(180deg, rgba(5, 7, 18, 0.55) 0, rgba(5, 7, 18, 0.12) 22%, rgba(5, 7, 18, 0.12) 72%, rgba(5, 7, 18, 0.6) 100%);
+}
+#view-perfis .perfis-container { position: relative; z-index: 1; }
+#view-perfis .perfis-titulo { color: #fff; text-shadow: 0 2px 18px rgba(0, 0, 0, 0.85), 0 1px 3px rgba(0, 0, 0, 0.7); }
+#view-perfis .perfil-nome { color: #fff; text-shadow: 0 1px 10px rgba(0, 0, 0, 0.9), 0 1px 2px rgba(0, 0, 0, 0.8); }
+#view-perfis .perfil-adicionar .perfil-nome { color: rgba(255, 255, 255, 0.86); }
+#view-perfis .avatar-adicionar { border-color: rgba(255, 255, 255, 0.7); color: rgba(255, 255, 255, 0.85); background: rgba(5, 7, 18, 0.35); }
+#view-perfis .perfil-tag { background: rgba(5, 7, 18, 0.7); color: #f0c66a; border-color: rgba(240, 198, 106, 0.6); }
+#view-perfis .perfis-carregando { color: rgba(255, 255, 255, 0.85); text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8); }
+#view-perfis .perfis-gerenciar { background: rgba(5, 7, 18, 0.55); border-color: rgba(255, 255, 255, 0.42); color: #fff; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+#view-perfis .perfis-gerenciar:hover { background: rgba(5, 7, 18, 0.7); border-color: var(--primary-color); color: var(--primary-color); }
+
+@media (max-width: 900px) {
+  .perfis-quadro { background-position: 72% 50%; }
+  .perfis-video { object-position: 72% 50%; }
+  .perfis-fundo::after {
+    background:
+      linear-gradient(180deg, rgba(5, 7, 18, 0.5) 0, rgba(5, 7, 18, 0.5) 100%),
+      radial-gradient(ellipse 80% 60% at 50% 52%, rgba(5, 7, 18, 0.3) 0%, rgba(5, 7, 18, 0) 100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .perfis-video { display: none; }
+}
+
 #view-oracoes .oracoes-container { max-width: 1040px; }
 .oracoes-topo { margin: 10px 0 22px; }
 .oracoes-topo .section-title { text-align: left; margin: 0 0 6px; }
