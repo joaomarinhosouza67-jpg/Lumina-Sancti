@@ -1,4 +1,4 @@
-const CACHE_NOME = 'lumina-sancti-1.22.53';
+const CACHE_NOME = 'lumina-sancti-1.22.54';
 const CACHE_DO_WIDGET = 'lumina-widget';
 const ETIQUETA_DO_WIDGET = 'lumina-dia';
 const ARQUIVOS_ESSENCIAIS = [

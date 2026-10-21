@@ -3681,6 +3681,91 @@ function iconeCoracao(preenchido) {
     : `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>`;
 }
 
+function soltarCoracoes(botao) {
+  if (document.documentElement.classList.contains('menos-movimento')) return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const caixa = botao.getBoundingClientRect();
+  const x = caixa.left + caixa.width / 2;
+  const y = caixa.top + caixa.height / 2;
+  for (let i = 0; i < 8; i += 1) {
+    const coracao = document.createElement('span');
+    coracao.className = 'coracao-voando';
+    coracao.innerHTML = iconeCoracao(true);
+    const angulo = (Math.PI * 2 * i) / 8 - Math.PI / 2;
+    const distancia = 34 + Math.random() * 22;
+    coracao.style.left = `${x}px`;
+    coracao.style.top = `${y}px`;
+    coracao.style.setProperty('--dx', `${Math.cos(angulo) * distancia}px`);
+    coracao.style.setProperty('--dy', `${Math.sin(angulo) * distancia - 18}px`);
+    coracao.style.setProperty('--giro', `${Math.round(Math.random() * 60 - 30)}deg`);
+    coracao.style.setProperty('--tam', `${0.55 + Math.random() * 0.45}`);
+    document.body.appendChild(coracao);
+    setTimeout(() => coracao.remove(), 900);
+  }
+}
+
+let temporizadorDoAvisoDosSantos = null;
+
+function avisoRapidoDosSantos(texto, tipo) {
+  let aviso = document.getElementById('aviso-dos-santos');
+  if (!aviso) {
+    aviso = document.createElement('div');
+    aviso.id = 'aviso-dos-santos';
+    aviso.className = 'aviso-dos-santos';
+    aviso.setAttribute('role', 'status');
+    aviso.setAttribute('aria-live', 'polite');
+    document.body.appendChild(aviso);
+  }
+  aviso.innerHTML = `${tipo === 'coracao' ? iconeCoracao(true) : (tipo === 'estrela' ? '<svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-estrela"></use></svg>' : '')}<span>${typeof tr === 'function' ? tr(texto) : texto}</span>`;
+  aviso.classList.toggle('com-coracao', tipo === 'coracao');
+  aviso.classList.remove('visivel');
+  void aviso.offsetWidth;
+  aviso.classList.add('visivel');
+  clearTimeout(temporizadorDoAvisoDosSantos);
+  temporizadorDoAvisoDosSantos = setTimeout(() => aviso.classList.remove('visivel'), 2200);
+}
+
+function chaveDoSantoDeDevocao() {
+  const perfil = typeof membroAtivo !== 'undefined' && membroAtivo && membroAtivo.id ? membroAtivo.id : 'aparelho';
+  return `lumina-sancti-santo-devocao-${perfil}`;
+}
+
+function santoDeDevocao() {
+  try { return localStorage.getItem(chaveDoSantoDeDevocao()) || ''; } catch (e) { return ''; }
+}
+
+function definirSantoDeDevocao(id) {
+  try {
+    if (id) localStorage.setItem(chaveDoSantoDeDevocao(), id);
+    else localStorage.removeItem(chaveDoSantoDeDevocao());
+  } catch (e) {
+  }
+}
+
+function botaoDeDevocao(id) {
+  const escolhido = santoDeDevocao() === id;
+  return `
+      <div class="bio-devocao${escolhido ? ' escolhido' : ''}" data-devocao-caixa>
+        <span class="bio-devocao-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-estrela"></use></svg></span>
+        <span class="bio-devocao-textos">
+          <strong>${escolhido ? 'Este é o seu santo de devoção' : 'Santo de devoção'}</strong>
+          <small>${escolhido ? 'Ele fica em destaque no seu perfil.' : 'Escolha este santo para caminhar com você. Ele fica em destaque no seu perfil.'}</small>
+        </span>
+        <button type="button" class="bio-devocao-botao" data-devocao="${id}">${escolhido ? 'Deixar de ser meu santo' : 'Escolher como meu santo de devoção'}</button>
+      </div>`;
+}
+
+document.addEventListener('click', (e) => {
+  const botao = e.target.closest && e.target.closest('[data-devocao]');
+  if (!botao) return;
+  const id = botao.dataset.devocao;
+  const jaEra = santoDeDevocao() === id;
+  definirSantoDeDevocao(jaEra ? '' : id);
+  const caixa = botao.closest('[data-devocao-caixa]');
+  if (caixa) caixa.outerHTML = botaoDeDevocao(id);
+  avisoRapidoDosSantos(jaEra ? 'Santo de devoção removido' : 'Agora este é o seu santo de devoção', jaEra ? '' : 'estrela');
+});
+
 function ligarBotaoFavorito(botao, id) {
   function atualizarAparencia() {
     const ativo = ehFavorito(id);
@@ -3694,11 +3779,14 @@ function ligarBotaoFavorito(botao, id) {
     e.stopPropagation();
     toggleFavorito(id);
     atualizarAparencia();
-    if (botao.classList.contains('favorito-ativo')) {
+    const ativo = botao.classList.contains('favorito-ativo');
+    if (ativo) {
       botao.classList.remove('batendo');
       void botao.offsetWidth;
       botao.classList.add('batendo');
+      soltarCoracoes(botao);
     }
+    avisoRapidoDosSantos(ativo ? 'Adicionado aos seus favoritos' : 'Removido dos favoritos', ativo ? 'coracao' : '');
     if (filtroAtual === 'favoritos') {
       renderGrid('favoritos');
     }
@@ -3888,6 +3976,7 @@ function showDetail(id) {
         ${textos.texto}
       </div>
       <div class="bio-oracao-e-frases" id="bio-oracao-e-frases"></div>
+      ${botaoDeDevocao(santo.id)}
       ${trilhaDoSanto ? `
       <button class="btn-ask-ai btn-fazer-trilha" id="btn-fazer-trilha">
         <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-trilha"></use></svg>

@@ -888,6 +888,34 @@ function blocoDasPreferencias() {
       </section>`;
 }
 
+function blocoDosMeusSantos() {
+  const lista = typeof santosData !== 'undefined' ? santosData : [];
+  const achar = (id) => lista.find((s) => s.id === id) || null;
+  const nome = (s) => escaparTexto(typeof textoDoSanto === 'function' ? textoDoSanto(s).nome : s.nome);
+  const foto = (id) => {
+    const endereco = typeof enderecoDaFotoDoSanto === 'function' ? enderecoDaFotoDoSanto(id) : '';
+    return endereco ? `<img src="${escaparTexto(endereco)}" alt="" loading="lazy">` : '';
+  };
+  const devocao = achar(typeof santoDeDevocao === 'function' ? santoDeDevocao() : '');
+  const favoritos = (typeof getFavoritos === 'function' ? getFavoritos() : []).map(achar).filter(Boolean);
+  return `
+      <section class="perfil-secao meus-santos">
+        <h4 class="perfil-secao-titulo">Meus santos</h4>
+        ${devocao ? `
+        <button type="button" class="santo-devocao-cartao" data-abrir-santo="${devocao.id}">
+          <span class="santo-devocao-foto">${foto(devocao.id)}</span>
+          <span class="santo-devocao-textos"><small>Meu santo de devoção</small><strong translate="no">${nome(devocao)}</strong><em>Ler a história</em></span>
+        </button>` : `
+        <p class="meus-santos-vazio">Você ainda não escolheu um santo de devoção. Abra a história de um santo e, no final, toque em "Escolher como meu santo de devoção".</p>`}
+        <div class="meus-santos-favoritos-topo"><strong>Favoritos</strong><small>${favoritos.length}</small></div>
+        ${favoritos.length ? `
+        <div class="favoritos-faixa">
+          ${favoritos.map((s) => `<button type="button" class="favorito-mini" data-abrir-santo="${s.id}"><span class="favorito-mini-foto">${foto(s.id)}</span><span class="favorito-mini-nome" translate="no">${nome(s)}</span></button>`).join('')}
+        </div>` : `
+        <p class="meus-santos-vazio">Toque no coração de um santo para guardá-lo aqui.</p>`}
+      </section>`;
+}
+
 function marcarEscolha(lugar, seletor, escolhido) {
   lugar.querySelectorAll(seletor).forEach((botao) => {
     const ativa = botao === escolhido;
@@ -950,6 +978,7 @@ async function renderizarMeuPerfil() {
         </div>
       </section>` : ''}
       ${perfil ? blocoDasInsignias() : ''}
+      ${blocoDosMeusSantos()}
       <h3 class="meu-perfil-config-titulo">Configurações</h3>
       ${blocoDasPreferencias()}
       ${perfil ? `
@@ -1029,6 +1058,9 @@ async function renderizarMeuPerfil() {
   ligar('meu-perfil-enfeites', () => { if (typeof abrirEnfeitesDoPerfil === 'function') abrirEnfeitesDoPerfil(); });
   ligar('meu-perfil-suporte', () => { if (typeof abrirSuporte === 'function') abrirSuporte(); });
   ligarPreferencias(lugar);
+  lugar.querySelectorAll('[data-abrir-santo]').forEach((botao) => botao.addEventListener('click', () => {
+    if (typeof showDetail === 'function') showDetail(botao.dataset.abrirSanto);
+  }));
   if (adulto && typeof atualizarAvisoDoSuporte === 'function') atualizarAvisoDoSuporte();
   if (perfil && typeof enfeitarMeuPerfil === 'function') enfeitarMeuPerfil();
   if (adulto && typeof preencherResumoSocial === 'function') preencherResumoSocial(lugar.querySelector('#meu-perfil-social'), perfil.id);
