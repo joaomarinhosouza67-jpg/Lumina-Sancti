@@ -2690,6 +2690,7 @@ function mudarDeView(idNovaView, opcoes) {
       proxima.style.display = 'block';
       setTimeout(() => proxima.classList.add('active'), 20);
     }
+    setTimeout(conferirMarcaDoTopo, 60);
     window.scrollTo({ top: 0, behavior: 'auto' });
   };
 
@@ -3687,6 +3688,25 @@ function soltarCoracoes(botao) {
   const caixa = botao.getBoundingClientRect();
   const x = caixa.left + caixa.width / 2;
   const y = caixa.top + caixa.height / 2;
+  const anel = document.createElement('span');
+  anel.className = 'anel-do-coracao';
+  anel.style.left = `${x}px`;
+  anel.style.top = `${y}px`;
+  document.body.appendChild(anel);
+  setTimeout(() => anel.remove(), 700);
+  for (let i = 0; i < 10; i += 1) {
+    const brilho = document.createElement('span');
+    brilho.className = 'brilho-do-coracao';
+    const angulo = (Math.PI * 2 * i) / 10 + Math.PI / 10;
+    const distancia = 26 + Math.random() * 30;
+    brilho.style.left = `${x}px`;
+    brilho.style.top = `${y}px`;
+    brilho.style.setProperty('--dx', `${Math.cos(angulo) * distancia}px`);
+    brilho.style.setProperty('--dy', `${Math.sin(angulo) * distancia}px`);
+    brilho.style.animationDelay = `${Math.random() * 0.12}s`;
+    document.body.appendChild(brilho);
+    setTimeout(() => brilho.remove(), 900);
+  }
   for (let i = 0; i < 8; i += 1) {
     const coracao = document.createElement('span');
     coracao.className = 'coracao-voando';
@@ -3724,6 +3744,18 @@ function avisoRapidoDosSantos(texto, tipo) {
   clearTimeout(temporizadorDoAvisoDosSantos);
   temporizadorDoAvisoDosSantos = setTimeout(() => aviso.classList.remove('visivel'), 2200);
 }
+
+function conferirMarcaDoTopo() {
+  const titulo = document.querySelector('.hero-title');
+  if (!titulo) return;
+  const caixa = titulo.getBoundingClientRect();
+  const visivel = titulo.offsetParent !== null && caixa.bottom > 64 && caixa.top < window.innerHeight;
+  document.body.classList.toggle('marca-escondida', visivel);
+}
+
+window.addEventListener('scroll', conferirMarcaDoTopo, { passive: true });
+window.addEventListener('resize', conferirMarcaDoTopo);
+[300, 1500, 7000].forEach((espera) => setTimeout(conferirMarcaDoTopo, espera));
 
 function chaveDoSantoDeDevocao() {
   const perfil = typeof membroAtivo !== 'undefined' && membroAtivo && membroAtivo.id ? membroAtivo.id : 'aparelho';

@@ -760,6 +760,7 @@ function abrirPerfisJaNaEntrada() {
   document.body.classList.remove('catalogo-interno');
   if (typeof aplicarTemaDaPagina === 'function') aplicarTemaDaPagina('view-perfis');
   if (typeof fundoDoLogin === 'function') fundoDoLogin('view-perfis');
+  document.body.classList.remove('marca-escondida');
   const tela = document.getElementById('view-perfis');
   tela.style.display = 'block';
   tela.classList.add('active');
