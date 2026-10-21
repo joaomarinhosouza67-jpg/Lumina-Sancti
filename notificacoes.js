@@ -386,12 +386,24 @@ function abrirPeloEnderecoDoLembrete() {
   let destino = '';
   let conversa = '';
   let idDoCenaculo = '';
+  let santoDoLink = '';
   try {
     const parametros = new URLSearchParams(window.location.search);
     destino = parametros.get('abrir') || '';
     conversa = parametros.get('conversa') || '';
     idDoCenaculo = parametros.get('id') || '';
+    santoDoLink = parametros.get('santo') || '';
   } catch (e) { destino = ''; }
+  if (santoDoLink && typeof santosData !== 'undefined' && santosData.some((s) => s.id === santoDoLink)) {
+    const santo = santoDoLink;
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('santo');
+      history.replaceState(null, '', url.pathname + url.search + url.hash);
+    } catch (e) {  }
+    setTimeout(() => { if (typeof showDetail === 'function') showDetail(santo); }, 1200);
+    return;
+  }
   if (!destino) return;
   conversaDoLink = Number(conversa) > 0 ? Number(conversa) : 0;
   cenaculoDoLink = /^[0-9a-f-]{36}$/.test(idDoCenaculo) ? idDoCenaculo : '';

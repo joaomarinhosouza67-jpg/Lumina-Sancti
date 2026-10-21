@@ -3758,7 +3758,7 @@ function ligarBotaoOuvir(santo) {
     }
 
     const textos = textoDoSanto(santo);
-    const texto = `${textos.nome}. ${textoLimpo(textos.texto)}`;
+    const texto = `${textos.nome}. ${textoLimpo(typeof textoParaOuvirDoSanto === 'function' ? textoParaOuvirDoSanto(santo, textos) : textos.texto)}`;
     const fala = new SpeechSynthesisUtterance(texto);
     fala.lang = (!textos.traduzido || idiomaAtual === 'pt') ? 'pt-BR' : (idiomaAtual === 'en' ? 'en-US' : 'es-ES');
     fala.rate = 0.95;
@@ -3869,6 +3869,7 @@ function showDetail(id) {
     `;
 
     ligarBotaoOuvir(santo);
+    if (typeof colocarHistoriaCompleta === 'function') colocarHistoriaCompleta(santo);
     if (typeof preencherOracaoEFrasesDoSanto === 'function') preencherOracaoEFrasesDoSanto(santo, document.getElementById('bio-oracao-e-frases'));
 
     const btnFazerTrilha = document.getElementById('btn-fazer-trilha');

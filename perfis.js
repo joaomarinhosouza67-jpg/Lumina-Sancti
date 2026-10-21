@@ -487,6 +487,7 @@ function membroDoPerfil(perfil) {
     proximaSantidadeEm: perfil.next_regen_at || null,
     ofensiva: perfil.streak || 0,
     melhorOfensiva: perfil.best_streak || 0,
+    ultimoDia: perfil.last_active || null,
   };
 }
 
@@ -719,6 +720,7 @@ function escolherPerfil(membro) {
   if (typeof verificarNovidade === 'function') setTimeout(verificarNovidade, 1800);
   if (typeof atualizarAvisoDoSuporte === 'function') setTimeout(atualizarAvisoDoSuporte, 1200);
   if (typeof atualizarMensagensNaoLidas === 'function') setTimeout(atualizarMensagensNaoLidas, 1500);
+  if (typeof guardarDiaDoWidget === 'function') setTimeout(guardarDiaDoWidget, 1800);
   if (typeof executarAcaoDoLink === 'function') executarAcaoDoLink();
 }
 

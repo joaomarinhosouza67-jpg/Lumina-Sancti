@@ -2222,6 +2222,7 @@ function finalizarLicao() {
     insigniaNova = true;
   }
   const hojeDaMissao = dataLocalISO(new Date());
+  if (typeof marcarMissaoDeHojeNoWidget === 'function') marcarMissaoDeHojeNoWidget();
   const ofensivaSubiu = estado.diaDaUltimaMissao !== hojeDaMissao;
   estado.diaDaUltimaMissao = hojeDaMissao;
   const perfeita = acertosDePrimeira === total && !anterior;
@@ -2636,6 +2637,7 @@ async function finalizarLicaoNoServidor() {
   const antesDaMissao = membro ? { fe: membro.fe, ofensiva: membro.ofensiva } : {};
   const ofensivaSubiu = !!membro && Number(r.streak) > Number(antesDaMissao.ofensiva || 0);
   if (membro) Object.assign(membro, { fe: r.faith_total, ofensiva: r.streak, santidade: r.santidade });
+  if (typeof marcarMissaoDeHojeNoWidget === 'function') marcarMissaoDeHojeNoWidget();
 
   somDaLicao('fim');
   if (corpo) {

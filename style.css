@@ -6181,3 +6181,7 @@ button.curso-cartao {
 .enfeite-lugar-pequeno:is([data-com-moldura="sao-miguel"], [data-com-moldura="asas-de-anjo"], [data-com-moldura="asas-celestiais"], [data-com-moldura="asas-celestiais-douradas"], [data-com-moldura="sol-da-graca"]) { margin-inline: 20px 22px; }
 .marco-autor-textos, .ranking-linha .ranking-nome { position: relative; z-index: 3; }
 .perfil-publico-nome, .painel-topo .painel-nome { position: relative; z-index: 31; text-shadow: 0 1px 10px rgba(0, 0, 0, 0.7), 0 0 2px rgba(0, 0, 0, 0.6); }
+
+.bio-historia h3 { margin: 10px 0 -4px; font-family: var(--font-title); font-size: 1.32rem; font-weight: 600; color: var(--primary-color); line-height: 1.3; }
+.bio-historia h3:first-child { margin-top: 0; }
+.bio-historia blockquote { margin: 0; padding: 10px 16px; border-left: 3px solid var(--primary-color); background: rgba(255, 255, 255, 0.04); border-radius: 0 12px 12px 0; font-style: italic; }
