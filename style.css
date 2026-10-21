@@ -6705,3 +6705,17 @@ html::-webkit-scrollbar { display: none; }
 
 .site-footer .footer-icon, .site-footer .footer-nome, .site-footer .footer-social { display: none !important; }
 .site-footer { padding-top: 28px; }
+
+html { scrollbar-width: thin; scrollbar-color: #d9a93f rgba(5, 7, 18, 0.9); }
+html::-webkit-scrollbar { display: block; width: 9px; }
+html::-webkit-scrollbar-track { background: #070a1c; }
+html::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #fff1c2, #e2b552 45%, #a8741f); border-radius: 999px; border: 2px solid #070a1c; }
+html::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #fff6d6, #f0cf7a 45%, #c99434); }
+html::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+
+.sidebar-decoration { padding: 26px 0 22px; }
+.sidebar-decoration svg.menu-estrela { display: block; margin: 0 auto; animation: estrelaDoInicioGira 16s linear infinite, estrelaDoMenuBrilha 4.5s ease-in-out infinite; filter: none; }
+@keyframes estrelaDoMenuBrilha {
+  0%, 100% { filter: drop-shadow(0 0 8px rgba(255, 215, 106, 0.6)); }
+  50% { filter: drop-shadow(0 0 22px rgba(255, 215, 106, 1)) drop-shadow(0 0 40px rgba(255, 190, 60, 0.4)); }
+}

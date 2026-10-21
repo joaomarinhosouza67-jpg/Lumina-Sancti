@@ -294,7 +294,21 @@
     </nav>
 
     <div class="sidebar-decoration">
-      <svg viewBox="0 0 100 100" width="50" height="50" fill="var(--primary-color)"><path d="M50 0 L55 45 L100 50 L55 55 L50 100 L45 55 L0 50 L45 45 Z" opacity="0.3"/></svg>
+      <svg class="menu-estrela" viewBox="0 0 100 100" width="64" height="64" aria-hidden="true">
+        <defs>
+          <radialGradient id="menu-ouro" cx="50%" cy="50%" r="55%"><stop offset="0" stop-color="#fffbe8"/><stop offset=".3" stop-color="#f8e19a"/><stop offset=".72" stop-color="#dcae45"/><stop offset="1" stop-color="#9a6a1c"/></radialGradient>
+          <radialGradient id="menu-brilho"><stop offset="0" stop-color="#fffef5"/><stop offset=".45" stop-color="#ffe9a8" stop-opacity=".5"/><stop offset="1" stop-color="#ffd76a" stop-opacity="0"/></radialGradient>
+        </defs>
+        <circle cx="50" cy="50" r="34" fill="url(#menu-brilho)" opacity=".55"/>
+        <g transform="rotate(45 50 50)" opacity=".65">
+          <path d="M50 15 C52 38 62 48 85 50 C62 52 52 62 50 85 C48 62 38 52 15 50 C38 48 48 38 50 15 Z" fill="url(#menu-ouro)"/>
+          <path d="M50 50 L50 15 C52 38 62 48 85 50 Z M50 50 L50 85 C48 62 38 52 15 50 Z" fill="#6e4710" opacity=".28"/>
+        </g>
+        <path d="M50 0 C52 35 65 48 100 50 C65 52 52 65 50 100 C48 65 35 52 0 50 C35 48 48 35 50 0 Z" fill="url(#menu-ouro)"/>
+        <path d="M50 50 L50 0 C52 35 65 48 100 50 Z M50 50 L50 100 C48 65 35 52 0 50 Z" fill="#6e4710" opacity=".26"/>
+        <path d="M50 50 V3 M50 50 H97 M50 50 V97 M50 50 H3" stroke="#fffbe8" stroke-width=".7" opacity=".6"/>
+        <circle cx="50" cy="50" r="5" fill="#fffef5"/>
+      </svg>
     </div>
   </aside>
   <div id="overlay" class="overlay"></div>
