@@ -1661,7 +1661,7 @@ function renderizarTrilhas() {
     const nos = trilha.licoes.map((licao, i) => {
       const feita = !!estado.licoes[licao.slug];
       const liberada = licaoDesbloqueada(trilha, i, estado);
-      const classe = feita ? 'concluida' : (liberada ? (i === proximaDaTrilha ? 'atual' : 'atual sem-pulso') : 'bloqueada');
+      const classe = feita ? (missaoRevisada(trilha.slug, licao.slug) ? 'concluida revisada' : 'concluida') : (liberada ? (i === proximaDaTrilha ? 'atual' : 'atual sem-pulso') : 'bloqueada');
       const simbolo = feita ? icone('check', 'icone-no') : (liberada ? icone('estrela', 'icone-no') : icone('cadeado', 'icone-no'));
       const rotuloAcessivel = tt('missao_rotulo', { n: i + 1, titulo: licao.titulo })
         + (feita ? tt('missao_refazer') : (liberada ? '' : tt('missao_bloqueada')));
@@ -1790,6 +1790,26 @@ function fecharBalaoComEsc(evento) {
   if (evento.key === 'Escape') fecharBalaoDeRevisao();
 }
 
+function chaveDasRevisoes() {
+  const perfil = typeof membroAtivo !== 'undefined' && membroAtivo && membroAtivo.id ? membroAtivo.id : 'aparelho';
+  return `lumina-sancti-revisoes-${perfil}`;
+}
+
+function missoesRevisadas() {
+  try { return JSON.parse(localStorage.getItem(chaveDasRevisoes()) || '{}') || {}; } catch (e) { return {}; }
+}
+
+function missaoRevisada(trilhaSlug, licaoSlug) {
+  return !!missoesRevisadas()[`${trilhaSlug}:${licaoSlug}`];
+}
+
+function marcarMissaoRevisada(trilhaSlug, licaoSlug) {
+  const revisadas = missoesRevisadas();
+  revisadas[`${trilhaSlug}:${licaoSlug}`] = new Date().toISOString();
+  try { localStorage.setItem(chaveDasRevisoes(), JSON.stringify(revisadas)); } catch (e) {
+  }
+}
+
 function abrirBalaoDeRevisao(botao) {
   const lugar = botao.closest('.no-wrapper');
   if (!lugar) return;
@@ -1800,10 +1820,14 @@ function abrirBalaoDeRevisao(botao) {
   const indice = Number(botao.dataset.indice);
   if (!trilha || !trilha.licoes[indice]) return;
   const fe = modoConta() && trilha.servidor ? feDaRevisaoNaConta : FE_REVISAO;
+  const jaRevisada = missaoRevisada(trilha.slug, trilha.licoes[indice].slug);
   const balao = document.createElement('div');
-  balao.className = 'no-revisar';
+  balao.className = jaRevisada ? 'no-revisar no-revisar-feita' : 'no-revisar';
   balao.setAttribute('role', 'dialog');
-  balao.innerHTML = `
+  balao.innerHTML = jaRevisada ? `
+    <span class="no-revisar-selo">${icone('estrela')} ${tr('Missão revisada')}</span>
+    <strong class="no-revisar-titulo">${tt('revisar_titulo', { n: indice + 1, titulo: trilha.licoes[indice].titulo })}</strong>
+    <p class="no-revisar-texto">${tr('Você já revisou esta missão. Ela agora é dourada.')}</p>` : `
     <span class="no-revisar-selo">${icone('check')} ${tt('revisar_feita')}</span>
     <strong class="no-revisar-titulo">${tt('revisar_titulo', { n: indice + 1, titulo: trilha.licoes[indice].titulo })}</strong>
     <p class="no-revisar-texto">${tt('revisar_texto')}</p>
@@ -1813,7 +1837,7 @@ function abrirBalaoDeRevisao(botao) {
     </button>`;
   lugar.classList.add('com-revisar');
   lugar.appendChild(balao);
-  balao.querySelector('.no-revisar-botao').addEventListener('click', (evento) => {
+  if (!jaRevisada) balao.querySelector('.no-revisar-botao').addEventListener('click', (evento) => {
     evento.stopPropagation();
     fecharBalaoDeRevisao();
     abrirNoDaTrilha(trilha.slug, indice);
@@ -2208,6 +2232,7 @@ function finalizarLicao() {
 
   const estado = carregarProgressoTrilhas();
   const anterior = estado.licoes[licao.slug];
+  if (anterior) marcarMissaoRevisada(trilha.slug, licao.slug);
   const feGanha = anterior ? FE_REVISAO : FE_BASE_LICAO + FE_POR_ACERTO_DE_PRIMEIRA * acertosDePrimeira;
   estado.fe += feGanha;
   estado.licoes[licao.slug] = {
@@ -2601,6 +2626,7 @@ function estrelasDaMissao(quantas) {
 async function finalizarLicaoNoServidor() {
   const { trilha, licao, total } = licaoAtual;
   licaoAtual.finalizada = true;
+  if (licaoAtual.revisao) marcarMissaoRevisada(trilha.slug, licao.slug);
   licaoAtual.servidor.respondidas = total;
   atualizarTopoDaLicao();
   prepararRodapeDaLicao(tt('salvando'), false);

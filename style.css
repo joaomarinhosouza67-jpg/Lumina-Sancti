@@ -6644,3 +6644,21 @@ body.marca-escondida .navbar { background: transparent; -webkit-backdrop-filter:
 @media (max-width: 1039px) {
   body:not(:has(#view-home.active)) .catedral-lado { opacity: 0.3; }
 }
+
+#search-btn, #lumina-btn { color: #f0cf7a; }
+
+.site-footer { border-top: 1px solid rgba(240, 207, 122, 0.3); background: radial-gradient(ellipse at 50% 0%, rgba(240, 207, 122, 0.09), transparent 60%), var(--bg-color); }
+.footer-icon { fill: #f0cf7a; opacity: 1; filter: drop-shadow(0 0 8px rgba(240, 207, 122, 0.55)); }
+.footer-nome { color: transparent; background: linear-gradient(180deg, #fff6d6, #f0cf7a 55%, #b8862b); -webkit-background-clip: text; background-clip: text; letter-spacing: 2px; }
+.footer-social-link { color: #e9d6a4; }
+.footer-social-link:hover { color: #f0cf7a; }
+.footer-privacidade, .footer-termos, .footer-suporte, .footer-instalar { display: inline-flex; align-items: center; gap: 6px; margin: 4px; padding: 8px 16px; border-radius: 999px; border: 1px solid rgba(240, 207, 122, 0.4); background: rgba(240, 207, 122, 0.06); color: #f0cf7a; font-family: var(--font-text); font-size: 0.85rem; font-weight: 600; text-decoration: none; cursor: pointer; }
+.footer-privacidade:hover, .footer-termos:hover, .footer-suporte:hover, .footer-instalar:hover { border-color: #f0cf7a; background: rgba(240, 207, 122, 0.14); }
+.footer-suporte .icone, .footer-instalar .icone { width: 16px; height: 16px; }
+.footer-contato { margin-top: 12px; }
+.footer-contato a { color: #f0cf7a; }
+
+.no-licao.concluida.revisada .no-circulo { background: linear-gradient(145deg, #fff1c2, #e2b552 50%, #a8741f) !important; border-color: #fff1c2 !important; color: #3a2604 !important; box-shadow: 0 6px 0 #8a5a14, 0 0 20px rgba(240, 207, 122, 0.6) !important; }
+.no-licao.concluida.revisada .icone-no { color: #3a2604; }
+.no-revisar-feita .no-revisar-selo { color: #f0cf7a; }
+.no-revisar-feita { border-color: rgba(240, 207, 122, 0.6); }
