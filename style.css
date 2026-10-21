@@ -6175,3 +6175,9 @@ button.curso-cartao {
 
 .cursos-topo[hidden] { display: none; }
 .curso-secao .curso-video { max-width: 900px; }
+
+.marco-autor-foto.com-moldura, .enfeite-lugar-pequeno.com-moldura { margin-inline: 7px; }
+.marco-autor-foto:is([data-com-moldura="sao-miguel"], [data-com-moldura="asas-de-anjo"], [data-com-moldura="asas-celestiais"], [data-com-moldura="asas-celestiais-douradas"], [data-com-moldura="sol-da-graca"]),
+.enfeite-lugar-pequeno:is([data-com-moldura="sao-miguel"], [data-com-moldura="asas-de-anjo"], [data-com-moldura="asas-celestiais"], [data-com-moldura="asas-celestiais-douradas"], [data-com-moldura="sol-da-graca"]) { margin-inline: 20px 22px; }
+.marco-autor-textos, .ranking-linha .ranking-nome { position: relative; z-index: 3; }
+.perfil-publico-nome, .painel-topo .painel-nome { position: relative; z-index: 31; text-shadow: 0 1px 10px rgba(0, 0, 0, 0.7), 0 0 2px rgba(0, 0, 0, 0.6); }

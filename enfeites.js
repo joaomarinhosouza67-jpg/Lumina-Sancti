@@ -276,6 +276,8 @@ function colocarMoldura(lugar, id) {
   lugar.querySelectorAll(':scope > .enfeite-moldura').forEach((antiga) => antiga.remove());
   const tem = !!MOLDURAS[id];
   lugar.classList.toggle('com-moldura', tem);
+  if (tem) lugar.setAttribute('data-com-moldura', id);
+  else lugar.removeAttribute('data-com-moldura');
   if (tem) lugar.insertAdjacentHTML('beforeend', svgDaMoldura(id));
 }
 
