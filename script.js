@@ -2391,8 +2391,13 @@ function aplicarIdioma(codigo) {
 
   document.documentElement.lang = codigo === 'pt' ? 'pt-BR' : codigo;
 
-  document.querySelectorAll('#idioma-menu .idioma-opcao').forEach(btn => {
+  document.querySelectorAll('#idioma-menu .idioma-opcao, .side-idioma').forEach(btn => {
     btn.classList.toggle('idioma-ativa', btn.dataset.lang === codigo);
+  });
+  document.querySelectorAll('[data-idioma]').forEach(btn => {
+    const ativa = btn.dataset.idioma === codigo;
+    btn.classList.toggle('ativa', ativa);
+    btn.setAttribute('aria-pressed', ativa ? 'true' : 'false');
   });
 
   try {
@@ -2443,6 +2448,10 @@ function iniciarSeletorDeIdioma() {
   document.addEventListener('click', () => {
     menu.classList.remove('aberto');
     botao.setAttribute('aria-expanded', 'false');
+  });
+
+  document.querySelectorAll('.side-idioma').forEach(opcao => {
+    opcao.addEventListener('click', () => aplicarIdioma(opcao.dataset.lang));
   });
 
   aplicarIdioma(getIdiomaSalvo());
@@ -2704,8 +2713,19 @@ function fundoDoLogin(idDaView) {
   });
 }
 
+async function mostrarVersaoDoApp() {
+  const lugar = document.getElementById('meu-perfil-versao');
+  if (!lugar || typeof caches === 'undefined') return;
+  try {
+    const nomes = await caches.keys();
+    const nome = nomes.find((n) => /^lumina-sancti-\d+\.\d+\.\d+$/.test(n));
+    if (nome) lugar.textContent = `Lumina Sancti · ${typeof tr === 'function' ? tr('versão') : 'versão'} ${nome.replace('lumina-sancti-', '')}`;
+  } catch (e) {
+  }
+}
+
 function tocarVideoDeFundo(video) {
-  const semMovimento = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const semMovimento = (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) || document.documentElement.classList.contains('menos-movimento');
   const economia = navigator.connection && navigator.connection.saveData;
   const toca = typeof video.canPlayType === 'function' && video.canPlayType('video/webm; codecs="vp9"');
   if (semMovimento || economia || !toca) return;
@@ -3100,6 +3120,11 @@ function iniciarPaginaDePerfil() {
 
   const privacidade = document.getElementById('meu-perfil-privacidade');
   if (privacidade) privacidade.addEventListener('click', abrirPrivacidade);
+  const termos = document.getElementById('meu-perfil-termos');
+  if (termos) termos.addEventListener('click', abrirTermosDaAssinatura);
+  const indicar = document.getElementById('meu-perfil-indicar');
+  if (indicar) indicar.addEventListener('click', compartilharSite);
+  mostrarVersaoDoApp();
   const sair = document.getElementById('meu-perfil-sair');
   if (sair) {
     sair.addEventListener('click', async () => {

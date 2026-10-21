@@ -282,6 +282,12 @@
       <button class="side-nav-link" id="nav-planos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-estrela"></use></svg><span>Planos</span></button>
       <button class="side-nav-link" id="nav-suporte"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-ajuda"></use></svg><span>Fale com a equipe</span><span class="aviso-suporte" data-aviso-suporte hidden></span></button>
       <button class="side-nav-link" id="nav-instalar" hidden><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-baixar"></use></svg><span>Instalar o app</span></button>
+      <div class="sidebar-divisor"></div>
+      <div class="side-idiomas" role="group" aria-label="Idioma / Language">
+        <button type="button" class="side-idioma" data-lang="pt" translate="no"><svg class="bandeira" viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" fill="#009c3b"/><path d="M10 1.8 18.2 7 10 12.2 1.8 7z" fill="#ffdf00"/><circle cx="10" cy="7" r="2.9" fill="#002776"/></svg>PT</button>
+        <button type="button" class="side-idioma" data-lang="en" translate="no"><svg class="bandeira" viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" fill="#ffffff"/><path d="M0 0h20v2H0zM0 4h20v2H0zM0 8h20v2H0zM0 12h20v2H0z" fill="#b22234"/><rect width="9" height="8" fill="#3c3b6e"/></svg>EN</button>
+        <button type="button" class="side-idioma" data-lang="es" translate="no"><svg class="bandeira" viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" fill="#aa151b"/><rect y="3.5" width="20" height="7" fill="#f1bf00"/></svg>ES</button>
+      </div>
 
     </nav>
 
@@ -1004,6 +1010,19 @@
               <span class="ajuste-textos"><strong>Política de Privacidade</strong><small>Como cuidamos dos seus dados</small></span>
               <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-seta-direita"></use></svg>
             </button>
+            <button type="button" class="ajuste" id="meu-perfil-termos">
+              <span class="ajuste-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-livro"></use></svg></span>
+              <span class="ajuste-textos"><strong>Termos da Assinatura</strong><small>Regras de pagamento e cancelamento</small></span>
+              <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-seta-direita"></use></svg>
+            </button>
+            <button type="button" class="ajuste" id="meu-perfil-indicar">
+              <span class="ajuste-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-enviar"></use></svg></span>
+              <span class="ajuste-textos"><strong>Indicar o Lumina Sancti</strong><small>Mande o app para amigos e família</small></span>
+              <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-seta-direita"></use></svg>
+            </button>
+          </div>
+
+          <div class="ajustes-lista">
             <button type="button" class="ajuste" id="meu-perfil-sair">
               <span class="ajuste-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-sair"></use></svg></span>
               <span class="ajuste-textos"><strong>Sair da conta</strong><small>Você pode entrar de novo quando quiser</small></span>
@@ -1016,6 +1035,7 @@
             <p data-i18n="perfil_excluir_aviso">Isso apaga sua conta e todos os dados ligados a ela, para sempre. Não tem como desfazer.</p>
             <button id="perfil-excluir-btn" class="btn-excluir-conta" data-i18n="perfil_excluir_botao">Excluir minha conta</button>
           </div>
+          <p class="meu-perfil-versao" id="meu-perfil-versao" translate="no">Lumina Sancti</p>
         </section>
       </div>
     </section>

@@ -818,6 +818,101 @@ function blocoDasInsignias() {
     </section>`;
 }
 
+const CHAVE_TAMANHO_DO_TEXTO = 'lumina-sancti-tamanho-texto';
+const CHAVE_MENOS_MOVIMENTO = 'lumina-sancti-menos-movimento';
+const IDIOMAS_DO_APP = [
+  ['pt', 'Português', '<svg class="bandeira" viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" fill="#009c3b"/><path d="M10 1.8 18.2 7 10 12.2 1.8 7z" fill="#ffdf00"/><circle cx="10" cy="7" r="2.9" fill="#002776"/></svg>'],
+  ['en', 'English', '<svg class="bandeira" viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" fill="#ffffff"/><path d="M0 0h20v2H0zM0 4h20v2H0zM0 8h20v2H0zM0 12h20v2H0z" fill="#b22234"/><rect width="9" height="8" fill="#3c3b6e"/></svg>'],
+  ['es', 'Español', '<svg class="bandeira" viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" fill="#aa151b"/><rect y="3.5" width="20" height="7" fill="#f1bf00"/></svg>'],
+];
+const TAMANHOS_DO_TEXTO = [['normal', 'Normal'], ['grande', 'Grande'], ['maior', 'Muito grande']];
+const ICONE_DO_GLOBO = '<svg class="icone" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z"/></svg>';
+const ICONE_DO_TEXTO = '<svg class="icone" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5h11v2M9.5 5v14M7 19h5M14 12v-1.5h7V12M17.5 10.5V19M16 19h3"/></svg>';
+const ICONE_DO_MOVIMENTO = '<svg class="icone" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>';
+
+function lerPreferencia(chave) {
+  try { return localStorage.getItem(chave) || ''; } catch (e) { return ''; }
+}
+
+function guardarPreferencia(chave, valor) {
+  try {
+    if (valor) localStorage.setItem(chave, valor);
+    else localStorage.removeItem(chave);
+  } catch (e) {
+  }
+}
+
+function aplicarPreferenciasDoAparelho() {
+  const raiz = document.documentElement;
+  const tamanho = lerPreferencia(CHAVE_TAMANHO_DO_TEXTO);
+  raiz.classList.toggle('texto-grande', tamanho === 'grande');
+  raiz.classList.toggle('texto-maior', tamanho === 'maior');
+  raiz.classList.toggle('menos-movimento', lerPreferencia(CHAVE_MENOS_MOVIMENTO) === '1');
+}
+
+aplicarPreferenciasDoAparelho();
+
+function blocoDasPreferencias() {
+  const idioma = typeof idiomaAtual !== 'undefined' && idiomaAtual ? idiomaAtual : 'pt';
+  const tamanho = lerPreferencia(CHAVE_TAMANHO_DO_TEXTO) || 'normal';
+  const menos = lerPreferencia(CHAVE_MENOS_MOVIMENTO) === '1';
+  return `
+      <section class="perfil-secao">
+        <h4 class="perfil-secao-titulo">Preferências</h4>
+        <div class="ajustes-lista">
+          <div class="ajuste-bloco">
+            <div class="ajuste-bloco-topo">
+              <span class="ajuste-icone">${ICONE_DO_GLOBO}</span>
+              <span class="ajuste-textos"><strong>Idioma</strong><small>O app inteiro muda para o idioma escolhido</small></span>
+            </div>
+            <div class="ajuste-escolhas" role="group" aria-label="Idioma">
+              ${IDIOMAS_DO_APP.map(([codigo, nome, bandeira]) => `<button type="button" class="ajuste-escolha${codigo === idioma ? ' ativa' : ''}" data-idioma="${codigo}" aria-pressed="${codigo === idioma}" translate="no">${bandeira}<span>${nome}</span></button>`).join('')}
+            </div>
+          </div>
+          <div class="ajuste-bloco">
+            <div class="ajuste-bloco-topo">
+              <span class="ajuste-icone">${ICONE_DO_TEXTO}</span>
+              <span class="ajuste-textos"><strong>Tamanho do texto</strong><small>Deixe as letras maiores para ler melhor</small></span>
+            </div>
+            <div class="ajuste-escolhas" role="group" aria-label="Tamanho do texto">
+              ${TAMANHOS_DO_TEXTO.map(([codigo, nome], i) => `<button type="button" class="ajuste-escolha${codigo === tamanho ? ' ativa' : ''}" data-tamanho="${codigo}" aria-pressed="${codigo === tamanho}"><span class="ajuste-aa ajuste-aa-${i}" aria-hidden="true">Aa</span><span>${nome}</span></button>`).join('')}
+            </div>
+          </div>
+          <label class="ajuste ajuste-chave">
+            <span class="ajuste-icone">${ICONE_DO_MOVIMENTO}</span>
+            <span class="ajuste-textos"><strong>Menos animações</strong><small>Deixa o app mais calmo e economiza bateria</small></span>
+            <input type="checkbox" class="chave" id="pref-menos-movimento"${menos ? ' checked' : ''}>
+            <span class="chave-trilho" aria-hidden="true"></span>
+          </label>
+        </div>
+      </section>`;
+}
+
+function marcarEscolha(lugar, seletor, escolhido) {
+  lugar.querySelectorAll(seletor).forEach((botao) => {
+    const ativa = botao === escolhido;
+    botao.classList.toggle('ativa', ativa);
+    botao.setAttribute('aria-pressed', ativa ? 'true' : 'false');
+  });
+}
+
+function ligarPreferencias(lugar) {
+  lugar.querySelectorAll('[data-idioma]').forEach((botao) => botao.addEventListener('click', () => {
+    marcarEscolha(lugar, '[data-idioma]', botao);
+    if (typeof aplicarIdioma === 'function') aplicarIdioma(botao.dataset.idioma);
+  }));
+  lugar.querySelectorAll('[data-tamanho]').forEach((botao) => botao.addEventListener('click', () => {
+    guardarPreferencia(CHAVE_TAMANHO_DO_TEXTO, botao.dataset.tamanho === 'normal' ? '' : botao.dataset.tamanho);
+    aplicarPreferenciasDoAparelho();
+    marcarEscolha(lugar, '[data-tamanho]', botao);
+  }));
+  const chave = lugar.querySelector('#pref-menos-movimento');
+  if (chave) chave.addEventListener('change', () => {
+    guardarPreferencia(CHAVE_MENOS_MOVIMENTO, chave.checked ? '1' : '');
+    aplicarPreferenciasDoAparelho();
+  });
+}
+
 async function renderizarMeuPerfil() {
   const lugar = document.getElementById('meu-perfil-cabecalho');
   if (!lugar) return;
@@ -855,6 +950,8 @@ async function renderizarMeuPerfil() {
         </div>
       </section>` : ''}
       ${perfil ? blocoDasInsignias() : ''}
+      <h3 class="meu-perfil-config-titulo">Configurações</h3>
+      ${blocoDasPreferencias()}
       ${perfil ? `
       <section class="perfil-secao">
         <h4 class="perfil-secao-titulo">Aparência</h4>
@@ -931,6 +1028,7 @@ async function renderizarMeuPerfil() {
   ligar('meu-perfil-plano', () => { if (typeof abrirPlanos === 'function') abrirPlanos(); });
   ligar('meu-perfil-enfeites', () => { if (typeof abrirEnfeitesDoPerfil === 'function') abrirEnfeitesDoPerfil(); });
   ligar('meu-perfil-suporte', () => { if (typeof abrirSuporte === 'function') abrirSuporte(); });
+  ligarPreferencias(lugar);
   if (adulto && typeof atualizarAvisoDoSuporte === 'function') atualizarAvisoDoSuporte();
   if (perfil && typeof enfeitarMeuPerfil === 'function') enfeitarMeuPerfil();
   if (adulto && typeof preencherResumoSocial === 'function') preencherResumoSocial(lugar.querySelector('#meu-perfil-social'), perfil.id);
