@@ -6697,3 +6697,11 @@ html::-webkit-scrollbar { display: none; }
 .search-result-festa { align-self: flex-start; margin-top: 2px; padding: 2px 9px; border-radius: 999px; background: rgba(240, 207, 122, 0.1); border: 1px solid rgba(240, 207, 122, 0.35); color: #f0cf7a; font-size: 0.72rem; font-weight: 700; }
 
 .sidebar-decoration svg { animation: estrelaDoInicioGira 16s linear infinite; filter: drop-shadow(0 0 8px rgba(240, 207, 122, 0.55)); }
+
+@media (max-width: 1039px) {
+  .catedral-lado { width: clamp(110px, 33vw, 300px) !important; background-size: 100% auto !important; background-position: center 46% !important; opacity: 0.5; -webkit-mask: linear-gradient(90deg, #000 45%, transparent 100%); mask: linear-gradient(90deg, #000 45%, transparent 100%); }
+  body:not(:has(#view-home.active)) .catedral-lado { opacity: 0.25; }
+}
+
+.site-footer .footer-icon, .site-footer .footer-nome, .site-footer .footer-social { display: none !important; }
+.site-footer { padding-top: 28px; }
