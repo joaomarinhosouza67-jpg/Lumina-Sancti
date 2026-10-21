@@ -3871,13 +3871,15 @@ function showDetail(id) {
       : ((typeof TRILHAS !== 'undefined') ? TRILHAS.find(t => t.santoId === santo.id) : null);
 
     bioArticle.innerHTML = `
-      <div class="bio-header">
-        <h2 class="bio-title">
-          <svg viewBox="0 0 24 24" width="30" height="30" style="vertical-align: middle; margin-right:8px;"><use href="#icon-aureola"></use></svg>
-          ${textos.nome}
-        </h2>
+      <div class="bio-capa">
+        <div class="bio-img-wrapper" id="bio-img-wrapper"></div>
+        <div class="bio-header">
+          <h2 class="bio-title">
+            <svg viewBox="0 0 24 24" width="30" height="30" style="vertical-align: middle; margin-right:8px;"><use href="#icon-aureola"></use></svg>
+            ${textos.nome}
+          </h2>
+        </div>
       </div>
-      <div class="bio-img-wrapper" id="bio-img-wrapper"></div>
       ${avisoTraducao}
       <button class="btn-ouvir" id="btn-ouvir-bio">
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
