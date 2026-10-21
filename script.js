@@ -3592,6 +3592,21 @@ function ligarCartaoSantoDoDia(idBase, santo) {
   });
 }
 
+function proximoSantoDoCalendario() {
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+  let melhor = null;
+  santosData.forEach((santo) => {
+    const partes = /^(\d{2})-(\d{2})$/.exec(santo.data || santo.festa || '');
+    if (!partes) return;
+    let quando = new Date(hoje.getFullYear(), Number(partes[1]) - 1, Number(partes[2]));
+    if (quando <= hoje) quando = new Date(hoje.getFullYear() + 1, Number(partes[1]) - 1, Number(partes[2]));
+    const dias = Math.round((quando - hoje) / 86400000);
+    if (!melhor || dias < melhor.dias) melhor = { santo, dias, quando };
+  });
+  return melhor;
+}
+
 function renderSantoDoDia() {
   const container = document.getElementById('santo-do-dia');
   if (!container) return;
@@ -3600,16 +3615,23 @@ function renderSantoDoDia() {
   const santoDeHoje = getSantoDeHoje();
   const santoDestaque = getSantoEmDestaque(santoDeHoje ? santoDeHoje.id : null);
 
+  const proximo = santoDeHoje ? null : proximoSantoDoCalendario();
+  const santoDoTopo = santoDeHoje || (proximo && proximo.santo);
+  const destaque = santoDoTopo && santoDestaque && santoDestaque.id === santoDoTopo.id ? getSantoEmDestaque(santoDoTopo.id) : santoDestaque;
+
   let html = '';
   if (santoDeHoje) {
     html += montarCartaoSantoDoDia(santoDeHoje, tr('Hoje, {data}, a Igreja celebra', { data: dataFormatada }), 'sdd-hoje');
+  } else if (proximo) {
+    const quando = proximo.quando.toLocaleDateString(typeof localDoIdioma === 'function' ? localDoIdioma() : 'pt-BR', { day: 'numeric', month: 'long' });
+    html += montarCartaoSantoDoDia(proximo.santo, tr('Próxima festa: {data}', { data: quando }), 'sdd-hoje');
   }
-  html += montarCartaoSantoDoDia(santoDestaque, 'Santo em destaque', 'sdd-destaque');
+  html += montarCartaoSantoDoDia(destaque, 'Santo em destaque', 'sdd-destaque');
 
   container.innerHTML = html;
 
-  if (santoDeHoje) ligarCartaoSantoDoDia('sdd-hoje', santoDeHoje);
-  ligarCartaoSantoDoDia('sdd-destaque', santoDestaque);
+  if (santoDoTopo) ligarCartaoSantoDoDia('sdd-hoje', santoDoTopo);
+  ligarCartaoSantoDoDia('sdd-destaque', destaque);
 }
 
 let ultimoDiaExibido = new Date().toDateString();
@@ -3686,42 +3708,12 @@ function soltarCoracoes(botao) {
   if (document.documentElement.classList.contains('menos-movimento')) return;
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const caixa = botao.getBoundingClientRect();
-  const x = caixa.left + caixa.width / 2;
-  const y = caixa.top + caixa.height / 2;
   const anel = document.createElement('span');
   anel.className = 'anel-do-coracao';
-  anel.style.left = `${x}px`;
-  anel.style.top = `${y}px`;
+  anel.style.left = `${caixa.left + caixa.width / 2}px`;
+  anel.style.top = `${caixa.top + caixa.height / 2}px`;
   document.body.appendChild(anel);
   setTimeout(() => anel.remove(), 700);
-  for (let i = 0; i < 10; i += 1) {
-    const brilho = document.createElement('span');
-    brilho.className = 'brilho-do-coracao';
-    const angulo = (Math.PI * 2 * i) / 10 + Math.PI / 10;
-    const distancia = 26 + Math.random() * 30;
-    brilho.style.left = `${x}px`;
-    brilho.style.top = `${y}px`;
-    brilho.style.setProperty('--dx', `${Math.cos(angulo) * distancia}px`);
-    brilho.style.setProperty('--dy', `${Math.sin(angulo) * distancia}px`);
-    brilho.style.animationDelay = `${Math.random() * 0.12}s`;
-    document.body.appendChild(brilho);
-    setTimeout(() => brilho.remove(), 900);
-  }
-  for (let i = 0; i < 8; i += 1) {
-    const coracao = document.createElement('span');
-    coracao.className = 'coracao-voando';
-    coracao.innerHTML = iconeCoracao(true);
-    const angulo = (Math.PI * 2 * i) / 8 - Math.PI / 2;
-    const distancia = 34 + Math.random() * 22;
-    coracao.style.left = `${x}px`;
-    coracao.style.top = `${y}px`;
-    coracao.style.setProperty('--dx', `${Math.cos(angulo) * distancia}px`);
-    coracao.style.setProperty('--dy', `${Math.sin(angulo) * distancia - 18}px`);
-    coracao.style.setProperty('--giro', `${Math.round(Math.random() * 60 - 30)}deg`);
-    coracao.style.setProperty('--tam', `${0.55 + Math.random() * 0.45}`);
-    document.body.appendChild(coracao);
-    setTimeout(() => coracao.remove(), 900);
-  }
 }
 
 let temporizadorDoAvisoDosSantos = null;
@@ -3846,7 +3838,10 @@ function renderGrid(filter = 'todos') {
     const card = document.createElement('div');
     card.className = 'card animate-card';
     card.style.animationDelay = `${index * 0.05}s`;
-    card.onclick = () => showDetail(santo.id);
+    card.onclick = () => {
+      if (typeof cortinaDeTroca === 'function') cortinaDeTroca('Abrindo a história...');
+      showDetail(santo.id);
+    };
 
     card.innerHTML = `
       <span class="card-colunas" aria-hidden="true"></span>
@@ -4180,6 +4175,8 @@ function closeSearch() {
 
 searchBtn.addEventListener('click', openSearch);
 closeSearchBtn.addEventListener('click', closeSearch);
+searchModal.addEventListener('click', (e) => { if (e.target === searchModal) closeSearch(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && searchModal.classList.contains('active')) closeSearch(); });
 
 const PALAVRAS_DE_TITULO_NA_BUSCA = new Set([
   'sao', 'santo', 'santa', 'santos', 'santas', 'san', 'saint', 'saints', 'st', 'ste', 'sainte',
