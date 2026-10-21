@@ -3345,9 +3345,9 @@ function iniciarChuvaDeMeteoros() {
     const profundidade = Math.random();
 
     const angulo = (INCLINACAO + (Math.random() * 2 - 1) * VARIACAO).toFixed(2);
-    const comprimento = Math.round(150 + profundidade * 260);
-    const espessura = (2 + profundidade * 1.9).toFixed(2);
-    const luz = (0.55 + profundidade * 0.45).toFixed(2);
+    const comprimento = Math.round(130 + profundidade * 330);
+    const espessura = (1.1 + profundidade * 1.5).toFixed(2);
+    const luz = (0.5 + profundidade * 0.5).toFixed(2);
     const distancia = Math.round((largura + altura) * (0.55 + Math.random() * 0.3));
     const duracao = (2.4 - profundidade * 1.1 + Math.random() * 0.4).toFixed(2);
 
