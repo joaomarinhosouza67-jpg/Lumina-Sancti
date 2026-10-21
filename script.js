@@ -4240,11 +4240,22 @@ searchInput.addEventListener('input', (e) => {
     const item = document.createElement('div');
     item.className = 'search-result-item';
     item.style.animationDelay = `${index * 0.05}s`;
+    const fotoDoResultado = typeof enderecoDaFotoDoSanto === 'function' ? enderecoDaFotoDoSanto(santo.id) : '';
+    const diaDaFesta = /^(\d{2})-(\d{2})$/.exec(santo.data || santo.festa || '');
+    const festaDoResultado = diaDaFesta ? new Date(2024, Number(diaDaFesta[1]) - 1, Number(diaDaFesta[2])).toLocaleDateString(typeof localDoIdioma === 'function' ? localDoIdioma() : 'pt-BR', { day: 'numeric', month: 'long' }) : '';
     item.innerHTML = `
-      <div class="search-result-title">${textoDoSanto(santo).nome}</div>
-      <div class="search-result-desc">${textoDoSanto(santo).resumo.substring(0, 70)}...</div>
+      <span class="search-result-foto">${fotoDoResultado ? `<img src="${fotoDoResultado}" alt="" loading="lazy">` : ''}</span>
+      <span class="search-result-textos">
+        <span class="search-result-title">${textoDoSanto(santo).nome}</span>
+        <span class="search-result-desc">${textoDoSanto(santo).resumo.substring(0, 90)}...</span>
+        ${festaDoResultado ? `<span class="search-result-festa">${tr('Festa: {data}', { data: festaDoResultado })}</span>` : ''}
+      </span>
     `;
-    item.onclick = () => showDetail(santo.id);
+    item.onclick = () => {
+      closeSearch();
+      if (typeof cortinaDeTroca === 'function') cortinaDeTroca('Abrindo a história...');
+      showDetail(santo.id);
+    };
     searchResults.appendChild(item);
   });
 });
