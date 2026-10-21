@@ -3880,6 +3880,7 @@ function showDetail(id) {
           </h2>
         </div>
       </div>
+      <div class="bio-ornamento" aria-hidden="true"></div>
       ${avisoTraducao}
       <button class="btn-ouvir" id="btn-ouvir-bio">
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
