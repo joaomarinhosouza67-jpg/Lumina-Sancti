@@ -790,28 +790,37 @@
         </button>
 
         <div id="terco-escolha" class="terco-escolha">
-          <h2 class="section-title" style="text-align:left; margin: 10px 0 4px;">Terço guiado</h2>
-          <div class="title-divider" style="margin: 0 0 20px;"></div>
-          <p class="terco-intro">Escolha o mistério de hoje (já sugerimos o tradicional do dia da semana) e rezaremos juntos, passo a passo.</p>
+          <header class="terco-topo-escolha">
+            <h2 class="section-title">Terço guiado</h2>
+            <p class="terco-intro">Escolha o mistério de hoje (já sugerimos o tradicional do dia da semana) e rezaremos juntos, passo a passo.</p>
+          </header>
           <div id="terco-botoes-misterio" class="terco-botoes-misterio"></div>
           <h3 class="terco-outros-titulo">Outro terço</h3>
           <div id="terco-outros" class="terco-botoes-misterio"></div>
         </div>
 
         <div id="terco-rezando" class="terco-rezando" style="display:none;">
-          <p class="terco-nome-rezando" id="terco-nome-rezando"></p>
-          <div class="terco-progresso">
-            <span id="terco-passo-atual">1</span> / <span id="terco-passo-total">1</span>
+          <div class="terco-cabecalho">
+            <p class="terco-nome-rezando" id="terco-nome-rezando"></p>
+            <div class="terco-progresso">
+              <span class="terco-progresso-texto"><span id="terco-passo-atual">1</span> / <span id="terco-passo-total">1</span></span>
+              <span class="terco-barra" aria-hidden="true"><i id="terco-barra-cheia"></i></span>
+            </div>
           </div>
-          <div id="terco-conta-visual" class="terco-conta-visual"></div>
-          <h3 id="terco-titulo-passo" class="terco-titulo-passo"></h3>
-          <p id="terco-texto-passo" class="terco-texto-passo"></p>
-          <div id="terco-contas" class="terco-contas" hidden></div>
+          <div class="terco-palco">
+            <div id="terco-rosario" class="terco-rosario" aria-hidden="true"></div>
+            <div class="terco-oracao-cartao" id="terco-oracao-cartao">
+              <span class="terco-etapa" id="terco-etapa"></span>
+              <h3 id="terco-titulo-passo" class="terco-titulo-passo"></h3>
+              <p id="terco-texto-passo" class="terco-texto-passo"></p>
+              <div id="terco-contas" class="terco-contas" hidden></div>
+            </div>
+          </div>
           <div class="terco-navegacao">
             <button id="terco-anterior" class="filter-btn">← Anterior</button>
             <button id="terco-proximo" class="filter-btn active">Próxima →</button>
           </div>
-          <button id="terco-sair" class="btn-back" style="margin-top:24px;">Encerrar o terço</button>
+          <button id="terco-sair" class="btn-back terco-sair">Encerrar o terço</button>
         </div>
       </div>
     </section>

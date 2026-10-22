@@ -111,7 +111,7 @@ function temaParaPagina(idDaPagina) {
   if (idDaPagina === 'view-home') {
     return document.body.classList.contains('catalogo-interno') ? temaDoSite : 'dourado';
   }
-  if (idDaPagina === 'view-perfis' || idDaPagina === 'view-ia') return 'dourado';
+  if (idDaPagina === 'view-perfis' || idDaPagina === 'view-ia' || idDaPagina === 'view-terco') return 'dourado';
   return 'liturgico';
 }
 

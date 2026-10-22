@@ -6832,3 +6832,71 @@ button.album-carta:hover, button.album-carta:focus-visible { transform: translat
 @keyframes carta-pulsa { 0%, 100% { box-shadow: 0 0 10px rgba(170, 90, 255, 0.3), 0 6px 16px rgba(0, 0, 0, 0.45); } 50% { box-shadow: 0 0 24px rgba(170, 90, 255, 0.75), 0 6px 16px rgba(0, 0, 0, 0.45); } }
 @keyframes carta-gira { to { --giro: 360deg; } }
 @keyframes carta-cintila { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+
+.terco-container { max-width: 860px; }
+.terco-topo-escolha { text-align: center; margin: 6px auto 22px; max-width: 560px; }
+.terco-topo-escolha .section-title { margin: 6px 0 10px; font-size: clamp(1.9rem, 5vw, 2.5rem); background: linear-gradient(180deg, #fff1c2, #e2b552 55%, #a8741f); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.terco-topo-escolha .section-title::after { content: ''; display: block; width: 140px; height: 12px; margin: 10px auto 0; background: radial-gradient(circle, #fff1c2 0 3px, transparent 4px) center / 12px 12px no-repeat, linear-gradient(90deg, transparent, rgba(240, 207, 122, 0.8), transparent) center / 100% 1px no-repeat; }
+.terco-topo-escolha .terco-intro { margin: 0; text-align: center; }
+.terco-botoes-misterio { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+#terco-outros.terco-botoes-misterio { grid-template-columns: minmax(0, 1fr); }
+.terco-btn-misterio { position: relative; overflow: hidden; display: flex; align-items: flex-start; gap: 14px; padding: 18px; border-radius: 20px; border: 1px solid transparent; background: radial-gradient(circle at 0 0, rgba(240, 207, 122, 0.14), transparent 55%) padding-box, linear-gradient(var(--bg-alt), var(--bg-alt)) padding-box, linear-gradient(135deg, rgba(255, 241, 194, 0.75), rgba(110, 71, 16, 0.45) 45%, rgba(240, 207, 122, 0.6)) border-box; color: var(--text-main); box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.terco-btn-misterio:hover, .terco-btn-misterio:focus-visible { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(0, 0, 0, 0.45), 0 0 22px rgba(240, 207, 122, 0.2); }
+.terco-btn-misterio.sugerido { background: radial-gradient(circle at 0 0, rgba(240, 207, 122, 0.3), transparent 60%) padding-box, linear-gradient(var(--bg-alt), var(--bg-alt)) padding-box, linear-gradient(135deg, #fff1c2, #b8862b 45%, #f0cf7a) border-box; box-shadow: 0 10px 26px rgba(0, 0, 0, 0.4), 0 0 26px rgba(240, 207, 122, 0.28); }
+.terco-btn-misterio.sugerido::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(115deg, transparent 35%, rgba(255, 241, 194, 0.18) 50%, transparent 65%); transform: translateX(-120%); animation: terco-reluz 5s ease-in-out infinite; }
+.terco-misterio-icone { flex-shrink: 0; width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff8e0, #e2b552 55%, #8a5a14); color: #3a2506; box-shadow: 0 0 0 3px rgba(240, 207, 122, 0.18), 0 0 16px rgba(240, 207, 122, 0.35); }
+.terco-misterio-icone svg { width: 26px; height: 26px; }
+.terco-misterio-textos { display: flex; flex-direction: column; gap: 4px; min-width: 0; text-align: left; }
+.terco-btn-misterio .nome { font-family: var(--font-title); font-size: 1.25rem; color: #f6e2a0; line-height: 1.2; }
+.terco-btn-misterio .tag { margin: 0; font-size: 0.7rem; letter-spacing: 1px; color: var(--text-muted); background: none; padding: 0; }
+.terco-sugerido { color: #f0cf7a; font-weight: 800; }
+.terco-misterio-lista { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+.terco-misterio-lista span { padding: 3px 9px; border-radius: 999px; border: 1px solid rgba(240, 207, 122, 0.22); background: rgba(240, 207, 122, 0.05); color: var(--text-muted); font-size: 0.72rem; line-height: 1.3; }
+.terco-btn-misericordia { flex-direction: column; gap: 4px; }
+.terco-btn-misericordia::before { content: ''; position: absolute; right: -30px; top: -30px; width: 130px; height: 130px; border-radius: 50%; background: radial-gradient(circle, rgba(255, 255, 255, 0.12), rgba(240, 120, 120, 0.08) 45%, transparent 70%); pointer-events: none; }
+.terco-btn-misericordia .descricao { color: var(--text-muted); }
+.terco-outros-titulo { text-align: center; color: #e2b552; margin: 30px 0 12px; }
+.terco-cabecalho { text-align: center; margin: 4px auto 18px; max-width: 520px; }
+.terco-nome-rezando { margin: 0 0 10px; color: #f0cf7a; letter-spacing: 2px; }
+.terco-progresso { display: flex; align-items: center; gap: 12px; margin: 0; color: var(--text-muted); font-size: 0.8rem; font-weight: 700; }
+.terco-progresso-texto { flex-shrink: 0; min-width: 52px; }
+.terco-barra { flex: 1; height: 6px; border-radius: 999px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
+.terco-barra i { display: block; height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, #a8741f, #f0cf7a, #fff1c2); box-shadow: 0 0 10px rgba(240, 207, 122, 0.6); transition: width 0.4s ease; }
+.terco-palco { display: grid; grid-template-columns: 270px minmax(0, 1fr); gap: 26px; align-items: center; }
+.terco-rosario { position: relative; }
+.terco-rosario::before { content: ''; position: absolute; inset: 8% 8% 20%; border-radius: 50%; background: radial-gradient(circle, rgba(240, 207, 122, 0.14), transparent 70%); pointer-events: none; }
+.terco-rosario svg { position: relative; display: block; width: 100%; height: auto; overflow: visible; }
+.terco-rosario-fio { fill: none; stroke: rgba(240, 207, 122, 0.35); stroke-width: 1.2; }
+.terco-rosario-conta { fill: rgba(255, 255, 255, 0.07); stroke: rgba(240, 207, 122, 0.5); stroke-width: 1; transition: fill 0.3s ease; }
+.terco-rosario-conta.feita { fill: #d9a93f; stroke: #fff1c2; }
+.terco-rosario-conta.atual { fill: #fff1c2; stroke: #fff; filter: drop-shadow(0 0 5px #f0cf7a); animation: terco-conta-viva 1.6s ease-in-out infinite; }
+.terco-rosario-medalha path, .terco-rosario-cruz path { fill: rgba(240, 207, 122, 0.25); stroke: rgba(240, 207, 122, 0.7); stroke-width: 1; }
+.terco-rosario-medalha.feita path, .terco-rosario-cruz.feita path { fill: #d9a93f; stroke: #fff1c2; }
+.terco-rosario-medalha.atual path, .terco-rosario-cruz.atual path { fill: #fff1c2; stroke: #fff; filter: drop-shadow(0 0 6px #f0cf7a); animation: terco-conta-viva 1.6s ease-in-out infinite; }
+.terco-oracao-cartao { position: relative; padding: 26px 24px 24px; border-radius: 24px; border: 1px solid transparent; background: radial-gradient(circle at 50% 0, rgba(240, 207, 122, 0.16), transparent 60%) padding-box, linear-gradient(var(--bg-alt), var(--bg-alt)) padding-box, linear-gradient(135deg, rgba(255, 241, 194, 0.75), rgba(110, 71, 16, 0.45) 45%, rgba(240, 207, 122, 0.6)) border-box; box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4); text-align: center; }
+.terco-oracao-cartao.entrando { animation: terco-entra 0.4s ease both; }
+.terco-oracao-cartao.misterio { background: radial-gradient(circle at 50% 0, rgba(240, 207, 122, 0.32), transparent 65%) padding-box, linear-gradient(180deg, #2b1f0a, var(--bg-alt)) padding-box, linear-gradient(135deg, #fff1c2, #b8862b 45%, #f0cf7a) border-box; box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45), 0 0 30px rgba(240, 207, 122, 0.25); }
+.terco-oracao-cartao.final { box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45), 0 0 40px rgba(240, 207, 122, 0.4); }
+.terco-etapa { display: inline-block; margin-bottom: 10px; padding: 4px 12px; border-radius: 999px; border: 1px solid rgba(240, 207, 122, 0.35); background: rgba(240, 207, 122, 0.08); color: #f0cf7a; font-size: 0.68rem; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase; }
+.terco-titulo-passo { margin: 0 0 14px; font-size: clamp(1.3rem, 3.6vw, 1.7rem); line-height: 1.25; background: linear-gradient(180deg, #fff1c2, #e2b552 60%, #b8862b); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.terco-titulo-passo::after { content: ''; display: block; width: 90px; height: 1px; margin: 12px auto 0; background: linear-gradient(90deg, transparent, rgba(240, 207, 122, 0.8), transparent); }
+.terco-texto-passo { margin: 0; font-size: 1.08rem; line-height: 1.85; color: #efe6d2; }
+.terco-contas { margin-top: 20px; }
+.terco-conta { width: 24px; height: 24px; border: 1.5px solid rgba(240, 207, 122, 0.65); background: rgba(255, 255, 255, 0.05); }
+.terco-conta.marcada { background: radial-gradient(circle at 35% 30%, #fff8e0, #e2b552 55%, #8a5a14); border-color: #fff1c2; box-shadow: 0 0 10px rgba(240, 207, 122, 0.6); }
+.terco-contas-dica { color: #d8c8a2; }
+.terco-navegacao { margin-top: 24px; }
+.terco-navegacao .filter-btn { min-width: 150px; border-radius: 999px; padding: 12px 20px; }
+.terco-navegacao .filter-btn:disabled { opacity: 0.4; cursor: default; }
+.terco-sair { display: flex; margin: 22px auto 0; }
+@keyframes terco-entra { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes terco-conta-viva { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
+@keyframes terco-reluz { 0%, 60% { transform: translateX(-120%); } 100% { transform: translateX(120%); } }
+@media (max-width: 760px) {
+  .terco-botoes-misterio { grid-template-columns: minmax(0, 1fr); }
+  .terco-palco { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .terco-rosario { max-width: 140px; margin: 0 auto; }
+  .terco-cabecalho { margin-bottom: 10px; }
+  .terco-oracao-cartao { padding: 22px 18px 20px; }
+  .terco-navegacao .filter-btn { min-width: 0; flex: 1; }
+}

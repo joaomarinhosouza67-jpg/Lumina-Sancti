@@ -4642,22 +4642,22 @@ function montarPassosDoTerco(chaveMisterio) {
   if (chaveMisterio === 'misericordia') return montarPassosDoTercoDaMisericordia();
   const conjunto = MISTERIOS_DO_TERCO[chaveMisterio];
   const passos = [
-    { titulo: 'Sinal da Cruz', texto: ORACOES[0].texto },
-    { titulo: 'Credo dos Apóstolos', texto: ORACOES[4].texto },
-    { titulo: 'Pai Nosso', texto: ORACOES[1].texto },
-    { titulo: '3 Ave-Marias (fé, esperança e caridade)', texto: ORACOES[2].texto, contas: 3 },
-    { titulo: 'Glória ao Pai', texto: ORACOES[3].texto },
+    { titulo: 'Sinal da Cruz', texto: ORACOES[0].texto, lugar: { tipo: 'cruz' } },
+    { titulo: 'Credo dos Apóstolos', texto: ORACOES[4].texto, lugar: { tipo: 'cruz' } },
+    { titulo: 'Pai Nosso', texto: ORACOES[1].texto, lugar: { tipo: 'pingente-grande' } },
+    { titulo: '3 Ave-Marias (fé, esperança e caridade)', texto: ORACOES[2].texto, contas: 3, lugar: { tipo: 'pingente-pequenas' } },
+    { titulo: 'Glória ao Pai', texto: ORACOES[3].texto, lugar: { tipo: 'medalha' } },
   ];
 
-  conjunto.lista.forEach((misterio) => {
-    passos.push({ titulo: misterio.titulo, texto: misterio.texto });
-    passos.push({ titulo: 'Pai Nosso', texto: ORACOES[1].texto });
-    passos.push({ titulo: '10 Ave-Marias', texto: ORACOES[2].texto, contas: 10 });
-    passos.push({ titulo: 'Glória ao Pai + Jaculatória', texto: `${ORACOES[3].texto}\n\nÓ meu Jesus, perdoai-nos, livrai-nos do fogo do inferno, levai as almas todas para o Céu, principalmente as que mais precisarem.` });
+  conjunto.lista.forEach((misterio, dezena) => {
+    passos.push({ titulo: misterio.titulo, texto: misterio.texto, misterio: true, lugar: { tipo: 'grande', dezena } });
+    passos.push({ titulo: 'Pai Nosso', texto: ORACOES[1].texto, lugar: { tipo: 'grande', dezena } });
+    passos.push({ titulo: '10 Ave-Marias', texto: ORACOES[2].texto, contas: 10, lugar: { tipo: 'pequenas', dezena } });
+    passos.push({ titulo: 'Glória ao Pai + Jaculatória', texto: `${ORACOES[3].texto}\n\nÓ meu Jesus, perdoai-nos, livrai-nos do fogo do inferno, levai as almas todas para o Céu, principalmente as que mais precisarem.`, lugar: { tipo: 'fim-da-dezena', dezena } });
   });
 
-  passos.push({ titulo: 'Salve Rainha', texto: ORACOES[5].texto });
-  passos.push({ titulo: 'Para encerrar', texto: 'Em nome do Pai, e do Filho, e do Espírito Santo. Amém.\n\nQue Nossa Senhora abençoe o seu dia.' });
+  passos.push({ titulo: 'Salve Rainha', texto: ORACOES[5].texto, lugar: { tipo: 'medalha' } });
+  passos.push({ titulo: 'Para encerrar', texto: 'Em nome do Pai, e do Filho, e do Espírito Santo. Amém.\n\nQue Nossa Senhora abençoe o seu dia.', lugar: { tipo: 'cruz' }, fim: true });
 
   return passos;
 }
@@ -4665,20 +4665,20 @@ function montarPassosDoTerco(chaveMisterio) {
 function montarPassosDoTercoDaMisericordia() {
   const o = TERCO_DA_MISERICORDIA.oracoes;
   const passos = [
-    { titulo: 'Sinal da Cruz', texto: ORACOES[0].texto },
-    { titulo: 'Oração inicial (opcional)', texto: o.expirastes },
-    { titulo: 'Ó Sangue e Água (três vezes, opcional)', texto: o.sangueEAgua, contas: 3 },
-    { titulo: 'Pai Nosso', texto: ORACOES[1].texto },
-    { titulo: 'Ave Maria', texto: ORACOES[2].texto },
-    { titulo: 'Credo dos Apóstolos', texto: ORACOES[4].texto },
+    { titulo: 'Sinal da Cruz', texto: ORACOES[0].texto, lugar: { tipo: 'cruz' } },
+    { titulo: 'Oração inicial (opcional)', texto: o.expirastes, lugar: { tipo: 'cruz' } },
+    { titulo: 'Ó Sangue e Água (três vezes, opcional)', texto: o.sangueEAgua, contas: 3, lugar: { tipo: 'cruz' } },
+    { titulo: 'Pai Nosso', texto: ORACOES[1].texto, lugar: { tipo: 'pingente-grande' } },
+    { titulo: 'Ave Maria', texto: ORACOES[2].texto, lugar: { tipo: 'pingente-pequenas' } },
+    { titulo: 'Credo dos Apóstolos', texto: ORACOES[4].texto, lugar: { tipo: 'medalha' } },
   ];
   for (let dezena = 1; dezena <= 5; dezena++) {
-    passos.push({ titulo: tr('{n}ª dezena — conta grande', { n: dezena }), texto: o.eternoPai });
-    passos.push({ titulo: tr('{n}ª dezena — dez contas pequenas', { n: dezena }), texto: o.dolorosaPaixao, contas: 10 });
+    passos.push({ titulo: tr('{n}ª dezena — conta grande', { n: dezena }), texto: o.eternoPai, lugar: { tipo: 'grande', dezena: dezena - 1 } });
+    passos.push({ titulo: tr('{n}ª dezena — dez contas pequenas', { n: dezena }), texto: o.dolorosaPaixao, contas: 10, lugar: { tipo: 'pequenas', dezena: dezena - 1 } });
   }
-  passos.push({ titulo: 'Para concluir (três vezes)', texto: o.deusSanto, contas: 3 });
-  passos.push({ titulo: 'Oração final (opcional)', texto: o.oracaoFinal });
-  passos.push({ titulo: 'Jesus, eu confio em Vós!', texto: 'Jesus, eu confio em Vós!\n\nEm nome do Pai, e do Filho, e do Espírito Santo. Amém.' });
+  passos.push({ titulo: 'Para concluir (três vezes)', texto: o.deusSanto, contas: 3, lugar: { tipo: 'medalha' } });
+  passos.push({ titulo: 'Oração final (opcional)', texto: o.oracaoFinal, lugar: { tipo: 'medalha' } });
+  passos.push({ titulo: 'Jesus, eu confio em Vós!', texto: 'Jesus, eu confio em Vós!\n\nEm nome do Pai, e do Filho, e do Espírito Santo. Amém.', lugar: { tipo: 'cruz' }, fim: true });
   return passos;
 }
 
@@ -4701,6 +4701,7 @@ function renderizarContasDoPasso(passo) {
     <p class="terco-contas-dica" aria-live="polite">${tr('Toque numa conta a cada oração ({n} de {total})', { n: 0, total: passo.contas })}</p>`;
   const atualizar = () => {
     area.querySelectorAll('.terco-conta').forEach((conta, i) => conta.classList.toggle('marcada', i < contasMarcadas));
+    desenharRosarioDoTerco();
     area.querySelector('.terco-contas-dica').textContent = contasMarcadas >= passo.contas
       ? tr('Pronto: {n} de {total}', { n: passo.contas, total: passo.contas })
       : tr('Toque numa conta a cada oração ({n} de {total})', { n: contasMarcadas, total: passo.contas });
@@ -4714,13 +4715,120 @@ function renderizarContasDoPasso(passo) {
   });
 }
 
+const POSICOES_DO_ROSARIO = (() => {
+  const cx = 150;
+  const cy = 128;
+  const rx = 118;
+  const ry = 108;
+  const loop = [];
+  const total = 55;
+  for (let i = 0; i < total; i++) {
+    const angulo = Math.PI / 2 + ((i + 1) / (total + 1)) * Math.PI * 2;
+    loop.push({ x: cx + rx * Math.cos(angulo), y: cy + ry * Math.sin(angulo) });
+  }
+  const dezenas = [];
+  for (let d = 0; d < 5; d++) {
+    dezenas.push({ grande: loop[d * 11], pequenas: loop.slice(d * 11 + 1, d * 11 + 11) });
+  }
+  return {
+    dezenas,
+    medalha: { x: cx, y: cy + ry },
+    pingentePequenas: [0, 1, 2].map((i) => ({ x: cx, y: cy + ry + 24 + i * 15 })),
+    pingenteGrande: { x: cx, y: cy + ry + 24 + 3 * 15 + 6 },
+    cruz: { x: cx, y: cy + ry + 24 + 3 * 15 + 32 },
+  };
+})();
+
+function estadoDoRosarioNoPasso(indice) {
+  const feitos = new Set();
+  const atuais = new Set();
+  const marcar = (alvo, lugar, parcial) => {
+    if (!lugar) return;
+    const { tipo, dezena } = lugar;
+    if (tipo === 'cruz') alvo.add('cruz');
+    else if (tipo === 'medalha') alvo.add('medalha');
+    else if (tipo === 'pingente-grande') alvo.add('pg');
+    else if (tipo === 'pingente-pequenas') {
+      const quantas = parcial == null ? 3 : parcial;
+      for (let i = 0; i < quantas; i++) alvo.add(`pp${i}`);
+    } else if (tipo === 'grande') alvo.add(`g${dezena}`);
+    else if (tipo === 'pequenas') {
+      const quantas = parcial == null ? 10 : parcial;
+      for (let i = 0; i < quantas; i++) alvo.add(`p${dezena}-${i}`);
+    } else if (tipo === 'fim-da-dezena') {
+      alvo.add(`g${dezena}`);
+      for (let i = 0; i < 10; i++) alvo.add(`p${dezena}-${i}`);
+    }
+  };
+  for (let i = 0; i < indice; i++) marcar(feitos, passosTercoAtual[i].lugar, null);
+  const passo = passosTercoAtual[indice];
+  if (passo && passo.lugar) {
+    const comContas = passo.contas && (passo.lugar.tipo === 'pequenas' || passo.lugar.tipo === 'pingente-pequenas');
+    if (comContas) {
+      marcar(feitos, passo.lugar, contasMarcadas);
+      const proxima = Math.min(contasMarcadas, passo.contas - 1);
+      if (passo.lugar.tipo === 'pequenas') atuais.add(`p${passo.lugar.dezena}-${proxima}`);
+      else atuais.add(`pp${Math.min(contasMarcadas, 2)}`);
+    } else {
+      marcar(atuais, passo.lugar, null);
+    }
+  }
+  return { feitos, atuais };
+}
+
+function desenharRosarioDoTerco() {
+  const lugar = document.getElementById('terco-rosario');
+  if (!lugar || !passosTercoAtual.length) return;
+  const { feitos, atuais } = estadoDoRosarioNoPasso(indicePassoTerco);
+  const P = POSICOES_DO_ROSARIO;
+  const classe = (id) => (atuais.has(id) ? 'atual' : (feitos.has(id) ? 'feita' : ''));
+  const conta = (id, p, r) => `<circle class="terco-rosario-conta ${classe(id)}" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${r}"/>`;
+  const contas = [];
+  P.dezenas.forEach((d, i) => {
+    contas.push(conta(`g${i}`, d.grande, 6.6));
+    d.pequenas.forEach((p, j) => contas.push(conta(`p${i}-${j}`, p, 4.3)));
+  });
+  P.pingentePequenas.forEach((p, i) => contas.push(conta(`pp${i}`, p, 4.3)));
+  contas.push(conta('pg', P.pingenteGrande, 6.6));
+  const m = P.medalha;
+  const c = P.cruz;
+  lugar.innerHTML = `<svg viewBox="0 0 300 330" role="presentation">
+    <ellipse class="terco-rosario-fio" cx="150" cy="128" rx="118" ry="108"/>
+    <line class="terco-rosario-fio" x1="150" y1="${m.y}" x2="150" y2="${c.y - 10}"/>
+    ${contas.join('')}
+    <g class="terco-rosario-medalha ${classe('medalha')}"><path d="M${m.x} ${m.y - 9} l7 9 -7 9 -7 -9z"/></g>
+    <g class="terco-rosario-cruz ${classe('cruz')}"><path d="M${c.x - 3} ${c.y - 12}h6v8h8v6h-8v14h-6v-14h-8v-6h8z"/></g>
+  </svg>`;
+}
+
 function renderizarPassoDoTerco() {
   const passo = passosTercoAtual[indicePassoTerco];
   document.getElementById('terco-passo-atual').textContent = indicePassoTerco + 1;
   document.getElementById('terco-passo-total').textContent = passosTercoAtual.length;
   document.getElementById('terco-titulo-passo').textContent = passo.titulo;
   document.getElementById('terco-texto-passo').textContent = passo.texto;
+  const cartao = document.getElementById('terco-oracao-cartao');
+  if (cartao) {
+    cartao.classList.toggle('misterio', Boolean(passo.misterio));
+    cartao.classList.toggle('final', Boolean(passo.fim));
+    cartao.classList.remove('entrando');
+    void cartao.offsetWidth;
+    cartao.classList.add('entrando');
+  }
+  const etapa = document.getElementById('terco-etapa');
+  if (etapa) {
+    const lugar = passo.lugar || {};
+    let texto = '';
+    if (passo.misterio) texto = tr('Mistério {n} de 5', { n: lugar.dezena + 1 });
+    else if (lugar.dezena != null) texto = tr('Dezena {n} de 5', { n: lugar.dezena + 1 });
+    else if (passo.fim) texto = tr('Conclusão');
+    else texto = tr('Orações iniciais');
+    etapa.textContent = texto;
+  }
+  const barra = document.getElementById('terco-barra-cheia');
+  if (barra) barra.style.width = `${Math.round(((indicePassoTerco + 1) / passosTercoAtual.length) * 100)}%`;
   renderizarContasDoPasso(passo);
+  desenharRosarioDoTerco();
 
   const btnAnterior = document.getElementById('terco-anterior');
   const btnProximo = document.getElementById('terco-proximo');
@@ -4756,10 +4864,20 @@ function iniciarPaginaDoTerco() {
   if (!containerBotoes) return;
 
   const sugerido = misterioSugeridoHoje();
+  const ICONES_DOS_MISTERIOS = {
+    gozosos: '<path d="M12 3l1.8 3.9 4.2.5-3.1 2.9.8 4.2L12 12.4 8.3 14.5l.8-4.2L6 7.4l4.2-.5z"/><path d="M5 21h14M7 21l2-5h6l2 5"/>',
+    dolorosos: '<path d="M12 2v20M7 7h10"/><path d="M4 14c3-2 5 2 8 0s5 2 8 0"/>',
+    gloriosos: '<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/>',
+    luminosos: '<path d="M12 3a6 6 0 0 1 4 10.5V17H8v-3.5A6 6 0 0 1 12 3z"/><path d="M9 21h6M10 17v4M14 17v4"/>',
+  };
   containerBotoes.innerHTML = Object.entries(MISTERIOS_DO_TERCO).map(([chave, conjunto]) => `
-    <button class="terco-btn-misterio ${chave === sugerido ? 'sugerido' : ''}" data-misterio="${chave}">
-      <div class="nome">${conjunto.nome}</div>
-      <div class="tag">${chave === sugerido ? 'Sugerido para hoje · ' : ''}${conjunto.dias}</div>
+    <button class="terco-btn-misterio terco-misterio-${chave} ${chave === sugerido ? 'sugerido' : ''}" data-misterio="${chave}">
+      <span class="terco-misterio-icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONES_DOS_MISTERIOS[chave]}</svg></span>
+      <span class="terco-misterio-textos">
+        <span class="nome">${conjunto.nome}</span>
+        <span class="tag">${chave === sugerido ? `<b class="terco-sugerido">${tr('Sugerido para hoje')}</b> · ` : ''}${conjunto.dias}</span>
+        <span class="terco-misterio-lista">${conjunto.lista.map((m) => `<span>${m.titulo.replace(/^.*?—\s*/, '')}</span>`).join('')}</span>
+      </span>
     </button>
   `).join('');
 
@@ -4781,6 +4899,24 @@ function iniciarPaginaDoTerco() {
   document.getElementById('terco-anterior').addEventListener('click', () => {
     if (indicePassoTerco > 0) { indicePassoTerco--; renderizarPassoDoTerco(); }
   });
+  const areaDoTerco = document.getElementById('terco-rezando');
+  if (areaDoTerco) {
+    let toqueX = null;
+    areaDoTerco.addEventListener('touchstart', (e) => { toqueX = e.touches[0].clientX; }, { passive: true });
+    areaDoTerco.addEventListener('touchend', (e) => {
+      if (toqueX == null || e.target.closest('.terco-contas')) { toqueX = null; return; }
+      const dx = e.changedTouches[0].clientX - toqueX;
+      toqueX = null;
+      if (Math.abs(dx) < 70) return;
+      document.getElementById(dx < 0 ? 'terco-proximo' : 'terco-anterior').click();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (areaDoTerco.style.display === 'none' || !document.getElementById('view-terco').classList.contains('active')) return;
+      if (e.target && /input|textarea/i.test(e.target.tagName)) return;
+      if (e.key === 'ArrowRight') document.getElementById('terco-proximo').click();
+      else if (e.key === 'ArrowLeft') document.getElementById('terco-anterior').click();
+    });
+  }
   document.getElementById('terco-proximo').addEventListener('click', () => {
     if (indicePassoTerco < passosTercoAtual.length - 1) {
       indicePassoTerco++;
