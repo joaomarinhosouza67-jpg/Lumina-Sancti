@@ -4686,6 +4686,60 @@ let passosTercoAtual = [];
 let indicePassoTerco = 0;
 let contasMarcadas = 0;
 
+const CHAVE_JEITO_DO_TERCO = 'lumina-sancti-terco-jeito';
+const RESPOSTAS_DO_TERCO = ['O pão nosso', 'Give us this day', 'Danos hoy', 'Santa Maria, Mãe', 'Holy Mary', 'Santa María, Madre', 'como era no princípio', 'as it was in the beginning', 'como era en el principio', 'para que sejamos dignos', 'that we may be made worthy', 'para que seamos dignos', 'tende misericórdia', 'have mercy', 'ten misericordia', 'tende piedade', 'ten piedad'];
+
+function jeitoDoTerco() {
+  try { return localStorage.getItem(CHAVE_JEITO_DO_TERCO) === 'grupo' ? 'grupo' : 'sozinho'; } catch (e) { return 'sozinho'; }
+}
+
+function mudarJeitoDoTerco(jeito) {
+  try { localStorage.setItem(CHAVE_JEITO_DO_TERCO, jeito); } catch (e) { return; }
+  mostrarJeitoDoTerco();
+  if (passosTercoAtual.length && document.getElementById('terco-rezando').style.display !== 'none') renderizarPassoDoTerco();
+}
+
+function mostrarJeitoDoTerco() {
+  const jeito = jeitoDoTerco();
+  document.querySelectorAll('.terco-jeito-botao').forEach((botao) => {
+    const ativo = botao.dataset.jeito === jeito;
+    botao.classList.toggle('ativo', ativo);
+    botao.setAttribute('aria-pressed', ativo ? 'true' : 'false');
+  });
+  const dica = document.getElementById('terco-jeito-dica');
+  if (dica) dica.textContent = jeito === 'grupo'
+    ? tr('Uma pessoa puxa a primeira parte de cada oração e todos respondem a segunda. Bom para rezar em família ou com amigos.')
+    : tr('Você reza cada oração inteira, no seu ritmo.');
+  const chip = document.getElementById('terco-jeito-chip');
+  if (chip) chip.textContent = jeito === 'grupo' ? tr('Rezando com alguém · trocar') : tr('Rezando sozinho · trocar');
+}
+
+function dividirOracaoEmGrupo(texto) {
+  const minusculo = texto.toLowerCase();
+  let corte = -1;
+  RESPOSTAS_DO_TERCO.forEach((marca) => {
+    const i = minusculo.indexOf(marca.toLowerCase());
+    if (i > 0 && (corte < 0 || i < corte)) corte = i;
+  });
+  return corte < 0 ? null : [texto.slice(0, corte).trim(), texto.slice(corte).trim()];
+}
+
+function mostrarTextoDoPasso(passo) {
+  const lugar = document.getElementById('terco-texto-passo');
+  const grupo = jeitoDoTerco() === 'grupo';
+  lugar.classList.toggle('em-grupo', grupo);
+  if (!grupo) {
+    lugar.textContent = passo.texto;
+    return;
+  }
+  const texto = tr(passo.texto);
+  const partes = dividirOracaoEmGrupo(texto);
+  const parte = (rotulo, conteudo, classe) => `<span class="terco-parte ${classe}" translate="no"><b>${rotulo}</b>${escaparTexto(conteudo)}</span>`;
+  lugar.innerHTML = partes
+    ? parte(tr('Quem puxa'), partes[0], 'puxa') + parte(tr('Todos respondem'), partes[1], 'todos')
+    : parte(passo.misterio ? tr('Quem puxa anuncia') : tr('Todos juntos'), texto, passo.misterio ? 'puxa' : 'todos');
+}
+
 function renderizarContasDoPasso(passo) {
   const area = document.getElementById('terco-contas');
   if (!area) return;
@@ -4806,7 +4860,7 @@ function renderizarPassoDoTerco() {
   document.getElementById('terco-passo-atual').textContent = indicePassoTerco + 1;
   document.getElementById('terco-passo-total').textContent = passosTercoAtual.length;
   document.getElementById('terco-titulo-passo').textContent = passo.titulo;
-  document.getElementById('terco-texto-passo').textContent = passo.texto;
+  mostrarTextoDoPasso(passo);
   const cartao = document.getElementById('terco-oracao-cartao');
   if (cartao) {
     cartao.classList.toggle('misterio', Boolean(passo.misterio));
@@ -4891,6 +4945,11 @@ function iniciarPaginaDoTerco() {
         <div class="tag">${agoraEhHoraDaMisericordia ? 'Agora é a Hora da Misericórdia' : TERCO_DA_MISERICORDIA.dias}</div>
       </button>`;
   }
+
+  document.querySelectorAll('.terco-jeito-botao').forEach((botao) => botao.addEventListener('click', () => mudarJeitoDoTerco(botao.dataset.jeito)));
+  const chipDoJeito = document.getElementById('terco-jeito-chip');
+  if (chipDoJeito) chipDoJeito.addEventListener('click', () => mudarJeitoDoTerco(jeitoDoTerco() === 'grupo' ? 'sozinho' : 'grupo'));
+  mostrarJeitoDoTerco();
 
   document.querySelectorAll('#terco-escolha .terco-btn-misterio').forEach(btn => {
     btn.addEventListener('click', () => iniciarTerco(btn.dataset.misterio));

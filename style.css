@@ -6897,6 +6897,28 @@ button.album-carta:hover, button.album-carta:focus-visible { transform: translat
   .terco-palco { grid-template-columns: minmax(0, 1fr); gap: 14px; }
   .terco-rosario { max-width: 140px; margin: 0 auto; }
   .terco-cabecalho { margin-bottom: 10px; }
-  .terco-oracao-cartao { padding: 22px 18px 20px; }
+  .terco-oracao-cartao { padding: 22px 14px 20px; }
+  .terco-contas-fila { gap: 5px; flex-wrap: nowrap; }
+  .terco-conta { flex: 0 1 23px; width: 23px; min-width: 0; height: auto; aspect-ratio: 1; }
   .terco-navegacao .filter-btn { min-width: 0; flex: 1; }
 }
+@media (max-width: 520px) {
+  .album-grade { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .album-carta { padding: 6px 4px 8px; gap: 4px; border-radius: 12px; }
+  .album-carta-nome { font-size: 0.66rem; }
+  .album-carta-selo { font-size: 0.52rem; letter-spacing: 0.5px; }
+  .album-tipo { padding: 3px 8px; font-size: 0.66rem; }
+}
+.terco-jeito { margin: 0 auto 22px; max-width: 460px; text-align: center; }
+.terco-jeito-pergunta { margin: 0 0 10px; color: #f0cf7a; font-size: 0.74rem; font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase; }
+.terco-jeito-botoes { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 5px; border-radius: 999px; border: 1px solid transparent; background: linear-gradient(var(--bg-alt), var(--bg-alt)) padding-box, linear-gradient(135deg, rgba(255, 241, 194, 0.75), rgba(110, 71, 16, 0.45) 45%, rgba(240, 207, 122, 0.6)) border-box; }
+.terco-jeito-botao { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 12px; border: 0; border-radius: 999px; background: transparent; color: var(--text-muted); font-family: var(--font-text); font-size: 0.92rem; font-weight: 700; cursor: pointer; transition: background 0.2s ease, color 0.2s ease; }
+.terco-jeito-botao svg { width: 20px; height: 20px; flex-shrink: 0; }
+.terco-jeito-botao.ativo { background: linear-gradient(180deg, #f6e2a0, #d9a93f 60%, #b8862b); color: #2a1a05; box-shadow: 0 0 14px rgba(240, 207, 122, 0.4); }
+.terco-jeito-dica { margin: 10px 0 0; color: var(--text-muted); font-size: 0.82rem; line-height: 1.5; }
+.terco-jeito-chip { margin: 0 auto 12px; padding: 4px 12px; border-radius: 999px; border: 1px solid rgba(240, 207, 122, 0.35); background: rgba(240, 207, 122, 0.06); color: #e2b552; font-family: var(--font-text); font-size: 0.72rem; font-weight: 700; cursor: pointer; }
+.terco-texto-passo.em-grupo { display: flex; flex-direction: column; gap: 12px; text-align: left; }
+.terco-parte { display: block; padding: 12px 14px 12px 16px; border-radius: 14px; border-left: 3px solid rgba(240, 207, 122, 0.45); background: rgba(255, 255, 255, 0.03); }
+.terco-parte b { display: block; margin-bottom: 4px; color: #f0cf7a; font-size: 0.66rem; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase; }
+.terco-parte.todos { border-left-color: #f0cf7a; background: linear-gradient(90deg, rgba(240, 207, 122, 0.12), rgba(240, 207, 122, 0.02)); }
+.terco-parte.todos b { color: #fff1c2; }
