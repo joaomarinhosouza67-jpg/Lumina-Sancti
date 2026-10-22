@@ -3749,6 +3749,46 @@ window.addEventListener('scroll', conferirMarcaDoTopo, { passive: true });
 window.addEventListener('resize', conferirMarcaDoTopo);
 [300, 1500, 7000].forEach((espera) => setTimeout(conferirMarcaDoTopo, espera));
 
+function chaveDoAlbum() {
+  const perfil = typeof membroAtivo !== 'undefined' && membroAtivo && membroAtivo.id ? membroAtivo.id : 'aparelho';
+  return `lumina-sancti-album-${perfil}`;
+}
+
+function cartasDoAlbum() {
+  try { return JSON.parse(localStorage.getItem(chaveDoAlbum()) || '{}') || {}; } catch (e) { return {}; }
+}
+
+function raridadeDaCarta(santo) {
+  if (santo.categoria === 'arcanjos' || santo.categoria === 'sagrada-familia') return 'lendaria';
+  return santo.categoria === 'doutores' ? 'rara' : 'comum';
+}
+
+function ganharCarta(id, dourada) {
+  const santo = santosData.find((s) => s.id === id);
+  if (!santo) return;
+  const cartas = cartasDoAlbum();
+  const antes = cartas[id];
+  if (antes === 'dourada' || (antes && !dourada)) return;
+  cartas[id] = dourada ? 'dourada' : 'normal';
+  try { localStorage.setItem(chaveDoAlbum(), JSON.stringify(cartas)); } catch (e) { return; }
+  avisoRapidoDosSantos(tr(dourada ? 'Carta dourada no seu álbum: {nome}' : 'Nova carta no seu álbum: {nome}', { nome: textoDoSanto(santo).nome }), 'estrela');
+}
+
+let ultimaCartaLida = '';
+
+function conferirLeituraAteOFim() {
+  const fim = document.querySelector('#view-detail.active .bio-devocao');
+  const artigo = document.getElementById('bio-article');
+  const id = artigo && artigo.dataset.santoId;
+  if (!fim || !id || id === ultimaCartaLida) return;
+  if (fim.getBoundingClientRect().top < window.innerHeight - 40) {
+    ultimaCartaLida = id;
+    ganharCarta(id, false);
+  }
+}
+
+window.addEventListener('scroll', conferirLeituraAteOFim, { passive: true });
+
 function chaveDoSantoDeDevocao() {
   const perfil = typeof membroAtivo !== 'undefined' && membroAtivo && membroAtivo.id ? membroAtivo.id : 'aparelho';
   return `lumina-sancti-santo-devocao-${perfil}`;

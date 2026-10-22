@@ -1617,7 +1617,25 @@ function exibirTrilhas(slugParaMostrar) {
       const bloco = document.getElementById(`trilha-${slugParaMostrar}`);
       if (bloco && bloco.scrollIntoView) bloco.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 400);
+  } else {
+    setTimeout(irParaOndeParou, 450);
   }
+}
+
+function irParaOndeParou() {
+  const estado = carregarProgressoTrilhas();
+  let ultima = null;
+  Object.entries(estado.licoes || {}).forEach(([slug, dado]) => {
+    if (dado && dado.concluidaEm && (!ultima || dado.concluidaEm > ultima.quando)) ultima = { slug, quando: dado.concluidaEm };
+  });
+  let alvo = null;
+  if (ultima) {
+    const trilha = trilhasEmUso().find((t) => t.licoes.some((l) => l.slug === ultima.slug));
+    const bloco = trilha && document.getElementById(`trilha-${trilha.slug}`);
+    if (bloco) alvo = bloco.querySelector('.no-licao.atual') || bloco.querySelector(`.no-licao[data-indice="${trilha.licoes.findIndex((l) => l.slug === ultima.slug)}"]`);
+  }
+  if (!alvo) alvo = document.querySelector('#view-trilhas .no-licao.atual:not(.sem-pulso)');
+  if (alvo && alvo.scrollIntoView) alvo.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 function renderizarTrilhas() {
@@ -2233,6 +2251,7 @@ function finalizarLicao() {
   const estado = carregarProgressoTrilhas();
   const anterior = estado.licoes[licao.slug];
   if (anterior) marcarMissaoRevisada(trilha.slug, licao.slug);
+  if (trilha.santoId && typeof ganharCarta === 'function') setTimeout(() => ganharCarta(trilha.santoId, trilhaConcluida(trilha, carregarProgressoTrilhas())), 1500);
   const feGanha = anterior ? FE_REVISAO : FE_BASE_LICAO + FE_POR_ACERTO_DE_PRIMEIRA * acertosDePrimeira;
   estado.fe += feGanha;
   estado.licoes[licao.slug] = {
@@ -2627,6 +2646,7 @@ async function finalizarLicaoNoServidor() {
   const { trilha, licao, total } = licaoAtual;
   licaoAtual.finalizada = true;
   if (licaoAtual.revisao) marcarMissaoRevisada(trilha.slug, licao.slug);
+  if (trilha.santoId && typeof ganharCarta === 'function') setTimeout(() => ganharCarta(trilha.santoId, false), 1500);
   licaoAtual.servidor.respondidas = total;
   atualizarTopoDaLicao();
   prepararRodapeDaLicao(tt('salvando'), false);

@@ -913,7 +913,102 @@ function blocoDosMeusSantos() {
           ${favoritos.map((s) => `<button type="button" class="favorito-mini" data-abrir-santo="${s.id}"><span class="favorito-mini-foto">${foto(s.id)}</span><span class="favorito-mini-nome" translate="no">${nome(s)}</span></button>`).join('')}
         </div>` : `
         <p class="meus-santos-vazio">Toque no coração de um santo para guardá-lo aqui.</p>`}
+        ${blocoDosSantosPessoais(achar, nome, foto)}
+        ${blocoDoAlbum()}
       </section>`;
+}
+
+function chaveDoAniversario() {
+  const perfil = typeof membroAtivo !== 'undefined' && membroAtivo && membroAtivo.id ? membroAtivo.id : 'aparelho';
+  return `lumina-sancti-aniversario-${perfil}`;
+}
+
+function santoDoNome(nomeDaPessoa) {
+  const limpar = (texto) => String(texto || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  const primeiro = limpar(nomeDaPessoa).split(/\s+/)[0];
+  if (!primeiro || primeiro.length < 3 || typeof santosData === 'undefined') return null;
+  return santosData.find((s) => limpar(s.nome).split(/[^a-z]+/).slice(1).includes(primeiro)) || null;
+}
+
+function santoDaData(mesDia) {
+  if (!mesDia || typeof santosData === 'undefined') return null;
+  const [mes, dia] = mesDia.split('-').map(Number);
+  const base = new Date(2024, mes - 1, dia);
+  let melhor = null;
+  santosData.forEach((santo) => {
+    const partes = /^(\d{2})-(\d{2})$/.exec(santo.data || santo.festa || '');
+    if (!partes) return;
+    let quando = new Date(2024, Number(partes[1]) - 1, Number(partes[2]));
+    if (quando < base) quando = new Date(2025, Number(partes[1]) - 1, Number(partes[2]));
+    const dias = Math.round((quando - base) / 86400000);
+    if (!melhor || dias < melhor.dias) melhor = { santo, dias };
+  });
+  return melhor ? melhor.santo : null;
+}
+
+function blocoDosSantosPessoais(achar, nome, foto) {
+  const perfil = (typeof membroAtivo !== 'undefined' && membroAtivo) || null;
+  const doNome = santoDoNome(perfil ? perfil.nome : '');
+  let aniversario = '';
+  try { aniversario = localStorage.getItem(chaveDoAniversario()) || ''; } catch (e) {
+  }
+  const doAniversario = santoDaData(aniversario);
+  const cartao = (santo, rotulo) => `
+          <button type="button" class="santo-pessoal" data-abrir-santo="${santo.id}">
+            <span class="favorito-mini-foto">${foto(santo.id)}</span>
+            <small>${rotulo}</small>
+            <strong translate="no">${nome(santo)}</strong>
+          </button>`;
+  return `
+        <div class="meus-santos-favoritos-topo"><strong>Santos que caminham com você</strong></div>
+        <div class="santos-pessoais">
+          ${doNome ? cartao(doNome, tr('Do seu nome')) : `<p class="meus-santos-vazio">${tr('Não achamos um santo com o seu nome.')}</p>`}
+          ${doAniversario ? cartao(doAniversario, tr('Do seu aniversário')) : `
+          <label class="santo-pessoal santo-pessoal-vazio">
+            <small>${tr('Do seu aniversário')}</small>
+            <span>${tr('Quando você faz aniversário?')}</span>
+            <input type="date" id="meu-aniversario" aria-label="${tr('Data do seu aniversário')}">
+          </label>`}
+        </div>
+        ${doAniversario ? `<button type="button" class="perfil-link" id="trocar-aniversario">${tr('Mudar a data do aniversário')}</button>` : ''}`;
+}
+
+function blocoDoAlbum() {
+  if (typeof cartasDoAlbum !== 'function' || typeof santosData === 'undefined') return '';
+  const cartas = cartasDoAlbum();
+  const tenho = santosData.filter((s) => cartas[s.id]).length;
+  const porcento = Math.round((tenho / santosData.length) * 100);
+  return `
+        <button type="button" class="album-botao" id="abrir-album">
+          <span class="album-botao-icone">${iconeDoCenaculo('medalha')}</span>
+          <span class="album-botao-textos"><strong>${tr('Meu álbum de santos')}</strong><small>${tr('{n} de {total} cartas', { n: tenho, total: santosData.length })}</small><span class="album-barra"><span style="width:${porcento}%"></span></span></span>
+          ${iconeDoCenaculo('seta-direita')}
+        </button>`;
+}
+
+function abrirAlbumDeSantos() {
+  const cartas = cartasDoAlbum();
+  const rotulos = { lendaria: tr('Lendária'), rara: tr('Rara'), comum: tr('Comum') };
+  const tenho = santosData.filter((s) => cartas[s.id]).length;
+  const grade = santosData.map((santo) => {
+    const carta = cartas[santo.id];
+    const raridade = raridadeDaCarta(santo);
+    if (!carta) return `<div class="album-carta vazia ${raridade}"><span class="album-carta-foto">?</span><span class="album-carta-nome">???</span></div>`;
+    const endereco = typeof enderecoDaFotoDoSanto === 'function' ? enderecoDaFotoDoSanto(santo.id) : '';
+    return `<button type="button" class="album-carta ${raridade}${carta === 'dourada' ? ' dourada' : ''}" data-abrir-santo="${santo.id}">
+      <span class="album-carta-foto">${endereco ? `<img src="${escaparTexto(endereco)}" alt="" loading="lazy">` : ''}</span>
+      <span class="album-carta-nome" translate="no">${escaparTexto(textoDoSanto(santo).nome)}</span>
+      <span class="album-carta-selo">${carta === 'dourada' ? tr('Dourada') : rotulos[raridade]}</span>
+    </button>`;
+  }).join('');
+  const corpo = janelaDoCenaculo(tr('Meu álbum de santos'), `
+    <p class="album-resumo">${tr('{n} de {total} cartas', { n: tenho, total: santosData.length })}</p>
+    <p class="cenaculo-explica">${tr('Ganhe cartas lendo a história de um santo até o fim ou fazendo as missões das trilhas. Termine uma trilha inteira e a carta do santo fica dourada.')}</p>
+    <div class="album-grade">${grade}</div>`);
+  corpo.querySelectorAll('[data-abrir-santo]').forEach((botao) => botao.addEventListener('click', () => {
+    fecharJanelaDoCenaculo();
+    if (typeof showDetail === 'function') showDetail(botao.dataset.abrirSanto);
+  }));
 }
 
 function marcarEscolha(lugar, seletor, escolhido) {
@@ -1061,6 +1156,20 @@ async function renderizarMeuPerfil() {
   lugar.querySelectorAll('[data-abrir-santo]').forEach((botao) => botao.addEventListener('click', () => {
     if (typeof showDetail === 'function') showDetail(botao.dataset.abrirSanto);
   }));
+  ligar('abrir-album', abrirAlbumDeSantos);
+  const campoDoAniversario = lugar.querySelector('#meu-aniversario');
+  if (campoDoAniversario) campoDoAniversario.addEventListener('change', () => {
+    const partes = /^\d{4}-(\d{2})-(\d{2})$/.exec(campoDoAniversario.value || '');
+    if (!partes) return;
+    try { localStorage.setItem(chaveDoAniversario(), `${partes[1]}-${partes[2]}`); } catch (e) {
+    }
+    renderizarMeuPerfil();
+  });
+  ligar('trocar-aniversario', () => {
+    try { localStorage.removeItem(chaveDoAniversario()); } catch (e) {
+    }
+    renderizarMeuPerfil();
+  });
   if (adulto && typeof atualizarAvisoDoSuporte === 'function') atualizarAvisoDoSuporte();
   if (perfil && typeof enfeitarMeuPerfil === 'function') enfeitarMeuPerfil();
   if (adulto && typeof preencherResumoSocial === 'function') preencherResumoSocial(lugar.querySelector('#meu-perfil-social'), perfil.id);
