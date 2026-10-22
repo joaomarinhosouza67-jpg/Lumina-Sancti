@@ -3759,9 +3759,15 @@ function cartasDoAlbum() {
 }
 
 function raridadeDaCarta(santo) {
-  if (santo.categoria === 'arcanjos' || santo.categoria === 'sagrada-familia') return 'lendaria';
-  return santo.categoria === 'doutores' ? 'rara' : 'comum';
+  const categorias = [].concat(santo.categoria || []);
+  if (categorias.includes('sagrada-familia')) return 'secreta';
+  if (categorias.includes('arcanjos')) return 'lendaria';
+  if (categorias.includes('doutores')) return 'epica';
+  if (categorias.includes('santos-jovens') || categorias.includes('beatos')) return 'rara';
+  return 'comum';
 }
+
+const ORDEM_DAS_RARIDADES = ['secreta', 'lendaria', 'epica', 'rara', 'comum'];
 
 function ganharCarta(id, dourada) {
   const santo = santosData.find((s) => s.id === id);
@@ -3771,7 +3777,9 @@ function ganharCarta(id, dourada) {
   if (antes === 'dourada' || (antes && !dourada)) return;
   cartas[id] = dourada ? 'dourada' : 'normal';
   try { localStorage.setItem(chaveDoAlbum(), JSON.stringify(cartas)); } catch (e) { return; }
-  avisoRapidoDosSantos(tr(dourada ? 'Carta dourada no seu álbum: {nome}' : 'Nova carta no seu álbum: {nome}', { nome: textoDoSanto(santo).nome }), 'estrela');
+  const avisos = { secreta: 'Você achou uma carta secreta: {nome}', lendaria: 'Carta lendária no seu álbum: {nome}', epica: 'Carta épica no seu álbum: {nome}' };
+  const aviso = dourada ? 'Carta dourada no seu álbum: {nome}' : (avisos[raridadeDaCarta(santo)] || 'Nova carta no seu álbum: {nome}');
+  avisoRapidoDosSantos(tr(aviso, { nome: textoDoSanto(santo).nome }), 'estrela');
 }
 
 let ultimaCartaLida = '';

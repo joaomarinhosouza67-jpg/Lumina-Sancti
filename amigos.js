@@ -988,21 +988,32 @@ function blocoDoAlbum() {
 
 function abrirAlbumDeSantos() {
   const cartas = cartasDoAlbum();
-  const rotulos = { lendaria: tr('Lendária'), rara: tr('Rara'), comum: tr('Comum') };
+  const rotulos = { secreta: tr('Secreta'), lendaria: tr('Lendária'), epica: tr('Épica'), rara: tr('Rara'), comum: tr('Comum') };
   const tenho = santosData.filter((s) => cartas[s.id]).length;
-  const grade = santosData.map((santo) => {
+  const contagem = {};
+  ORDEM_DAS_RARIDADES.forEach((r) => { contagem[r] = { tenho: 0, total: 0 }; });
+  const ordenados = santosData.map((santo) => ({ santo, raridade: raridadeDaCarta(santo) }))
+    .sort((a, b) => ORDEM_DAS_RARIDADES.indexOf(a.raridade) - ORDEM_DAS_RARIDADES.indexOf(b.raridade));
+  const grade = ordenados.map(({ santo, raridade }) => {
     const carta = cartas[santo.id];
-    const raridade = raridadeDaCarta(santo);
-    if (!carta) return `<div class="album-carta vazia ${raridade}"><span class="album-carta-foto">?</span><span class="album-carta-nome">???</span></div>`;
+    contagem[raridade].total += 1;
+    if (!carta) {
+      const nome = raridade === 'secreta' ? tr('Carta secreta') : '???';
+      return `<div class="album-carta vazia ${raridade}"><span class="album-carta-brilho" aria-hidden="true"></span><span class="album-carta-foto">?</span><span class="album-carta-nome">${nome}</span><span class="album-carta-selo">${rotulos[raridade]}</span></div>`;
+    }
+    contagem[raridade].tenho += 1;
     const endereco = typeof enderecoDaFotoDoSanto === 'function' ? enderecoDaFotoDoSanto(santo.id) : '';
     return `<button type="button" class="album-carta ${raridade}${carta === 'dourada' ? ' dourada' : ''}" data-abrir-santo="${santo.id}">
+      <span class="album-carta-brilho" aria-hidden="true"></span>
       <span class="album-carta-foto">${endereco ? `<img src="${escaparTexto(endereco)}" alt="" loading="lazy">` : ''}</span>
       <span class="album-carta-nome" translate="no">${escaparTexto(textoDoSanto(santo).nome)}</span>
-      <span class="album-carta-selo">${carta === 'dourada' ? tr('Dourada') : rotulos[raridade]}</span>
+      <span class="album-carta-selo">${rotulos[raridade]}${carta === 'dourada' ? ` · ${tr('Dourada')}` : ''}</span>
     </button>`;
   }).join('');
+  const legenda = ORDEM_DAS_RARIDADES.map((r) => `<span class="album-tipo ${r}"><i aria-hidden="true"></i>${rotulos[r]} <b>${contagem[r].tenho}/${contagem[r].total}</b></span>`).join('');
   const corpo = janelaDoCenaculo(tr('Meu álbum de santos'), `
     <p class="album-resumo">${tr('{n} de {total} cartas', { n: tenho, total: santosData.length })}</p>
+    <div class="album-tipos">${legenda}</div>
     <p class="cenaculo-explica">${tr('Ganhe cartas lendo a história de um santo até o fim ou fazendo as missões das trilhas. Termine uma trilha inteira e a carta do santo fica dourada.')}</p>
     <div class="album-grade">${grade}</div>`);
   corpo.querySelectorAll('[data-abrir-santo]').forEach((botao) => botao.addEventListener('click', () => {

@@ -6793,14 +6793,42 @@ button.ranking-linha:hover { border-color: transparent; box-shadow: 0 0 18px rgb
 .cenaculo-janela-conteudo:has(.album-grade) { max-width: 780px; }
 .album-resumo { margin: 0 0 6px; color: #f0cf7a; font-weight: 800; text-align: center; }
 .album-grade { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 12px; max-height: 60vh; overflow-y: auto; padding: 6px 4px 10px; scrollbar-width: thin; scrollbar-color: #d9a93f transparent; }
-.album-carta { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 8px 6px 10px; border-radius: 14px; border: 1.5px solid rgba(200, 200, 210, 0.45); background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(5, 7, 18, 0.6)); color: var(--text-main); font-family: var(--font-text); cursor: pointer; text-align: center; }
-.album-carta.rara { border-color: rgba(120, 170, 255, 0.7); box-shadow: 0 0 12px rgba(120, 170, 255, 0.2); }
-.album-carta.lendaria { border-color: #f0cf7a; box-shadow: 0 0 14px rgba(240, 207, 122, 0.3); }
-.album-carta.dourada { border-color: #fff1c2; background: linear-gradient(180deg, rgba(240, 207, 122, 0.3), rgba(110, 71, 16, 0.4)); box-shadow: 0 0 20px rgba(240, 207, 122, 0.55); }
-.album-carta-foto { width: 100%; aspect-ratio: 4 / 5; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 50% 50% 8px 8px / 30% 30% 8px 8px; background: #05070f; color: rgba(240, 207, 122, 0.35); font-family: var(--font-title); font-size: 2rem; }
+@property --giro { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+.album-carta { --borda: linear-gradient(160deg, #e2e2e8, #6b6b75 50%, #b9b9c2); --fundo: linear-gradient(180deg, #1c1e25, #0a0b10); --brilho: rgba(190, 190, 200, 0.12); --linha: rgba(200, 200, 210, 0.35); --selo: #c3c3cc; position: relative; overflow: hidden; isolation: isolate; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 8px 6px 10px; border-radius: 14px; border: 2px solid transparent; background: var(--fundo) padding-box, var(--borda) border-box; box-shadow: 0 0 14px var(--brilho), 0 6px 16px rgba(0, 0, 0, 0.45); color: var(--text-main); font-family: var(--font-text); cursor: pointer; text-align: center; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.album-carta > :not(.album-carta-brilho) { position: relative; z-index: 1; }
+button.album-carta:hover, button.album-carta:focus-visible { transform: translateY(-4px) scale(1.03); }
+.album-carta.rara { --borda: linear-gradient(160deg, #d6e6ff, #2f6fe0 50%, #8fb8ff); --fundo: radial-gradient(circle at 50% 0, rgba(80, 140, 255, 0.25), transparent 60%), linear-gradient(180deg, #0f1f3f, #060a17); --brilho: rgba(90, 150, 255, 0.35); --linha: rgba(120, 170, 255, 0.55); --selo: #a8c8ff; }
+.album-carta.epica { --borda: linear-gradient(160deg, #f0dcff, #7b2fd0 45%, #d4a2ff 70%, #5a1fa0); --fundo: radial-gradient(circle at 50% 0, rgba(170, 90, 255, 0.32), transparent 62%), linear-gradient(180deg, #2a1240, #0b0516); --brilho: rgba(170, 90, 255, 0.45); --linha: rgba(196, 139, 255, 0.6); --selo: #d4a8ff; animation: carta-pulsa 2.6s ease-in-out infinite; }
+.album-carta.lendaria { --borda: linear-gradient(135deg, #fff1c2, #b8862b 30%, #f6e2a0 50%, #8a5a14 75%, #f0cf7a); --fundo: radial-gradient(circle at 50% 0, rgba(240, 207, 122, 0.35), transparent 62%), linear-gradient(180deg, #2e2109, #0c0803); --brilho: rgba(240, 207, 122, 0.55); --linha: rgba(240, 207, 122, 0.7); --selo: #f6e2a0; }
+.album-carta.secreta { --borda: conic-gradient(from var(--giro), #ff6ad5, #7af0ff, #b3ff7a, #ffe66a, #c47aff, #ff6ad5); --fundo: radial-gradient(circle at 50% 28%, #1d1a26, #000 72%); --brilho: rgba(196, 122, 255, 0.4); --linha: rgba(255, 255, 255, 0.3); --selo: #fff; animation: carta-gira 4s linear infinite; }
+.album-carta.dourada { --borda: linear-gradient(135deg, #fff8e0, #d9a93f 40%, #fff1c2 60%, #a8741f); --brilho: rgba(255, 225, 140, 0.7); }
+.album-carta-foto { width: 100%; aspect-ratio: 4 / 5; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 50% 50% 8px 8px / 30% 30% 8px 8px; background: #05070f; box-shadow: 0 0 0 1px var(--linha), inset 0 0 18px rgba(0, 0, 0, 0.6); color: var(--selo); font-family: var(--font-title); font-size: 2.2rem; }
 .album-carta-foto img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
 .album-carta-nome { font-size: 0.72rem; font-weight: 700; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.album-carta-selo { font-size: 0.62rem; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: #c9c1ad; }
-.album-carta.rara .album-carta-selo { color: #9fc2ff; }
-.album-carta.lendaria .album-carta-selo, .album-carta.dourada .album-carta-selo { color: #f0cf7a; }
-.album-carta.vazia { cursor: default; opacity: 0.5; border-style: dashed; box-shadow: none; }
+.album-carta-selo { font-size: 0.6rem; font-weight: 800; letter-spacing: 0.8px; line-height: 1.3; text-transform: uppercase; color: var(--selo); }
+.album-carta.secreta .album-carta-selo { background: linear-gradient(90deg, #ff6ad5, #7af0ff, #b3ff7a, #ffe66a, #c47aff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.album-carta.lendaria .album-carta-nome, .album-carta.dourada .album-carta-nome { color: #fff1c2; }
+.album-carta-brilho { position: absolute; inset: 0; z-index: 2; pointer-events: none; display: none; background: linear-gradient(115deg, transparent 35%, rgba(255, 248, 220, 0.6) 50%, transparent 65%); transform: translateX(-130%); animation: carta-varre 3.4s ease-in-out infinite; }
+.album-carta.lendaria .album-carta-brilho, .album-carta.dourada .album-carta-brilho { display: block; }
+.album-carta.epica .album-carta-brilho { display: block; background: linear-gradient(115deg, transparent 38%, rgba(230, 200, 255, 0.4) 50%, transparent 62%); animation-duration: 4.4s; }
+.album-carta.secreta .album-carta-brilho { display: block; mix-blend-mode: screen; background: linear-gradient(115deg, transparent 30%, rgba(255, 106, 213, 0.35) 42%, rgba(122, 240, 255, 0.4) 50%, rgba(179, 255, 122, 0.3) 58%, transparent 70%); animation-duration: 3s; }
+.album-carta.lendaria::after, .album-carta.secreta::after { content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: radial-gradient(circle at 16% 20%, #fff 0 1px, transparent 2px), radial-gradient(circle at 84% 28%, #fff1c2 0 1.3px, transparent 2.6px), radial-gradient(circle at 72% 80%, #fff 0 1px, transparent 2px), radial-gradient(circle at 24% 66%, #f6e2a0 0 1.2px, transparent 2.4px), radial-gradient(circle at 50% 10%, #fff 0 0.8px, transparent 1.8px); animation: carta-cintila 2.4s ease-in-out infinite; }
+.album-carta.secreta::after { background: radial-gradient(circle at 16% 20%, #fff 0 1px, transparent 2px), radial-gradient(circle at 84% 28%, #c47aff 0 1.3px, transparent 2.6px), radial-gradient(circle at 72% 80%, #7af0ff 0 1px, transparent 2px), radial-gradient(circle at 24% 66%, #ff6ad5 0 1.2px, transparent 2.4px), radial-gradient(circle at 50% 10%, #fff 0 0.8px, transparent 1.8px); animation-duration: 3s; }
+.album-carta.vazia { cursor: default; filter: saturate(0.45) brightness(0.7); animation: none; box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45); }
+.album-carta.vazia .album-carta-brilho, .album-carta.vazia::after { display: none; }
+.album-carta.vazia .album-carta-nome { color: var(--text-muted); }
+.album-carta.secreta.vazia { filter: none; animation: carta-gira 7s linear infinite; }
+.album-carta.secreta.vazia .album-carta-foto { font-size: 0; background: radial-gradient(circle at 50% 45%, #15121d, #000 70%); }
+.album-carta.secreta.vazia .album-carta-foto::before { content: '?'; display: block; line-height: 1; font-size: 2.6rem; background: linear-gradient(180deg, #ff6ad5, #7af0ff, #c47aff); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 8px rgba(196, 122, 255, 0.6)); }
+.album-tipos { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 4px 0 10px; }
+.album-tipo { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.12); background: rgba(255, 255, 255, 0.04); color: var(--text-muted); font-size: 0.72rem; font-weight: 700; }
+.album-tipo b { color: var(--text-main); }
+.album-tipo i { width: 9px; height: 9px; border-radius: 50%; background: #9a9aa4; }
+.album-tipo.rara i { background: #4f8bff; box-shadow: 0 0 6px #4f8bff; }
+.album-tipo.epica i { background: #a45cf0; box-shadow: 0 0 6px #a45cf0; }
+.album-tipo.lendaria i { background: #f0cf7a; box-shadow: 0 0 6px #f0cf7a; }
+.album-tipo.secreta i { background: conic-gradient(#ff6ad5, #7af0ff, #b3ff7a, #ffe66a, #c47aff, #ff6ad5); box-shadow: 0 0 0 1px #000, 0 0 6px rgba(196, 122, 255, 0.7); }
+@keyframes carta-varre { 0%, 50% { transform: translateX(-130%); } 100% { transform: translateX(130%); } }
+@keyframes carta-pulsa { 0%, 100% { box-shadow: 0 0 10px rgba(170, 90, 255, 0.3), 0 6px 16px rgba(0, 0, 0, 0.45); } 50% { box-shadow: 0 0 24px rgba(170, 90, 255, 0.75), 0 6px 16px rgba(0, 0, 0, 0.45); } }
+@keyframes carta-gira { to { --giro: 360deg; } }
+@keyframes carta-cintila { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
