@@ -1,23 +1,17 @@
 {
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
   "headers": [
-    {
-      "source": "/fundo-login(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=604800" }
-      ]
-    },
     {
       "source": "/(.*)",
       "headers": [
+        { "key": "Cache-Control", "value": "no-store, max-age=0" },
+        { "key": "X-Robots-Tag", "value": "noindex" },
         { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains" },
         { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
         { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "Permissions-Policy", "value": "camera=(self), microphone=(self), geolocation=(), payment=()" },
-        {
-          "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://upload.wikimedia.org https://*.wikimedia.org https://*.wikipedia.org https://upvualhciytwypmwtpye.supabase.co https://*.giphy.com https://i.ytimg.com; connect-src 'self' https://upvualhciytwypmwtpye.supabase.co wss://upvualhciytwypmwtpye.supabase.co https://*.wikipedia.org https://*.wikimedia.org https://api.giphy.com https://cdn.jsdelivr.net; frame-src https://challenges.cloudflare.com https://www.youtube-nocookie.com https://player.vimeo.com; worker-src 'self'; manifest-src 'self'; media-src 'self' blob: https://upvualhciytwypmwtpye.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
-        }
+        { "key": "Content-Security-Policy", "value": "default-src 'none'; style-src 'unsafe-inline'; img-src data:; worker-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'" }
       ]
     }
   ]
