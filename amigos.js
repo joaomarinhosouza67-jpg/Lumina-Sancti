@@ -556,6 +556,14 @@ async function abrirPerfilPublico(idDoPerfil) {
           </div>
         </section>
         ${dados.eu ? '' : blocoDaComparacao(dados, foto)}
+        ${dados.eu || !Array.isArray(dados.album) ? '' : `<section class="perfil-secao">
+          <h4 class="perfil-secao-titulo">${tr('Álbum dos Santos')}</h4>
+          <button type="button" class="album-botao" id="perfil-publico-album">
+            <span class="album-botao-icone">${iconeDoCenaculo('medalha')}</span>
+            <span class="album-botao-textos"><strong>${tr('Ver o álbum')}</strong><small>${tr('{n} de {total} figurinhas', { n: dados.album.length, total: santosData.length })}</small></span>
+            ${iconeDoCenaculo('seta-direita')}
+          </button>
+        </section>`}
         ${rodapeDoPerfil(dados)}
       </div>`;
     if (typeof aplicarEnfeitesNoCartao === 'function') aplicarEnfeitesNoCartao(corpo.querySelector('.perfil-publico'), dados.enfeites);
@@ -581,6 +589,14 @@ async function abrirPerfilPublico(idDoPerfil) {
         }
       });
     });
+    const verAlbum = corpo.querySelector('#perfil-publico-album');
+    if (verAlbum) {
+      verAlbum.addEventListener('click', () => {
+        const cartasDoAmigo = {};
+        dados.album.forEach((item) => { if (item && item.santo) cartasDoAmigo[item.santo] = item.dourada ? 'dourada' : 'normal'; });
+        abrirAlbumDeSantos({ cartas: cartasDoAmigo, dono: dados.nome });
+      });
+    }
     const meuCodigo = corpo.querySelector('#perfil-publico-meu-codigo');
     if (meuCodigo) meuCodigo.addEventListener('click', () => abrirMeuCodigo());
     const bloquear = corpo.querySelector('#perfil-publico-bloquear');
@@ -915,6 +931,8 @@ function blocoDosMeusSantos() {
         <p class="meus-santos-vazio">Toque no coração de um santo para guardá-lo aqui.</p>`}
         ${blocoDosSantosPessoais(achar, nome, foto)}
         ${blocoDoAlbum()}
+        ${blocoDoPassaporte()}
+        ${blocoDaVirtude()}
       </section>`;
 }
 
@@ -944,6 +962,31 @@ function santoDaData(mesDia) {
     if (!melhor || dias < melhor.dias) melhor = { santo, dias };
   });
   return melhor ? melhor.santo : null;
+}
+
+function avisarFestaDosSantosPessoais() {
+  const perfil = (typeof membroAtivo !== 'undefined' && membroAtivo) || null;
+  const hoje = new Date();
+  const mesDia = `${String(hoje.getMonth() + 1).padStart(2, '0')}-${String(hoje.getDate()).padStart(2, '0')}`;
+  const chave = `lumina-sancti-festa-avisada-${perfil && perfil.id ? perfil.id : 'aparelho'}`;
+  let aniversario = '';
+  try {
+    if (localStorage.getItem(chave) === mesDia) return;
+    aniversario = localStorage.getItem(chaveDoAniversario()) || '';
+  } catch (e) {
+    return;
+  }
+  const doNome = santoDoNome(perfil ? perfil.nome : '');
+  let texto = '';
+  if (aniversario === mesDia) {
+    const doDia = santoDaData(mesDia);
+    texto = doDia ? tr('Feliz aniversário! Hoje {nome} reza por você.', { nome: textoDoSanto(doDia).nome }) : tr('Feliz aniversário! Os santos rezam por você hoje.');
+  } else if (doNome && (doNome.data || doNome.festa) === mesDia) {
+    texto = tr('Hoje é a festa de {nome}, o santo do seu nome!', { nome: textoDoSanto(doNome).nome });
+  }
+  if (!texto || typeof avisoRapidoDosSantos !== 'function') return;
+  try { localStorage.setItem(chave, mesDia); } catch (e) { return; }
+  avisoRapidoDosSantos(texto, 'estrela');
 }
 
 function blocoDosSantosPessoais(achar, nome, foto) {
@@ -981,45 +1024,406 @@ function blocoDoAlbum() {
   return `
         <button type="button" class="album-botao" id="abrir-album">
           <span class="album-botao-icone">${iconeDoCenaculo('medalha')}</span>
-          <span class="album-botao-textos"><strong>${tr('Meu álbum de santos')}</strong><small>${tr('{n} de {total} cartas', { n: tenho, total: santosData.length })}</small><span class="album-barra"><span style="width:${porcento}%"></span></span></span>
+          <span class="album-botao-textos"><strong>${tr('Meu álbum de santos')}</strong><small>${tr('{n} de {total} figurinhas', { n: tenho, total: santosData.length })}</small><span class="album-barra"><span style="width:${porcento}%"></span></span></span>
           ${iconeDoCenaculo('seta-direita')}
         </button>`;
 }
 
-function abrirAlbumDeSantos() {
-  const cartas = cartasDoAlbum();
-  const rotulos = { secreta: tr('Secreta'), lendaria: tr('Lendária'), epica: tr('Épica'), rara: tr('Rara'), comum: tr('Comum') };
-  const tenho = santosData.filter((s) => cartas[s.id]).length;
-  const contagem = {};
-  ORDEM_DAS_RARIDADES.forEach((r) => { contagem[r] = { tenho: 0, total: 0 }; });
-  const ordenados = santosData.map((santo) => ({ santo, raridade: raridadeDaCarta(santo) }))
-    .sort((a, b) => ORDEM_DAS_RARIDADES.indexOf(a.raridade) - ORDEM_DAS_RARIDADES.indexOf(b.raridade));
-  const grade = ordenados.map(({ santo, raridade }) => {
-    const carta = cartas[santo.id];
-    contagem[raridade].total += 1;
-    if (!carta) {
-      const nome = raridade === 'secreta' ? tr('Carta secreta') : '???';
-      return `<div class="album-carta vazia ${raridade}"><span class="album-carta-brilho" aria-hidden="true"></span><span class="album-carta-foto">?</span><span class="album-carta-nome">${nome}</span><span class="album-carta-selo">${rotulos[raridade]}</span></div>`;
-    }
-    contagem[raridade].tenho += 1;
-    const endereco = typeof enderecoDaFotoDoSanto === 'function' ? enderecoDaFotoDoSanto(santo.id) : '';
-    return `<button type="button" class="album-carta ${raridade}${carta === 'dourada' ? ' dourada' : ''}" data-abrir-santo="${santo.id}">
-      <span class="album-carta-brilho" aria-hidden="true"></span>
-      <span class="album-carta-foto">${endereco ? `<img src="${escaparTexto(endereco)}" alt="" loading="lazy">` : ''}</span>
-      <span class="album-carta-nome" translate="no">${escaparTexto(textoDoSanto(santo).nome)}</span>
-      <span class="album-carta-selo">${rotulos[raridade]}${carta === 'dourada' ? ` · ${tr('Dourada')}` : ''}</span>
+const SANTUARIOS = [
+  { id: 'aparecida', nome: 'Aparecida', pais: 'Brasil', lugar: 'Santuário Nacional de Nossa Senhora Aparecida', lat: -22.8519, lon: -45.2337, trilhas: ['nossa-senhora'] },
+  { id: 'salvador', nome: 'Salvador', pais: 'Brasil', lugar: 'Santuário de Santa Dulce dos Pobres', lat: -12.9333, lon: -38.5106, trilhas: ['dulce-pobres'] },
+  { id: 'fatima', nome: 'Fátima', pais: 'Portugal', lugar: 'Santuário de Fátima', lat: 39.6317, lon: -8.6728, trilhas: ['nossa-senhora'] },
+  { id: 'guadalupe', nome: 'Guadalupe', pais: 'México', lugar: 'Basílica de Guadalupe', lat: 19.4847, lon: -99.1172, trilhas: ['nossa-senhora'] },
+  { id: 'nazare', nome: 'Nazaré', pais: 'Israel', lugar: 'Basílica da Anunciação', lat: 32.7022, lon: 35.2978, trilhas: ['jose'] },
+  { id: 'roma', nome: 'Roma', pais: 'Vaticano', lugar: 'Basílica de São Pedro', lat: 41.9022, lon: 12.4539, trilhas: ['joao-paulo-ii', 'judas-tadeu', 'sebastiao'] },
+  { id: 'assis', nome: 'Assis', pais: 'Itália', lugar: 'Basílica de São Francisco', lat: 43.0748, lon: 12.6055, trilhas: ['francisco-assis', 'clara-assis', 'carlo-acutis'] },
+  { id: 'padua', nome: 'Pádua', pais: 'Itália', lugar: 'Basílica de Santo Antônio', lat: 45.4014, lon: 11.8807, trilhas: ['antonio-padua'] },
+  { id: 'cassia', nome: 'Cássia', pais: 'Itália', lugar: 'Basílica de Santa Rita', lat: 42.7177, lon: 13.0144, trilhas: ['rita-cassia'] },
+  { id: 'san-giovanni-rotondo', nome: 'San Giovanni Rotondo', pais: 'Itália', lugar: 'Santuário de São Padre Pio', lat: 41.7064, lon: 15.7036, trilhas: ['padre-pio'] },
+  { id: 'monte-cassino', nome: 'Monte Cassino', pais: 'Itália', lugar: 'Abadia de Monte Cassino', lat: 41.49, lon: 13.8139, trilhas: ['bento-nursia'] },
+  { id: 'ostia', nome: 'Óstia', pais: 'Itália', lugar: 'Onde Santa Mônica passou seus últimos dias', lat: 41.7556, lon: 12.2903, trilhas: ['monica'] },
+  { id: 'turim', nome: 'Turim', pais: 'Itália', lugar: 'Basílica de Maria Auxiliadora', lat: 45.0786, lon: 7.6735, trilhas: ['joao-bosco'] },
+  { id: 'lisieux', nome: 'Lisieux', pais: 'França', lugar: 'Basílica de Santa Teresinha', lat: 49.1414, lon: 0.235, trilhas: ['teresinha'] },
+  { id: 'avila', nome: 'Ávila', pais: 'Espanha', lugar: 'Convento de Santa Teresa', lat: 40.656, lon: -4.701, trilhas: ['teresa-avila'] },
+  { id: 'cracovia', nome: 'Cracóvia', pais: 'Polônia', lugar: 'Santuário da Divina Misericórdia', lat: 50.0187, lon: 19.9318, trilhas: ['faustina'] },
+  { id: 'niepokalanow', nome: 'Niepokalanów', pais: 'Polônia', lugar: 'Convento fundado por São Maximiliano Kolbe', lat: 52.2196, lon: 20.4119, trilhas: ['maximiliano-kolbe'] },
+  { id: 'calcuta', nome: 'Calcutá', pais: 'Índia', lugar: 'Casa Mãe das Missionárias da Caridade', lat: 22.5524, lon: 88.3601, trilhas: ['teresa-calcuta'] },
+];
+const DISTANCIA_DO_SANTUARIO_EM_KM = 5;
+
+function chaveDoPassaporte() {
+  const perfil = typeof membroAtivo !== 'undefined' && membroAtivo && membroAtivo.id ? membroAtivo.id : 'aparelho';
+  return `lumina-sancti-passaporte-${perfil}`;
+}
+
+function visitasDoPassaporte() {
+  try { return JSON.parse(localStorage.getItem(chaveDoPassaporte()) || '{}') || {}; } catch (e) { return {}; }
+}
+
+function trilhasTerminadas() {
+  const feitas = new Set();
+  let estado = null;
+  try { estado = typeof carregarProgressoTrilhas === 'function' ? carregarProgressoTrilhas() : null; } catch (e) { estado = null; }
+  if (!estado || !estado.licoes || typeof trilhasDoAlbum !== 'function') return feitas;
+  trilhasDoAlbum().forEach((trilha) => {
+    if (trilha.licoes && trilha.licoes.length && trilhaConcluida(trilha, estado)) feitas.add(trilha.santoId || trilha.slug);
+  });
+  return feitas;
+}
+
+function distanciaEmKm(lat1, lon1, lat2, lon2) {
+  const rad = (graus) => (graus * Math.PI) / 180;
+  const a = Math.sin(rad(lat2 - lat1) / 2) ** 2 + Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(rad(lon2 - lon1) / 2) ** 2;
+  return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function nomesDosSantosDoSantuario(santuario) {
+  return santuario.trilhas.map((id) => {
+    const santo = santosData.find((s) => s.id === id);
+    return santo ? textoDoSanto(santo).nome : tr('Nossa Senhora');
+  }).join(' · ');
+}
+
+function blocoDoPassaporte() {
+  const feitas = trilhasTerminadas();
+  const carimbos = SANTUARIOS.filter((s) => s.trilhas.some((t) => feitas.has(t))).length;
+  return `
+        <button type="button" class="album-botao passaporte-botao" id="abrir-passaporte">
+          <span class="album-botao-icone">${iconeDoCenaculo('igreja')}</span>
+          <span class="album-botao-textos"><strong>${tr('Passaporte do peregrino')}</strong><small>${tr('{n} de {total} carimbos', { n: carimbos, total: SANTUARIOS.length })}</small></span>
+          ${iconeDoCenaculo('seta-direita')}
+        </button>`;
+}
+
+function abrirPassaporte() {
+  const feitas = trilhasTerminadas();
+  const visitas = visitasDoPassaporte();
+  const carimbados = SANTUARIOS.filter((s) => s.trilhas.some((t) => feitas.has(t))).length;
+  const carimbo = (santuario, i) => {
+    const ganho = santuario.trilhas.some((t) => feitas.has(t));
+    const visita = visitas[santuario.id];
+    return `<button type="button" class="carimbo${ganho ? ' ganho' : ''}${visita ? ' visitado' : ''}" data-santuario="${santuario.id}" style="--inclinacao:${((i * 7) % 15) - 7}deg">
+      <span class="carimbo-anel"><span class="carimbo-cidade" translate="no">${santuario.nome}</span><span class="carimbo-pais">${tr(santuario.pais)}</span></span>
+      ${visita ? `<span class="carimbo-peregrino">${tr('Peregrino')}<small>${escaparTexto(visita)}</small></span>` : ''}
+      <span class="carimbo-lugar">${tr(santuario.lugar)}</span>
+      <span class="carimbo-santos" translate="no">${escaparTexto(nomesDosSantosDoSantuario(santuario))}</span>
     </button>`;
-  }).join('');
-  const legenda = ORDEM_DAS_RARIDADES.map((r) => `<span class="album-tipo ${r}"><i aria-hidden="true"></i>${rotulos[r]} <b>${contagem[r].tenho}/${contagem[r].total}</b></span>`).join('');
-  const corpo = janelaDoCenaculo(tr('Meu álbum de santos'), `
-    <p class="album-resumo">${tr('{n} de {total} cartas', { n: tenho, total: santosData.length })}</p>
-    <div class="album-tipos">${legenda}</div>
-    <p class="cenaculo-explica">${tr('Ganhe cartas lendo a história de um santo até o fim ou fazendo as missões das trilhas. Termine uma trilha inteira e a carta do santo fica dourada.')}</p>
-    <div class="album-grade">${grade}</div>`);
-  corpo.querySelectorAll('[data-abrir-santo]').forEach((botao) => botao.addEventListener('click', () => {
+  };
+  const corpo = janelaDoCenaculo(tr('Passaporte do peregrino'), `<div class="passaporte">
+      <div class="passaporte-capa">
+        <span class="passaporte-emblema">${iconeDoCenaculo('cruz')}</span>
+        <small>LUMINA SANCTI</small>
+        <strong>${tr('Passaporte do peregrino')}</strong>
+        <span>${tr('{n} de {total} carimbos', { n: carimbados, total: SANTUARIOS.length })} · ${tr('{n} visitas', { n: Object.keys(visitas).length })}</span>
+      </div>
+      <p class="passaporte-explica">${tr('Cada trilha terminada carimba o santuário do santo. Se você for a um desses lugares de verdade, toque em "Estou num santuário" para ganhar o carimbo de peregrino.')}</p>
+      <button type="button" class="passaporte-local" id="passaporte-local">${iconeDoCenaculo('igreja')}<span>${tr('Estou num santuário')}</span></button>
+      <p class="passaporte-resposta" id="passaporte-resposta" aria-live="polite"></p>
+      <div class="passaporte-carimbos">${SANTUARIOS.map(carimbo).join('')}</div>
+      <p class="passaporte-privacidade">${tr('Sua localização só é usada na hora, para conferir. Ela não é guardada nem enviada.')}</p>
+    </div>`);
+  const resposta = corpo.querySelector('#passaporte-resposta');
+  corpo.querySelectorAll('[data-santuario]').forEach((botao) => botao.addEventListener('click', () => {
+    const santuario = SANTUARIOS.find((s) => s.id === botao.dataset.santuario);
+    if (!santuario) return;
+    const trilha = trilhasDoAlbum().find((t) => santuario.trilhas.includes(t.santoId || t.slug));
+    const santo = santosData.find((s) => santuario.trilhas.includes(s.id));
     fecharJanelaDoCenaculo();
-    if (typeof showDetail === 'function') showDetail(botao.dataset.abrirSanto);
+    if (!botao.classList.contains('ganho') && trilha && typeof abrirTrilhas === 'function') abrirTrilhas(trilha.slug);
+    else if (santo && typeof showDetail === 'function') showDetail(santo.id);
   }));
+  corpo.querySelector('#passaporte-local').addEventListener('click', (evento) => {
+    const botao = evento.currentTarget;
+    if (!navigator.geolocation) { resposta.textContent = tr('Este aparelho não consegue ver a localização.'); return; }
+    botao.disabled = true;
+    resposta.textContent = tr('Conferindo onde você está...');
+    navigator.geolocation.getCurrentPosition((posicao) => {
+      botao.disabled = false;
+      const { latitude, longitude } = posicao.coords;
+      const perto = SANTUARIOS.map((s) => ({ s, km: distanciaEmKm(latitude, longitude, s.lat, s.lon) })).sort((a, b) => a.km - b.km)[0];
+      if (perto.km <= DISTANCIA_DO_SANTUARIO_EM_KM) {
+        const hoje = new Date();
+        const todas = visitasDoPassaporte();
+        todas[perto.s.id] = `${String(hoje.getDate()).padStart(2, '0')}/${String(hoje.getMonth() + 1).padStart(2, '0')}/${hoje.getFullYear()}`;
+        try { localStorage.setItem(chaveDoPassaporte(), JSON.stringify(todas)); } catch (e) { return; }
+        avisoRapidoDosSantos(tr('Carimbo de peregrino em {lugar}!', { lugar: perto.s.nome }), 'estrela');
+        abrirPassaporte();
+        return;
+      }
+      resposta.textContent = tr('Você está a {km} km de {lugar}, o santuário mais perto do passaporte.', { km: Math.round(perto.km).toLocaleString(), lugar: perto.s.nome });
+    }, () => {
+      botao.disabled = false;
+      resposta.textContent = tr('Não foi possível ver onde você está. Confira se a localização está liberada para o Lumina Sancti.');
+    }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 });
+  });
+}
+
+const VIRTUDES_DA_SEMANA = [
+  { virtude: 'Paciência', santo: 'monica', acoes: ['Esperar sem reclamar', 'Responder com calma a quem me irritou', 'Rezar por alguém difícil de conviver'] },
+  { virtude: 'Caridade', santo: 'teresa-calcuta', acoes: ['Ajudar em casa sem ninguém pedir', 'Dar atenção a quem está sozinho', 'Partilhar algo que é meu'] },
+  { virtude: 'Humildade', santo: 'teresinha', acoes: ['Fazer uma boa ação sem contar a ninguém', 'Pedir desculpas', 'Elogiar alguém de coração'] },
+  { virtude: 'Alegria', santo: 'joao-bosco', acoes: ['Sorrir para todos em casa', 'Contar algo bom que aconteceu hoje', 'Passar um tempo junto com a família'] },
+  { virtude: 'Coragem', santo: 'sebastiao', acoes: ['Fazer o sinal da cruz sem vergonha', 'Defender quem foi tratado mal', 'Falar a verdade, mesmo sendo difícil'] },
+  { virtude: 'Simplicidade', santo: 'francisco-assis', acoes: ['Usar menos o celular hoje', 'Agradecer a Deus pela natureza', 'Doar algo que eu não uso mais'] },
+  { virtude: 'Confiança', santo: 'faustina', acoes: ['Rezar "Jesus, eu confio em Vós"', 'Ler um trecho do Evangelho', 'Entregar a Deus uma preocupação'] },
+  { virtude: 'Perdão', santo: 'joao-paulo-ii', acoes: ['Perdoar uma ofensa', 'Não guardar mágoa de ninguém', 'Rezar por quem me fez mal'] },
+  { virtude: 'Generosidade', santo: 'maximiliano-kolbe', acoes: ['Dar a vez para outra pessoa', 'Ajudar sem esperar nada em troca', 'Rezar por alguém que está sofrendo'] },
+  { virtude: 'Trabalho', santo: 'jose', acoes: ['Fazer bem feita uma tarefa', 'Ajudar nos trabalhos da casa', 'Oferecer o meu trabalho a Deus'] },
+  { virtude: 'Oração', santo: 'padre-pio', acoes: ['Rezar uma dezena do terço', 'Ficar um minuto em silêncio com Deus', 'Rezar pela família'] },
+  { virtude: 'Esperança', santo: 'rita-cassia', acoes: ['Não desanimar diante de um problema', 'Animar alguém que está triste', 'Agradecer por três coisas boas do dia'] },
+];
+const META_DA_VIRTUDE_POR_PESSOA = 10;
+
+function virtudeDaSemana() {
+  const hoje = new Date();
+  const semana = Math.floor((Date.UTC(hoje.getFullYear(), hoje.getMonth(), hoje.getDate()) - Date.UTC(2024, 0, 1)) / 604800000);
+  return VIRTUDES_DA_SEMANA[((semana % VIRTUDES_DA_SEMANA.length) + VIRTUDES_DA_SEMANA.length) % VIRTUDES_DA_SEMANA.length];
+}
+
+function blocoDaVirtude() {
+  const virtude = virtudeDaSemana();
+  return `
+        <button type="button" class="album-botao virtude-botao" id="abrir-virtude">
+          <span class="album-botao-icone">${iconeDoCenaculo('coracao')}</span>
+          <span class="album-botao-textos"><strong>${tr('Virtude da semana: {virtude}', { virtude: tr(virtude.virtude) })}</strong><small>${tr('Desafio da família')}</small></span>
+          ${iconeDoCenaculo('seta-direita')}
+        </button>`;
+}
+
+function dataLocalDaVirtude(data) {
+  return `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, '0')}-${String(data.getDate()).padStart(2, '0')}`;
+}
+
+function virtudeNaConta() {
+  return typeof supabaseCliente !== 'undefined' && supabaseCliente && typeof sessaoAtual !== 'undefined' && sessaoAtual
+    && typeof membroAtivo !== 'undefined' && membroAtivo && membroAtivo.id;
+}
+
+function chaveDaVirtude() {
+  const perfil = typeof membroAtivo !== 'undefined' && membroAtivo && membroAtivo.id ? membroAtivo.id : 'aparelho';
+  return `lumina-sancti-virtude-${perfil}`;
+}
+
+function virtudeLocal() {
+  let marcas = {};
+  try { marcas = JSON.parse(localStorage.getItem(chaveDaVirtude()) || '{}') || {}; } catch (e) { marcas = {}; }
+  const hoje = new Date();
+  const inicio = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() - ((hoje.getDay() + 6) % 7));
+  const desde = dataLocalDaVirtude(inicio);
+  const semana = Object.entries(marcas).filter(([dia]) => dia >= desde).reduce((soma, [, lista]) => soma + lista.length, 0);
+  return { marcas, dados: { perfis: [{ id: 'eu', nome: (typeof membroAtivo !== 'undefined' && membroAtivo && membroAtivo.nome) || '', eu: true, hoje: marcas[dataLocalDaVirtude(hoje)] || [], semana }] } };
+}
+
+async function dadosDaVirtude() {
+  if (virtudeNaConta()) return chamarCenaculo('desafio_da_familia', { _pid: membroAtivo.id });
+  return virtudeLocal().dados;
+}
+
+async function marcarVirtude(acao, feita) {
+  if (virtudeNaConta()) return chamarCenaculo('desafio_marcar', { _pid: membroAtivo.id, _acao: acao, _feita: feita });
+  const { marcas } = virtudeLocal();
+  const hoje = dataLocalDaVirtude(new Date());
+  const lista = new Set(marcas[hoje] || []);
+  if (feita) lista.add(acao); else lista.delete(acao);
+  marcas[hoje] = Array.from(lista).sort();
+  Object.keys(marcas).forEach((dia) => { if (dia < dataLocalDaVirtude(new Date(Date.now() - 60 * 86400000))) delete marcas[dia]; });
+  localStorage.setItem(chaveDaVirtude(), JSON.stringify(marcas));
+  return virtudeLocal().dados;
+}
+
+async function abrirDesafioDaVirtude() {
+  const virtude = virtudeDaSemana();
+  const santo = santosData.find((s) => s.id === virtude.santo);
+  const endereco = santo && typeof enderecoDaFotoDoSanto === 'function' ? enderecoDaFotoDoSanto(santo.id) : '';
+  const corpo = janelaDoCenaculo(tr('Virtude da semana'), `<p class="perfis-carregando">${tr('Carregando...')}</p>`);
+  const desenhar = (dados) => {
+    const perfis = (dados && dados.perfis) || [];
+    const eu = perfis.find((p) => p.eu) || perfis[0] || { hoje: [] };
+    const feitas = new Set((eu.hoje || []).map(Number));
+    const total = perfis.reduce((soma, p) => soma + Number(p.semana || 0), 0);
+    const meta = Math.max(1, perfis.length) * META_DA_VIRTUDE_POR_PESSOA;
+    corpo.innerHTML = `<div class="virtude">
+      <div class="virtude-topo">
+        <span class="virtude-foto">${endereco ? `<img src="${escaparTexto(endereco)}" alt="">` : ''}</span>
+        <span class="virtude-textos"><small>${tr('Virtude da semana')}</small><strong>${tr(virtude.virtude)}</strong><em translate="no">${santo ? escaparTexto(textoDoSanto(santo).nome) : ''}</em></span>
+      </div>
+      <p class="virtude-explica">${tr('Toda semana, uma virtude para a família viver junto. Marque as pequenas ações que você fez hoje.')}</p>
+      <div class="virtude-acoes">${virtude.acoes.map((acao, i) => `<button type="button" class="virtude-acao${feitas.has(i) ? ' feita' : ''}" data-acao="${i}" aria-pressed="${feitas.has(i)}"><span class="virtude-check">${iconeDoCenaculo('check')}</span><span>${tr(acao)}</span></button>`).join('')}</div>
+      <div class="virtude-familia">
+        <div class="virtude-familia-topo"><strong>${tr('A família nesta semana')}</strong><small>${tr('{n} de {total} ações', { n: Math.min(total, meta), total: meta })}</small></div>
+        <span class="virtude-barra"><span style="width:${Math.min(100, Math.round((total / meta) * 100))}%"></span></span>
+        <ul class="virtude-pessoas">${perfis.map((p) => `<li><span translate="no">${escaparTexto(p.nome || tr('Você'))}</span>${p.eu && p.nome ? `<em>${tr('você')}</em>` : ''}<b>${Number(p.semana || 0)}</b></li>`).join('')}</ul>
+      </div>
+    </div>`;
+    corpo.querySelectorAll('[data-acao]').forEach((botao) => botao.addEventListener('click', async () => {
+      botao.disabled = true;
+      try {
+        desenhar(await marcarVirtude(Number(botao.dataset.acao), !botao.classList.contains('feita')));
+      } catch (erro) {
+        botao.disabled = false;
+        avisoRapidoDosSantos(tr('Não foi possível salvar. Tente de novo.'));
+      }
+    }));
+  };
+  try {
+    desenhar(await dadosDaVirtude());
+  } catch (erro) {
+    corpo.innerHTML = `<p class="not-found-msg">${tr('Não foi possível carregar o desafio. Tente de novo.')}</p>`;
+  }
+}
+
+const SECOES_DO_ALBUM = { secreta: 'Sagrada Família', lendaria: 'Os Arcanjos', epica: 'Doutores da Igreja', rara: 'Jovens santos e beatos', comum: 'Grandes santos' };
+const FIGURINHAS_POR_PAGINA = 9;
+const SILHUETA_DO_SANTO = '<svg viewBox="0 0 40 52" aria-hidden="true"><circle cx="20" cy="11" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="20" cy="19" r="7.5" fill="currentColor"/><path d="M5 52c0-12 6.5-20 15-20s15 8 15 20z" fill="currentColor"/></svg>';
+let paginaDoAlbum = 0;
+let teclasDoAlbumLigadas = false;
+
+function teclaDoAlbum(evento) {
+  const modal = document.getElementById('cenaculo-janela');
+  const livro = modal && modal.classList.contains('active') ? modal.querySelector('.album-livro') : null;
+  if (!livro) return;
+  if (evento.key === 'ArrowRight') livro.querySelector('#album-avancar').click();
+  else if (evento.key === 'ArrowLeft') livro.querySelector('#album-voltar').click();
+}
+
+function abrirAlbumDeSantos(opcoes) {
+  const deAmigo = !!(opcoes && opcoes.cartas);
+  const cartas = deAmigo ? opcoes.cartas : cartasDoAlbum();
+  const comTrilha = deAmigo ? new Set() : new Set(trilhasDoAlbum().map((trilha) => trilha.santoId).filter(Boolean));
+  const rotulos = { secreta: tr('Secreta'), lendaria: tr('Lendária'), epica: tr('Épica'), rara: tr('Rara'), comum: tr('Comum') };
+  const ordenados = santosData.map((santo) => ({ santo, raridade: raridadeDaCarta(santo) }))
+    .sort((a, b) => ORDEM_DAS_RARIDADES.indexOf(a.raridade) - ORDEM_DAS_RARIDADES.indexOf(b.raridade))
+    .map((item, i) => Object.assign(item, { numero: i + 1 }));
+  const tenho = ordenados.filter((item) => cartas[item.santo.id]).length;
+  const paginas = [{ capa: true }];
+  const inicioDaSecao = {};
+  ORDEM_DAS_RARIDADES.forEach((raridade) => {
+    const secao = ordenados.filter((item) => item.raridade === raridade);
+    inicioDaSecao[raridade] = paginas.length;
+    for (let i = 0; i < secao.length; i += FIGURINHAS_POR_PAGINA) paginas.push({ raridade, secao, lista: secao.slice(i, i + FIGURINHAS_POR_PAGINA) });
+  });
+
+  const figurinha = ({ santo, raridade, numero }) => {
+    const numeroTexto = String(numero).padStart(3, '0');
+    const carta = cartas[santo.id];
+    const nome = escaparTexto(textoDoSanto(santo).nome);
+    if (carta) {
+      const endereco = typeof enderecoDaFotoDoSanto === 'function' ? enderecoDaFotoDoSanto(santo.id) : '';
+      return `<div class="album-vaga cheia"><button type="button" class="album-carta ${raridade}${carta === 'dourada' ? ' dourada' : ''}" data-abrir-santo="${santo.id}">
+        <span class="album-carta-brilho" aria-hidden="true"></span>
+        <span class="album-carta-numero">${numeroTexto}</span>
+        <span class="album-carta-foto">${endereco ? `<img src="${escaparTexto(endereco)}" alt="" loading="lazy">` : ''}</span>
+        <span class="album-carta-nome" translate="no">${nome}</span>
+        <span class="album-carta-selo">${rotulos[raridade]}${carta === 'dourada' ? ` · ${tr('Dourada')}` : ''}</span>
+      </button></div>`;
+    }
+    const segredo = raridade === 'secreta';
+    const temTrilha = comTrilha.has(santo.id);
+    const tag = temTrilha ? 'button' : 'div';
+    return `<${tag}${temTrilha ? ` type="button" data-abrir-trilha="${santo.id}"` : ''} class="album-vaga ${raridade}${temTrilha ? ' com-trilha' : (deAmigo ? '' : ' em-breve')}">
+      <span class="album-vaga-numero">${numeroTexto}</span>
+      <span class="album-vaga-silhueta">${segredo ? '?' : SILHUETA_DO_SANTO}</span>
+      <span class="album-vaga-nome"${segredo ? '' : ' translate="no"'}>${segredo ? tr('Carta secreta') : nome}</span>
+      ${deAmigo ? '' : `<span class="album-vaga-dica">${temTrilha ? tr('Termine a trilha') : tr('Trilha em breve')}</span>`}
+    </${tag}>`;
+  };
+
+  const legenda = ORDEM_DAS_RARIDADES.map((raridade) => {
+    const secao = ordenados.filter((item) => item.raridade === raridade);
+    return `<button type="button" class="album-tipo ${raridade}" data-ir-pagina="${inicioDaSecao[raridade]}"><i aria-hidden="true"></i>${rotulos[raridade]} <b>${secao.filter((item) => cartas[item.santo.id]).length}/${secao.length}</b></button>`;
+  }).join('');
+
+  const desenharPagina = (indice) => {
+    const pagina = paginas[indice];
+    if (pagina.capa) return `<section class="album-pagina album-capa">
+      <div class="album-capa-moldura">
+        <svg class="album-capa-estrela" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 0C52 35 65 48 100 50C65 52 52 65 50 100C48 65 35 52 0 50C35 48 48 35 50 0Z"/></svg>
+        <p class="album-capa-marca">LUMINA SANCTI</p>
+        <h3 class="album-capa-titulo">${tr('Álbum dos Santos')}</h3>
+        <p class="album-capa-resumo">${tr('{n} de {total} figurinhas', { n: tenho, total: ordenados.length })}</p>
+        <span class="album-barra"><span style="width:${Math.round((tenho / ordenados.length) * 100)}%"></span></span>
+        <div class="album-tipos">${legenda}</div>
+        ${deAmigo ? `<p class="album-capa-explica">${tr('Álbum de {nome}', { nome: escaparTexto(opcoes.dono || '') })}</p>` : `<p class="album-capa-explica">${tr('Termine a trilha de um santo para colar a figurinha dele. Faça todas as missões com 3 estrelas e ela fica dourada.')}</p>
+        <p class="album-capa-trilhas">${tr('{n} santos já têm trilha. Novas trilhas liberam novas figurinhas.', { n: comTrilha.size })}</p>`}
+      </div>
+    </section>`;
+    const coladas = pagina.secao.filter((item) => cartas[item.santo.id]).length;
+    return `<section class="album-pagina ${pagina.raridade}">
+      <header class="album-pagina-topo"><span class="album-pagina-selo" aria-hidden="true"></span><h3>${tr(SECOES_DO_ALBUM[pagina.raridade])}</h3><small>${rotulos[pagina.raridade]} · ${coladas}/${pagina.secao.length}</small></header>
+      <div class="album-pagina-grade">${pagina.lista.map(figurinha).join('')}</div>
+      <footer class="album-pagina-numero">${indice}</footer>
+    </section>`;
+  };
+
+  const seta = iconeDoCenaculo('seta-direita');
+  const corpo = janelaDoCenaculo(deAmigo ? tr('Álbum de {nome}', { nome: opcoes.dono || '' }) : tr('Meu álbum de santos'), `<div class="album-livro">
+      <div class="album-folhas" id="album-folhas"></div>
+      <div class="album-controles">
+        <button type="button" class="album-virar voltar" id="album-voltar" aria-label="${tr('Página anterior')}">${seta}</button>
+        <span class="album-indicador" id="album-indicador"></span>
+        <button type="button" class="album-virar" id="album-avancar" aria-label="${tr('Próxima página')}">${seta}</button>
+      </div>
+    </div>`);
+  const livro = corpo.querySelector('.album-livro');
+  const folhas = livro.querySelector('#album-folhas');
+  const dupla = () => window.matchMedia('(min-width: 860px)').matches;
+  const visiveis = () => {
+    if (!dupla() || paginaDoAlbum === 0) return [paginaDoAlbum];
+    return [paginaDoAlbum, paginaDoAlbum + 1].filter((i) => i < paginas.length);
+  };
+  const mostrar = (direcao) => {
+    paginaDoAlbum = Math.max(0, Math.min(paginas.length - 1, paginaDoAlbum));
+    if (dupla() && paginaDoAlbum > 0 && paginaDoAlbum % 2 === 0) paginaDoAlbum -= 1;
+    const lista = visiveis();
+    folhas.className = `album-folhas${lista.length > 1 ? ' dupla' : ''}`;
+    folhas.innerHTML = lista.map(desenharPagina).join('');
+    if (direcao) {
+      void folhas.offsetWidth;
+      folhas.classList.add(`vira-${direcao}`);
+    }
+    const ultima = lista[lista.length - 1];
+    livro.querySelector('#album-indicador').textContent = paginaDoAlbum === 0
+      ? tr('Capa')
+      : tr('Página {n} de {total}', { n: lista.join('-'), total: paginas.length - 1 });
+    livro.querySelector('#album-voltar').disabled = paginaDoAlbum === 0;
+    livro.querySelector('#album-avancar').disabled = ultima >= paginas.length - 1;
+  };
+  const virar = (sentido) => {
+    const lista = visiveis();
+    const destino = sentido > 0 ? lista[lista.length - 1] + 1 : (dupla() ? (paginaDoAlbum <= 1 ? 0 : paginaDoAlbum - 2) : paginaDoAlbum - 1);
+    if (destino < 0 || destino >= paginas.length) return;
+    paginaDoAlbum = destino;
+    mostrar(sentido > 0 ? 'frente' : 'tras');
+  };
+
+  livro.addEventListener('click', (evento) => {
+    const alvo = evento.target.closest('[data-abrir-santo], [data-abrir-trilha], [data-ir-pagina], #album-voltar, #album-avancar');
+    if (!alvo) return;
+    if (alvo.id === 'album-voltar') { virar(-1); return; }
+    if (alvo.id === 'album-avancar') { virar(1); return; }
+    if (alvo.dataset.irPagina) { paginaDoAlbum = Number(alvo.dataset.irPagina); mostrar('frente'); return; }
+    fecharJanelaDoCenaculo();
+    if (alvo.dataset.abrirSanto) {
+      if (typeof showDetail === 'function') showDetail(alvo.dataset.abrirSanto);
+      return;
+    }
+    const trilha = trilhaDoSanto(alvo.dataset.abrirTrilha);
+    if (trilha && typeof abrirTrilhas === 'function') abrirTrilhas(trilha.slug);
+  });
+  let toqueX = null;
+  folhas.addEventListener('touchstart', (evento) => { toqueX = evento.touches[0].clientX; }, { passive: true });
+  folhas.addEventListener('touchend', (evento) => {
+    if (toqueX === null) return;
+    const distancia = evento.changedTouches[0].clientX - toqueX;
+    toqueX = null;
+    if (Math.abs(distancia) > 60) virar(distancia < 0 ? 1 : -1);
+  });
+  if (!teclasDoAlbumLigadas) {
+    document.addEventListener('keydown', teclaDoAlbum);
+    teclasDoAlbumLigadas = true;
+  }
+  paginaDoAlbum = 0;
+  mostrar();
 }
 
 function marcarEscolha(lugar, seletor, escolhido) {
@@ -1168,6 +1572,8 @@ async function renderizarMeuPerfil() {
     if (typeof showDetail === 'function') showDetail(botao.dataset.abrirSanto);
   }));
   ligar('abrir-album', abrirAlbumDeSantos);
+  ligar('abrir-passaporte', abrirPassaporte);
+  ligar('abrir-virtude', abrirDesafioDaVirtude);
   const campoDoAniversario = lugar.querySelector('#meu-aniversario');
   if (campoDoAniversario) campoDoAniversario.addEventListener('change', () => {
     const partes = /^\d{4}-(\d{2})-(\d{2})$/.exec(campoDoAniversario.value || '');

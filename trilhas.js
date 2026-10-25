@@ -2251,7 +2251,8 @@ function finalizarLicao() {
   const estado = carregarProgressoTrilhas();
   const anterior = estado.licoes[licao.slug];
   if (anterior) marcarMissaoRevisada(trilha.slug, licao.slug);
-  if (trilha.santoId && typeof ganharCarta === 'function') setTimeout(() => ganharCarta(trilha.santoId, trilhaConcluida(trilha, carregarProgressoTrilhas())), 1500);
+  const trilhaJaConcluida = trilhaConcluida(trilha, estado);
+  if (trilha.santoId && typeof ganharCarta === 'function') setTimeout(() => { if (!trilhaJaConcluida && trilhaConcluida(trilha, carregarProgressoTrilhas())) ganharCarta(trilha.santoId); }, 1500);
   const feGanha = anterior ? FE_REVISAO : FE_BASE_LICAO + FE_POR_ACERTO_DE_PRIMEIRA * acertosDePrimeira;
   estado.fe += feGanha;
   estado.licoes[licao.slug] = {
@@ -2646,7 +2647,6 @@ async function finalizarLicaoNoServidor() {
   const { trilha, licao, total } = licaoAtual;
   licaoAtual.finalizada = true;
   if (licaoAtual.revisao) marcarMissaoRevisada(trilha.slug, licao.slug);
-  if (trilha.santoId && typeof ganharCarta === 'function') setTimeout(() => ganharCarta(trilha.santoId, false), 1500);
   licaoAtual.servidor.respondidas = total;
   atualizarTopoDaLicao();
   prepararRodapeDaLicao(tt('salvando'), false);
@@ -2679,6 +2679,7 @@ async function finalizarLicaoNoServidor() {
   }
   const insigniaNova = !!estado && !jaTinhaInsignia && trilhaConcluida(trilha, estado);
   if (insigniaNova) estado.insignias[trilha.slug] = new Date().toISOString();
+  if (insigniaNova && trilha.santoId && typeof ganharCarta === 'function') setTimeout(() => ganharCarta(trilha.santoId), 1500);
   const membro = typeof obterMembroAtivo === 'function' ? obterMembroAtivo() : null;
   const antesDaMissao = membro ? { fe: membro.fe, ofensiva: membro.ofensiva } : {};
   const ofensivaSubiu = !!membro && Number(r.streak) > Number(antesDaMissao.ofensiva || 0);

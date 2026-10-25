@@ -102,6 +102,7 @@ function tempoLiturgicoAtual() {
 }
 
 const PAGINAS_QUE_HERDAM = ['view-detail'];
+const PAGINAS_LITURGICAS = ['view-leitura'];
 const PAGINAS_COM_SELO = ['view-trilhas', 'view-terco', 'view-ia', 'view-oracoes', 'view-padroeiro', 'view-leitura'];
 
 let temaDoSite = 'dourado';
@@ -111,8 +112,7 @@ function temaParaPagina(idDaPagina) {
   if (idDaPagina === 'view-home') {
     return document.body.classList.contains('catalogo-interno') ? temaDoSite : 'dourado';
   }
-  if (idDaPagina === 'view-perfis' || idDaPagina === 'view-ia' || idDaPagina === 'view-terco') return 'dourado';
-  return 'liturgico';
+  return PAGINAS_LITURGICAS.includes(idDaPagina) ? 'liturgico' : 'dourado';
 }
 
 function idiomaDoTempoLiturgico() {

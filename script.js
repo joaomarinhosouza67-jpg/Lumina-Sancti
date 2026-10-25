@@ -2670,6 +2670,7 @@ function atualizarInterfaceDeConta() {
 function mudarDeView(idNovaView, opcoes) {
   if (typeof paginaSoParaAdultos === 'function' && paginaSoParaAdultos(idNovaView)) return;
   if (typeof paginaBloqueadaPelaSuspensao === 'function' && paginaBloqueadaPelaSuspensao(idNovaView)) return;
+  if (idNovaView === 'view-home' && typeof avisarFestaDosSantosPessoais === 'function') setTimeout(avisarFestaDosSantosPessoais, 1800);
   const todasAsViews = ['view-home', 'view-detail', 'view-ia', 'view-auth', 'view-perfil', 'view-privacidade', 'view-oracoes', 'view-leitura', 'view-terco', 'view-padroeiro', 'view-trilhas', 'view-licao', 'view-perfis', 'view-ranking', 'view-planos', 'view-termos', 'view-completar', 'view-cenaculos', 'view-cenaculo', 'view-comunidade', 'view-cursos', 'view-suporte'];
   const viewAtual = todasAsViews.map(id => document.getElementById(id)).find(v => v && v.classList.contains('active'));
   if (idNovaView !== 'view-licao' && typeof pararVozInfantil === 'function') pararVozInfantil(false);
@@ -3610,6 +3611,7 @@ function proximoSantoDoCalendario() {
 }
 
 function renderSantoDoDia() {
+  if (typeof avisarFestaDosSantosPessoais === 'function') setTimeout(avisarFestaDosSantosPessoais, 2500);
   const container = document.getElementById('santo-do-dia');
   if (!container) return;
 
@@ -3751,13 +3753,28 @@ window.addEventListener('scroll', conferirMarcaDoTopo, { passive: true });
 window.addEventListener('resize', conferirMarcaDoTopo);
 [300, 1500, 7000].forEach((espera) => setTimeout(conferirMarcaDoTopo, espera));
 
-function chaveDoAlbum() {
-  const perfil = typeof membroAtivo !== 'undefined' && membroAtivo && membroAtivo.id ? membroAtivo.id : 'aparelho';
-  return `lumina-sancti-album-${perfil}`;
+function trilhasDoAlbum() {
+  try { return (typeof trilhasEmUso === 'function' ? trilhasEmUso() : []) || []; } catch (e) { return []; }
+}
+
+function trilhaDoSanto(id) {
+  return trilhasDoAlbum().find((trilha) => trilha.santoId === id) || null;
 }
 
 function cartasDoAlbum() {
-  try { return JSON.parse(localStorage.getItem(chaveDoAlbum()) || '{}') || {}; } catch (e) { return {}; }
+  const cartas = {};
+  let estado = null;
+  try { estado = typeof carregarProgressoTrilhas === 'function' ? carregarProgressoTrilhas() : null; } catch (e) { estado = null; }
+  if (!estado || !estado.licoes) return cartas;
+  trilhasDoAlbum().forEach((trilha) => {
+    if (!trilha.santoId || !trilha.licoes || !trilha.licoes.length || !trilhaConcluida(trilha, estado)) return;
+    const perfeita = trilha.licoes.every((licao) => {
+      const feita = estado.licoes[licao.slug] || {};
+      return Number(feita.estrelas) === 3 || (Number(feita.total) > 0 && Number(feita.melhorAcertos) === Number(feita.total));
+    });
+    cartas[trilha.santoId] = perfeita ? 'dourada' : 'normal';
+  });
+  return cartas;
 }
 
 function raridadeDaCarta(santo) {
@@ -3771,33 +3788,15 @@ function raridadeDaCarta(santo) {
 
 const ORDEM_DAS_RARIDADES = ['secreta', 'lendaria', 'epica', 'rara', 'comum'];
 
-function ganharCarta(id, dourada) {
+function ganharCarta(id) {
   const santo = santosData.find((s) => s.id === id);
   if (!santo) return;
-  const cartas = cartasDoAlbum();
-  const antes = cartas[id];
-  if (antes === 'dourada' || (antes && !dourada)) return;
-  cartas[id] = dourada ? 'dourada' : 'normal';
-  try { localStorage.setItem(chaveDoAlbum(), JSON.stringify(cartas)); } catch (e) { return; }
+  const dourada = cartasDoAlbum()[id] === 'dourada';
   const avisos = { secreta: 'Você achou uma carta secreta: {nome}', lendaria: 'Carta lendária no seu álbum: {nome}', epica: 'Carta épica no seu álbum: {nome}' };
   const aviso = dourada ? 'Carta dourada no seu álbum: {nome}' : (avisos[raridadeDaCarta(santo)] || 'Nova carta no seu álbum: {nome}');
   avisoRapidoDosSantos(tr(aviso, { nome: textoDoSanto(santo).nome }), 'estrela');
 }
 
-let ultimaCartaLida = '';
-
-function conferirLeituraAteOFim() {
-  const fim = document.querySelector('#view-detail.active .bio-devocao');
-  const artigo = document.getElementById('bio-article');
-  const id = artigo && artigo.dataset.santoId;
-  if (!fim || !id || id === ultimaCartaLida) return;
-  if (fim.getBoundingClientRect().top < window.innerHeight - 40) {
-    ultimaCartaLida = id;
-    ganharCarta(id, false);
-  }
-}
-
-window.addEventListener('scroll', conferirLeituraAteOFim, { passive: true });
 
 function chaveDoSantoDeDevocao() {
   const perfil = typeof membroAtivo !== 'undefined' && membroAtivo && membroAtivo.id ? membroAtivo.id : 'aparelho';
@@ -3822,10 +3821,10 @@ function botaoDeDevocao(id) {
       <div class="bio-devocao${escolhido ? ' escolhido' : ''}" data-devocao-caixa>
         <span class="bio-devocao-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-estrela"></use></svg></span>
         <span class="bio-devocao-textos">
-          <strong>${escolhido ? 'Este é o seu santo de devoção' : 'Santo de devoção'}</strong>
-          <small>${escolhido ? 'Ele fica em destaque no seu perfil.' : 'Escolha este santo para caminhar com você. Ele fica em destaque no seu perfil.'}</small>
+          <strong>${escolhido ? 'Seu santo de devoção' : 'Santo de devoção'}</strong>
+          <small>${escolhido ? 'Em destaque no seu perfil.' : 'Escolha este santo para caminhar com você.'}</small>
         </span>
-        <button type="button" class="bio-devocao-botao" data-devocao="${id}">${escolhido ? 'Deixar de ser meu santo' : 'Escolher como meu santo de devoção'}</button>
+        <button type="button" class="bio-devocao-botao" data-devocao="${id}">${escolhido ? 'Remover' : 'Escolher'}</button>
       </div>`;
 }
 
@@ -4152,7 +4151,7 @@ let origemDoCatalogo = null;
 function abrirCatalogo() {
   const atual = idDaPaginaVisivel();
   if (atual === 'view-home') return false;
-  const interno = typeof temaDoSite !== 'undefined' && temaDoSite === 'liturgico';
+  const interno = true;
   if (interno) {
     if (atual === 'view-detail') {
       if (origemDaBiografia !== 'catalogo-interno') origemDoCatalogo = PAGINAS_PARA_VOLTAR[origemDaBiografia] || null;
@@ -4190,7 +4189,7 @@ filterBtns.forEach(btn => {
 
 const btnVoltarDoCatalogo = document.getElementById('btn-voltar-catalogo');
 if (btnVoltarDoCatalogo) {
-  btnVoltarDoCatalogo.addEventListener('click', () => mudarDeView(origemDoCatalogo || 'view-home'));
+  btnVoltarDoCatalogo.addEventListener('click', () => mudarDeView('view-home'));
 }
 
 function openSidebar() {
@@ -5263,6 +5262,10 @@ function iniciarNavegacaoDoMenuLateral() {
   const cursosParaTrilhas = document.getElementById('cursos-ir-trilhas');
   if (navCursos) navCursos.addEventListener('click', () => { closeSidebar(); if (typeof abrirCursos === 'function') abrirCursos(); else mudarDeView('view-cursos'); });
   if (voltarDosCursos) voltarDosCursos.addEventListener('click', () => mudarDeView('view-home'));
+  ['btn-back-cenaculos', 'btn-back-comunidade'].forEach((id) => {
+    const botao = document.getElementById(id);
+    if (botao) botao.addEventListener('click', () => mudarDeView('view-home'));
+  });
   if (cursosParaTrilhas) cursosParaTrilhas.addEventListener('click', () => { if (typeof abrirTrilhas === 'function') abrirTrilhas(); });
 }
 

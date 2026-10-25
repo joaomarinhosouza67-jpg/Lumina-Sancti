@@ -96,6 +96,8 @@ function contarToqueNaEstrelaDoRodape() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const estrela = document.querySelector('.site-footer .footer-icon');
-  if (estrela) estrela.addEventListener('click', contarToqueNaEstrelaDoRodape);
+  ['.site-footer .footer-icon', '#meu-perfil-versao'].forEach((seletor) => {
+    const alvo = document.querySelector(seletor);
+    if (alvo) alvo.addEventListener('click', contarToqueNaEstrelaDoRodape);
+  });
 });

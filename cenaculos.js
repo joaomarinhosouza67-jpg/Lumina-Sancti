@@ -950,6 +950,7 @@ function renderizarCabecalhoDaConversa() {
   const fotoDoTopo = document.getElementById('cenaculo-topo-foto');
   if (fotoDoTopo) fotoDoTopo.innerHTML = fotoDoTopoDaConversa();
   aplicarFundo(cenaculoAberto.fundo);
+  atualizarFaixaDoTercoAoVivo();
   const encontro = document.getElementById('cenaculo-encontro');
   if (cenaculoAberto.encontro) {
     encontro.hidden = false;
@@ -1418,6 +1419,9 @@ function ouvirMensagensNovas() {
           renderizarMensagens(false);
           if (nova) agendarLeituraDaConversa();
           if (nova && !membroDoCenaculo(mudanca.new.perfil_id)) recarregarMembros();
+        })
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'terco_ao_vivo', filter: `cenaculo_id=eq.${idDoCenaculo}` }, () => {
+          if (cenaculoAberto && cenaculoAberto.id === idDoCenaculo) atualizarFaixaDoTercoAoVivo();
         })
         .subscribe();
     }
@@ -2014,11 +2018,13 @@ function abrirMenuDoCenaculo() {
   const bloqueado = !!outro && (cenaculoAberto.bloqueados || []).includes(outro.perfil_id);
   const opcoes = conversa ? [
     outro ? '<button type="button" class="cenaculo-opcao" data-acao="perfil">Ver perfil</button>' : '',
+    '<button type="button" class="cenaculo-opcao" data-acao="terco">Rezar o terço juntos</button>',
     '<button type="button" class="cenaculo-opcao" data-acao="fundo">Papel de parede</button>',
     outro ? `<button type="button" class="cenaculo-opcao" data-acao="${bloqueado ? 'desbloquear' : 'bloquear'}">${tr(bloqueado ? 'Desbloquear {nome}' : 'Bloquear {nome}', { nome: escaparTexto(outro.nome) })}</button>` : '',
     '<button type="button" class="cenaculo-opcao" data-acao="regras">Regras dos Cenáculos</button>',
     '<button type="button" class="cenaculo-opcao cenaculo-opcao-perigo" data-acao="sair">Apagar esta conversa da lista</button>',
   ] : [
+    '<button type="button" class="cenaculo-opcao" data-acao="terco">Rezar o terço juntos</button>',
     organizador ? '<button type="button" class="cenaculo-opcao" data-acao="convidar">Convidar pessoas</button>' : '',
     organizador ? '<button type="button" class="cenaculo-opcao" data-acao="encontro">Marcar encontro no Google Meet</button>' : '',
     organizador ? '<button type="button" class="cenaculo-opcao" data-acao="foto">Foto do grupo</button>' : '',
@@ -2034,7 +2040,8 @@ function abrirMenuDoCenaculo() {
   corpo.querySelectorAll('.cenaculo-opcao').forEach((botao) => {
     botao.addEventListener('click', () => {
       const acao = botao.dataset.acao;
-      if (acao === 'convidar') mostrarConvite(cenaculoAberto.codigo, false);
+      if (acao === 'terco') abrirTercoAoVivo();
+      else if (acao === 'convidar') mostrarConvite(cenaculoAberto.codigo, false);
       else if (acao === 'encontro') abrirMarcacaoDeEncontro();
       else if (acao === 'foto' && typeof abrirFotoDoGrupo === 'function') abrirFotoDoGrupo();
       else if (acao === 'fundo' && typeof abrirEscolhaDeFundo === 'function') abrirEscolhaDeFundo();
@@ -2381,3 +2388,230 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+const MISTERIOS_DO_TERCO_AO_VIVO = ['gozosos', 'dolorosos', 'gloriosos', 'luminosos', 'misericordia'];
+let tercoAoVivo = null;
+let canalDoTercoAoVivo = null;
+let vigiaDoTercoAoVivo = null;
+
+function nomeDoTercoAoVivo(chave) {
+  if (chave === 'misericordia') return tr(TERCO_DA_MISERICORDIA.nome);
+  return MISTERIOS_DO_TERCO[chave] ? tr(MISTERIOS_DO_TERCO[chave].nome) : '';
+}
+
+function mensagemDoTercoAoVivo(erro) {
+  const texto = String((erro && erro.message) || erro || '');
+  if (texto.includes('terco_em_andamento')) return tr('Já tem um terço ao vivo neste grupo. Toque em "Rezar junto" para entrar.');
+  if (texto.includes('so_quem_puxa')) return tr('Só quem está puxando pode passar as orações.');
+  if (texto.includes('sem_terco')) return tr('Este terço ao vivo já terminou.');
+  return mensagemDoCenaculo(erro);
+}
+
+function pararTercoAoVivo() {
+  if (canalDoTercoAoVivo && supabaseCliente && supabaseCliente.removeChannel) {
+    try { supabaseCliente.removeChannel(canalDoTercoAoVivo); } catch (e) { canalDoTercoAoVivo = null; }
+  }
+  canalDoTercoAoVivo = null;
+  clearInterval(vigiaDoTercoAoVivo);
+  vigiaDoTercoAoVivo = null;
+  tercoAoVivo = null;
+}
+
+async function atualizarFaixaDoTercoAoVivo() {
+  const lugar = document.getElementById('cenaculo-terco-vivo');
+  const perfil = perfilAdultoAtivo();
+  if (!lugar) return;
+  if (!perfil || !cenaculoAberto) { lugar.hidden = true; return; }
+  const cid = cenaculoAberto.id;
+  let estado = null;
+  try { estado = await chamarCenaculo('terco_vivo_estado', { _pid: perfil.id, _cid: cid }); } catch (e) { estado = null; }
+  if (!cenaculoAberto || cenaculoAberto.id !== cid) return;
+  if (!estado) { lugar.hidden = true; lugar.innerHTML = ''; return; }
+  const souEu = estado.puxador === perfil.id;
+  lugar.hidden = false;
+  lugar.innerHTML = `
+    <span class="terco-vivo-faixa-icone">${iconeDoCenaculo('terco')}</span>
+    <span class="terco-vivo-faixa-textos">
+      <strong><i class="terco-vivo-ponto" aria-hidden="true"></i>${tr('Terço ao vivo')}</strong>
+      <small>${souEu ? tr('Você está puxando: {terco}', { terco: escaparTexto(nomeDoTercoAoVivo(estado.misterio)) }) : tr('{nome} está puxando: {terco}', { nome: escaparTexto(estado.puxador_nome || ''), terco: escaparTexto(nomeDoTercoAoVivo(estado.misterio)) })}</small>
+    </span>
+    <button type="button" class="terco-vivo-faixa-entrar">${souEu ? tr('Voltar ao terço') : tr('Rezar junto')}</button>`;
+  lugar.querySelector('.terco-vivo-faixa-entrar').addEventListener('click', () => abrirTercoAoVivo());
+}
+
+async function abrirTercoAoVivo() {
+  const perfil = perfilAdultoAtivo();
+  if (!perfil || !cenaculoAberto) return;
+  const cid = cenaculoAberto.id;
+  let estado = null;
+  try {
+    estado = await chamarCenaculo('terco_vivo_estado', { _pid: perfil.id, _cid: cid });
+  } catch (erro) {
+    avisoDoCenaculo(mensagemDoTercoAoVivo(erro));
+    return;
+  }
+  if (estado) mostrarTercoAoVivo(cid, estado);
+  else escolherMisterioAoVivo(cid);
+}
+
+function escolherMisterioAoVivo(cid) {
+  const perfil = perfilAdultoAtivo();
+  const sugerido = typeof misterioSugeridoHoje === 'function' ? misterioSugeridoHoje() : 'gozosos';
+  const corpo = janelaDoCenaculo(tr('Rezar o terço juntos'), `
+    <p class="cenaculo-explica">${tr('Escolha o terço. Você puxa as orações e todos do grupo acompanham ao vivo, cada um no seu celular.')}</p>
+    <div class="terco-vivo-escolha">${MISTERIOS_DO_TERCO_AO_VIVO.map((chave) => `
+      <button type="button" class="terco-vivo-misterio${chave === sugerido ? ' sugerido' : ''}" data-misterio="${chave}">
+        <span class="terco-vivo-misterio-icone">${iconeDoCenaculo(chave === 'misericordia' ? 'misericordia' : 'terco')}</span>
+        <span><strong>${escaparTexto(nomeDoTercoAoVivo(chave))}</strong>${chave === sugerido ? `<small>${tr('Sugerido para hoje')}</small>` : ''}</span>
+      </button>`).join('')}</div>`);
+  corpo.querySelectorAll('[data-misterio]').forEach((botao) => botao.addEventListener('click', async () => {
+    botao.disabled = true;
+    try {
+      const estado = await chamarCenaculo('terco_vivo_comecar', { _pid: perfil.id, _cid: cid, _misterio: botao.dataset.misterio });
+      if (cenaculoAberto && cenaculoAberto.id === cid && typeof enviarAoCenaculo === 'function') {
+        enviarAoCenaculo('texto', tr('Comecei o terço ao vivo: {terco}. Toque em "Rezar junto", no alto da conversa, para rezar comigo.', { terco: nomeDoTercoAoVivo(botao.dataset.misterio) }));
+      }
+      mostrarTercoAoVivo(cid, estado);
+      atualizarFaixaDoTercoAoVivo();
+    } catch (erro) {
+      botao.disabled = false;
+      avisoDoCenaculo(mensagemDoTercoAoVivo(erro));
+    }
+  }));
+}
+
+function mostrarTercoAoVivo(cid, estadoInicial) {
+  const perfil = perfilAdultoAtivo();
+  if (!perfil) return;
+  pararTercoAoVivo();
+  tercoAoVivo = { cid, estado: estadoInicial, misterio: estadoInicial.misterio, passos: montarPassosDoTerco(estadoInicial.misterio), presentes: [] };
+  const corpo = janelaDoCenaculo(tr('Terço ao vivo'), '<div class="terco-vivo" id="terco-vivo"></div>');
+  const lugar = corpo.querySelector('#terco-vivo');
+
+  const desenhar = () => {
+    if (!tercoAoVivo || tercoAoVivo.cid !== cid) return;
+    const estado = tercoAoVivo.estado;
+    if (!estado) {
+      lugar.innerHTML = `<div class="terco-vivo-fim"><span class="terco-vivo-faixa-icone">${iconeDoCenaculo('terco')}</span><p>${tr('O terço ao vivo terminou. Que Nossa Senhora abençoe vocês!')}</p></div>`;
+      return;
+    }
+    if (estado.misterio !== tercoAoVivo.misterio) {
+      tercoAoVivo.misterio = estado.misterio;
+      tercoAoVivo.passos = montarPassosDoTerco(estado.misterio);
+    }
+    const passos = tercoAoVivo.passos;
+    const indice = Math.max(0, Math.min(Number(estado.passo) || 0, passos.length - 1));
+    const passo = passos[indice];
+    const souPuxador = estado.puxador === perfil.id;
+    const texto = tr(passo.texto);
+    const partes = typeof dividirOracaoEmGrupo === 'function' ? dividirOracaoEmGrupo(texto) : null;
+    const parte = (rotulo, conteudo, classe) => `<span class="terco-parte ${classe}" translate="no"><b>${rotulo}</b>${escaparTexto(conteudo)}</span>`;
+    const oracao = partes
+      ? parte(tr('Quem puxa'), partes[0], 'puxa') + parte(tr('Todos respondem'), partes[1], 'todos')
+      : parte(passo.misterio ? tr('Quem puxa anuncia') : tr('Todos juntos'), texto, passo.misterio ? 'puxa' : 'todos');
+    const marcadas = Number(estado.contas) || 0;
+    const contas = passo.contas ? `<div class="terco-contas"><div class="terco-contas-fila">${Array.from({ length: passo.contas }, (_, i) => `<button type="button" class="terco-conta${i < marcadas ? ' marcada' : ''}" data-conta="${i}"${souPuxador ? '' : ' disabled'} aria-label="${tr('Conta {n} de {total}', { n: i + 1, total: passo.contas })}"></button>`).join('')}</div><p class="terco-contas-dica">${souPuxador ? tr('Toque numa conta a cada oração ({n} de {total})', { n: marcadas, total: passo.contas }) : tr('{n} de {total}', { n: marcadas, total: passo.contas })}</p></div>` : '';
+    const presentes = tercoAoVivo.presentes;
+    lugar.innerHTML = `
+      <div class="terco-vivo-topo">
+        <span class="terco-vivo-selo"><i class="terco-vivo-ponto" aria-hidden="true"></i>${tr('Ao vivo')}</span>
+        <strong>${escaparTexto(nomeDoTercoAoVivo(estado.misterio))}</strong>
+        <small>${souPuxador ? tr('Você está puxando o terço') : tr('{nome} está puxando o terço', { nome: escaparTexto(estado.puxador_nome || '') })}</small>
+        ${presentes.length ? `<span class="terco-vivo-presentes" translate="no">${iconeDoCenaculo('usuarios')}${presentes.map(escaparTexto).join(', ')}</span>` : ''}
+      </div>
+      <div class="terco-progresso"><span class="terco-progresso-texto">${indice + 1} / ${passos.length}</span><span class="terco-barra" aria-hidden="true"><i style="width:${Math.round(((indice + 1) / passos.length) * 100)}%"></i></span></div>
+      <div class="terco-oracao-cartao${passo.misterio ? ' misterio' : ''}${passo.fim ? ' final' : ''}">
+        <h3 class="terco-titulo-passo">${escaparTexto(passo.titulo)}</h3>
+        <p class="terco-texto-passo em-grupo">${oracao}</p>
+        ${contas}
+      </div>
+      <div class="terco-navegacao terco-vivo-controles">
+        ${souPuxador
+          ? `<button type="button" class="filter-btn" data-vivo="voltar"${indice === 0 ? ' disabled' : ''}>${tr('Anterior')}</button><button type="button" class="filter-btn active" data-vivo="avancar">${indice >= passos.length - 1 ? tr('Concluir') : tr('Próxima')}</button>`
+          : `<button type="button" class="filter-btn" data-vivo="puxar">${tr('Puxar o terço')}</button>`}
+      </div>
+      ${souPuxador ? `<button type="button" class="terco-vivo-encerrar" data-vivo="encerrar">${tr('Encerrar o terço ao vivo')}</button>` : `<p class="terco-vivo-dica">${tr('As orações passam sozinhas quando quem puxa avança.')}</p>`}`;
+  };
+
+  const salvar = async (passo, contas) => {
+    try {
+      tercoAoVivo.estado = await chamarCenaculo('terco_vivo_avancar', { _pid: perfil.id, _cid: cid, _passo: passo, _contas: contas });
+      desenhar();
+    } catch (erro) {
+      avisoDoCenaculo(mensagemDoTercoAoVivo(erro));
+      buscar();
+    }
+  };
+  const buscar = async () => {
+    try {
+      const estado = await chamarCenaculo('terco_vivo_estado', { _pid: perfil.id, _cid: cid });
+      if (!tercoAoVivo || tercoAoVivo.cid !== cid) return;
+      const antes = tercoAoVivo.estado;
+      const mudou = !antes !== !estado || (estado && (estado.passo !== antes.passo || estado.contas !== antes.contas || estado.puxador !== antes.puxador || estado.misterio !== antes.misterio));
+      tercoAoVivo.estado = estado;
+      if (mudou) desenhar();
+    } catch (e) {
+      return;
+    }
+  };
+  const encerrar = async () => {
+    try { await chamarCenaculo('terco_vivo_encerrar', { _pid: perfil.id, _cid: cid }); } catch (e) { return; }
+    if (tercoAoVivo) tercoAoVivo.estado = null;
+    desenhar();
+    atualizarFaixaDoTercoAoVivo();
+  };
+
+  lugar.addEventListener('click', async (evento) => {
+    const estado = tercoAoVivo && tercoAoVivo.estado;
+    if (!estado) return;
+    const conta = evento.target.closest('[data-conta]');
+    if (conta) {
+      const numero = Number(conta.dataset.conta) + 1;
+      salvar(estado.passo, estado.contas === numero ? numero - 1 : numero);
+      return;
+    }
+    const acao = evento.target.closest('[data-vivo]');
+    if (!acao) return;
+    const tipo = acao.dataset.vivo;
+    if (tipo === 'voltar') salvar(Math.max(0, estado.passo - 1), 0);
+    else if (tipo === 'avancar') {
+      if (estado.passo >= tercoAoVivo.passos.length - 1) encerrar();
+      else salvar(estado.passo + 1, 0);
+    } else if (tipo === 'encerrar') encerrar();
+    else if (tipo === 'puxar') {
+      try {
+        tercoAoVivo.estado = await chamarCenaculo('terco_vivo_puxar', { _pid: perfil.id, _cid: cid });
+        desenhar();
+        atualizarFaixaDoTercoAoVivo();
+      } catch (erro) {
+        avisoDoCenaculo(mensagemDoTercoAoVivo(erro));
+      }
+    }
+  });
+
+  try {
+    if (supabaseCliente && supabaseCliente.channel) {
+      const canal = supabaseCliente.channel(`terco-vivo-${cid}`, { config: { presence: { key: perfil.id } } });
+      canalDoTercoAoVivo = canal;
+      canal
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'terco_ao_vivo', filter: `cenaculo_id=eq.${cid}` }, () => buscar())
+        .on('presence', { event: 'sync' }, () => {
+          if (!tercoAoVivo || tercoAoVivo.cid !== cid) return;
+          tercoAoVivo.presentes = Object.values(canal.presenceState()).map((lista) => lista[0] && lista[0].nome).filter(Boolean);
+          desenhar();
+        })
+        .subscribe((status) => {
+          if (status === 'SUBSCRIBED') canal.track({ nome: String(perfil.nome || '').split(' ')[0] });
+        });
+    }
+  } catch (e) {
+    canalDoTercoAoVivo = null;
+  }
+  let voltas = 0;
+  vigiaDoTercoAoVivo = setInterval(() => {
+    if (!document.querySelector('#cenaculo-janela.active #terco-vivo')) { pararTercoAoVivo(); return; }
+    voltas += 1;
+    if (voltas % 3 === 0 && !document.hidden) buscar();
+  }, 2000);
+  desenhar();
+}

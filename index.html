@@ -377,7 +377,7 @@
       <div class="catalogo-interno-topo container" id="catalogo-interno-topo">
         <button class="btn-back" id="btn-voltar-catalogo">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-          <span data-i18n="voltar">Voltar</span>
+          <span data-i18n="voltar_inicio">Voltar para o início</span>
         </button>
         <h2 class="section-title" data-i18n="catalogo_interno_titulo">Catálogo dos Santos</h2>
         <div class="title-divider"></div>
@@ -1094,6 +1094,10 @@
     <section id="view-cenaculos" class="view">
       <div class="cenaculos-casa" id="cenaculos-casa">
         <div class="cenaculos-painel" id="cenaculos-painel">
+          <button type="button" class="btn-back cenaculos-voltar" id="btn-back-cenaculos">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span data-i18n="voltar_inicio">Voltar para o início</span>
+          </button>
           <div class="cenaculos-topo">
             <h2 class="cenaculos-titulo">Cenáculos</h2>
             <div class="cenaculos-topo-icones">
@@ -1129,6 +1133,10 @@
 
     <section id="view-comunidade" class="view">
       <div class="container comunidade-container">
+        <button type="button" class="btn-back" id="btn-back-comunidade">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span data-i18n="voltar_inicio">Voltar para o início</span>
+        </button>
         <div class="comunidade-topo">
           <h2 class="section-title comunidade-titulo">Comunidade</h2>
           <button type="button" class="comunidade-postar" id="comunidade-postar-btn"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-mais"></use></svg><span>Compartilhar um marco</span></button>
@@ -1167,6 +1175,7 @@
           </button>
           <button type="button" class="icon-btn" id="cenaculo-menu-btn" aria-label="Opções do cenáculo"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-pontos"></use></svg></button>
         </header>
+        <div id="cenaculo-terco-vivo" class="terco-vivo-faixa" hidden></div>
         <div id="cenaculo-encontro" class="cenaculo-encontro" hidden></div>
         <div id="cenaculo-mensagens" class="cenaculo-mensagens"></div>
         <div id="cenaculo-painel-emojis" class="cenaculo-painel cenaculo-painel-emojis" hidden></div>
