@@ -1,0 +1,70 @@
+{
+  "name": "Lumina Sancti - Luz dos Santos",
+  "short_name": "Lumina Sancti",
+  "description": "Biografias de santos, beatos, doutores da Igreja e anjos, com Santo do Dia, trilhas estilo Duolingo, orações, terço guiado e a assistente Lumina.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0a0e22",
+  "theme_color": "#0a0e22",
+  "orientation": "portrait-primary",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "id": "./",
+  "categories": [
+    "education",
+    "books",
+    "lifestyle"
+  ],
+  "widgets": [
+    {
+      "name": "Lumina Sancti: seu dia com a Lumi",
+      "short_name": "Lumina Sancti",
+      "description": "A Lumi lembra a missão do dia, mostra a sua ofensiva e o santo do dia.",
+      "tag": "lumina-dia",
+      "ms_ac_template": "widgets/lumi-dia.json",
+      "data": "widgets/dados-do-dia.json",
+      "type": "application/json",
+      "screenshots": [
+        {
+          "src": "widgets/previa-widget.png",
+          "sizes": "600x400",
+          "label": "A Lumi e o santo do dia"
+        }
+      ],
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ],
+      "auth": false,
+      "update": 21600
+    }
+  ]
+}

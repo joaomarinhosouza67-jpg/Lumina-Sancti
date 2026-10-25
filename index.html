@@ -1,40 +1,1342 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex">
-<title>Lumina Sancti | Voltamos em breve</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23f0cf7a' d='M50 0C52 35 65 48 100 50C65 52 52 65 50 100C48 65 35 52 0 50C35 48 48 35 50 0Z'/%3E%3C/svg%3E">
-<style>
-:root { color-scheme: dark; }
-* { box-sizing: border-box; }
-html, body { margin: 0; min-height: 100%; }
-body { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px 16px; background: radial-gradient(circle at 50% 20%, #1b1a33, #070814 70%); color: #efe6d2; font-family: Georgia, "Times New Roman", serif; text-align: center; }
-main { width: 100%; max-width: 560px; padding: 34px 26px; border-radius: 24px; border: 1px solid transparent; background: linear-gradient(#0d0f22, #0d0f22) padding-box, linear-gradient(135deg, rgba(255, 241, 194, 0.8), rgba(110, 71, 16, 0.5) 45%, rgba(240, 207, 122, 0.7)) border-box; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(240, 207, 122, 0.12); }
-svg { width: 54px; height: 54px; }
-h1 { margin: 14px 0 6px; font-size: 1.9rem; letter-spacing: 4px; font-weight: normal; color: #f0cf7a; }
-h2 { margin: 0 0 22px; font-size: 1.05rem; font-weight: normal; letter-spacing: 2px; text-transform: uppercase; color: #e2b552; }
-p { margin: 0 0 14px; font-size: 1.05rem; line-height: 1.7; }
-.linha { width: 120px; height: 1px; margin: 22px auto; background: linear-gradient(90deg, transparent, rgba(240, 207, 122, 0.8), transparent); }
-.outros p { font-size: 0.92rem; color: #c9bfa8; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Lumina Sancti | Aprenda a vida dos santos como num jogo</title>
+  <meta name="description" content="Site católico para aprender a vida dos santos e a fé da Igreja como num jogo: missões, medalhas, Santo do Dia, terço guiado e orações. Grátis e para toda a família.">
+  <meta name="keywords" content="santos católicos, vida dos santos, site católico, aprender sobre os santos, Igreja Católica, santo do dia, terço guiado, catequese, orações católicas">
+  <link rel="canonical" href="https://luminasancti.com/">
+
+  <meta property="og:site_name" content="Lumina Sancti">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:title" content="Lumina Sancti | Aprenda a vida dos santos como num jogo">
+  <meta property="og:description" content="Missões, medalhas, Santo do Dia e terço guiado. Site católico, grátis e para toda a família.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://luminasancti.com/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://luminasancti.com/">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lumina Sancti | Aprenda a vida dos santos como num jogo">
+  <meta name="twitter:description" content="Missões, medalhas, Santo do Dia e terço guiado. Site católico, grátis e para toda a família.">
+  <meta name="twitter:image" content="https://luminasancti.com/og-image.jpg">
+
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://luminasancti.com/#site","url":"https://luminasancti.com/","name":"Lumina Sancti","alternateName":"Luz dos Santos","inLanguage":["pt-BR","en","es"],"description":"Site católico para aprender a vida dos santos e a fé da Igreja como num jogo: missões, medalhas, Santo do Dia, terço guiado e orações. Grátis e para toda a família.","publisher":{"@id":"https://luminasancti.com/#organizacao"}},{"@type":"Organization","@id":"https://luminasancti.com/#organizacao","name":"Lumina Sancti","url":"https://luminasancti.com/","logo":"https://luminasancti.com/icon-512.png","email":"suporte@luminasancti.com","sameAs":["https://www.instagram.com/luminasancti"]},{"@type":"WebApplication","name":"Lumina Sancti","url":"https://luminasancti.com/","applicationCategory":"EducationalApplication","operatingSystem":"Android, iOS, Windows, macOS","inLanguage":"pt-BR","description":"Site católico para aprender a vida dos santos e a fé da Igreja como num jogo: missões, medalhas, Santo do Dia, terço guiado e orações. Grátis e para toda a família.","offers":{"@type":"Offer","price":"0","priceCurrency":"BRL"}}]}</script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Merriweather+Sans:wght@300..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+  <link rel="icon" type="image/svg+xml" href="favicon-animado.svg">
+  <link rel="alternate icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0a0e22">
+  <meta name="color-scheme" content="dark">
+
 </head>
 <body>
-<main>
-<svg viewBox="0 0 100 100" aria-hidden="true"><path fill="#f0cf7a" d="M50 0C52 35 65 48 100 50C65 52 52 65 50 100C48 65 35 52 0 50C35 48 48 35 50 0Z"/></svg>
-<h1>LUMINA SANCTI</h1>
-<h2>Fechado temporariamente por segurança</h2>
-<p>Nos últimos dias, várias falhas de segurança atingiram aplicativos e sites no mundo todo.</p>
-<p>Por precaução, fechamos o Lumina Sancti para proteger você, a sua família e os seus dados. Enquanto isso, o aplicativo e as contas ficam bloqueados, e ninguém consegue entrar nem ver nenhuma informação.</p>
-<p>Estamos aplicando novas atualizações de segurança. Devemos voltar em breve, com todas as proteções ativas.</p>
-<p>Se você usa a mesma senha do Lumina Sancti em outros lugares, recomendamos trocá-la.</p>
-<p>Pedimos desculpas pelo transtorno e agradecemos a sua paciência e as suas orações.</p>
-<div class="linha"></div>
-<div class="outros">
-<p lang="en">In recent days, several security failures have hit apps and websites around the world. As a precaution, Lumina Sancti is temporarily closed and all accounts are locked. We are applying new security updates and expect to be back soon, with every protection active. If you use the same password elsewhere, we recommend changing it.</p>
-<p lang="es">En los últimos días, varias fallas de seguridad afectaron aplicaciones y sitios en todo el mundo. Por precaución, Lumina Sancti está cerrado temporalmente y todas las cuentas están bloqueadas. Estamos aplicando nuevas actualizaciones de seguridad y esperamos volver pronto, con todas las protecciones activas. Si usas la misma contraseña en otros sitios, te recomendamos cambiarla.</p>
-</div>
-</main>
+  <div class="catedral-lado catedral-esquerda" aria-hidden="true"></div>
+  <div class="catedral-lado catedral-direita" aria-hidden="true"></div>
+
+  <div id="meteor-layer" class="meteor-layer" aria-hidden="true"></div>
+
+  <div id="intro-screen" class="intro-screen" aria-hidden="true">
+    <canvas id="intro-canvas" class="intro-canvas"></canvas>
+    <div class="intro-brand">Lumina Sancti</div>
+    <div class="intro-lema" data-i18n="hero_subtitulo">Luz dos Santos</div>
+    <div class="intro-skip-hint">Toque para pular</div>
+    <div class="intro-carregando"><span>Preparando sua jornada...</span><i></i></div>
+  </div>
+
+  <div id="tela-carregando" class="tela-carregando" aria-hidden="true">
+    <div class="tela-carregando-centro">
+      <div class="tela-carregando-sinal"></div>
+      <p class="tela-carregando-texto" id="tela-carregando-texto">Preparando sua jornada...</p>
+    </div>
+  </div>
+
+  <header id="navbar" class="navbar">
+    <div class="nav-container">
+      <button id="menu-btn" class="icon-btn" aria-label="Abrir Menu">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      </button>
+      <h1 class="nav-brand">Lumina Sancti</h1>
+      <div class="nav-right-actions">
+        <div class="idioma-wrapper">
+          <button id="idioma-btn" class="icon-btn" aria-label="Mudar idioma / Change language" aria-haspopup="true" aria-expanded="false">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z"/></svg>
+          </button>
+          <div id="idioma-menu" class="idioma-menu">
+            <button class="idioma-opcao" data-lang="pt"><svg class="bandeira" viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" fill="#009c3b"/><path d="M10 1.8 18.2 7 10 12.2 1.8 7z" fill="#ffdf00"/><circle cx="10" cy="7" r="2.9" fill="#002776"/></svg> Português</button>
+            <button class="idioma-opcao" data-lang="en"><svg class="bandeira" viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" fill="#ffffff"/><path d="M0 0h20v2H0zM0 4h20v2H0zM0 8h20v2H0zM0 12h20v2H0z" fill="#b22234"/><rect width="9" height="8" fill="#3c3b6e"/></svg> English</button>
+            <button class="idioma-opcao" data-lang="es"><svg class="bandeira" viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" fill="#aa151b"/><rect y="3.5" width="20" height="7" fill="#f1bf00"/></svg> Español</button>
+          </div>
+        </div>
+        <button id="search-btn" class="icon-btn" aria-label="Pesquisar" data-i18n-aria="aria_pesquisar" style="margin-left: 10px;">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        </button>
+        <button id="lumina-btn" class="icon-btn" aria-label="Conversar com a Lumina" style="margin-left: 10px;">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.34 6.34l2.83 2.83M14.83 14.83l2.83 2.83M17.66 6.34l-2.83 2.83M9.17 14.83l-2.83 2.83"/><circle cx="12" cy="12" r="2.2" fill="currentColor" stroke="none"/></svg>
+        </button>
+        <div class="conta-wrapper">
+          <button id="conta-btn" class="icon-btn" aria-label="Minha conta" aria-haspopup="true" aria-expanded="false" style="margin-left: 10px;">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </button>
+          <div id="conta-menu" class="idioma-menu">
+            <button id="conta-menu-entrar" class="conta-opcao" data-i18n="conta_entrar">Entrar / Criar conta</button>
+            <button id="conta-menu-perfil" class="conta-opcao" style="display:none;" data-i18n="conta_perfil">Meu perfil</button>
+            <button id="conta-menu-perfis" class="conta-opcao" style="display:none;">Trocar perfil</button>
+            <button id="conta-menu-config-perfis" class="conta-opcao" style="display:none;">Configurações de perfil</button>
+            <button id="conta-menu-sair" class="conta-opcao" style="display:none;" data-i18n="conta_sair">Sair</button>
+            <button id="conta-menu-sair-kids" class="conta-opcao" style="display:none;">Sair do modo infantil</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div id="perfil-editor-modal" class="search-modal">
+    <div class="search-modal-content perfil-editor">
+      <div class="search-header">
+        <h3 id="perfil-editor-titulo">Novo perfil</h3>
+        <button id="perfil-editor-fechar" class="icon-btn" aria-label="Fechar"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      </div>
+      <div id="perfil-editor-previa" class="perfil-editor-previa"></div>
+      <label class="perfil-editor-rotulo" for="perfil-editor-nome">Nome</label>
+      <input type="text" id="perfil-editor-nome" class="perfil-editor-campo" maxlength="24" autocomplete="off">
+      <p class="perfil-editor-rotulo">Tipo de perfil</p>
+      <div class="perfil-tipos">
+        <button type="button" class="perfil-tipo" data-tipo="adulto">Adulto</button>
+        <button type="button" class="perfil-tipo" data-tipo="crianca">Criança</button>
+      </div>
+      <label class="perfil-consentimento" id="perfil-editor-consentimento" hidden>
+        <input type="checkbox" id="perfil-editor-autorizo">
+        <span>Sou pai, mãe ou responsável por esta criança e autorizo o uso deste perfil.</span>
+      </label>
+      <div class="perfil-faixa-bloco" id="perfil-editor-faixa" hidden>
+        <p class="perfil-editor-rotulo">Faixa de idade da criança</p>
+        <div class="perfil-faixas">
+          <button type="button" class="perfil-faixa" data-faixa="ate7">Até 7 anos</button>
+          <button type="button" class="perfil-faixa" data-faixa="8a12">8 a 12 anos</button>
+          <button type="button" class="perfil-faixa" data-faixa="13a17">13 a 17 anos</button>
+        </div>
+        <p class="perfil-faixa-nota">As perguntas das trilhas mudam conforme a idade. O que a criança já fez continua guardado se você mudar depois.</p>
+      </div>
+      <p class="perfil-editor-rotulo">Avatar</p>
+      <div id="perfil-avatares" class="perfil-avatares"></div>
+      <div class="perfil-foto-acoes">
+        <label class="perfil-foto-botao">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-camera"></use></svg>
+          <span>Usar uma foto da galeria</span>
+          <input type="file" id="perfil-editor-foto" accept="image/*" hidden>
+        </label>
+        <button type="button" id="perfil-editor-remover-foto" class="perfil-link" hidden>Remover foto</button>
+      </div>
+      <div class="perfil-editor-pin" id="perfil-editor-pin" hidden>
+        <p class="perfil-editor-rotulo">PIN do perfil</p>
+        <p class="perfil-editor-pin-estado" id="perfil-editor-pin-estado"></p>
+        <div class="perfil-editor-pin-botoes">
+          <button type="button" class="filter-btn" id="perfil-editor-pin-criar">Criar PIN do perfil</button>
+          <button type="button" class="perfil-link" id="perfil-editor-pin-tirar" hidden>Tirar o PIN</button>
+        </div>
+      </div>
+      <div class="perfil-aviso-extra" id="perfil-editor-extra" hidden>
+        <strong>Atenção: este é um perfil extra.</strong>
+        <span>Hoje ele é grátis. Quando as assinaturas começarem, só o primeiro perfil da conta (de adulto ou de criança) continua grátis. Para continuar usando este perfil, será preciso assinar o plano Duo ou o Família.</span>
+        <span>Por enquanto, cada conta pode ter no máximo 3 perfis.</span>
+      </div>
+      <button type="button" id="perfil-editor-salvar" class="licao-botao">Salvar</button>
+      <button type="button" id="perfil-editor-excluir" class="perfil-link perfil-link-perigo" hidden>Excluir este perfil</button>
+      <p class="auth-feedback" id="perfil-editor-feedback" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <div id="faixa-modal" class="search-modal">
+    <div class="search-modal-content faixa-janela">
+      <div class="faixa-passo" id="faixa-passo-chamar">
+        <div class="faixa-palco" aria-hidden="true">
+          <span class="faixa-raios"></span>
+          <span class="faixa-halo"></span>
+          <svg class="faixa-estrela" viewBox="0 0 64 64"><defs><linearGradient id="faixa-ouro" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff4cc"/><stop offset=".45" stop-color="#f0c95a"/><stop offset="1" stop-color="#c2922a"/></linearGradient></defs><path d="M32 5l7.6 15.7 17.3 2.2-12.7 12 3.3 17.1L32 43.6 16.5 52l3.3-17.1L7.1 22.9l17.3-2.2z" fill="url(#faixa-ouro)" stroke="#fff3c9" stroke-width="1.4" stroke-linejoin="round"/><path d="M25.5 22.5l4.2-.6M22 27l1.8-.3" stroke="#fffbea" stroke-width="2.2" stroke-linecap="round" opacity=".85"/></svg>
+          <i class="faixa-cintila c1"></i><i class="faixa-cintila c2"></i><i class="faixa-cintila c3"></i>
+        </div>
+        <h3>Chame um responsável</h3>
+        <p id="faixa-modal-texto">Para as perguntas ficarem certinhas para a idade da criança, um adulto precisa escolher a faixa de idade. É só desta vez.</p>
+        <button type="button" class="licao-botao" id="faixa-sou-responsavel">Sou o responsável</button>
+        <button type="button" class="faixa-depois" id="faixa-agora-nao">Agora não</button>
+      </div>
+      <div class="faixa-passo" id="faixa-passo-escolher" hidden>
+        <h3>Qual é a faixa de idade?</h3>
+        <p>As perguntas das trilhas mudam conforme a idade. O que a criança já fez continua guardado.</p>
+        <div class="perfil-faixas">
+          <button type="button" class="faixa-opcao" data-faixa="ate7">Até 7 anos</button>
+          <button type="button" class="faixa-opcao" data-faixa="8a12">8 a 12 anos</button>
+          <button type="button" class="faixa-opcao" data-faixa="13a17">13 a 17 anos</button>
+        </div>
+        <p class="auth-feedback" id="faixa-modal-feedback" aria-live="polite"></p>
+        <button type="button" class="licao-botao" id="faixa-salvar">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="portao-modal" class="search-modal">
+    <div class="search-modal-content portao">
+      <div class="search-header">
+        <h3 id="portao-titulo">Sair do modo infantil</h3>
+        <button id="portao-fechar" class="icon-btn" aria-label="Fechar"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      </div>
+      <p class="portao-texto" id="portao-texto"></p>
+      <div class="portao-pin" id="portao-pin">
+        <div class="portao-pontos" id="portao-pontos"><span></span><span></span><span></span><span></span></div>
+        <div class="portao-teclado" id="portao-teclado">
+          <button type="button" data-tecla="1">1</button><button type="button" data-tecla="2">2</button><button type="button" data-tecla="3">3</button>
+          <button type="button" data-tecla="4">4</button><button type="button" data-tecla="5">5</button><button type="button" data-tecla="6">6</button>
+          <button type="button" data-tecla="7">7</button><button type="button" data-tecla="8">8</button><button type="button" data-tecla="9">9</button>
+          <span></span><button type="button" data-tecla="0">0</button><button type="button" data-tecla="apagar" aria-label="Apagar"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><path d="M18 9l-6 6M12 9l6 6"/></svg></button>
+        </div>
+      </div>
+      <form class="auth-form portao-senha" id="portao-senha" hidden>
+        <label for="portao-senha-campo">Senha da conta</label>
+        <div class="auth-senha">
+          <input type="password" id="portao-senha-campo" autocomplete="current-password">
+          <button type="button" class="auth-olho" data-alvo="portao-senha-campo" aria-label="Mostrar senha" aria-pressed="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+        <div class="auth-captcha" data-captcha="portao"></div>
+        <button type="submit" class="auth-botao">Confirmar</button>
+      </form>
+      <p class="auth-feedback" id="portao-feedback" aria-live="polite"></p>
+      <div class="portao-links">
+        <button type="button" class="auth-link" id="portao-esqueci">Esqueci o PIN</button>
+        <button type="button" class="auth-link" id="portao-sair-conta" hidden>Sair da conta</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="perfil-painel-modal" class="search-modal">
+    <div class="search-modal-content perfil-painel">
+      <div class="search-header">
+        <h3>Perfil</h3>
+        <button id="perfil-painel-fechar" class="icon-btn" aria-label="Fechar"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      </div>
+      <div id="perfil-painel-conteudo"></div>
+    </div>
+  </div>
+
+  <div id="instalar-modal" class="search-modal">
+    <div class="search-modal-content instalar-janela">
+      <div class="search-header">
+        <h3>Instalar o Lumina Sancti</h3>
+        <button id="instalar-fechar" class="icon-btn" aria-label="Fechar"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      </div>
+      <div id="instalar-instrucoes"></div>
+    </div>
+  </div>
+
+  <div id="search-modal" class="search-modal">
+    <div class="search-modal-content">
+      <div class="search-header">
+        <h3 data-i18n="pesquisar_titulo">Pesquisar Santo ou Beato</h3>
+        <button id="close-search-btn" class="icon-btn" aria-label="Fechar Pesquisa">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="search-input-wrapper">
+        <input type="text" id="search-input" placeholder="Digite o nome do santo..." data-i18n-placeholder="pesquisar_placeholder" autocomplete="off">
+      </div>
+      <div id="search-results" class="search-results"></div>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <h2 data-i18n="catalogo_titulo">Catálogo</h2>
+      <button id="close-menu-btn" class="icon-btn" aria-label="Fechar Menu">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="filter-btn side-filter active" data-filter="todos" data-i18n="filtro_todos">Todos os Santos</button>
+      <button class="filter-btn side-filter" data-filter="favoritos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-coracao"></use></svg><span data-i18n="filtro_favoritos">Favoritos</span></button>
+      <button class="filter-btn side-filter" data-filter="sagrada-familia" data-i18n="filtro_sagrada_familia">Sagrada Família</button>
+      <button class="filter-btn side-filter" data-filter="arcanjos" data-i18n="filtro_arcanjos">Arcanjos</button>
+      <button class="filter-btn side-filter" data-filter="doutores" data-i18n="filtro_doutores">Doutores da Igreja</button>
+      <button class="filter-btn side-filter" data-filter="grandes-santos" data-i18n="filtro_grandes_santos">Grandes Santos</button>
+      <button class="filter-btn side-filter" data-filter="santos-jovens" data-i18n="filtro_santos_jovens">Santos Jovens</button>
+      <button class="filter-btn side-filter" data-filter="beatos" data-i18n="filtro_beatos">Beatos</button>
+
+      <div class="sidebar-divisor"></div>
+      <button class="side-nav-link side-nav-destaque" id="nav-trilhas"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-trilha"></use></svg><span data-i18n="trilhas_titulo">Trilhas dos Santos</span></button>
+      <button class="side-nav-link side-nav-destaque" id="nav-cenaculos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-usuarios"></use></svg><span>Cenáculos</span></button>
+      <button class="side-nav-link side-nav-destaque" id="nav-comunidade"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-comunidade"></use></svg><span>Comunidade</span></button>
+      <button class="side-nav-link side-nav-destaque" id="nav-cursos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-capelo"></use></svg><span>Cursos de aprofundamento</span></button>
+      <button class="side-nav-link" id="nav-leitura"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-biblia"></use></svg><span data-i18n="nav_leitura">Leitura do dia</span></button>
+      <button class="side-nav-link" id="nav-oracoes"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-livro"></use></svg><span data-i18n="nav_oracoes">Orações do dia a dia</span></button>
+      <button class="side-nav-link" id="nav-terco"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-terco"></use></svg><span data-i18n="nav_terco">Terço guiado</span></button>
+      <button class="side-nav-link" id="nav-padroeiro"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lupa"></use></svg><span data-i18n="nav_padroeiro">Padroeiro de...</span></button>
+      <button class="side-nav-link" id="nav-planos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-estrela"></use></svg><span>Planos</span></button>
+      <button class="side-nav-link" id="nav-suporte"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-ajuda"></use></svg><span>Fale com a equipe</span><span class="aviso-suporte" data-aviso-suporte hidden></span></button>
+      <button class="side-nav-link" id="nav-instalar" hidden><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-baixar"></use></svg><span>Instalar o app</span></button>
+      <div class="sidebar-divisor"></div>
+      <div class="side-idiomas" role="group" aria-label="Idioma / Language">
+        <button type="button" class="side-idioma" data-lang="pt" translate="no"><svg class="bandeira" viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" fill="#009c3b"/><path d="M10 1.8 18.2 7 10 12.2 1.8 7z" fill="#ffdf00"/><circle cx="10" cy="7" r="2.9" fill="#002776"/></svg>PT</button>
+        <button type="button" class="side-idioma" data-lang="en" translate="no"><svg class="bandeira" viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" fill="#ffffff"/><path d="M0 0h20v2H0zM0 4h20v2H0zM0 8h20v2H0zM0 12h20v2H0z" fill="#b22234"/><rect width="9" height="8" fill="#3c3b6e"/></svg>EN</button>
+        <button type="button" class="side-idioma" data-lang="es" translate="no"><svg class="bandeira" viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" fill="#aa151b"/><rect y="3.5" width="20" height="7" fill="#f1bf00"/></svg>ES</button>
+      </div>
+
+    </nav>
+
+    <div class="sidebar-decoration">
+      <svg class="menu-estrela" viewBox="0 0 100 100" width="64" height="64" aria-hidden="true">
+        <defs>
+          <radialGradient id="menu-ouro" cx="50%" cy="50%" r="55%"><stop offset="0" stop-color="#fffbe8"/><stop offset=".3" stop-color="#f8e19a"/><stop offset=".72" stop-color="#dcae45"/><stop offset="1" stop-color="#9a6a1c"/></radialGradient>
+          <radialGradient id="menu-brilho"><stop offset="0" stop-color="#fffef5"/><stop offset=".45" stop-color="#ffe9a8" stop-opacity=".5"/><stop offset="1" stop-color="#ffd76a" stop-opacity="0"/></radialGradient>
+        </defs>
+        <circle cx="50" cy="50" r="34" fill="url(#menu-brilho)" opacity=".55"/>
+        <g transform="rotate(45 50 50)" opacity=".65">
+          <path d="M50 15 C52 38 62 48 85 50 C62 52 52 62 50 85 C48 62 38 52 15 50 C38 48 48 38 50 15 Z" fill="url(#menu-ouro)"/>
+          <path d="M50 50 L50 15 C52 38 62 48 85 50 Z M50 50 L50 85 C48 62 38 52 15 50 Z" fill="#6e4710" opacity=".28"/>
+        </g>
+        <path d="M50 0 C52 35 65 48 100 50 C65 52 52 65 50 100 C48 65 35 52 0 50 C35 48 48 35 50 0 Z" fill="url(#menu-ouro)"/>
+        <path d="M50 50 L50 0 C52 35 65 48 100 50 Z M50 50 L50 100 C48 65 35 52 0 50 Z" fill="#6e4710" opacity=".26"/>
+        <path d="M50 50 V3 M50 50 H97 M50 50 V97 M50 50 H3" stroke="#fffbe8" stroke-width=".7" opacity=".6"/>
+        <circle cx="50" cy="50" r="5" fill="#fffef5"/>
+      </svg>
+    </div>
+  </aside>
+  <div id="overlay" class="overlay"></div>
+
+  <main id="main-content">
+    <div id="aviso-geral" class="aviso-geral" role="status" hidden></div>
+
+    <section id="view-home" class="view active">
+      <section class="hero">
+        <div class="hero-content">
+          <div class="hero-icon-container">
+            <svg class="hero-icon" viewBox="0 0 100 100" width="84" height="84" aria-hidden="true">
+              <defs>
+                <radialGradient id="hero-ouro" cx="50%" cy="50%" r="55%"><stop offset="0" stop-color="#fffbe8"/><stop offset=".3" stop-color="#f8e19a"/><stop offset=".72" stop-color="#dcae45"/><stop offset="1" stop-color="#9a6a1c"/></radialGradient>
+                <radialGradient id="hero-brilho"><stop offset="0" stop-color="#fffef5"/><stop offset=".45" stop-color="#ffe9a8" stop-opacity=".5"/><stop offset="1" stop-color="#ffd76a" stop-opacity="0"/></radialGradient>
+              </defs>
+              <circle cx="50" cy="50" r="34" fill="url(#hero-brilho)" opacity=".5"/>
+              <g transform="rotate(45 50 50)" opacity=".65">
+                <path d="M50 15 C52 38 62 48 85 50 C62 52 52 62 50 85 C48 62 38 52 15 50 C38 48 48 38 50 15 Z" fill="url(#hero-ouro)"/>
+                <path d="M50 50 L50 15 C52 38 62 48 85 50 Z M50 50 L50 85 C48 62 38 52 15 50 Z" fill="#6e4710" opacity=".28"/>
+              </g>
+              <path d="M50 0 C52 35 65 48 100 50 C65 52 52 65 50 100 C48 65 35 52 0 50 C35 48 48 35 50 0 Z" fill="url(#hero-ouro)"/>
+              <path d="M50 50 L50 0 C52 35 65 48 100 50 Z M50 50 L50 100 C48 65 35 52 0 50 Z" fill="#6e4710" opacity=".26"/>
+              <path d="M50 50 V3 M50 50 H97 M50 50 V97 M50 50 H3" stroke="#fffbe8" stroke-width=".7" opacity=".6"/>
+              <circle cx="50" cy="50" r="5" fill="#fffef5"/>
+            </svg>
+          </div>
+          <h1 class="hero-title">Lumina Sancti</h1>
+          <p class="hero-subtitle" data-i18n="hero_subtitulo">Luz dos Santos</p>
+          <p class="hero-quote" data-i18n="hero_citacao">"A santidade não é o luxo de alguns, mas um chamado silencioso e ardente ao coração de todos nós, iluminando o mundo em cada época."</p>
+        </div>
+      </section>
+
+      <section class="frase-do-dia-inicio container" id="frase-do-dia" aria-label="Frase do dia"></section>
+
+      <section class="santo-do-dia container" id="santo-do-dia">
+      </section>
+
+      <section class="atalhos-app container" id="atalhos-app">
+        <button type="button" class="atalho-cartao" data-destino="trilhas">
+          <span class="atalho-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-trilha"></use></svg></span>
+          <span class="atalho-textos"><strong data-i18n="trilhas_titulo">Trilhas dos Santos</strong><span>Aprenda com a vida dos santos, missão por missão.</span></span>
+        </button>
+        <button type="button" class="atalho-cartao" data-destino="cenaculos">
+          <span class="atalho-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-usuarios"></use></svg></span>
+          <span class="atalho-textos"><strong>Cenáculos</strong><span>Grupos de oração e amizade na fé, com encontros pelo Google Meet.</span></span>
+        </button>
+        <button type="button" class="atalho-cartao" data-destino="comunidade">
+          <span class="atalho-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-comunidade"></use></svg></span>
+          <span class="atalho-textos"><strong>Comunidade</strong><span>Siga outras pessoas e celebre juntos cada marco nas trilhas.</span></span>
+        </button>
+        <button type="button" class="atalho-cartao" data-destino="cursos">
+          <span class="atalho-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-capelo"></use></svg></span>
+          <span class="atalho-textos"><strong>Cursos de aprofundamento</strong><span>Em breve: estudos sobre casamento, Missa, Bíblia e muito mais.</span></span>
+        </button>
+      </section>
+
+      <section class="about container">
+        <h2 class="section-title" data-i18n="sobre_titulo">Sobre o Lumina Sancti</h2>
+        <div class="title-divider"></div>
+        <p class="about-text" data-i18n="sobre_texto">
+          O <strong>Lumina Sancti</strong> (Luz dos Santos) é um refúgio digital dedicado a preservar e compartilhar a vida, a fé e o legado daqueles que deixaram um rastro inextinguível de luz na história. Este espaço foi criado para revelar que a santidade não é algo distante, mas uma trilha bela, possível e acessível no cotidiano de qualquer época ou idade.
+        </p>
+      </section>
+
+      <div class="catalogo-interno-topo container" id="catalogo-interno-topo">
+        <button class="btn-back" id="btn-voltar-catalogo">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span data-i18n="voltar">Voltar</span>
+        </button>
+        <h2 class="section-title" data-i18n="catalogo_interno_titulo">Catálogo dos Santos</h2>
+        <div class="title-divider"></div>
+      </div>
+
+      <section class="catalog container" id="materias">
+        <div class="filters-container">
+          <button class="filter-btn active" data-filter="todos" data-i18n="filtro_todos_curto">Todos</button>
+          <button class="filter-btn" data-filter="favoritos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-coracao"></use></svg><span data-i18n="filtro_favoritos">Favoritos</span></button>
+          <button class="filter-btn" data-filter="sagrada-familia" data-i18n="filtro_sagrada_familia">Sagrada Família</button>
+          <button class="filter-btn" data-filter="arcanjos" data-i18n="filtro_arcanjos">Arcanjos</button>
+          <button class="filter-btn" data-filter="doutores" data-i18n="filtro_doutores_curto">Doutores</button>
+          <button class="filter-btn" data-filter="grandes-santos" data-i18n="filtro_grandes_santos">Grandes Santos</button>
+          <button class="filter-btn" data-filter="santos-jovens" data-i18n="filtro_santos_jovens">Santos Jovens</button>
+          <button class="filter-btn" data-filter="beatos" data-i18n="filtro_beatos">Beatos</button>
+        </div>
+
+        <div id="cards-grid" class="cards-grid">
+        </div>
+      </section>
+    </section>
+
+    <section id="view-detail" class="view">
+      <div class="container bio-container" id="bio-container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <button id="btn-back" class="btn-back">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span data-i18n="voltar_inicio">Voltar para o início</span>
+          </button>
+          <button id="btn-share" class="icon-btn" aria-label="Compartilhar" style="color: var(--primary-color);">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          </button>
+        </div>
+        <article id="bio-article" class="bio-article">
+        </article>
+      </div>
+    </section>
+
+    <section id="view-ia" class="view">
+      <div class="container lumina-container">
+        <button class="btn-back" id="btn-back-lumina">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span data-i18n="voltar_inicio">Voltar para o início</span>
+        </button>
+
+        <div class="lumina-header">
+          <div class="lumina-avatar">
+            <svg viewBox="0 0 100 100" width="46" height="46" fill="var(--primary-color)">
+              <path d="M50 0 C52 35 65 48 100 50 C65 52 52 65 50 100 C48 65 35 52 0 50 C35 48 48 35 50 0 Z" opacity="0.9"/>
+              <path d="M50 15 C52 38 62 48 85 50 C62 52 52 62 50 85 C48 62 38 52 15 50 C38 48 48 38 50 15 Z" opacity="0.6" transform="rotate(45 50 50)"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="lumina-titulo">Lumina</h2>
+            <p class="lumina-subtitulo" data-i18n="lumina_subtitulo">A assistente exclusiva do Lumina Sancti — só sobre santos, beatos, veneráveis, doutores e anjos.</p>
+          </div>
+        </div>
+
+        <div id="lumina-precisa-login" class="lumina-aviso" style="display:none;">
+          <p data-i18n="lumina_precisa_login">Para conversar com a Lumina, entre na sua conta (é rápido e gratuito).</p>
+          <button id="lumina-ir-login" class="filter-btn active" data-i18n="conta_entrar">Entrar / Criar conta</button>
+        </div>
+
+        <div id="lumina-chat-area" style="display:none;">
+          <p class="lumina-restantes" id="lumina-restantes"></p>
+
+          <div id="lumina-resposta-area" class="lumina-resposta-area"></div>
+
+          <div id="lumina-pensando" class="lumina-pensando" style="display:none;">
+            <span></span><span></span><span></span>
+          </div>
+
+          <div class="lumina-input-row">
+            <input type="text" id="lumina-input" class="lumina-input" data-i18n-placeholder="lumina_placeholder" placeholder="Pergunte sobre um santo, beato, doutor ou anjo...">
+            <button id="lumina-enviar" class="btn-lumina-enviar" aria-label="Enviar">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+          <p class="lumina-erro" id="lumina-erro" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-auth" class="view">
+      <div class="auth-fundo" aria-hidden="true">
+        <div class="auth-quadro">
+          <video class="auth-video" id="auth-video" muted loop playsinline preload="none" disablepictureinpicture disableremoteplayback></video>
+        </div>
+      </div>
+      <div class="container auth-container">
+        <button class="btn-back" id="btn-back-auth">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span data-i18n="voltar_inicio">Voltar para o início</span>
+        </button>
+
+        <div class="auth-ceu" aria-hidden="true"></div>
+
+        <div class="auth-card">
+          <div class="auth-marca">
+            <svg class="auth-estrela" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 0 C52 35 65 48 100 50 C65 52 52 65 50 100 C48 65 35 52 0 50 C35 48 48 35 50 0 Z"/></svg>
+            <h2 class="auth-titulo" id="auth-titulo">Que bom ter você aqui</h2>
+            <p class="auth-subtitulo" id="auth-subtitulo">Entre para guardar a Fé, as medalhas e o progresso de toda a família.</p>
+          </div>
+
+          <div class="auth-tabs" id="auth-tabs" role="tablist">
+            <button type="button" class="auth-tab active" id="auth-tab-entrar" role="tab" data-i18n="conta_entrar_aba">Entrar</button>
+            <button type="button" class="auth-tab" id="auth-tab-cadastrar" role="tab" data-i18n="conta_cadastrar_aba">Criar conta</button>
+          </div>
+
+          <button type="button" id="auth-google" class="auth-google">
+            <svg class="auth-google-logo" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+            <span data-i18n="conta_google">Continuar com Google</span>
+          </button>
+          <div class="auth-divisor" id="auth-divisor"><span data-i18n="conta_ou_email">ou com e-mail</span></div>
+
+          <form id="auth-form-entrar" class="auth-form">
+            <label for="entrar-email" data-i18n="conta_email">E-mail</label>
+            <input type="email" id="entrar-email" required autocomplete="email" placeholder="seu@email.com">
+            <label for="entrar-senha" data-i18n="conta_senha">Senha</label>
+            <div class="auth-senha">
+              <input type="password" id="entrar-senha" required autocomplete="current-password">
+              <button type="button" class="auth-olho" data-alvo="entrar-senha" aria-label="Mostrar senha" aria-pressed="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+            </div>
+            <button type="button" class="auth-link auth-link-direita" id="auth-esqueci" data-i18n="conta_esqueci">Esqueci minha senha</button>
+            <div class="auth-captcha" data-captcha="entrar"></div>
+            <button type="submit" class="auth-botao" data-i18n="conta_entrar_botao">Entrar</button>
+          </form>
+
+          <form id="auth-form-cadastrar" class="auth-form" style="display:none;">
+            <label for="cadastrar-nome" data-i18n="conta_nome">Nome</label>
+            <input type="text" id="cadastrar-nome" required autocomplete="name" maxlength="60">
+            <label for="cadastrar-email" data-i18n="conta_email">E-mail</label>
+            <input type="email" id="cadastrar-email" required autocomplete="email" placeholder="seu@email.com">
+            <label for="cadastrar-senha" data-i18n="conta_senha">Senha</label>
+            <div class="auth-senha">
+              <input type="password" id="cadastrar-senha" required minlength="8" autocomplete="new-password">
+              <button type="button" class="auth-olho" data-alvo="cadastrar-senha" aria-label="Mostrar senha" aria-pressed="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+            </div>
+            <p class="auth-dica" data-i18n="conta_senha_dica">Pelo menos 8 caracteres, com letras e números.</p>
+            <label class="auth-aceite">
+              <input type="checkbox" id="cadastrar-aceite" required>
+              <span><span data-i18n="conta_aceito">Li e aceito a</span> <button type="button" class="auth-link auth-link-inline" id="auth-ver-privacidade" data-i18n="conta_politica">Política de Privacidade</button></span>
+            </label>
+            <div class="auth-captcha" data-captcha="cadastrar"></div>
+            <button type="submit" class="auth-botao" data-i18n="conta_cadastrar_botao">Criar minha conta</button>
+          </form>
+
+          <form id="auth-form-codigo" class="auth-form" style="display:none;">
+            <p class="auth-codigo-desc" data-i18n="conta_codigo_desc">Enviamos um código de 6 dígitos para o seu e-mail. Digite-o abaixo para confirmar sua conta.</p>
+            <label for="codigo-confirmacao" data-i18n="conta_codigo_label">Código de confirmação</label>
+            <input type="text" id="codigo-confirmacao" class="auth-codigo" inputmode="numeric" pattern="[0-9]*" maxlength="6" required autocomplete="one-time-code" placeholder="000000">
+            <button type="submit" class="auth-botao" data-i18n="conta_codigo_botao">Confirmar código</button>
+            <button type="button" id="reenviar-codigo-btn" class="auth-link" data-i18n="conta_reenviar">Reenviar código</button>
+          </form>
+
+          <form id="auth-form-recuperar" class="auth-form" style="display:none;">
+            <p class="auth-codigo-desc" data-i18n="conta_recuperar_desc">Digite o e-mail da sua conta. Vamos mandar um código para você criar uma senha nova.</p>
+            <label for="recuperar-email" data-i18n="conta_email">E-mail</label>
+            <input type="email" id="recuperar-email" required autocomplete="email" placeholder="seu@email.com">
+            <div class="auth-captcha" data-captcha="recuperar"></div>
+            <button type="submit" class="auth-botao" data-i18n="conta_recuperar_botao">Enviar código</button>
+            <button type="button" class="auth-link auth-voltar-entrar" data-i18n="conta_voltar_entrar">Voltar para Entrar</button>
+          </form>
+
+          <form id="auth-form-nova-senha" class="auth-form" style="display:none;">
+            <p class="auth-codigo-desc" id="nova-senha-desc"></p>
+            <label for="recuperar-codigo" data-i18n="conta_codigo_label">Código de confirmação</label>
+            <input type="text" id="recuperar-codigo" class="auth-codigo" inputmode="numeric" pattern="[0-9]*" maxlength="6" required autocomplete="one-time-code" placeholder="000000">
+            <label for="nova-senha" data-i18n="conta_nova_senha">Nova senha</label>
+            <div class="auth-senha">
+              <input type="password" id="nova-senha" required minlength="8" autocomplete="new-password">
+              <button type="button" class="auth-olho" data-alvo="nova-senha" aria-label="Mostrar senha" aria-pressed="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+            </div>
+            <p class="auth-dica" data-i18n="conta_senha_dica">Pelo menos 8 caracteres, com letras e números.</p>
+            <button type="submit" class="auth-botao" data-i18n="conta_nova_senha_botao">Salvar nova senha</button>
+            <button type="button" class="auth-link auth-voltar-entrar" data-i18n="conta_voltar_entrar">Voltar para Entrar</button>
+          </form>
+
+          <p class="auth-feedback" id="auth-feedback" aria-live="polite"></p>
+          <p class="auth-seguro"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Seus dados ficam protegidos. Nunca pedimos sua senha por e-mail ou mensagem.</span></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-privacidade" class="view">
+      <div class="container privacidade-container">
+        <button class="btn-back" id="btn-back-privacidade">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span>Voltar</span>
+        </button>
+        <h2 class="section-title" style="text-align:left; margin: 10px 0 4px;">Política de Privacidade</h2>
+        <div class="title-divider" style="margin: 0 0 16px;"></div>
+        <div data-i18n-bloco="privacidade">
+        <p class="privacidade-data">Atualizada em 1 de outubro de 2026.</p>
+
+        <h3>Quem somos</h3>
+        <p>O Lumina Sancti (luminasancti.com) é um site e aplicativo católico sobre a vida dos santos. Para falar com a gente sobre seus dados, escreva para <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a>.</p>
+
+        <h3>Sem conta</h3>
+        <p>Você pode usar o Lumina Sancti sem criar conta. Nesse caso não recebemos nenhum dado pessoal seu: o progresso das trilhas, os santos favoritos e o idioma ficam guardados só no seu aparelho.</p>
+
+        <h3>O que guardamos quando você cria uma conta</h3>
+        <ul>
+          <li>Seu nome e seu e-mail.</li>
+          <li>Os perfis da família: nome, avatar ou foto escolhida e se o perfil é de adulto ou de criança.</li>
+          <li>O progresso de cada perfil nas trilhas: Fé, ofensiva, medalhas e respostas das missões.</li>
+          <li>Um código do aparelho, usado para permitir uma conta por aparelho.</li>
+          <li>Quantas perguntas você fez à Lumina, nossa assistente, para controlar o limite diário. O texto das perguntas não fica guardado conosco.</li>
+          <li>Se você usar a Comunidade: quem você segue, quem segue você, os marcos que postou e as reações que deu.</li>
+          <li>Os pedidos para conversar que você enviou ou recebeu, com a data e a resposta (aceito ou recusado).</li>
+          <li>Se você ligar os lembretes: o endereço de notificação do seu aparelho, criado pelo navegador, e quais lembretes você quer receber.</li>
+          <li>Se você usar os Cenáculos: os grupos de que participa, as conversas com amigos, as mensagens, GIFs, figurinhas e áudios que envia, a foto e o fundo dos grupos, os encontros marcados, o seu código pessoal, as pessoas que você adicionou e as denúncias e bloqueios que fizer.</li>
+          <li>Se você falar com a equipe pelo suporte: o assunto escolhido, as mensagens que você e a equipe trocaram e de qual perfil você escreveu. Elas servem só para responder e resolver o que você pediu.</li>
+        </ul>
+
+        <h3>Cenáculos (grupos)</h3>
+        <p>Os Cenáculos são só para adultos, e para entrar é preciso aceitar as Regras dos Cenáculos. As conversas não são secretas: a equipe do Lumina Sancti pode ler as mensagens e ouvir os áudios para proteger os participantes e investigar denúncias. Uma mensagem apagada some para o grupo, mas a equipe guarda uma cópia para poder investigar denúncias. Os áudios ficam guardados por até 90 dias. O microfone só é usado enquanto você grava um áudio, e a câmera só enquanto você escaneia o QR Code de alguém, sempre com a sua permissão. A imagem da câmera é lida no seu próprio aparelho: não é gravada nem enviada para ninguém. Se você usar uma foto sua como papel de parede, ela fica guardada na sua conta e só você a vê. Nos cenáculos, os outros participantes veem o nome e a foto do seu perfil.</p>
+        <p>Cada perfil de adulto tem um código pessoal, com QR Code. Quem recebe o seu código pode adicionar você e conversar com você; se ele cair em mãos erradas, gere um código novo, e o antigo para de funcionar. Você também pode bloquear e denunciar.</p>
+        <p>Outro adulto que encontrar você no ranking geral ou na Comunidade pode tocar em "Pedir para conversar". Ninguém consegue conversar com você sem que você aceite: o pedido aparece em Cenáculos, e você escolhe aceitar ou recusar. Se você recusar, a mesma pessoa só pode pedir de novo depois de 7 dias. Cada pessoa pode enviar no máximo 20 pedidos por dia, e quem você bloquear não consegue enviar pedidos para você.</p>
+        <p>Quem conversa com você, participa de um cenáculo com você ou é da sua família vê o seu perfil com nome, foto, Fé, sequência de dias e lições concluídas. No ranking geral e na Comunidade, os outros adultos veem o seu primeiro nome, a sua foto ou avatar e esses números. Perfis infantis não aparecem para ninguém de fora da família.</p>
+        <p>Se as regras forem desrespeitadas, a equipe pode apagar mensagens, enviar uma advertência e suspender um perfil ou a conta inteira (com todos os perfis), por um tempo ou por tempo indeterminado. Nada do perfil ou da conta suspensa é apagado.</p>
+        <p>As reuniões por vídeo acontecem no Google Meet, fora do Lumina Sancti. Não gravamos nem guardamos nada dessas chamadas, e o uso do Meet segue as regras do Google.</p>
+
+        <h3>Comunidade</h3>
+        <p>Na Comunidade, os perfis de adulto podem seguir uns aos outros e compartilhar marcos das trilhas, como dias seguidos de ofensiva, missões perfeitas, Fé juntada e trilhas concluídas. Só é postado o que você escolher postar, e não existe texto livre. Guardamos quem você segue, quem segue você, os marcos que você postou e as reações (Amém e Parabéns) que você deu. Quem não é da sua família, seu contato ou do mesmo cenáculo vê só o seu primeiro nome, a sua foto ou avatar e os seus números das trilhas, e só pode conversar com você se você aceitar o pedido. Você pode apagar um marco postado quando quiser e deixar de seguir alguém a qualquer momento. Quando você bloqueia uma pessoa, ela deixa de seguir você e você deixa de seguir ela. Perfis infantis não participam da Comunidade.</p>
+
+        <h3>Lembretes</h3>
+        <p>Os lembretes são opcionais e só chegam se você ligar e permitir as notificações no aparelho: o da Hora da Misericórdia, às 15h, e o da ofensiva, no horário que você escolher (uma vez por dia ou de meia em meia hora, até as 22h30), só nos dias em que você ainda não fez a missão. Se a sua ofensiva acabar, por alguns dias chega um convite por dia para você voltar, e depois esses avisos param. O texto do lembrete pode trazer o seu primeiro nome e quantos dias seguidos você tem. Você desliga quando quiser em Meu perfil, na opção "Notificações", ou nas configurações do aparelho. Os avisos passam pelo serviço de notificações do próprio navegador ou do celular (Google, Apple ou Mozilla).</p>
+
+        <h3>Crianças</h3>
+        <p>Perfis infantis só podem ser criados pelo adulto dono da conta, que declara ser pai, mãe ou responsável pela criança e autoriza o uso do perfil. No perfil infantil não pedimos e-mail nem qualquer dado de contato da criança, e para sair do modo infantil é preciso o PIN dos pais. O Lumina Sancti não mostra anúncios.</p>
+
+        <h3>Para que usamos os dados</h3>
+        <p>Só para fazer a sua conta funcionar: guardar o progresso, montar o ranking da família, enviar os e-mails do código de confirmação e de boas-vindas e responder às perguntas feitas à Lumina. Não vendemos seus dados e não os usamos para publicidade.</p>
+
+        <h3>Quem nos ajuda a oferecer o serviço</h3>
+        <ul>
+          <li>Supabase: banco de dados e login, com servidores em São Paulo.</li>
+          <li>Vercel: hospedagem do site.</li>
+          <li>Resend: envio dos e-mails.</li>
+          <li>Google (Gemini): gera as respostas da Lumina a partir da pergunta enviada.</li>
+          <li>Google Meet: reuniões por vídeo dos Cenáculos, abertas direto no Google.</li>
+          <li>GIPHY: busca de GIFs e figurinhas nos Cenáculos. As palavras pesquisadas vão direto do seu navegador para o GIPHY, e só aparecem resultados de classificação livre.</li>
+          <li>Stripe e Google Play: pagamentos dos planos. Os dados do cartão ficam só com eles; o Lumina Sancti nunca os recebe. Guardamos apenas o plano escolhido, a situação da assinatura, a data de renovação e o código de cliente que o Stripe nos devolve.</li>
+          <li>Wikipédia (Wikimedia), Google Fonts e jsDelivr: fotos dos santos, letras do site, partes do código e a lista de emojis, carregadas diretamente pelo seu navegador.</li>
+        </ul>
+
+        <h3>Fotos dos santos</h3>
+        <p>As fotos e pinturas dos santos vêm do Wikimedia Commons e são de domínio público ou de licenças livres. Para os santos que ainda não têm foto livre, o próprio Lumina Sancti fez um desenho. As fotos que pedem crédito estão listadas abaixo.</p>
+        <details class="creditos-fotos">
+          <summary>Ver os créditos das fotos</summary>
+          <ul id="creditos-das-fotos"></ul>
+        </details>
+
+        <h3>Seus direitos</h3>
+        <p>Pela Lei Geral de Proteção de Dados (LGPD), você pode pedir para ver, corrigir ou apagar seus dados. Você mesmo pode apagar tudo em Meu perfil, na opção "Excluir minha conta", ou nos escrever em <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a>.</p>
+
+        <h3>Segurança</h3>
+        <p>As senhas são guardadas de forma embaralhada pelo serviço de login, e ninguém consegue lê-las, nem nós. Toda a comunicação do site é criptografada (HTTPS).</p>
+
+        <h3>Mudanças nesta política</h3>
+        <p>Se esta política mudar, a data no começo da página será atualizada.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-oracoes" class="view">
+      <div class="container oracoes-container">
+        <button class="btn-back" id="btn-back-oracoes">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span data-i18n="voltar_inicio">Voltar para o início</span>
+        </button>
+        <header class="oracoes-topo">
+          <h2 class="section-title">Orações do dia a dia</h2>
+          <p class="oracoes-sub">Mais de 90 orações da Igreja em português, inglês e espanhol, para cada momento da vida.</p>
+        </header>
+
+        <div class="oracoes-destaques">
+          <article id="oracao-do-dia" class="oracao-do-dia"></article>
+          <div id="frase-do-dia-oracoes" class="oracoes-frase"></div>
+        </div>
+
+        <div class="busca-oracao">
+          <label for="oracao-busca" class="busca-oracao-rotulo">Para que você quer rezar?</label>
+          <div class="busca-oracao-campo">
+            <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lupa"></use></svg>
+            <input type="search" id="oracao-busca" placeholder="Ex.: estou com medo, para dormir, pedir perdão..." autocomplete="off" enterkeyhint="search">
+          </div>
+          <div id="oracao-sugestoes" class="busca-atalhos" aria-label="Sugestões de busca"></div>
+          <div id="oracao-resultado" class="oracao-resultado" aria-live="polite"></div>
+        </div>
+
+        <nav id="oracoes-categorias" class="oracoes-categorias" aria-label="Temas das orações"></nav>
+        <div id="lista-oracoes" class="lista-oracoes"></div>
+      </div>
+    </section>
+
+    <section id="view-leitura" class="view">
+      <div class="container leitura-container">
+        <button class="btn-back" id="btn-back-leitura">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span data-i18n="voltar_inicio">Voltar para o início</span>
+        </button>
+        <h2 class="section-title" style="text-align:left; margin: 10px 0 4px;" data-i18n="leitura_titulo">Leitura do dia</h2>
+        <div class="title-divider" style="margin: 0 0 24px;"></div>
+        <div class="leitura-em-breve">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-biblia"></use></svg>
+          <p data-i18n="leitura_em_breve">Em breve estará disponível.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-suporte" class="view">
+      <div class="container suporte-container">
+        <button class="btn-back" id="btn-back-suporte">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span data-i18n="voltar_inicio">Voltar para o início</span>
+        </button>
+        <header class="suporte-topo">
+          <span class="suporte-topo-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-ajuda"></use></svg></span>
+          <h2 class="section-title">Fale com a equipe</h2>
+          <div class="title-divider"></div>
+          <p class="suporte-intro">Tire dúvidas, conte um problema ou mande uma sugestão. A equipe do Lumina Sancti responde aqui mesmo.</p>
+        </header>
+        <div id="suporte-conteudo" class="suporte-conteudo"></div>
+      </div>
+    </section>
+
+    <section id="view-cursos" class="view">
+      <div class="container cursos-container">
+        <button class="btn-back" id="btn-back-cursos">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span data-i18n="voltar_inicio">Voltar para o início</span>
+        </button>
+        <header class="cursos-topo">
+          <p class="cursos-selo" id="cursos-selo">Em breve</p>
+          <h2 class="section-title">Cursos de aprofundamento</h2>
+          <div class="title-divider"></div>
+          <p class="cursos-intro">Para quem quer ir mais fundo na fé. Os cursos vão liberar páginas de aprofundamento sobre vários temas da vida cristã, com explicações simples, o que a Igreja ensina e como viver isso no dia a dia.</p>
+          <p class="cursos-intro">Cada curso vai liberando as páginas aos poucos, no seu ritmo, sempre com base na Bíblia, no Catecismo e no exemplo dos santos.</p>
+        </header>
+
+        <div id="cursos-catalogo-caixa">
+        <div id="cursos-catalogo" class="cursos-catalogo"></div>
+
+        <h3 class="cursos-subtitulo" id="cursos-em-breve-titulo">Temas que vão chegar</h3>
+        <ul class="cursos-lista">
+          <li class="curso-item">
+            <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-aliancas"></use></svg>
+            <div><h4>Casamento e vida a dois</h4><p>O sacramento do Matrimônio, o namoro e o noivado cristãos e a família como Igreja doméstica.</p></div>
+          </li>
+          <li class="curso-item">
+            <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-calice"></use></svg>
+            <div><h4>A Santa Missa explicada</h4><p>Cada parte da celebração, os gestos, as cores e por que a Eucaristia é o centro da fé.</p></div>
+          </li>
+          <li class="curso-item">
+            <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-gota"></use></svg>
+            <div><h4>Os sete sacramentos</h4><p>Do Batismo à Unção dos Enfermos: os sinais que Jesus deixou para nos dar a sua graça.</p></div>
+          </li>
+          <li class="curso-item">
+            <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-biblia"></use></svg>
+            <div><h4>A Bíblia: como ler e rezar</h4><p>Como a Bíblia foi escrita, como entender cada parte e como rezar com a Palavra de Deus.</p></div>
+          </li>
+          <li class="curso-item">
+            <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-coroa"></use></svg>
+            <div><h4>Maria na fé da Igreja</h4><p>Os dogmas sobre Nossa Senhora, as aparições reconhecidas e uma devoção bem vivida.</p></div>
+          </li>
+          <li class="curso-item">
+            <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-vela"></use></svg>
+            <div><h4>Oração e vida interior</h4><p>Meditação, leitura orante, exame de consciência e outros caminhos para rezar melhor.</p></div>
+          </li>
+          <li class="curso-item">
+            <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-chave"></use></svg>
+            <div><h4>Confissão e misericórdia</h4><p>Como se preparar, como se confessar bem e o tamanho do perdão de Deus.</p></div>
+          </li>
+          <li class="curso-item">
+            <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-livro"></use></svg>
+            <div><h4>O Credo e o Catecismo</h4><p>Aquilo em que a Igreja crê, frase por frase, explicado de um jeito simples.</p></div>
+          </li>
+          <li class="curso-item">
+            <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-tabuas"></use></svg>
+            <div><h4>Mandamentos e virtudes</h4><p>Os Dez Mandamentos, as virtudes e as escolhas do dia a dia à luz da fé.</p></div>
+          </li>
+          <li class="curso-item">
+            <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-igreja"></use></svg>
+            <div><h4>História da Igreja</h4><p>Dos apóstolos até hoje: mártires, concílios, santos e grandes momentos.</p></div>
+          </li>
+          <li class="curso-item">
+            <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-calendario"></use></svg>
+            <div><h4>O ano litúrgico</h4><p>Advento, Natal, Quaresma, Páscoa e Tempo Comum: o que celebramos em cada tempo.</p></div>
+          </li>
+          <li class="curso-item">
+            <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-chama"></use></svg>
+            <div><h4>Vocação e santidade</h4><p>Sacerdócio, vida consagrada e vida leiga: o chamado de cada um para ser santo.</p></div>
+          </li>
+        </ul>
+
+        <p class="cursos-enquanto" id="cursos-enquanto"><span>Enquanto os cursos não chegam, continue aprendendo nas Trilhas dos Santos.</span> <button type="button" class="cursos-link" id="cursos-ir-trilhas">Ir para as Trilhas</button></p>
+        </div>
+        <div id="curso-pagina" class="curso-pagina" hidden></div>
+        <div id="aula-pagina" class="aula-pagina" hidden></div>
+      </div>
+    </section>
+
+    <section id="view-terco" class="view">
+      <div class="container terco-container">
+        <button class="btn-back" id="btn-back-terco">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span data-i18n="voltar_inicio">Voltar para o início</span>
+        </button>
+
+        <div id="terco-escolha" class="terco-escolha">
+          <header class="terco-topo-escolha">
+            <h2 class="section-title">Terço guiado</h2>
+            <p class="terco-intro">Escolha o mistério de hoje (já sugerimos o tradicional do dia da semana) e rezaremos juntos, passo a passo.</p>
+          </header>
+          <div class="terco-jeito">
+            <p class="terco-jeito-pergunta">Como você vai rezar?</p>
+            <div class="terco-jeito-botoes" role="group" aria-label="Como você vai rezar?">
+              <button type="button" class="terco-jeito-botao" data-jeito="sozinho" aria-pressed="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c1.2-3.8 4-5.5 7-5.5s5.8 1.7 7 5.5"/></svg>
+                <span>Sozinho</span>
+              </button>
+              <button type="button" class="terco-jeito-botao" data-jeito="grupo" aria-pressed="false">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="8.5" cy="8.5" r="3"/><circle cx="16.5" cy="9.5" r="2.5"/><path d="M2.5 20c1-3.4 3.3-5 6-5s5 1.6 6 5M14.5 15.3c.6-.2 1.3-.3 2-.3 2.3 0 4.2 1.4 5 4.5"/></svg>
+                <span>Com alguém</span>
+              </button>
+            </div>
+            <p class="terco-jeito-dica" id="terco-jeito-dica"></p>
+          </div>
+          <div id="terco-botoes-misterio" class="terco-botoes-misterio"></div>
+          <h3 class="terco-outros-titulo">Outro terço</h3>
+          <div id="terco-outros" class="terco-botoes-misterio"></div>
+        </div>
+
+        <div id="terco-rezando" class="terco-rezando" style="display:none;">
+          <div class="terco-cabecalho">
+            <p class="terco-nome-rezando" id="terco-nome-rezando"></p>
+            <button type="button" class="terco-jeito-chip" id="terco-jeito-chip"></button>
+            <div class="terco-progresso">
+              <span class="terco-progresso-texto"><span id="terco-passo-atual">1</span> / <span id="terco-passo-total">1</span></span>
+              <span class="terco-barra" aria-hidden="true"><i id="terco-barra-cheia"></i></span>
+            </div>
+          </div>
+          <div class="terco-palco">
+            <div id="terco-rosario" class="terco-rosario" aria-hidden="true"></div>
+            <div class="terco-oracao-cartao" id="terco-oracao-cartao">
+              <span class="terco-etapa" id="terco-etapa"></span>
+              <h3 id="terco-titulo-passo" class="terco-titulo-passo"></h3>
+              <p id="terco-texto-passo" class="terco-texto-passo"></p>
+              <div id="terco-contas" class="terco-contas" hidden></div>
+            </div>
+          </div>
+          <div class="terco-navegacao">
+            <button id="terco-anterior" class="filter-btn">← Anterior</button>
+            <button id="terco-proximo" class="filter-btn active">Próxima →</button>
+          </div>
+          <button id="terco-sair" class="btn-back terco-sair">Encerrar o terço</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-padroeiro" class="view">
+      <div class="container padroeiro-container">
+        <button class="btn-back" id="btn-back-padroeiro">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span data-i18n="voltar_inicio">Voltar para o início</span>
+        </button>
+        <h2 class="section-title" style="text-align:left; margin: 10px 0 4px;">Padroeiro de...</h2>
+        <div class="title-divider" style="margin: 0 0 16px;"></div>
+        <p class="terco-intro">Conte o que você está vivendo — uma necessidade, uma profissão, uma situação — e veja quais santos a Igreja costuma invocar para isso. Pode escrever do seu jeito: "vou viajar", "minha mãe está doente", "procuro emprego".</p>
+        <div class="busca-oracao-campo padroeiro-campo">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lupa"></use></svg>
+          <input type="search" id="padroeiro-input" placeholder="Ex.: viagem, doença, trabalho, prova..." autocomplete="off" enterkeyhint="search" aria-label="Necessidade, profissão ou situação">
+        </div>
+        <div id="padroeiro-temas" class="padroeiro-temas"></div>
+        <div id="padroeiro-resultados" class="padroeiro-resultados" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section id="view-trilhas" class="view">
+      <div class="container trilhas-container">
+        <button class="btn-back" id="btn-back-trilhas">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span data-i18n="voltar_inicio">Voltar para o início</span>
+        </button>
+        <div class="trilhas-layout">
+          <aside class="trilhas-lateral">
+            <h2 class="section-title trilhas-titulo" data-i18n="trilhas_titulo">Trilhas dos Santos</h2>
+            <p class="trilhas-intro" data-i18n="trilhas_intro">Uma trilha para cada santo. Complete as missões para ganhar Fé, manter sua ofensiva e conquistar a insígnia e a medalha da virtude de cada um.</p>
+            <div class="trilhas-conta" id="trilhas-conta"></div>
+            <div class="trilhas-stats" id="trilhas-stats"></div>
+            <div class="trilhas-medalhas-cartao">
+              <div class="trilhas-medalhas-topo">
+                <strong data-i18n="trilhas_insignias">Minhas medalhas</strong>
+                <span class="trilhas-medalhas-conta" id="trilhas-medalhas-conta"></span>
+              </div>
+              <div class="trilhas-vitrine" id="trilhas-vitrine"></div>
+              <button id="trilhas-abrir-insignias" class="trilhas-ver-medalhas"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-medalha"></use></svg><span data-i18n="trilhas_ver_medalhas">Ver todas as medalhas</span></button>
+            </div>
+          </aside>
+          <div class="trilhas-principal">
+            <div id="lista-trilhas" class="lista-trilhas"></div>
+            <p class="trilhas-nota" id="trilhas-nota">Por enquanto seu progresso fica salvo neste aparelho. Em breve ele vai ficar guardado na sua conta, com perfis e rankings.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-licao" class="view">
+      <div class="licao-tela">
+        <div class="licao-topo">
+          <button id="licao-fechar" class="icon-btn" aria-label="Sair da lição">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+          <div class="licao-barra"><div id="licao-barra-preenchida" class="licao-barra-preenchida"></div></div>
+          <span class="licao-santidade" title="Santidade"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-pomba"></use></svg><span id="licao-santidade">15</span></span>
+        </div>
+        <div id="licao-santo" class="licao-santo"></div>
+        <div id="licao-corpo" class="licao-corpo"></div>
+        <div class="licao-rodape">
+          <div id="licao-feedback" class="licao-feedback" aria-live="polite"></div>
+          <button id="licao-botao" class="licao-botao" disabled>Verificar</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-perfis" class="view">
+      <div class="perfis-fundo" aria-hidden="true">
+        <div class="perfis-quadro">
+          <video class="perfis-video" id="perfis-video" muted loop playsinline preload="none" disablepictureinpicture disableremoteplayback></video>
+        </div>
+      </div>
+      <div class="container perfis-container">
+        <h2 class="perfis-titulo">Quem vai aprender agora?</h2>
+        <div id="perfis-grade" class="perfis-grade"></div>
+        <button id="perfis-gerenciar" class="perfis-gerenciar">Gerenciar perfis</button>
+      </div>
+    </section>
+
+    <section id="view-ranking" class="view">
+      <div class="container ranking-container">
+        <button class="btn-back" id="btn-back-ranking">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span>Voltar às trilhas</span>
+        </button>
+        <h2 class="section-title trilhas-titulo">Ranking</h2>
+        <div class="ranking-abas" id="ranking-abas">
+          <button class="ranking-aba active" data-aba="familia">Família</button>
+          <button class="ranking-aba" data-aba="global" id="ranking-aba-global">Global</button>
+        </div>
+        <div class="ranking-periodos">
+          <button class="ranking-periodo active" data-periodo="week">Esta semana</button>
+          <button class="ranking-periodo" data-periodo="all">Desde sempre</button>
+        </div>
+        <div id="ranking-lista" class="ranking-lista"></div>
+        <p class="ranking-aviso-assinantes" id="ranking-aviso-assinantes">O ranking da família é um recurso para assinantes. Por enquanto, ele fica grátis por alguns dias para testes.</p>
+      </div>
+    </section>
+
+    <section id="view-planos" class="view">
+      <div class="container planos-container">
+        <button class="btn-back" id="btn-back-planos">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span data-i18n="voltar_inicio">Voltar para o início</span>
+        </button>
+        <h2 class="section-title trilhas-titulo">Planos</h2>
+        <p class="trilhas-intro">Escolha o jeito de caminhar com os santos: sozinho, a dois ou com toda a família.</p>
+        <div class="planos-periodo" role="group" aria-label="Como pagar">
+          <button type="button" class="planos-periodo-botao ativo" data-periodo="mensal" aria-pressed="true">Mensal</button>
+          <button type="button" class="planos-periodo-botao" data-periodo="anual" aria-pressed="false">Anual <small>1 mês de desconto</small></button>
+        </div>
+        <div id="planos-grade" class="planos-grade"></div>
+        <div class="planos-rodape">
+          <div id="planos-situacao" class="planos-situacao" hidden></div>
+          <p class="planos-mensagem" id="planos-mensagem" aria-live="polite"></p>
+          <p class="planos-letras">Pagamento seguro pelo Stripe, com cartão. A assinatura renova sozinha e pode ser cancelada quando você quiser. Se desistir em até 7 dias da primeira compra, devolvemos todo o valor.</p>
+          <button type="button" class="footer-privacidade" id="planos-termos">Termos da Assinatura</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-termos" class="view">
+      <div class="container privacidade-container">
+        <button class="btn-back" id="btn-back-termos">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span>Voltar</span>
+        </button>
+        <h2 class="section-title" style="text-align:left; margin: 10px 0 4px;">Termos da Assinatura</h2>
+        <div class="title-divider" style="margin: 0 0 16px;"></div>
+        <div data-i18n-bloco="termos">
+        <p class="privacidade-data">Atualizados em 29 de setembro de 2026.</p>
+
+        <h3>O que é a assinatura</h3>
+        <p>O Lumina Sancti (luminasancti.com) tem um plano Gratuito e três planos pagos: Individual, Duo e Família. O plano Gratuito continua existindo sempre, com as biografias dos santos, as orações, o terço guiado e as trilhas, para um perfil (de adulto ou de criança). Os planos pagos liberam mais perfis e outros recursos, descritos na página Planos. Os recursos marcados como "em breve" ainda não estão prontos e não fazem parte do que é cobrado hoje.</p>
+
+        <h3>Preços</h3>
+        <ul>
+          <li>Individual: R$ 19,90 por mês ou R$ 219 por ano, para 1 perfil.</li>
+          <li>Duo: R$ 31,90 por mês ou R$ 349 por ano, para 2 perfis.</li>
+          <li>Família: R$ 43,80 por mês ou R$ 481 por ano, para até 6 perfis.</li>
+        </ul>
+        <p>O preço cobrado é sempre o que aparece na tela de pagamento. Se um preço mudar, avisaremos por e-mail com pelo menos 30 dias de antecedência, e você poderá cancelar antes da nova cobrança.</p>
+
+        <h3>Como funciona a cobrança</h3>
+        <p>No site, o pagamento é feito com cartão pelo Stripe. No aplicativo para Android, será feito pela Google Play. O Lumina Sancti não recebe nem guarda os dados do seu cartão. A assinatura renova sozinha ao fim de cada período (todo mês ou todo ano, conforme a sua escolha), com a cobrança no mesmo cartão, até que você cancele.</p>
+
+        <h3>Cancelamento</h3>
+        <p>Você pode cancelar quando quiser, sem multa: na página Planos, toque em "Gerenciar assinatura". Se assinou pela Google Play, cancele na própria Google Play. Depois de cancelar, o plano continua valendo até o fim do período que já foi pago, e não há novas cobranças.</p>
+
+        <h3>Direito de arrependimento</h3>
+        <p>Pelo Código de Defesa do Consumidor (artigo 49), você pode desistir da primeira assinatura em até 7 dias depois da compra e receber de volta todo o valor pago. Para isso, escreva para <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a> com o e-mail da sua conta. O valor volta para o mesmo cartão; o prazo para aparecer na fatura depende do banco. Fora desse prazo, não devolvemos valores de períodos já iniciados, mas você pode cancelar a renovação a qualquer momento.</p>
+
+        <h3>Troca de plano</h3>
+        <p>Você pode trocar de plano pela opção "Gerenciar assinatura". A diferença de preço é calculada de forma proporcional ao tempo que falta no período.</p>
+
+        <h3>Se o pagamento falhar</h3>
+        <p>Se não conseguirmos cobrar o cartão, tentaremos de novo nos dias seguintes, e o plano continua valendo por mais 3 dias. Se o pagamento não for resolvido, a conta volta ao plano Gratuito.</p>
+
+        <h3>Quando o plano termina</h3>
+        <p>Nada é apagado. Os perfis continuam guardados, com a Fé, as medalhas e o progresso. Ficam liberados só os perfis que cabem no plano atual (os mais antigos da conta), e os outros ficam trancados até a conta ter um plano com mais perfis.</p>
+
+        <h3>Excluir a conta</h3>
+        <p>Ao excluir a conta, uma assinatura feita pelo site é cancelada na hora, sem novas cobranças. Uma assinatura feita pela Google Play precisa ser cancelada na Google Play antes de excluir a conta.</p>
+
+        <h3>Uso correto</h3>
+        <p>A assinatura é para uso da sua família. Contas que desrespeitarem as regras do Lumina Sancti podem ser suspensas, como explicado nas Regras dos Cenáculos.</p>
+
+        <h3>Fale conosco</h3>
+        <p>Dúvidas, cobranças que você não reconhece ou pedidos de reembolso: <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a>.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-completar" class="view">
+      <div class="container auth-container">
+        <div class="auth-card">
+          <h2 class="section-title" style="text-align:left; margin-bottom:8px;">Falta só um passo</h2>
+          <p class="auth-codigo-desc">Você escolheu sua conta do Google. Agora digite seu nome para concluir o cadastro no Lumina Sancti.</p>
+          <form id="completar-form" class="auth-form">
+            <label for="completar-nome">Seu nome</label>
+            <input type="text" id="completar-nome" required maxlength="40" autocomplete="name">
+            <button type="submit" class="filter-btn active">Concluir cadastro</button>
+          </form>
+          <button type="button" id="completar-outra-conta" class="perfil-link">Usar outra conta</button>
+          <p class="auth-feedback" id="completar-feedback" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-perfil" class="view">
+      <div class="container meu-perfil-container">
+        <button class="btn-back" id="btn-back-perfil">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span data-i18n="voltar_inicio">Voltar para o início</span>
+        </button>
+
+        <div id="meu-perfil-cabecalho"></div>
+
+        <section class="perfil-secao meu-perfil-conta">
+          <h4 class="perfil-secao-titulo">Minha conta</h4>
+          <div class="ajustes-cartao">
+            <form id="perfil-form" class="auth-form meu-perfil-form">
+              <label for="perfil-nome" data-i18n="conta_nome">Nome</label>
+              <input type="text" id="perfil-nome" required>
+              <p class="auth-email-fixo" id="perfil-email"></p>
+              <button type="submit" class="filter-btn active" data-i18n="perfil_salvar">Salvar alterações</button>
+            </form>
+            <p class="auth-feedback" id="perfil-feedback" aria-live="polite"></p>
+          </div>
+
+          <div class="ajustes-cartao perfil-pin">
+            <h3>PIN dos pais</h3>
+            <p id="perfil-pin-estado">Ele é pedido para sair de um perfil infantil.</p>
+            <button type="button" id="perfil-pin-botao" class="filter-btn active">Criar PIN</button>
+          </div>
+
+          <div class="ajustes-lista">
+            <button type="button" class="ajuste" id="meu-perfil-privacidade">
+              <span class="ajuste-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-escudo"></use></svg></span>
+              <span class="ajuste-textos"><strong>Política de Privacidade</strong><small>Como cuidamos dos seus dados</small></span>
+              <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-seta-direita"></use></svg>
+            </button>
+            <button type="button" class="ajuste" id="meu-perfil-termos">
+              <span class="ajuste-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-livro"></use></svg></span>
+              <span class="ajuste-textos"><strong>Termos da Assinatura</strong><small>Regras de pagamento e cancelamento</small></span>
+              <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-seta-direita"></use></svg>
+            </button>
+            <button type="button" class="ajuste" id="meu-perfil-indicar">
+              <span class="ajuste-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-enviar"></use></svg></span>
+              <span class="ajuste-textos"><strong>Indicar o Lumina Sancti</strong><small>Mande o app para amigos e família</small></span>
+              <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-seta-direita"></use></svg>
+            </button>
+          </div>
+
+          <div class="ajustes-lista">
+            <button type="button" class="ajuste" id="meu-perfil-sair">
+              <span class="ajuste-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-sair"></use></svg></span>
+              <span class="ajuste-textos"><strong>Sair da conta</strong><small>Você pode entrar de novo quando quiser</small></span>
+              <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-seta-direita"></use></svg>
+            </button>
+          </div>
+
+          <div class="perfil-zona-perigo">
+            <h3 data-i18n="perfil_zona_perigo">Excluir conta</h3>
+            <p data-i18n="perfil_excluir_aviso">Isso apaga sua conta e todos os dados ligados a ela, para sempre. Não tem como desfazer.</p>
+            <button id="perfil-excluir-btn" class="btn-excluir-conta" data-i18n="perfil_excluir_botao">Excluir minha conta</button>
+          </div>
+          <p class="meu-perfil-versao" id="meu-perfil-versao" translate="no">Lumina Sancti</p>
+        </section>
+      </div>
+    </section>
+
+    <section id="view-cenaculos" class="view">
+      <div class="cenaculos-casa" id="cenaculos-casa">
+        <div class="cenaculos-painel" id="cenaculos-painel">
+          <div class="cenaculos-topo">
+            <h2 class="cenaculos-titulo">Cenáculos</h2>
+            <div class="cenaculos-topo-icones">
+              <button type="button" class="icon-btn cenaculos-topo-botao" id="cenaculo-escanear-btn" aria-label="Escanear QR Code"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-escanear"></use></svg></button>
+              <button type="button" class="icon-btn cenaculos-topo-botao cenaculos-so-computador" id="cenaculo-nova-btn" aria-label="Nova conversa"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-conversa-mais"></use></svg></button>
+              <div class="cenaculos-menu-caixa">
+                <button type="button" class="icon-btn cenaculos-topo-botao" id="cenaculos-menu-btn" aria-label="Mais opções" aria-haspopup="true" aria-expanded="false"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-pontos"></use></svg></button>
+                <div class="cenaculos-menu" id="cenaculos-menu" role="menu" hidden>
+                  <button type="button" role="menuitem" id="cenaculo-meu-codigo-btn"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-qr"></use></svg><span>Meu código</span></button>
+                  <button type="button" role="menuitem" id="cenaculo-criar-btn"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-usuarios"></use></svg><span>Criar cenáculo</span></button>
+                  <button type="button" role="menuitem" id="cenaculo-entrar-btn"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-mais"></use></svg><span>Entrar com convite</span></button>
+                  <button type="button" role="menuitem" id="cenaculo-regras-btn"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-escudo"></use></svg><span>Regras dos Cenáculos</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <label class="cenaculos-busca">
+            <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lupa"></use></svg>
+            <input type="search" id="cenaculos-busca" placeholder="Pesquisar" aria-label="Pesquisar conversas" autocomplete="off">
+          </label>
+          <div class="cenaculos-filtros" role="tablist" aria-label="Filtrar conversas">
+            <button type="button" class="cenaculos-filtro ativo" data-filtro="tudo" role="tab">Tudo</button>
+            <button type="button" class="cenaculos-filtro" data-filtro="conversas" role="tab">Conversas</button>
+            <button type="button" class="cenaculos-filtro" data-filtro="grupos" role="tab">Cenáculos</button>
+          </div>
+          <div id="cenaculos-aviso-mensagens" class="cenaculos-aviso-mensagens" hidden></div>
+          <div id="cenaculos-pedidos" class="cenaculos-pedidos" hidden></div>
+          <div id="cenaculos-lista" class="cenaculos-lista"></div>
+          <button type="button" class="cenaculos-fab" id="cenaculo-conversa-btn" aria-label="Nova conversa"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-conversa-mais"></use></svg></button>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-comunidade" class="view">
+      <div class="container comunidade-container">
+        <div class="comunidade-topo">
+          <h2 class="section-title comunidade-titulo">Comunidade</h2>
+          <button type="button" class="comunidade-postar" id="comunidade-postar-btn"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-mais"></use></svg><span>Compartilhar um marco</span></button>
+        </div>
+        <div class="comunidade-eu" id="comunidade-eu"></div>
+        <div class="comunidade-abas" role="tablist" aria-label="O que mostrar">
+          <button type="button" class="comunidade-aba ativa" data-aba="seguindo" role="tab" aria-selected="true">Seguindo</button>
+          <button type="button" class="comunidade-aba" data-aba="global" role="tab" aria-selected="false">Global</button>
+        </div>
+        <div id="comunidade-lista" class="comunidade-lista" aria-live="polite"></div>
+        <button type="button" class="comunidade-mais" id="comunidade-mais" hidden>Ver mais</button>
+      </div>
+    </section>
+
+    <section id="view-cenaculo" class="view">
+      <div class="cenaculo-tela sem-conversa" id="cenaculo-tela">
+        <aside class="cenaculo-lateral" id="cenaculo-lateral" aria-label="Conversas"></aside>
+        <div class="cenaculo-principal">
+        <div class="cenaculo-vazio" id="cenaculo-vazio">
+          <span class="cenaculo-vazio-estrela" aria-hidden="true"><svg viewBox="0 0 100 100" width="84" height="84"><path d="M50 0 C52 35 65 48 100 50 C65 52 52 65 50 100 C48 65 35 52 0 50 C35 48 48 35 50 0 Z" fill="currentColor"/></svg></span>
+          <h3>Cenáculos no computador</h3>
+          <p>Escolha uma conversa na lista ao lado, ou comece uma nova com o código ou o QR Code de um amigo.</p>
+          <small><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-escudo"></use></svg> As conversas não são secretas: a equipe do Lumina Sancti pode lê-las para proteger todos.</small>
+        </div>
+        <div class="cenaculo-conversa" id="cenaculo-conversa">
+        <header class="cenaculo-topo">
+          <button type="button" class="icon-btn" id="cenaculo-voltar" aria-label="Voltar aos cenáculos">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          </button>
+          <button type="button" class="cenaculo-titulo" id="cenaculo-titulo-btn">
+            <span class="cenaculo-topo-foto" id="cenaculo-topo-foto"></span>
+            <span class="cenaculo-titulo-textos">
+              <strong id="cenaculo-nome" translate="no">Cenáculo</strong>
+              <small id="cenaculo-membros-contagem"></small>
+            </span>
+          </button>
+          <button type="button" class="icon-btn" id="cenaculo-menu-btn" aria-label="Opções do cenáculo"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-pontos"></use></svg></button>
+        </header>
+        <div id="cenaculo-encontro" class="cenaculo-encontro" hidden></div>
+        <div id="cenaculo-mensagens" class="cenaculo-mensagens"></div>
+        <div id="cenaculo-painel-emojis" class="cenaculo-painel cenaculo-painel-emojis" hidden></div>
+        <div id="cenaculo-painel-gifs" class="cenaculo-painel cenaculo-painel-gifs" hidden>
+          <div class="cenaculo-gifs-topo">
+            <div class="cenaculo-gifs-abas" role="tablist">
+              <button type="button" class="cenaculo-gifs-aba ativa" data-aba="gifs" role="tab">GIFs</button>
+              <button type="button" class="cenaculo-gifs-aba" data-aba="figurinhas" role="tab">Figurinhas</button>
+            </div>
+            <input type="search" id="cenaculo-gifs-busca" class="cenaculo-gifs-busca" placeholder="Pesquisar no GIPHY" aria-label="Pesquisar GIFs e figurinhas" autocomplete="off">
+          </div>
+          <div id="cenaculo-gifs-grade" class="cenaculo-gifs-grade"></div>
+          <p class="cenaculo-gifs-giphy">Powered by GIPHY</p>
+        </div>
+        <div id="cenaculo-gravando" class="cenaculo-gravando" hidden>
+          <button type="button" class="icon-btn cenaculo-gravando-cancelar" id="cenaculo-gravando-cancelar" aria-label="Cancelar áudio"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lixeira"></use></svg></button>
+          <span class="cenaculo-gravando-ponto" aria-hidden="true"></span>
+          <span class="cenaculo-gravando-tempo" id="cenaculo-gravando-tempo">0:00</span>
+          <span class="cenaculo-gravando-onda" id="cenaculo-gravando-onda" aria-label="Gravando áudio"></span>
+          <button type="button" class="cenaculo-enviar" id="cenaculo-gravando-enviar" aria-label="Enviar áudio"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-enviar"></use></svg></button>
+        </div>
+        <form id="cenaculo-escrever" class="cenaculo-escrever" autocomplete="off">
+          <div class="cenaculo-segurando" id="cenaculo-segurando" hidden>
+            <span class="cenaculo-gravando-ponto" aria-hidden="true"></span>
+            <span class="cenaculo-gravando-tempo" id="cenaculo-segurando-tempo">0:00</span>
+            <span class="cenaculo-deslize" id="cenaculo-deslize"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-voltar-seta"></use></svg> Deslize para cancelar</span>
+          </div>
+          <span class="cenaculo-trava" id="cenaculo-trava" hidden aria-hidden="true"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-cadeado"></use></svg><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-seta-cima"></use></svg></span>
+          <div class="cenaculo-caixa">
+            <button type="button" class="icon-btn cenaculo-ferramenta" id="cenaculo-emoji-btn" aria-label="Emojis"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-emoji"></use></svg></button>
+            <textarea id="cenaculo-texto" rows="1" maxlength="2000" placeholder="Mensagem" aria-label="Mensagem"></textarea>
+            <button type="button" class="icon-btn cenaculo-ferramenta cenaculo-gif-btn" id="cenaculo-gif-btn" aria-label="GIFs e figurinhas"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-figurinha"></use></svg></button>
+          </div>
+          <button type="submit" class="cenaculo-enviar" id="cenaculo-enviar-btn" aria-label="Enviar" hidden><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-enviar"></use></svg></button>
+          <button type="button" class="cenaculo-enviar" id="cenaculo-microfone-btn" aria-label="Gravar áudio"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-microfone"></use></svg></button>
+        </form>
+        </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <svg class="footer-icon" viewBox="0 0 100 100" width="28" height="28" fill="var(--primary-color)">
+        <path d="M50 0 C52 35 65 48 100 50 C65 52 52 65 50 100 C48 65 35 52 0 50 C35 48 48 35 50 0 Z" opacity="0.9"/>
+      </svg>
+      <p class="footer-nome">Lumina Sancti</p>
+
+      <div class="footer-social">
+        <a href="https://www.instagram.com/luminasancti" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="Lumina Sancti no Instagram">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          <span>@luminasancti</span>
+        </a>
+      </div>
+
+      <button type="button" id="footer-instalar" class="footer-instalar" hidden><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-baixar"></use></svg><span>Instalar o app no celular</span></button>
+      <button type="button" id="footer-privacidade" class="footer-privacidade">Política de Privacidade</button>
+      <button type="button" id="footer-termos" class="footer-privacidade footer-termos">Termos da Assinatura</button>
+      <button type="button" id="footer-suporte" class="footer-suporte"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-ajuda"></use></svg><span>Ajuda: fale com a equipe</span></button>
+      <p class="footer-contato" data-i18n="footer_fale_conosco">Fale conosco: <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a></p>
+    </div>
+  </footer>
+
+  <nav id="barra-app" class="barra-app" aria-label="Navegação principal">
+    <button type="button" class="barra-app-botao" data-destino="inicio"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-inicio"></use></svg><span>Início</span></button>
+    <button type="button" class="barra-app-botao" data-destino="trilhas"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-trilha"></use></svg><span>Trilhas</span></button>
+    <button type="button" class="barra-app-botao" data-destino="cenaculos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-usuarios"></use></svg><span>Cenáculos</span></button>
+    <button type="button" class="barra-app-botao" data-destino="comunidade"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-comunidade"></use></svg><span>Comunidade</span></button>
+    <button type="button" class="barra-app-botao" data-destino="oracoes"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-livro"></use></svg><span>Orações</span></button>
+    <button type="button" class="barra-app-botao" data-destino="conta"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-pessoa"></use></svg><span>Conta</span></button>
+  </nav>
+
+  <svg style="display: none;">
+    <defs>
+      <g id="icone-estrela"><path transform="scale(0.24)" d="M50 0 C52 35 65 48 100 50 C65 52 52 65 50 100 C48 65 35 52 0 50 C35 48 48 35 50 0 Z" fill="currentColor" stroke="none"/></g>
+      <g id="icone-chama"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></g>
+      <g id="icone-pomba"><path d="M16 7h.01"/><path d="M3.4 18H12a8 8 0 0 0 8-8V7a4 4 0 0 0-7.28-2.3L2 20"/><path d="m20 7 2 .5-2 .5"/><path d="M10 18v3"/><path d="M14 17.75V21"/><path d="M7 18a6 6 0 0 0 3.84-10.61"/></g>
+      <g id="icone-cadeado"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></g>
+      <g id="icone-check"><path d="M20 6 9 17l-5-5"/></g>
+      <g id="icone-medalha"><circle cx="12" cy="8" r="6"/><path d="M15.48 12.89 17 22l-5-3-5 3 1.52-9.11"/></g>
+      <g id="icone-trilha"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></g>
+      <g id="icone-biblia"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/><path d="M12 6.5v7M9.5 9h5"/></g>
+      <g id="icone-livro"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></g>
+      <g id="icone-terco"><circle cx="12" cy="8.5" r="6" stroke-dasharray="1.6 2.2"/><path d="M12 14.5v7.5M9.3 18h5.4"/></g>
+      <g id="icone-lupa"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></g>
+      <g id="icone-lapis"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></g>
+      <g id="icone-mais"><path d="M12 5v14M5 12h14"/></g>
+      <g id="icone-trofeu"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></g>
+      <g id="icone-usuarios"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></g>
+      <g id="icone-camera"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></g>
+      <g id="icone-baixar"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></g>
+      <g id="icone-coracao"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></g>
+      <g id="icone-som"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></g>
+      <g id="icone-som-mudo"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="m22 9-6 6"/><path d="m16 9 6 6"/></g>
+      <g id="icone-inicio"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></g>
+      <g id="icone-enviar"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></g>
+      <g id="icone-emoji"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 9h.01"/><path d="M15 9h.01"/></g>
+      <g id="icone-figurinha"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h9.5L21 15.5V5a2 2 0 0 0-2-2z"/><path d="M14 21v-4a2 2 0 0 1 2-2h5"/></g>
+      <g id="icone-video"><path d="m22 8-6 4 6 4V8z"/><rect x="2" y="6" width="14" height="12" rx="2"/></g>
+      <g id="icone-pontos"><circle cx="12" cy="5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="19" r="1.2"/></g>
+      <g id="icone-escudo"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></g>
+      <g id="icone-pessoa"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></g>
+      <g id="icone-conversa"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.8 8.8 0 0 1-3.9-.9L3 20.5l1.5-4.6A8.4 8.4 0 1 1 21 11.5z"/></g>
+      <g id="icone-conversa-mais"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.8 8.8 0 0 1-3.9-.9L3 20.5l1.5-4.6A8.4 8.4 0 1 1 21 11.5z"/><path d="M12 8v7M8.5 11.5h7"/></g>
+      <g id="icone-escanear"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M7 12h10"/></g>
+      <g id="icone-voltar-seta"><path d="m15 18-6-6 6-6"/></g>
+      <g id="icone-seta-cima"><path d="m18 15-6-6-6 6"/></g>
+      <g id="icone-seta-direita"><path d="m9 18 6-6-6-6"/></g>
+      <g id="icone-paleta"><path d="M12 22a10 10 0 1 1 10-10c0 2.8-2.2 4-4 4h-2a2 2 0 0 0-1.5 3.3A1.7 1.7 0 0 1 12 22z"/><circle cx="7.5" cy="11" r="1.2"/><circle cx="10.5" cy="7" r="1.2"/><circle cx="15.5" cy="7.5" r="1.2"/></g>
+      <g id="icone-sair"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></g>
+      <g id="icone-qr"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 14h3v3h-3zM20 14v.01M14 20v.01M17 20h4v-3"/></g>
+      <g id="icone-microfone"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><path d="M12 18v4"/></g>
+      <g id="icone-lixeira"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></g>
+      <g id="icone-tocar"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></g>
+      <g id="icone-pausar"><path d="M8 5v14M16 5v14" stroke-width="3.2"/></g>
+      <g id="icone-comunidade"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="m12 7.6 1.3 2.7 2.9.4-2.1 2 .5 2.9-2.6-1.4-2.6 1.4.5-2.9-2.1-2 2.9-.4z"/></g>
+      <g id="icone-cruz"><path d="M12 3v18M6.5 8.5h11"/></g>
+      <g id="icone-misericordia"><path d="M12 2.5v7M9 5h6"/><path d="M12 11.5 6 21.5M12 11.5l6 10M12 11.5 9.2 21.8M12 11.5l2.8 10.3"/></g>
+      <g id="icone-sino"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></g>
+      <g id="icone-capelo"><path d="M2 9.5 12 4.5l10 5-10 5z"/><path d="M6 11.5V16c0 1.7 2.7 3 6 3s6-1.3 6-3v-4.5"/><path d="M22 9.5v5"/></g>
+      <g id="icone-aliancas"><circle cx="9" cy="14.5" r="5.5"/><circle cx="15" cy="14.5" r="5.5"/><path d="m12 2.5 1.6 2.2L12 6.9l-1.6-2.2z"/></g>
+      <g id="icone-calice"><path d="M6.5 3h11c0 5.2-2.5 8.5-5.5 8.5S6.5 8.2 6.5 3z"/><path d="M12 11.5V19"/><path d="M8 21h8"/><path d="M9.5 19h5"/></g>
+      <g id="icone-gota"><path d="M12 2.7s-6 6.4-6 11.1a6 6 0 0 0 12 0C18 9.1 12 2.7 12 2.7z"/><path d="M12 11v6M9.5 13.5h5"/></g>
+      <g id="icone-coroa"><path d="M3.5 18h17l1-10-5.5 4L12 5l-4 7-5.5-4z"/><path d="M4 21h16"/></g>
+      <g id="icone-vela"><path d="M12 2.5c1.6 1.8 2 3 2 4a2 2 0 0 1-4 0c0-1 .4-2.2 2-4z"/><rect x="8.5" y="10" width="7" height="11" rx="1"/></g>
+      <g id="icone-chave"><circle cx="7.5" cy="16.5" r="4.5"/><path d="m10.7 13.3 9.8-9.8"/><path d="m17 6.8 3 3"/><path d="m14.5 9.3 2 2"/></g>
+      <g id="icone-tabuas"><path d="M3.5 20.5V8a4.25 4.25 0 0 1 8.5 0v12.5z"/><path d="M12 20.5V8a4.25 4.25 0 0 1 8.5 0v12.5z"/><path d="M6 10.5h3.5M6 13.5h3.5M6 16.5h3.5M14.5 10.5H18M14.5 13.5H18M14.5 16.5H18"/></g>
+      <g id="icone-igreja"><path d="M12 2v4M10 4h4"/><path d="M5.5 21V11L12 6l6.5 5v10"/><path d="M3 21h18"/><path d="M10 21v-4a2 2 0 0 1 4 0v4"/></g>
+      <g id="icone-calendario"><rect x="3" y="4.5" width="18" height="16.5" rx="2"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><path d="M12 12v6M9.5 14.3h5"/></g>
+      <g id="icone-ajuda"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></g>
+      <g id="icone-alerta"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></g>
+      <g id="icone-lampada"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.1 14c.2-1 .7-1.7 1.4-2.5A4.6 4.6 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.4 2.5"/></g>
+      <g id="icone-seguir"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></g>
+      <g id="icon-aureola">
+        <circle cx="12" cy="8" r="6" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-dasharray="2 2" opacity="0.8"/>
+        <path d="M12 14c-4.4 0-8 2.7-8 6v2h16v-2c0-3.3-3.6-6-8-6z" fill="var(--primary-color)" opacity="0.3"/>
+      </g>
+    </defs>
+  </svg>
+
+  <script src="entrada.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
+  <script src="busca.js"></script>
+  <script src="busca-idiomas.js"></script>
+  <script src="nomes-santos.js"></script>
+  <script src="liturgia.js"></script>
+  <script src="medalhas.js"></script>
+  <script src="telas-idioma.js"></script>
+  <script src="fotos-santos.js"></script>
+  <script src="script.js"></script>
+  <script src="oracoes-dados.js"></script>
+  <script src="oracoes.js"></script>
+  <script src="cursos.js"></script>
+  <script src="widget.js"></script>
+  <script src="historias.js"></script>
+  <script src="trilhas.js"></script>
+  <script src="perfis.js"></script>
+  <script src="mascote.js"></script>
+  <script src="cenaculos.js"></script>
+  <script src="amigos.js"></script>
+  <script src="planos.js"></script>
+  <script src="enfeites.js"></script>
+  <script src="enfeites-novos.js"></script>
+  <script src="enfeites-mais.js"></script>
+  <script src="comunidade.js"></script>
+  <script src="notificacoes.js"></script>
+  <script src="avisos.js"></script>
+  <script src="presentes.js"></script>
+  <script src="suporte.js"></script>
 </body>
 </html>
