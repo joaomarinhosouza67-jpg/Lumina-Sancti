@@ -93,6 +93,10 @@ async function verificarAdvertencia() {
   if (!advertencia || !advertencia.id || document.body.classList.contains('modo-kids') || !membroAtivo || membroAtivo.tipo !== 'adulto') return;
   advertenciaNaTela = true;
   const modal = janelaDaAdvertencia();
+  const recado = advertencia.tipo === 'recado';
+  modal.classList.toggle('recado', recado);
+  modal.querySelector('#advertencia-titulo').textContent = recado ? 'Recado da equipe do Lumina Sancti' : 'Aviso da equipe do Lumina Sancti';
+  modal.querySelector('.advertencia-explica').hidden = recado;
   modal.querySelector('#advertencia-motivo').textContent = advertencia.motivo;
   const entendi = modal.querySelector('#advertencia-entendi');
   const novoEntendi = entendi.cloneNode(true);
@@ -115,7 +119,7 @@ async function verificarAdvertencia() {
   regras.replaceWith(novasRegras);
   const caixaDasRegras = modal.querySelector('#advertencia-texto-das-regras');
   caixaDasRegras.hidden = true;
-  novasRegras.hidden = typeof REGRAS_DOS_CENACULOS === 'undefined';
+  novasRegras.hidden = recado || typeof REGRAS_DOS_CENACULOS === 'undefined';
   novasRegras.addEventListener('click', () => {
     if (!caixaDasRegras.innerHTML) caixaDasRegras.innerHTML = REGRAS_DOS_CENACULOS;
     caixaDasRegras.hidden = !caixaDasRegras.hidden;

@@ -1248,6 +1248,13 @@ function montarTrilha(original, idioma, kids) {
   return expandirEmMissoes(montada, idioma);
 }
 
+const TRILHAS_SECRETAS = ['santo-jose', 'jose'];
+TRILHAS_ORIGINAIS.sort((a, b) => Number(TRILHAS_SECRETAS.includes(a.slug)) - Number(TRILHAS_SECRETAS.includes(b.slug)));
+
+function trilhaSecreta(trilha) {
+  return TRILHAS_SECRETAS.includes(trilha.slug) || trilha.santoId === 'jose';
+}
+
 const TRILHAS = TRILHAS_ORIGINAIS.map((trilha) => montarTrilha(trilha, 'pt', false));
 
 let cacheDeTrilhasLocais = {};
@@ -1666,6 +1673,7 @@ function renderizarTrilhas() {
           <div class="trilha-foto" id="trilha-foto-${trilha.slug}"><svg class="card-img-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-aureola"></use></svg></div>
           <div class="trilha-info">
             <span class="trilha-virtude">${tt('virtude', { v: trilha.virtude })}</span>
+            ${trilhaSecreta(trilha) ? `<span class="trilha-secreta-selo">${tr('Trilha secreta')}</span>` : ''}
             <h3>${trilha.titulo}</h3>
             <p class="trilha-aviso-trancada">${icone('cadeado')} ${tt('conclua_trilha', { santo: anterior.santo })}</p>
           </div>
@@ -1712,6 +1720,7 @@ function renderizarTrilhas() {
           <div class="trilha-foto" id="trilha-foto-${trilha.slug}"><svg class="card-img-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-aureola"></use></svg></div>
           <div class="trilha-info">
             <span class="trilha-virtude">${tt('virtude', { v: trilha.virtude })}</span>
+            ${trilhaSecreta(trilha) ? `<span class="trilha-secreta-selo">${tr('Trilha secreta')}</span>` : ''}
             <h3>${trilha.titulo}</h3>
             <p>${trilha.descricao}</p>
             ${trilha.santoId ? `<button class="trilha-ler" data-santo="${trilha.santoId}">${tt('ler_historia')}</button>` : ''}
