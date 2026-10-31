@@ -1366,42 +1366,232 @@ function abrirAlbumDeSantos(opcoes) {
     </div>`);
   const livro = corpo.querySelector('.album-livro');
   const folhas = livro.querySelector('#album-folhas');
+  const janela = livro.closest('.cenaculo-janela-conteudo');
   const dupla = () => window.matchMedia('(min-width: 860px)').matches;
-  const visiveis = () => {
-    if (!dupla() || paginaDoAlbum === 0) return [paginaDoAlbum];
-    return [paginaDoAlbum, paginaDoAlbum + 1].filter((i) => i < paginas.length);
+  const semMovimento = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const entre = (valor, minimo, maximo) => Math.max(minimo, Math.min(maximo, valor));
+  const paginaBranca = '<section class="album-pagina album-branca" aria-hidden="true"></section>';
+  const inicioValido = (indice) => {
+    const limite = entre(indice, 0, paginas.length - 1);
+    return dupla() && limite > 0 && limite % 2 === 0 ? limite - 1 : limite;
   };
-  const mostrar = (direcao) => {
-    paginaDoAlbum = Math.max(0, Math.min(paginas.length - 1, paginaDoAlbum));
-    if (dupla() && paginaDoAlbum > 0 && paginaDoAlbum % 2 === 0) paginaDoAlbum -= 1;
-    const lista = visiveis();
-    folhas.className = `album-folhas${lista.length > 1 ? ' dupla' : ''}`;
-    folhas.innerHTML = lista.map(desenharPagina).join('');
-    if (direcao) {
-      void folhas.offsetWidth;
-      folhas.classList.add(`vira-${direcao}`);
+  const abertura = (inicio) => {
+    if (!dupla()) return { dir: inicio };
+    return inicio === 0 ? { dir: 0 } : { esq: inicio, dir: inicio + 1 };
+  };
+  const paginaPronta = (indice) => {
+    if (indice === undefined) return '';
+    return indice < paginas.length ? desenharPagina(indice) : paginaBranca;
+  };
+  const proximo = (sentido) => {
+    const destino = sentido > 0
+      ? (dupla() && paginaDoAlbum > 0 ? paginaDoAlbum + 2 : paginaDoAlbum + 1)
+      : (dupla() ? (paginaDoAlbum <= 1 ? 0 : paginaDoAlbum - 2) : paginaDoAlbum - 1);
+    return destino < 0 || destino >= paginas.length ? null : destino;
+  };
+  const pintarLados = (esq, dir) => {
+    folhas.innerHTML = `${dupla() ? `<div class="album-lado esq">${paginaPronta(esq)}</div>` : ''}<div class="album-lado dir">${paginaPronta(dir)}</div>`;
+  };
+  const adiantarFotos = (inicio) => {
+    if (typeof enderecoDaFotoDoSanto !== 'function') return;
+    for (let i = inicio - 2; i <= inicio + 3; i += 1) {
+      const pagina = paginas[i];
+      if (!pagina || !pagina.lista) continue;
+      pagina.lista.forEach(({ santo }) => {
+        const endereco = cartas[santo.id] ? enderecoDaFotoDoSanto(santo.id) : '';
+        if (endereco) new Image().src = endereco;
+      });
     }
-    const ultima = lista[lista.length - 1];
-    livro.querySelector('#album-indicador').textContent = paginaDoAlbum === 0
-      ? tr('Capa')
-      : tr('Página {n} de {total}', { n: lista.join('-'), total: paginas.length - 1 });
-    livro.querySelector('#album-voltar').disabled = paginaDoAlbum === 0;
-    livro.querySelector('#album-avancar').disabled = ultima >= paginas.length - 1;
   };
-  const virar = (sentido) => {
-    const lista = visiveis();
-    const destino = sentido > 0 ? lista[lista.length - 1] + 1 : (dupla() ? (paginaDoAlbum <= 1 ? 0 : paginaDoAlbum - 2) : paginaDoAlbum - 1);
-    if (destino < 0 || destino >= paginas.length) return;
-    paginaDoAlbum = destino;
-    mostrar(sentido > 0 ? 'frente' : 'tras');
+  const atualizarControles = (inicio) => {
+    const vistas = [inicio, ...(dupla() && inicio > 0 ? [inicio + 1] : [])].filter((i) => i < paginas.length);
+    const fracao = inicio / Math.max(1, paginas.length - 1);
+    livro.querySelector('#album-indicador').textContent = inicio === 0
+      ? tr('Capa')
+      : tr('Página {n} de {total}', { n: vistas.join('-'), total: paginas.length - 1 });
+    livro.querySelector('#album-voltar').disabled = inicio === 0;
+    livro.querySelector('#album-avancar').disabled = vistas[vistas.length - 1] >= paginas.length - 1;
+    folhas.style.setProperty('--pilha-esq', `${inicio === 0 ? 0 : (2 + fracao * 6).toFixed(1)}px`);
+    folhas.style.setProperty('--pilha-dir', `${(2 + (1 - fracao) * 6).toFixed(1)}px`);
+  };
+  const mostrar = (inicio) => {
+    paginaDoAlbum = inicioValido(inicio);
+    const lados = abertura(paginaDoAlbum);
+    folhas.className = `album-folhas ${dupla() ? 'dupla' : 'unica'}`;
+    folhas.style.minHeight = '';
+    folhas.style.setProperty('--abertura', dupla() && paginaDoAlbum === 0 ? '0' : '1');
+    pintarLados(lados.esq, lados.dir);
+    atualizarControles(paginaDoAlbum);
+    adiantarFotos(paginaDoAlbum);
   };
 
+  let giro = null;
+  const comecarGiro = (anterior, seguinte) => {
+    const a = abertura(anterior);
+    const b = abertura(seguinte);
+    const base = folhas.querySelector('.album-lado.dir');
+    const largura = base.offsetWidth;
+    const altura = base.offsetHeight;
+    const esquerda = base.offsetLeft;
+    const faixasTotal = dupla() ? 12 : 10;
+    const passo = largura / faixasTotal;
+    const sobra = 0.7;
+    const semPreguica = (html) => html.replace(/loading="lazy"/g, 'loading="eager"');
+    const frente = semPreguica(paginaPronta(a.dir));
+    const verso = dupla() ? semPreguica(paginaPronta(b.esq)) : paginaBranca;
+    const miolo = (lado, deslocamento, html) => `<div class="album-miolo ${lado}" style="left:${deslocamento.toFixed(2)}px;width:${largura}px;height:${altura}px">${html}</div>`;
+    const fatia = (i) => `<div class="album-faixa" style="left:${i === 0 ? 0 : passo.toFixed(2)}px;width:${(passo + sobra).toFixed(2)}px">
+      <div class="album-face frente">${miolo('dir', -i * passo, frente)}<i class="album-tom"></i><i class="album-luz"></i></div>
+      <div class="album-face verso">${miolo('esq', -(largura - i * passo - passo - sobra), verso)}<i class="album-tom"></i><i class="album-luz"></i></div>
+      ${i < faixasTotal - 1 ? fatia(i + 1) : ''}
+    </div>`;
+    folhas.style.minHeight = `${folhas.offsetHeight}px`;
+    pintarLados(a.esq, b.dir);
+    folhas.insertAdjacentHTML('beforeend', `${dupla() ? '<i class="album-sombra esq"></i>' : ''}<i class="album-sombra dir"></i><div class="album-folha-girando" style="left:${esquerda}px;width:${largura}px;height:${altura}px">${fatia(0)}</div>`);
+    janela.classList.add('album-girando');
+    giro = {
+      anterior,
+      seguinte,
+      largura,
+      p: 0,
+      alvo: 1,
+      quadro: null,
+      dura: anterior === 0,
+      abrindo: dupla() && anterior === 0,
+      sombraEsq: folhas.querySelector('.album-sombra.esq'),
+      sombraDir: folhas.querySelector('.album-sombra.dir'),
+      faixas: Array.from(folhas.querySelectorAll('.album-faixa')).map((faixa) => ({
+        faixa,
+        tomFrente: faixa.children[0].querySelector('.album-tom'),
+        luzFrente: faixa.children[0].querySelector('.album-luz'),
+        tomVerso: faixa.children[1].querySelector('.album-tom'),
+        luzVerso: faixa.children[1].querySelector('.album-luz'),
+      })),
+    };
+  };
+  const pintarGiro = (p) => {
+    giro.p = p;
+    let raiz = 180 * Math.pow(p, 1.8);
+    let ponta = 180 * (1 - Math.pow(1 - p, 1.8));
+    const meio = (raiz + ponta) / 2;
+    if (giro.dura) {
+      raiz = meio + (raiz - meio) * 0.1;
+      ponta = meio + (ponta - meio) * 0.1;
+    }
+    const passo = (ponta - raiz) / (giro.faixas.length - 1);
+    giro.faixas.forEach((item, i) => {
+      item.faixa.style.transform = `rotateY(${(i === 0 ? -raiz : -passo).toFixed(2)}deg)`;
+      const graus = raiz + passo * i;
+      const escuro = (0.68 * Math.pow(Math.sin((graus * Math.PI) / 180), 1.4)).toFixed(3);
+      item.tomFrente.style.opacity = escuro;
+      item.tomVerso.style.opacity = escuro;
+      item.luzFrente.style.opacity = (0.13 * Math.exp(-Math.pow((graus - 36) / 24, 2))).toFixed(3);
+      item.luzVerso.style.opacity = (0.13 * Math.exp(-Math.pow((144 - graus) / 24, 2))).toFixed(3);
+    });
+    const radianos = (meio * Math.PI) / 180;
+    const forca = (0.8 * Math.sin(radianos)).toFixed(3);
+    giro.sombraDir.style.opacity = forca;
+    giro.sombraDir.style.transform = `scaleX(${Math.max(0, Math.cos(radianos)).toFixed(3)})`;
+    if (giro.sombraEsq) {
+      giro.sombraEsq.style.opacity = forca;
+      giro.sombraEsq.style.transform = `scaleX(${Math.max(0, -Math.cos(radianos)).toFixed(3)})`;
+    }
+    if (giro.abrindo) folhas.style.setProperty('--abertura', p.toFixed(3));
+  };
+  const terminarGiro = () => {
+    if (!giro) return;
+    if (giro.quadro) cancelAnimationFrame(giro.quadro);
+    const destino = giro.alvo === 1 ? giro.seguinte : giro.anterior;
+    giro = null;
+    janela.classList.remove('album-girando');
+    mostrar(destino);
+  };
+  const animarGiro = (alvo, duracao) => {
+    const de = giro.p;
+    const comeco = performance.now();
+    giro.alvo = alvo;
+    const quadro = (agora) => {
+      if (!giro) return;
+      const x = entre((agora - comeco) / duracao, 0, 1);
+      const suave = x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+      pintarGiro(de + (alvo - de) * suave);
+      if (x < 1) giro.quadro = requestAnimationFrame(quadro);
+      else terminarGiro();
+    };
+    giro.quadro = requestAnimationFrame(quadro);
+  };
+  const girarPara = (destino) => {
+    terminarGiro();
+    const inicio = inicioValido(destino);
+    if (inicio === paginaDoAlbum) return;
+    if (semMovimento()) { mostrar(inicio); return; }
+    const frente = inicio > paginaDoAlbum;
+    atualizarControles(inicio);
+    comecarGiro(frente ? paginaDoAlbum : inicio, frente ? inicio : paginaDoAlbum);
+    pintarGiro(frente ? 0 : 1);
+    animarGiro(frente ? 1 : 0, 950);
+  };
+  const virar = (sentido) => {
+    terminarGiro();
+    const destino = proximo(sentido);
+    if (destino !== null) girarPara(destino);
+  };
+
+  let arraste = null;
+  let arrastouEm = 0;
+  folhas.addEventListener('dragstart', (evento) => evento.preventDefault());
+  folhas.addEventListener('pointerdown', (evento) => {
+    if (evento.button) return;
+    terminarGiro();
+    arraste = { id: evento.pointerId, x: evento.clientX, y: evento.clientY, ativo: false, ultimoX: evento.clientX, ultimoT: evento.timeStamp, velocidade: 0 };
+  });
+  folhas.addEventListener('pointermove', (evento) => {
+    if (!arraste || evento.pointerId !== arraste.id) return;
+    const dx = evento.clientX - arraste.x;
+    const dy = evento.clientY - arraste.y;
+    if (!arraste.ativo) {
+      if (Math.abs(dy) > 14 && Math.abs(dy) > Math.abs(dx)) { arraste = null; return; }
+      if (Math.abs(dx) < 10 || Math.abs(dx) < Math.abs(dy) || semMovimento()) return;
+      arraste.sentido = dx < 0 ? 1 : -1;
+      const destino = proximo(arraste.sentido);
+      if (destino === null) { arraste = null; return; }
+      arraste.ativo = true;
+      arraste.destino = destino;
+      if (folhas.setPointerCapture) folhas.setPointerCapture(evento.pointerId);
+      comecarGiro(arraste.sentido > 0 ? paginaDoAlbum : destino, arraste.sentido > 0 ? destino : paginaDoAlbum);
+    }
+    const alcance = giro.largura * (dupla() ? 1.5 : 0.9);
+    const avancou = entre(Math.abs(dx) / alcance, 0, 1);
+    const certo = arraste.sentido > 0 ? dx < 0 : dx > 0;
+    pintarGiro(arraste.sentido > 0 ? (certo ? avancou : 0) : (certo ? 1 - avancou : 1));
+    const tempo = Math.max(1, evento.timeStamp - arraste.ultimoT);
+    arraste.velocidade = (evento.clientX - arraste.ultimoX) / tempo;
+    arraste.ultimoX = evento.clientX;
+    arraste.ultimoT = evento.timeStamp;
+  });
+  const soltar = (evento) => {
+    if (!arraste || evento.pointerId !== arraste.id) return;
+    const { ativo, sentido, velocidade } = arraste;
+    arraste = null;
+    if (!ativo || !giro) return;
+    arrastouEm = performance.now();
+    const feito = sentido > 0 ? giro.p : 1 - giro.p;
+    const jogou = sentido > 0 ? velocidade < -0.5 : velocidade > 0.5;
+    const completa = evento.type === 'pointerup' && (feito > 0.35 || jogou);
+    const alvo = sentido > 0 ? (completa ? 1 : 0) : (completa ? 0 : 1);
+    if (completa) atualizarControles(alvo === 1 ? giro.seguinte : giro.anterior);
+    animarGiro(alvo, 160 + 620 * Math.abs(alvo - giro.p));
+  };
+  folhas.addEventListener('pointerup', soltar);
+  folhas.addEventListener('pointercancel', soltar);
+
   livro.addEventListener('click', (evento) => {
+    if (performance.now() - arrastouEm < 250) return;
     const alvo = evento.target.closest('[data-abrir-santo], [data-abrir-trilha], [data-ir-pagina], #album-voltar, #album-avancar');
     if (!alvo) return;
     if (alvo.id === 'album-voltar') { virar(-1); return; }
     if (alvo.id === 'album-avancar') { virar(1); return; }
-    if (alvo.dataset.irPagina) { paginaDoAlbum = Number(alvo.dataset.irPagina); mostrar('frente'); return; }
+    if (alvo.dataset.irPagina) { girarPara(Number(alvo.dataset.irPagina)); return; }
     fecharJanelaDoCenaculo();
     if (alvo.dataset.abrirSanto) {
       if (typeof showDetail === 'function') showDetail(alvo.dataset.abrirSanto);
@@ -1410,20 +1600,11 @@ function abrirAlbumDeSantos(opcoes) {
     const trilha = trilhaDoSanto(alvo.dataset.abrirTrilha);
     if (trilha && typeof abrirTrilhas === 'function') abrirTrilhas(trilha.slug);
   });
-  let toqueX = null;
-  folhas.addEventListener('touchstart', (evento) => { toqueX = evento.touches[0].clientX; }, { passive: true });
-  folhas.addEventListener('touchend', (evento) => {
-    if (toqueX === null) return;
-    const distancia = evento.changedTouches[0].clientX - toqueX;
-    toqueX = null;
-    if (Math.abs(distancia) > 60) virar(distancia < 0 ? 1 : -1);
-  });
   if (!teclasDoAlbumLigadas) {
     document.addEventListener('keydown', teclaDoAlbum);
     teclasDoAlbumLigadas = true;
   }
-  paginaDoAlbum = 0;
-  mostrar();
+  mostrar(0);
 }
 
 function marcarEscolha(lugar, seletor, escolhido) {

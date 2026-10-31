@@ -6924,8 +6924,6 @@ button.album-carta:hover, button.album-carta:focus-visible { transform: translat
 .album-folhas { display: grid; grid-template-columns: minmax(0, 1fr); perspective: 1800px; max-height: 72vh; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(240, 207, 122, 0.4) transparent; }
 .album-folhas.dupla { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .album-pagina { position: relative; display: flex; flex-direction: column; gap: 12px; padding: 18px 16px 12px; border-radius: 14px; border: 1px solid rgba(240, 207, 122, 0.35); background: radial-gradient(circle at 50% 0, rgba(240, 207, 122, 0.1), transparent 55%), repeating-linear-gradient(45deg, rgba(240, 207, 122, 0.025) 0 2px, transparent 2px 14px), linear-gradient(180deg, #121633, #0a0c1e); box-shadow: inset 0 0 0 6px #080a18, inset 0 0 0 7px rgba(240, 207, 122, 0.22), 0 14px 30px rgba(0, 0, 0, 0.45); }
-.album-folhas.dupla .album-pagina:first-child { border-radius: 14px 4px 4px 14px; box-shadow: inset -22px 0 26px -16px rgba(0, 0, 0, 0.8), inset 0 0 0 6px #080a18, inset 0 0 0 7px rgba(240, 207, 122, 0.22), 0 14px 30px rgba(0, 0, 0, 0.45); }
-.album-folhas.dupla .album-pagina:last-child { border-radius: 4px 14px 14px 4px; box-shadow: inset 22px 0 26px -16px rgba(0, 0, 0, 0.8), inset 0 0 0 6px #080a18, inset 0 0 0 7px rgba(240, 207, 122, 0.22), 0 14px 30px rgba(0, 0, 0, 0.45); }
 .album-pagina-topo { display: flex; align-items: center; gap: 10px; padding: 0 4px 10px; border-bottom: 1px solid rgba(240, 207, 122, 0.25); }
 .album-pagina-topo h3 { margin: 0; flex: 1; font-family: var(--font-title); font-size: 1.15rem; color: #f6e2a0; }
 .album-pagina-topo small { color: var(--text-muted); font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
@@ -6969,10 +6967,6 @@ button.album-tipo:hover { border-color: rgba(240, 207, 122, 0.5); }
 .album-virar.voltar .icone { transform: scaleX(-1); }
 .album-virar:disabled { opacity: 0.3; cursor: default; }
 .album-indicador { min-width: 140px; text-align: center; color: var(--text-muted); font-size: 0.85rem; font-weight: 700; }
-.album-folhas.vira-frente .album-pagina { transform-origin: left center; animation: album-vira-frente 0.55s ease both; }
-.album-folhas.vira-tras .album-pagina { transform-origin: right center; animation: album-vira-tras 0.55s ease both; }
-@keyframes album-vira-frente { from { opacity: 0.2; transform: rotateY(-70deg); } to { opacity: 1; transform: none; } }
-@keyframes album-vira-tras { from { opacity: 0.2; transform: rotateY(70deg); } to { opacity: 1; transform: none; } }
 @media (max-width: 520px) {
   .album-pagina { padding: 14px 10px 10px; }
   .album-pagina-grade { gap: 7px; }
@@ -7135,3 +7129,40 @@ button.album-tipo:hover { border-color: rgba(240, 207, 122, 0.5); }
 .album-pagina-topo h3 { font-size: 1.05rem; }
 .album-capa { min-height: 420px; }
 @media (max-width: 520px) { .album-capa { min-height: 380px; } .album-vaga { padding: 13px 3px 5px; } }
+
+.album-folhas { position: relative; perspective: 2400px; perspective-origin: 50% 42%; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+.album-folhas img { -webkit-user-drag: none; }
+.album-folhas.dupla { grid-template-columns: repeat(2, minmax(0, 1fr)); transform: translateX(calc((var(--abertura, 1) - 1) * 25%)); }
+.album-folhas.dupla::after { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 46px; margin-left: -23px; z-index: 2; pointer-events: none; opacity: var(--abertura, 1); background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.5) 46%, rgba(0, 0, 0, 0.72) 50%, rgba(0, 0, 0, 0.5) 54%, transparent); }
+.album-folhas.unica { clip-path: inset(-90px -40px -90px 0); }
+.album-lado { position: relative; display: flex; min-width: 0; }
+.album-lado > .album-pagina { flex: 1; min-width: 0; }
+.album-lado.esq:empty::before { display: none; }
+.album-pagina { --figurinha: min(108px, calc((88vh - 272px) / 4.26), calc((100vw - 96px) / 3)); min-height: calc(var(--figurinha) * 4.26 + 122px); }
+.album-capa { min-height: calc(var(--figurinha) * 4.26 + 122px); }
+.album-lado.dir::after, .album-lado.esq::before { content: ''; position: absolute; top: 5px; bottom: 5px; background: repeating-linear-gradient(90deg, #f0d48a 0 1px, #7a5a1c 1px 2px); box-shadow: 0 6px 14px rgba(0, 0, 0, 0.45); }
+.album-lado.dir::after { left: 100%; width: var(--pilha-dir, 4px); border-radius: 0 3px 3px 0; }
+.album-lado.esq::before { right: 100%; width: var(--pilha-esq, 4px); border-radius: 3px 0 0 3px; }
+.album-lado.dir .album-pagina, .album-miolo.dir .album-pagina { border-radius: 3px 14px 14px 3px; }
+.album-lado.esq .album-pagina, .album-miolo.esq .album-pagina { border-radius: 14px 3px 3px 14px; }
+.album-lado .album-pagina::before, .album-miolo .album-pagina::before { content: ''; position: absolute; inset: 0; z-index: 1; border-radius: inherit; pointer-events: none; }
+.album-lado.dir .album-pagina::before, .album-miolo.dir .album-pagina::before { background: linear-gradient(90deg, rgba(0, 0, 0, 0.55) 0, rgba(0, 0, 0, 0.14) 5%, rgba(255, 240, 200, 0.07) 13%, transparent 34%, transparent 86%, rgba(0, 0, 0, 0.16)); }
+.album-lado.esq .album-pagina::before, .album-miolo.esq .album-pagina::before { background: linear-gradient(270deg, rgba(0, 0, 0, 0.55) 0, rgba(0, 0, 0, 0.14) 5%, rgba(255, 240, 200, 0.07) 13%, transparent 34%, transparent 86%, rgba(0, 0, 0, 0.16)); }
+.album-pagina-grade { grid-template-rows: repeat(3, calc(var(--figurinha) * 1.42)); }
+.album-pagina-numero { margin-top: auto; }
+.album-branca { min-height: 100%; }
+.cenaculo-janela-conteudo.album-girando { overflow: hidden; }
+.album-folha-girando { position: absolute; top: 0; z-index: 3; pointer-events: none; transform-style: preserve-3d; }
+.album-faixa { position: absolute; top: 0; height: 100%; transform-origin: left center; transform-style: preserve-3d; will-change: transform; }
+.album-face { position: absolute; inset: 0; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.album-face.verso { transform: rotateY(180deg); }
+.album-miolo { position: absolute; top: 0; display: flex; }
+.album-miolo > .album-pagina { flex: 1; min-width: 0; }
+.album-miolo * { animation: none !important; transition: none !important; }
+.album-tom, .album-luz { position: absolute; inset: 0; opacity: 0; pointer-events: none; }
+.album-tom { background: #02030a; }
+.album-luz { background: #fff3cf; }
+.album-sombra { position: absolute; top: 0; bottom: 0; width: 50%; z-index: 2; opacity: 0; pointer-events: none; }
+.album-folhas.unica .album-sombra.dir { left: 0; width: 100%; transform-origin: left center; background: linear-gradient(90deg, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.3) 80%, transparent); }
+.album-folhas.dupla .album-sombra.dir { left: 50%; transform-origin: left center; background: linear-gradient(90deg, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.3) 80%, transparent); }
+.album-folhas.dupla .album-sombra.esq { left: 0; transform-origin: right center; background: linear-gradient(270deg, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.3) 80%, transparent); }
