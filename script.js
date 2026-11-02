@@ -2073,6 +2073,7 @@ const TRADUCOES = {
     sobre_texto: 'O <strong>Lumina Sancti</strong> (Luz dos Santos) é um refúgio digital dedicado a preservar e compartilhar a vida, a fé e o legado daqueles que deixaram um rastro inextinguível de luz na história. Este espaço foi criado para revelar que a santidade não é algo distante, mas uma trilha bela, possível e acessível no cotidiano de qualquer época ou idade.',
     filtro_todos_curto: 'Todos',
     filtro_todos: 'Todos os Santos',
+    nav_inicio: 'Início',
     filtro_favoritos: 'Favoritos',
     filtro_sagrada_familia: 'Sagrada Família',
     filtro_arcanjos: 'Arcanjos',
@@ -2156,6 +2157,7 @@ const TRADUCOES = {
     sobre_texto: '<strong>Lumina Sancti</strong> (Light of the Saints) is a digital refuge dedicated to preserving and sharing the life, faith and legacy of those who left an unquenchable trail of light in history. This space was created to reveal that holiness is not something distant, but a beautiful path, possible and accessible in the everyday life of any era or age.',
     filtro_todos_curto: 'All',
     filtro_todos: 'All Saints',
+    nav_inicio: 'Home',
     filtro_favoritos: 'Favorites',
     filtro_sagrada_familia: 'Holy Family',
     filtro_arcanjos: 'Archangels',
@@ -2239,6 +2241,7 @@ const TRADUCOES = {
     sobre_texto: '<strong>Lumina Sancti</strong> (Luz de los Santos) es un refugio digital dedicado a preservar y compartir la vida, la fe y el legado de quienes dejaron un rastro inextinguible de luz en la historia. Este espacio fue creado para revelar que la santidad no es algo distante, sino un camino bello, posible y accesible en la vida cotidiana de cualquier época o edad.',
     filtro_todos_curto: 'Todos',
     filtro_todos: 'Todos los Santos',
+    nav_inicio: 'Inicio',
     filtro_favoritos: 'Favoritos',
     filtro_sagrada_familia: 'Sagrada Familia',
     filtro_arcanjos: 'Arcángeles',
@@ -4190,6 +4193,14 @@ filterBtns.forEach(btn => {
 const btnVoltarDoCatalogo = document.getElementById('btn-voltar-catalogo');
 if (btnVoltarDoCatalogo) {
   btnVoltarDoCatalogo.addEventListener('click', () => mudarDeView('view-home'));
+}
+const botaoInicioDoMenu = document.getElementById('nav-inicio');
+if (botaoInicioDoMenu) {
+  botaoInicioDoMenu.addEventListener('click', () => {
+    closeSidebar();
+    mudarDeView('view-home');
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  });
 }
 
 function openSidebar() {

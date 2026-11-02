@@ -313,7 +313,7 @@ function desenhoDaLumi() {
 function criarPalcoDaLumi(id) {
   const palco = document.createElement('div');
   palco.id = id;
-  palco.className = 'lumi-palco lumi-chegando';
+  palco.className = 'lumi-palco';
   palco.innerHTML = `
     <button type="button" class="lumi" data-estado="parada" data-rosto="sorriso" data-bracos="baixo">${desenhoDaLumi()}</button>
     <p class="lumi-balao" role="status" aria-live="polite"></p>`;
@@ -326,9 +326,6 @@ function criarPalcoDaLumi(id) {
       setTimeout(() => { if (botao.dataset.estado === 'parada') botao.dataset.rosto = 'sorriso'; }, DURACAO_DOS_MOVIMENTOS.cutucada + 40);
     }
     if (palco.falaParaRepetir) falarParaCrianca(palco.falaParaRepetir);
-  });
-  palco.addEventListener('animationend', (evento) => {
-    if (evento.animationName === 'lumiChega') palco.classList.remove('lumi-chegando');
   });
   ligarGestosDaLumi();
   return palco;
@@ -512,7 +509,8 @@ const CAMINHOS_DO_VOO = [
 
 function vooDaLumiPodeTocar() {
   try {
-    return !document.hidden
+    return modoInfantilAtivo()
+      && !document.hidden
       && typeof window.requestAnimationFrame === 'function'
       && !!window.matchMedia
       && !semMovimentoDaLumi()

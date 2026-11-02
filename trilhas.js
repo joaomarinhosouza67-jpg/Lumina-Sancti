@@ -2671,6 +2671,8 @@ function estrelasDaMissao(quantas) {
 
 async function finalizarLicaoNoServidor() {
   const { trilha, licao, total } = licaoAtual;
+  const vaiVoar = typeof vooDaLumiPodeTocar === 'function' && vooDaLumiPodeTocar();
+  const folgaDoVoo = vaiVoar ? DURACAO_DO_VOO_DA_LUMI : 0;
   licaoAtual.finalizada = true;
   if (licaoAtual.revisao) marcarMissaoRevisada(trilha.slug, licao.slug);
   licaoAtual.servidor.respondidas = total;
@@ -2705,14 +2707,14 @@ async function finalizarLicaoNoServidor() {
   }
   const insigniaNova = !!estado && !jaTinhaInsignia && trilhaConcluida(trilha, estado);
   if (insigniaNova) estado.insignias[trilha.slug] = new Date().toISOString();
-  if (insigniaNova && trilha.santoId && typeof ganharCarta === 'function') setTimeout(() => ganharCarta(trilha.santoId), 1500);
+  if (insigniaNova && trilha.santoId && typeof ganharCarta === 'function') setTimeout(() => ganharCarta(trilha.santoId), 1500 + folgaDoVoo);
   const membro = typeof obterMembroAtivo === 'function' ? obterMembroAtivo() : null;
   const antesDaMissao = membro ? { fe: membro.fe, ofensiva: membro.ofensiva } : {};
   const ofensivaSubiu = !!membro && Number(r.streak) > Number(antesDaMissao.ofensiva || 0);
   if (membro) Object.assign(membro, { fe: r.faith_total, ofensiva: r.streak, santidade: r.santidade });
   if (typeof marcarMissaoDeHojeNoWidget === 'function') marcarMissaoDeHojeNoWidget();
 
-  somDaLicao('fim');
+  const mostrarFimDaMissao = () => {
   if (corpo) {
     corpo.innerHTML = `
       <div class="licao-fim">
@@ -2735,6 +2737,21 @@ async function finalizarLicaoNoServidor() {
   avisarMascote('concluiu', { medalha: insigniaNova });
   prepararRodapeDaLicao(tt('continuar'), true);
   animarOfensivaAcesa(corpo);
+  };
+  if (vaiVoar) {
+    tocarVooDaLumi({
+      titulo: tt('missao_concluida'),
+      texto: `+${r.faith_awarded} ${tt('de_fe')}`,
+      aoEstourar: () => somDaLicao('fim'),
+      aoRevelar: () => {
+        mostrarFimDaMissao();
+        animarChegadaDoFimDaMissao(Number(r.faith_awarded) || 0);
+      },
+    });
+  } else {
+    somDaLicao('fim');
+    mostrarFimDaMissao();
+  }
   if (membro && membro.tipo === 'adulto') {
     (async () => {
       const mostrouMarco = typeof verificarNovoMarco === 'function'
