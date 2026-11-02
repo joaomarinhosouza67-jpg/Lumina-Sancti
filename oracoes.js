@@ -187,6 +187,19 @@ function renderizarDestaquesDasOracoes() {
       <button type="button" class="oracao-do-dia-botao" data-oracao="${o.id}">${escaparOracao(traduzirInterface('Rezar agora'))}</button>`;
     doDia.querySelector('.oracao-do-dia-botao').addEventListener('click', () => abrirLeitorDeOracao(o.id, [o.id]));
   }
+  const noInicio = document.getElementById('oracao-do-dia-inicio');
+  if (noInicio) {
+    const o = oracaoDoDia();
+    const trecho = noIdioma(o.x).split('\n').filter((l) => l.trim()).slice(0, 2).join('\n');
+    noInicio.innerHTML = `
+      <article class="oracao-inicio-cartao">
+        <span class="oracao-do-dia-selo">${iconeDaOracao(o.cat)}${escaparOracao(traduzirInterface('Oração do dia'))}</span>
+        <h3 class="oracao-do-dia-titulo" translate="no">${escaparOracao(noIdioma(o.t))}</h3>
+        <p class="oracao-do-dia-trecho" translate="no">${escaparOracao(trecho)}…</p>
+        <button type="button" class="oracao-do-dia-botao" data-oracao="${o.id}">${escaparOracao(traduzirInterface('Rezar agora'))}</button>
+      </article>`;
+    noInicio.querySelector('.oracao-do-dia-botao').addEventListener('click', () => abrirLeitorDeOracao(o.id, [o.id]));
+  }
   const frase = document.getElementById('frase-do-dia-oracoes');
   if (frase) {
     frase.innerHTML = htmlDaFrase(fraseDoDia(), true);

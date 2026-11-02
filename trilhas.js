@@ -805,6 +805,14 @@ const TEXTOS_TRILHAS = {
     revisar_fe: '+{n} Fé',
     missao_bloqueada: ' (bloqueada)',
     comecar_balao: 'Começar',
+    continuar_titulo: 'Continue de onde parou',
+    continuar_botao: 'Continuar',
+    continuar_sub: '{santo} · Missão {n} de {total}',
+    tudo_feito_titulo: 'Você concluiu todas as trilhas!',
+    tudo_feito_sub: 'Pode refazer as missões para ganhar mais Fé.',
+    resumo_trilhas: '{feitas} de {total} missões · {medalhas} de {totalMedalhas} medalhas',
+    ver_missoes: 'Ver missões',
+    esconder_missoes: 'Esconder missões',
     medalha_de: 'Medalha da {m}',
     insignia_da_trilha: 'Insígnia da trilha',
     ler_historia: 'Ler a história →',
@@ -896,6 +904,14 @@ const TEXTOS_TRILHAS = {
     revisar_fe: '+{n} Faith',
     missao_bloqueada: ' (locked)',
     comecar_balao: 'Start',
+    continuar_titulo: 'Pick up where you left off',
+    continuar_botao: 'Continue',
+    continuar_sub: '{santo} · Mission {n} of {total}',
+    tudo_feito_titulo: 'You finished every trail!',
+    tudo_feito_sub: 'You can redo missions to earn more Faith.',
+    resumo_trilhas: '{feitas} of {total} missions · {medalhas} of {totalMedalhas} medals',
+    ver_missoes: 'See missions',
+    esconder_missoes: 'Hide missions',
     medalha_de: 'Medal of {m}',
     insignia_da_trilha: 'Trail badge',
     ler_historia: 'Read the story →',
@@ -987,6 +1003,14 @@ const TEXTOS_TRILHAS = {
     revisar_fe: '+{n} Fe',
     missao_bloqueada: ' (bloqueada)',
     comecar_balao: 'Empezar',
+    continuar_titulo: 'Sigue donde lo dejaste',
+    continuar_botao: 'Continuar',
+    continuar_sub: '{santo} · Misión {n} de {total}',
+    tudo_feito_titulo: '¡Terminaste todas las rutas!',
+    tudo_feito_sub: 'Puedes repetir las misiones para ganar más Fe.',
+    resumo_trilhas: '{feitas} de {total} misiones · {medalhas} de {totalMedalhas} medallas',
+    ver_missoes: 'Ver misiones',
+    esconder_missoes: 'Ocultar misiones',
     medalha_de: 'Medalla de {m}',
     insignia_da_trilha: 'Insignia del sendero',
     ler_historia: 'Leer la historia →',
@@ -1620,6 +1644,7 @@ function exibirTrilhas(slugParaMostrar) {
   mudarDeView('view-trilhas');
   renderizarTrilhas();
   if (slugParaMostrar) {
+    abrirBlocoDaTrilha(slugParaMostrar);
     setTimeout(() => {
       const bloco = document.getElementById(`trilha-${slugParaMostrar}`);
       if (bloco && bloco.scrollIntoView) bloco.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1639,10 +1664,89 @@ function irParaOndeParou() {
   if (ultima) {
     const trilha = trilhasEmUso().find((t) => t.licoes.some((l) => l.slug === ultima.slug));
     const bloco = trilha && document.getElementById(`trilha-${trilha.slug}`);
-    if (bloco) alvo = bloco.querySelector('.no-licao.atual') || bloco.querySelector(`.no-licao[data-indice="${trilha.licoes.findIndex((l) => l.slug === ultima.slug)}"]`);
+    if (bloco && !bloco.classList.contains('recolhida')) alvo = bloco.querySelector('.no-licao.atual') || bloco.querySelector(`.no-licao[data-indice="${trilha.licoes.findIndex((l) => l.slug === ultima.slug)}"]`);
   }
   if (!alvo) alvo = document.querySelector('#view-trilhas .no-licao.atual:not(.sem-pulso)');
   if (alvo && alvo.scrollIntoView) alvo.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+const SETA_DA_TRILHA = '<svg class="trilha-abrir-seta" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+
+function abrirBlocoDaTrilha(slug, abrir = true) {
+  const bloco = document.getElementById(`trilha-${slug}`);
+  if (!bloco) return;
+  bloco.classList.toggle('recolhida', !abrir);
+  const botao = bloco.querySelector('.trilha-abrir');
+  if (botao) {
+    botao.setAttribute('aria-expanded', abrir ? 'true' : 'false');
+    const texto = botao.querySelector('span');
+    if (texto) texto.textContent = tt(abrir ? 'esconder_missoes' : 'ver_missoes');
+  }
+  if (abrir) desenharLinhaDaTrilha(bloco.querySelector('.trilha-caminho'));
+}
+
+function desenharLinhaDaTrilha(caminho) {
+  if (!caminho || !caminho.getBoundingClientRect || !caminho.offsetWidth) return;
+  const antiga = caminho.querySelector('.trilha-linha');
+  if (antiga) antiga.remove();
+  const base = caminho.getBoundingClientRect();
+  const pontos = Array.from(caminho.querySelectorAll('.no-circulo, .no-medalha')).map((el) => {
+    const caixa = el.getBoundingClientRect();
+    return { x: caixa.left + caixa.width / 2 - base.left, y: caixa.top + caixa.height / 2 - base.top };
+  });
+  if (pontos.length < 2) return;
+  const trecho = (lista) => lista.reduce((rota, ponto, i) => {
+    if (i === 0) return `M${ponto.x.toFixed(1)} ${ponto.y.toFixed(1)}`;
+    const anterior = lista[i - 1];
+    const meio = (anterior.y + ponto.y) / 2;
+    return `${rota} C${anterior.x.toFixed(1)} ${meio.toFixed(1)}, ${ponto.x.toFixed(1)} ${meio.toFixed(1)}, ${ponto.x.toFixed(1)} ${ponto.y.toFixed(1)}`;
+  }, '');
+  const feitas = caminho.querySelectorAll('.no-licao.concluida').length;
+  const feito = pontos.slice(0, Math.min(pontos.length, feitas + 1));
+  caminho.insertAdjacentHTML('afterbegin', `<svg class="trilha-linha" width="${base.width}" height="${base.height}" aria-hidden="true"><path class="trilha-linha-falta" d="${trecho(pontos)}"/>${feitas > 0 ? `<path class="trilha-linha-feita" d="${trecho(feito)}"/>` : ''}</svg>`);
+}
+
+function desenharLinhasDasTrilhas() {
+  document.querySelectorAll('#lista-trilhas .trilha-bloco:not(.recolhida) .trilha-caminho').forEach(desenharLinhaDaTrilha);
+}
+
+let observadorDasTrilhas = null;
+let larguraDasTrilhas = 0;
+
+function vigiarLinhasDasTrilhas(lista) {
+  if (observadorDasTrilhas || typeof ResizeObserver !== 'function') return;
+  observadorDasTrilhas = new ResizeObserver(() => {
+    if (lista.offsetWidth === larguraDasTrilhas) return;
+    larguraDasTrilhas = lista.offsetWidth;
+    desenharLinhasDasTrilhas();
+  });
+  observadorDasTrilhas.observe(lista);
+}
+
+function htmlDoContinuar(trilhas, estado, ativa) {
+  const totalDeMissoes = trilhas.reduce((soma, trilha) => soma + trilha.licoes.length, 0);
+  const feitas = trilhas.reduce((soma, trilha) => soma + trilha.licoes.filter((licao) => !!estado.licoes[licao.slug]).length, 0);
+  const medalhas = trilhas.filter((trilha) => trilhaConcluida(trilha, estado)).length;
+  const porcento = Math.round((feitas / Math.max(1, totalDeMissoes)) * 100);
+  const resumo = `<div class="continuar-resumo"><span class="continuar-barra"><span style="width:${porcento}%"></span></span><small>${tt('resumo_trilhas', { feitas, total: totalDeMissoes, medalhas, totalMedalhas: trilhas.length })}</small></div>`;
+  if (!ativa) {
+    return `<div class="continuar-cartao tudo-feito"><div class="continuar-textos"><strong>${tt('tudo_feito_titulo')}</strong><span>${tt('tudo_feito_sub')}</span></div>${resumo}</div>`;
+  }
+  const indice = ativa.licoes.findIndex((licao) => !estado.licoes[licao.slug]);
+  const licao = ativa.licoes[indice];
+  return `
+    <div class="continuar-cartao" style="${variaveisDeCorDaTrilha(ativa)}">
+      <div class="continuar-linha">
+        <div class="continuar-foto" id="continuar-foto"><svg class="card-img-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-aureola"></use></svg></div>
+        <div class="continuar-textos">
+          <small>${tt('continuar_titulo')}</small>
+          <strong>${licao.titulo}</strong>
+          <span>${tt('continuar_sub', { santo: ativa.santo, n: indice + 1, total: ativa.licoes.length })}</span>
+        </div>
+      </div>
+      <button type="button" class="continuar-botao" id="continuar-missao" data-trilha="${ativa.slug}" data-indice="${indice}">${tt('continuar_botao')}${icone('seta-direita')}</button>
+      ${resumo}
+    </div>`;
 }
 
 function renderizarTrilhas() {
@@ -1660,6 +1764,18 @@ function renderizarTrilhas() {
   const trilhas = trilhasEmUso();
 
   const deslocamentos = ['desloc-0', 'desloc-d', 'desloc-0', 'desloc-e'];
+  const trilhaAtiva = trilhas.find((trilha, posicao) => {
+    const anterior = posicao > 0 ? trilhas[posicao - 1] : null;
+    return !trilhaConcluida(trilha, estado) && (!anterior || trilhaConcluida(anterior, estado) || trilhasTodasLiberadas());
+  }) || null;
+  let ultimaFeita = null;
+  Object.entries(estado.licoes || {}).forEach(([slug, dado]) => {
+    if (dado && dado.concluidaEm && (!ultimaFeita || dado.concluidaEm > ultimaFeita.quando)) ultimaFeita = { slug, quando: dado.concluidaEm };
+  });
+  const trilhaRecente = ultimaFeita ? trilhas.find((trilha) => trilha.licoes.some((licao) => licao.slug === ultimaFeita.slug)) : null;
+  const trilhaAberta = (trilha) => trilha === trilhaAtiva || trilha === trilhaRecente;
+  const lugarDoContinuar = document.getElementById('trilhas-continuar');
+  if (lugarDoContinuar) lugarDoContinuar.innerHTML = htmlDoContinuar(trilhas, estado, trilhaAtiva);
 
   lista.innerHTML = trilhas.map((trilha, posicao) => {
     const concluida = trilhaConcluida(trilha, estado);
@@ -1689,6 +1805,7 @@ function renderizarTrilhas() {
       const liberada = licaoDesbloqueada(trilha, i, estado);
       const classe = feita ? (missaoRevisada(trilha.slug, licao.slug) ? 'concluida revisada' : 'concluida') : (liberada ? (i === proximaDaTrilha ? 'atual' : 'atual sem-pulso') : 'bloqueada');
       const simbolo = feita ? icone('check', 'icone-no') : (liberada ? icone('estrela', 'icone-no') : icone('cadeado', 'icone-no'));
+      const estrelas = feita ? Math.min(3, Number(estado.licoes[licao.slug].estrelas) || 0) : 0;
       const rotuloAcessivel = tt('missao_rotulo', { n: i + 1, titulo: licao.titulo })
         + (feita ? tt('missao_refazer') : (liberada ? '' : tt('missao_bloqueada')));
       return `
@@ -1696,6 +1813,7 @@ function renderizarTrilhas() {
           <button class="no-licao ${classe}" data-trilha="${trilha.slug}" data-indice="${i}" aria-label="${rotuloAcessivel}">
             ${classe === 'atual' ? `<span class="no-balao">${tt('comecar_balao')}</span>` : ''}
             <span class="no-circulo">${simbolo}</span>
+            ${estrelas ? `<span class="no-estrelas" aria-hidden="true">${'<i class="cheia"></i>'.repeat(estrelas)}${'<i></i>'.repeat(3 - estrelas)}</span>` : ''}
             <span class="no-rotulo">${licao.titulo}</span>
           </button>
         </div>`;
@@ -1715,7 +1833,7 @@ function renderizarTrilhas() {
       </div>`;
 
     return `
-      <section class="trilha-bloco" id="trilha-${trilha.slug}" style="${variaveisDeCorDaTrilha(trilha)}">
+      <section class="trilha-bloco${trilhaAberta(trilha) ? '' : ' recolhida'}" id="trilha-${trilha.slug}" style="${variaveisDeCorDaTrilha(trilha)}">
         <div class="trilha-banner ${concluida ? 'concluida' : ''}">
           <div class="trilha-foto" id="trilha-foto-${trilha.slug}"><svg class="card-img-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><use href="#icon-aureola"></use></svg></div>
           <div class="trilha-info">
@@ -1729,6 +1847,7 @@ function renderizarTrilhas() {
             <span class="trilha-progresso-barra"><span style="width:${porcentoDaTrilha}%"></span></span>
             <small>${tt('missoes_feitas', { feitas: feitasDaTrilha, total: trilha.licoes.length })}</small>
           </div>
+          <button type="button" class="trilha-abrir" data-bloco="${trilha.slug}" aria-expanded="${trilhaAberta(trilha) ? 'true' : 'false'}"><span>${tt(trilhaAberta(trilha) ? 'esconder_missoes' : 'ver_missoes')}</span>${SETA_DA_TRILHA}</button>
         </div>
         <div class="trilha-caminho">${nos}${noInsignia}</div>
       </section>`;
@@ -1748,6 +1867,15 @@ function renderizarTrilhas() {
   lista.querySelectorAll('.trilha-ler').forEach((botao) => {
     botao.addEventListener('click', () => showDetail(botao.dataset.santo));
   });
+  lista.querySelectorAll('.trilha-abrir').forEach((botao) => {
+    botao.addEventListener('click', () => {
+      abrirBlocoDaTrilha(botao.dataset.bloco, botao.getAttribute('aria-expanded') !== 'true');
+    });
+  });
+  const botaoDeContinuar = document.getElementById('continuar-missao');
+  if (botaoDeContinuar) {
+    botaoDeContinuar.addEventListener('click', () => abrirNoDaTrilha(botaoDeContinuar.dataset.trilha, Number(botaoDeContinuar.dataset.indice)));
+  }
   lista.querySelectorAll('.no-insignia[data-medalha]').forEach((botao) => {
     botao.addEventListener('click', () => abrirInsignias(botao.dataset.medalha));
   });
@@ -1759,8 +1887,15 @@ function renderizarTrilhas() {
     buscarImagemSanto(santo).then((url) => {
       const alvo = document.getElementById(`trilha-foto-${trilha.slug}`);
       if (url && alvo) alvo.innerHTML = `<img src="${url}" alt="${trilha.santo}" loading="lazy">`;
+      const fotoDoContinuar = trilha === trilhaAtiva ? document.getElementById('continuar-foto') : null;
+      if (url && fotoDoContinuar) fotoDoContinuar.innerHTML = `<img src="${url}" alt="" loading="lazy">`;
     });
   });
+  if (typeof requestAnimationFrame === 'function') {
+    requestAnimationFrame(desenharLinhasDasTrilhas);
+    setTimeout(desenharLinhasDasTrilhas, 900);
+  }
+  vigiarLinhasDasTrilhas(lista);
 
   if (typeof renderizarFaixaDaConta === 'function') renderizarFaixaDaConta();
 

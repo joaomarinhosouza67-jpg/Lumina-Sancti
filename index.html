@@ -4,15 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Lumina Sancti | Aprenda a vida dos santos como num jogo</title>
-  <meta name="description" content="Site católico para aprender a vida dos santos e a fé da Igreja como num jogo: missões, medalhas, Santo do Dia, terço guiado e orações. Grátis e para toda a família.">
+  <title>Lumina Sancti | A vida dos santos como num jogo</title>
+  <meta name="description" content="Conheça a vida dos santos e aprenda a fé católica como num jogo: trilhas, medalhas, terço, orações e santo do dia. Grátis, para toda a família.">
   <meta name="keywords" content="santos católicos, vida dos santos, site católico, aprender sobre os santos, Igreja Católica, santo do dia, terço guiado, catequese, orações católicas">
   <link rel="canonical" href="https://luminasancti.com/">
 
   <meta property="og:site_name" content="Lumina Sancti">
   <meta property="og:locale" content="pt_BR">
-  <meta property="og:title" content="Lumina Sancti | Aprenda a vida dos santos como num jogo">
-  <meta property="og:description" content="Missões, medalhas, Santo do Dia e terço guiado. Site católico, grátis e para toda a família.">
+  <meta property="og:title" content="Lumina Sancti | A vida dos santos como num jogo">
+  <meta property="og:description" content="Trilhas, medalhas, terço, orações e santo do dia. Conheça os santos como num jogo. Grátis, para toda a família.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://luminasancti.com/og-image.jpg">
   <meta property="og:image:width" content="1200">
@@ -20,8 +20,8 @@
   <meta property="og:url" content="https://luminasancti.com/">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Lumina Sancti | Aprenda a vida dos santos como num jogo">
-  <meta name="twitter:description" content="Missões, medalhas, Santo do Dia e terço guiado. Site católico, grátis e para toda a família.">
+  <meta name="twitter:title" content="Lumina Sancti | A vida dos santos como num jogo">
+  <meta name="twitter:description" content="Trilhas, medalhas, terço, orações e santo do dia. Conheça os santos como num jogo. Grátis, para toda a família.">
   <meta name="twitter:image" content="https://luminasancti.com/og-image.jpg">
 
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://luminasancti.com/#site","url":"https://luminasancti.com/","name":"Lumina Sancti","alternateName":"Luz dos Santos","inLanguage":["pt-BR","en","es"],"description":"Site católico para aprender a vida dos santos e a fé da Igreja como num jogo: missões, medalhas, Santo do Dia, terço guiado e orações. Grátis e para toda a família.","publisher":{"@id":"https://luminasancti.com/#organizacao"}},{"@type":"Organization","@id":"https://luminasancti.com/#organizacao","name":"Lumina Sancti","url":"https://luminasancti.com/","logo":"https://luminasancti.com/icon-512.png","email":"suporte@luminasancti.com","sameAs":["https://www.instagram.com/luminasancti"]},{"@type":"WebApplication","name":"Lumina Sancti","url":"https://luminasancti.com/","applicationCategory":"EducationalApplication","operatingSystem":"Android, iOS, Windows, macOS","inLanguage":"pt-BR","description":"Site católico para aprender a vida dos santos e a fé da Igreja como num jogo: missões, medalhas, Santo do Dia, terço guiado e orações. Grátis e para toda a família.","offers":{"@type":"Offer","price":"0","priceCurrency":"BRL"}}]}</script>
@@ -49,6 +49,8 @@
 
   <div id="intro-screen" class="intro-screen" aria-hidden="true">
     <canvas id="intro-canvas" class="intro-canvas"></canvas>
+    <div class="intro-feixes"></div>
+    <svg class="intro-catedral" id="intro-catedral" viewBox="0 0 1000 1000" aria-hidden="true"></svg>
     <div class="intro-brand">Lumina Sancti</div>
     <div class="intro-lema" data-i18n="hero_subtitulo">Luz dos Santos</div>
     <div class="intro-skip-hint">Toque para pular</div>
@@ -345,6 +347,8 @@
 
       <section class="frase-do-dia-inicio container" id="frase-do-dia" aria-label="Frase do dia"></section>
 
+      <section class="oracao-do-dia-inicio container" id="oracao-do-dia-inicio" aria-label="Oração do dia"></section>
+
       <section class="santo-do-dia container" id="santo-do-dia">
       </section>
 
@@ -370,8 +374,13 @@
       <section class="about container">
         <h2 class="section-title" data-i18n="sobre_titulo">Sobre o Lumina Sancti</h2>
         <div class="title-divider"></div>
+        <div class="about-pilares">
+          <div class="about-pilar"><span><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-livro"></use></svg></span><strong data-i18n="sobre_pilar_1_t">Conheça</strong><small data-i18n="sobre_pilar_1">A história completa de cada santo.</small></div>
+          <div class="about-pilar"><span><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-trilha"></use></svg></span><strong data-i18n="sobre_pilar_2_t">Aprenda</strong><small data-i18n="sobre_pilar_2">Trilhas com missões, medalhas e cartas.</small></div>
+          <div class="about-pilar"><span><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-cruz"></use></svg></span><strong data-i18n="sobre_pilar_3_t">Reze</strong><small data-i18n="sobre_pilar_3">Orações e terço, sozinho ou em família.</small></div>
+        </div>
         <p class="about-text" data-i18n="sobre_texto">
-          O <strong>Lumina Sancti</strong> (Luz dos Santos) é um refúgio digital dedicado a preservar e compartilhar a vida, a fé e o legado daqueles que deixaram um rastro inextinguível de luz na história. Este espaço foi criado para revelar que a santidade não é algo distante, mas uma trilha bela, possível e acessível no cotidiano de qualquer época ou idade.
+          O <strong>Lumina Sancti</strong> (Luz dos Santos) nasceu de uma certeza: os santos não são personagens distantes. Foram pessoas de verdade, com medos, quedas e recomeços, que deixaram Deus transformar a vida delas. Aqui você conhece a história de cada um, aprende como num jogo, reza com quem ama e descobre, um passo de cada vez, que a santidade também é para você.
         </p>
       </section>
 
@@ -385,6 +394,13 @@
       </div>
 
       <section class="catalog container" id="materias">
+        <div class="catalogo-barra">
+          <label class="catalogo-busca">
+            <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lupa"></use></svg>
+            <input type="search" id="catalogo-busca" placeholder="Procurar um santo" autocomplete="off" enterkeyhint="search" aria-label="Procurar um santo">
+          </label>
+          <span class="catalogo-conta" id="catalogo-conta" aria-live="polite"></span>
+        </div>
         <div class="filters-container">
           <button class="filter-btn active" data-filter="todos" data-i18n="filtro_todos_curto">Todos</button>
           <button class="filter-btn" data-filter="favoritos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-coracao"></use></svg><span data-i18n="filtro_favoritos">Favoritos</span></button>
@@ -425,6 +441,7 @@
         </button>
 
         <div class="lumina-header">
+          <span class="lumina-avatar-raios" aria-hidden="true"></span>
           <div class="lumina-avatar">
             <svg viewBox="0 0 100 100" width="46" height="46" fill="var(--primary-color)">
               <path d="M50 0 C52 35 65 48 100 50 C65 52 52 65 50 100 C48 65 35 52 0 50 C35 48 48 35 50 0 Z" opacity="0.9"/>
@@ -443,7 +460,14 @@
         </div>
 
         <div id="lumina-chat-area" style="display:none;">
-          <p class="lumina-restantes" id="lumina-restantes"></p>
+          <div class="lumina-topo-chat">
+            <button type="button" class="lumina-nova" id="lumina-nova" hidden><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-mais"></use></svg><span>Nova conversa</span></button>
+            <p class="lumina-restantes" id="lumina-restantes"></p>
+          </div>
+          <div class="lumina-boas-vindas" id="lumina-boas-vindas">
+            <p class="lumina-mensagem">Olá! Eu sou a Lumina. Posso contar a história de um santo, ajudar você a encontrar um padroeiro ou explicar algo da vida da Igreja. Por onde começamos?</p>
+            <div class="lumina-sugestoes" id="lumina-sugestoes"></div>
+          </div>
 
           <div id="lumina-resposta-area" class="lumina-resposta-area"></div>
 
@@ -849,7 +873,7 @@
         </button>
         <h2 class="section-title" style="text-align:left; margin: 10px 0 4px;">Padroeiro de...</h2>
         <div class="title-divider" style="margin: 0 0 16px;"></div>
-        <p class="terco-intro">Conte o que você está vivendo — uma necessidade, uma profissão, uma situação — e veja quais santos a Igreja costuma invocar para isso. Pode escrever do seu jeito: "vou viajar", "minha mãe está doente", "procuro emprego".</p>
+        <p class="terco-intro padroeiro-intro">Conte o que você está vivendo e veja a quais santos a Igreja costuma recorrer.</p>
         <div class="busca-oracao-campo padroeiro-campo">
           <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lupa"></use></svg>
           <input type="search" id="padroeiro-input" placeholder="Ex.: viagem, doença, trabalho, prova..." autocomplete="off" enterkeyhint="search" aria-label="Necessidade, profissão ou situação">
@@ -881,6 +905,7 @@
             </div>
           </aside>
           <div class="trilhas-principal">
+            <div id="trilhas-continuar" class="trilhas-continuar"></div>
             <div id="lista-trilhas" class="lista-trilhas"></div>
             <p class="trilhas-nota" id="trilhas-nota">Por enquanto seu progresso fica salvo neste aparelho. Em breve ele vai ficar guardado na sua conta, com perfis e rankings.</p>
           </div>
@@ -1139,7 +1164,10 @@
           <span data-i18n="voltar_inicio">Voltar para o início</span>
         </button>
         <div class="comunidade-topo">
-          <h2 class="section-title comunidade-titulo">Comunidade</h2>
+          <div class="comunidade-topo-textos">
+            <h2 class="section-title comunidade-titulo">Comunidade</h2>
+            <p class="comunidade-lema">Celebre cada passo com quem caminha com você.</p>
+          </div>
           <button type="button" class="comunidade-postar" id="comunidade-postar-btn"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-mais"></use></svg><span>Compartilhar um marco</span></button>
         </div>
         <div class="comunidade-eu" id="comunidade-eu"></div>

@@ -1,3 +1,28 @@
+function desenharCatedralDaEntrada() {
+  const lugar = document.getElementById('intro-catedral');
+  if (!lugar) return;
+  const traco = (d, atraso, fino) => `<path pathLength="1" d="${d}" style="animation-delay:${atraso}s"${fino ? ' class="fino"' : ''}/>`;
+  const circulo = (cx, cy, r, atraso, fino) => traco(`M${cx - r} ${cy}a${r} ${r} 0 1 0 ${r * 2} 0a${r} ${r} 0 1 0 ${-r * 2} 0`, atraso, fino);
+  let raios = '';
+  let bolinhas = '';
+  for (let i = 0; i < 16; i += 1) {
+    const a = (i / 16) * Math.PI * 2;
+    raios += `M${(500 + Math.cos(a) * 150).toFixed(1)} ${(500 + Math.sin(a) * 150).toFixed(1)}L${(500 + Math.cos(a) * 232).toFixed(1)} ${(500 + Math.sin(a) * 232).toFixed(1)}`;
+    const b = a + Math.PI / 16;
+    bolinhas += circulo(+(500 + Math.cos(b) * 198).toFixed(1), +(500 + Math.sin(b) * 198).toFixed(1), 20, 0.75 + i * 0.03, true);
+  }
+  lugar.innerHTML = '<defs><linearGradient id="intro-ouro" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff4d0"/><stop offset=".45" stop-color="#ecc566"/><stop offset="1" stop-color="#9a6a1c"/></linearGradient></defs>'
+    + traco('M120 1800V520C120 300 320 120 500 20C680 120 880 300 880 520V1800', 0.1)
+    + traco('M172 1800V530C172 335 342 172 500 82C658 172 828 335 828 530V1800', 0.28, true)
+    + traco('M40 1800V-400M74 1800V-400', 0.05, true)
+    + traco('M960 1800V-400M926 1800V-400', 0.05, true)
+    + circulo(500, 500, 252, 0.45)
+    + circulo(500, 500, 232, 0.55, true)
+    + circulo(500, 500, 150, 0.65)
+    + traco(raios, 0.7, true)
+    + bolinhas;
+}
+
 (function iniciarEntrada() {
   const tela = document.getElementById('intro-screen');
   if (!tela) return;
@@ -6,6 +31,7 @@
     return;
   }
   document.body.classList.add('intro-ativa');
+  desenharCatedralDaEntrada();
 
   const inicio = performance.now();
   let encerrada = false;

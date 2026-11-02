@@ -2070,7 +2070,13 @@ const TRADUCOES = {
     hero_subtitulo: 'Luz dos Santos',
     hero_citacao: '"A santidade não é o luxo de alguns, mas um chamado silencioso e ardente ao coração de todos nós, iluminando o mundo em cada época."',
     sobre_titulo: 'Sobre o Lumina Sancti',
-    sobre_texto: 'O <strong>Lumina Sancti</strong> (Luz dos Santos) é um refúgio digital dedicado a preservar e compartilhar a vida, a fé e o legado daqueles que deixaram um rastro inextinguível de luz na história. Este espaço foi criado para revelar que a santidade não é algo distante, mas uma trilha bela, possível e acessível no cotidiano de qualquer época ou idade.',
+    sobre_texto: 'O <strong>Lumina Sancti</strong> (Luz dos Santos) nasceu de uma certeza: os santos não são personagens distantes. Foram pessoas de verdade, com medos, quedas e recomeços, que deixaram Deus transformar a vida delas. Aqui você conhece a história de cada um, aprende como num jogo, reza com quem ama e descobre, um passo de cada vez, que a santidade também é para você.',
+    sobre_pilar_1_t: 'Conheça',
+    sobre_pilar_1: 'A história completa de cada santo.',
+    sobre_pilar_2_t: 'Aprenda',
+    sobre_pilar_2: 'Trilhas com missões, medalhas e cartas.',
+    sobre_pilar_3_t: 'Reze',
+    sobre_pilar_3: 'Orações e terço, sozinho ou em família.',
     filtro_todos_curto: 'Todos',
     filtro_todos: 'Todos os Santos',
     nav_inicio: 'Início',
@@ -2154,7 +2160,13 @@ const TRADUCOES = {
     hero_subtitulo: 'Light of the Saints',
     hero_citacao: '"Holiness is not the luxury of a few, but a quiet, burning call in the heart of every one of us, lighting up the world in every age."',
     sobre_titulo: 'About Lumina Sancti',
-    sobre_texto: '<strong>Lumina Sancti</strong> (Light of the Saints) is a digital refuge dedicated to preserving and sharing the life, faith and legacy of those who left an unquenchable trail of light in history. This space was created to reveal that holiness is not something distant, but a beautiful path, possible and accessible in the everyday life of any era or age.',
+    sobre_texto: '<strong>Lumina Sancti</strong> (Light of the Saints) was born from one conviction: the saints are not distant figures. They were real people, with fears, falls and new beginnings, who let God transform their lives. Here you get to know each one\'s story, learn as if playing a game, pray with those you love and discover, one step at a time, that holiness is for you too.',
+    sobre_pilar_1_t: 'Discover',
+    sobre_pilar_1: 'The full story of each saint.',
+    sobre_pilar_2_t: 'Learn',
+    sobre_pilar_2: 'Trails with missions, medals and cards.',
+    sobre_pilar_3_t: 'Pray',
+    sobre_pilar_3: 'Prayers and the rosary, alone or with family.',
     filtro_todos_curto: 'All',
     filtro_todos: 'All Saints',
     nav_inicio: 'Home',
@@ -2238,7 +2250,13 @@ const TRADUCOES = {
     hero_subtitulo: 'Luz de los Santos',
     hero_citacao: '"La santidad no es el lujo de unos pocos, sino un llamado silencioso y ardiente en el corazón de todos nosotros, iluminando el mundo en cada época."',
     sobre_titulo: 'Sobre Lumina Sancti',
-    sobre_texto: '<strong>Lumina Sancti</strong> (Luz de los Santos) es un refugio digital dedicado a preservar y compartir la vida, la fe y el legado de quienes dejaron un rastro inextinguible de luz en la historia. Este espacio fue creado para revelar que la santidad no es algo distante, sino un camino bello, posible y accesible en la vida cotidiana de cualquier época o edad.',
+    sobre_texto: '<strong>Lumina Sancti</strong> (Luz de los Santos) nació de una certeza: los santos no son personajes lejanos. Fueron personas de verdad, con miedos, caídas y nuevos comienzos, que dejaron que Dios transformara su vida. Aquí conoces la historia de cada uno, aprendes como en un juego, rezas con quienes amas y descubres, paso a paso, que la santidad también es para ti.',
+    sobre_pilar_1_t: 'Conoce',
+    sobre_pilar_1: 'La historia completa de cada santo.',
+    sobre_pilar_2_t: 'Aprende',
+    sobre_pilar_2: 'Rutas con misiones, medallas y cartas.',
+    sobre_pilar_3_t: 'Reza',
+    sobre_pilar_3: 'Oraciones y rosario, solo o en familia.',
     filtro_todos_curto: 'Todos',
     filtro_todos: 'Todos los Santos',
     nav_inicio: 'Inicio',
@@ -3228,6 +3246,8 @@ async function enviarPerguntaLumina() {
   input.value = '';
   input.disabled = true;
   botaoEnviar.disabled = true;
+  mostrarConversaDaLumina(true);
+  areaResposta.querySelectorAll('.lumina-seguir').forEach((bloco) => bloco.remove());
 
   const blocoPergunta = document.createElement('div');
   blocoPergunta.className = 'lumina-mensagem lumina-mensagem-pergunta';
@@ -3263,6 +3283,7 @@ async function enviarPerguntaLumina() {
     blocoResposta.className = 'lumina-mensagem';
     areaResposta.appendChild(blocoResposta);
     await efeitoMaquinaDeEscrever(blocoResposta, dados.resposta);
+    acrescentarAcoesDaLumina(areaResposta, dados.resposta);
     areaResposta.scrollTop = areaResposta.scrollHeight;
 
     if (typeof dados.perguntasRestantesHoje === 'number') {
@@ -3278,11 +3299,127 @@ async function enviarPerguntaLumina() {
   }
 }
 
+const SUGESTOES_DA_LUMINA = ['Quem foi São Francisco de Assis?', 'Qual santo me ajuda numa prova?', 'Me conte sobre um santo jovem.', 'O que é um doutor da Igreja?'];
+
+function mostrarConversaDaLumina(comConversa) {
+  const boasVindas = document.getElementById('lumina-boas-vindas');
+  const nova = document.getElementById('lumina-nova');
+  if (boasVindas) boasVindas.hidden = comConversa;
+  if (nova) nova.hidden = !comConversa;
+}
+
+function perguntarParaLumina(texto) {
+  const campo = document.getElementById('lumina-input');
+  if (!campo || campo.disabled) return;
+  campo.value = texto;
+  enviarPerguntaLumina();
+}
+
+function santosCitadosPelaLumina(texto) {
+  const resposta = normalizarBuscaDoCatalogo(texto);
+  return santosData
+    .map((santo) => ({ santo, nome: textoDoSanto(santo).nome }))
+    .filter(({ nome }) => nome.length > 5 && resposta.includes(normalizarBuscaDoCatalogo(nome)))
+    .sort((a, b) => b.nome.length - a.nome.length)
+    .slice(0, 3);
+}
+
+function pararVozDaLumina() {
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  document.querySelectorAll('.lumina-acao-ouvir.falando').forEach((botao) => botao.classList.remove('falando'));
+}
+
+function ouvirRespostaDaLumina(botao, texto) {
+  if (!window.speechSynthesis || typeof SpeechSynthesisUtterance !== 'function') return;
+  const jaFalava = botao.classList.contains('falando');
+  pararVozDaLumina();
+  if (jaFalava) return;
+  const fala = new SpeechSynthesisUtterance(texto);
+  fala.lang = { en: 'en-US', es: 'es-ES' }[idiomaAtual] || 'pt-BR';
+  fala.onend = () => botao.classList.remove('falando');
+  botao.classList.add('falando');
+  window.speechSynthesis.speak(fala);
+  const vigia = setInterval(() => {
+    const naPagina = document.getElementById('view-ia') && document.getElementById('view-ia').classList.contains('active');
+    if (!botao.classList.contains('falando')) clearInterval(vigia);
+    else if (!naPagina) { pararVozDaLumina(); clearInterval(vigia); }
+  }, 500);
+}
+
+function acrescentarAcoesDaLumina(area, resposta) {
+  const citados = santosCitadosPelaLumina(resposta);
+  const acoes = document.createElement('div');
+  acoes.className = 'lumina-acoes';
+  acoes.innerHTML = `
+    <button type="button" class="lumina-acao lumina-acao-copiar"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lapis"></use></svg><span>${tr('Copiar')}</span></button>
+    <button type="button" class="lumina-acao lumina-acao-ouvir"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-som"></use></svg><span>${tr('Ouvir')}</span></button>`;
+  area.appendChild(acoes);
+  acoes.querySelector('.lumina-acao-copiar').addEventListener('click', async (evento) => {
+    const rotulo = evento.currentTarget.querySelector('span');
+    try {
+      await navigator.clipboard.writeText(resposta);
+      rotulo.textContent = tr('Copiado!');
+      setTimeout(() => { rotulo.textContent = tr('Copiar'); }, 1500);
+    } catch (e) {
+      rotulo.textContent = tr('Copiar');
+    }
+  });
+  acoes.querySelector('.lumina-acao-ouvir').addEventListener('click', (evento) => ouvirRespostaDaLumina(evento.currentTarget, resposta));
+  if (!citados.length) return;
+  const seguir = document.createElement('div');
+  seguir.className = 'lumina-seguir';
+  const principal = citados[0].nome;
+  seguir.innerHTML = `
+    ${citados.map(({ santo, nome }) => `<button type="button" class="lumina-santo" data-santo="${santo.id}"><span class="lumina-santo-foto" id="lumina-santo-${santo.id}"></span><span>${tr('Conhecer {nome}', { nome: escaparTextoDeOracao(nome) })}</span></button>`).join('')}
+    <button type="button" class="lumina-sugestao" data-pergunta="${escaparTextoDeOracao(tr('Como posso imitar {nome}?', { nome: principal }))}">${escaparTextoDeOracao(tr('Como posso imitar {nome}?', { nome: principal }))}</button>`;
+  area.appendChild(seguir);
+  citados.forEach(({ santo }) => {
+    buscarImagemSanto(santo).then((url) => {
+      const foto = document.getElementById(`lumina-santo-${santo.id}`);
+      if (url && foto) foto.innerHTML = `<img src="${url}" alt="">`;
+    });
+  });
+  seguir.addEventListener('click', (evento) => {
+    const santo = evento.target.closest('[data-santo]');
+    if (santo) { showDetail(santo.dataset.santo); return; }
+    const pergunta = evento.target.closest('[data-pergunta]');
+    if (pergunta) perguntarParaLumina(pergunta.dataset.pergunta);
+  });
+}
+
+function desenharSugestoesDaLumina() {
+  const lugar = document.getElementById('lumina-sugestoes');
+  if (!lugar) return;
+  lugar.innerHTML = SUGESTOES_DA_LUMINA.map((texto) => `<button type="button" class="lumina-sugestao" data-pergunta="${escaparTextoDeOracao(tr(texto))}">${escaparTextoDeOracao(tr(texto))}</button>`).join('');
+}
+
 function iniciarPaginaDaLumina() {
   const enviar = document.getElementById('lumina-enviar');
   const input = document.getElementById('lumina-input');
   const irLogin = document.getElementById('lumina-ir-login');
   if (!enviar) return;
+
+  desenharSugestoesDaLumina();
+  document.addEventListener('lumina-idioma', desenharSugestoesDaLumina);
+  const sugestoes = document.getElementById('lumina-sugestoes');
+  if (sugestoes) {
+    sugestoes.addEventListener('click', (evento) => {
+      const botao = evento.target.closest('[data-pergunta]');
+      if (botao) perguntarParaLumina(botao.dataset.pergunta);
+    });
+  }
+  const nova = document.getElementById('lumina-nova');
+  if (nova) {
+    nova.addEventListener('click', () => {
+      pararVozDaLumina();
+      const area = document.getElementById('lumina-resposta-area');
+      if (area) area.innerHTML = '';
+      const erro = document.getElementById('lumina-erro');
+      if (erro) erro.textContent = '';
+      mostrarConversaDaLumina(false);
+      input.focus();
+    });
+  }
 
   enviar.addEventListener('click', enviarPerguntaLumina);
   input.addEventListener('keydown', (e) => {
@@ -3325,6 +3462,7 @@ function iniciarNavegacaoDeContas() {
   iniciarPaginaDeAutenticacao();
   iniciarPaginaDePerfil();
   iniciarPaginaDaLumina();
+  iniciarBuscaDoCatalogo();
 }
 
 function iniciarChuvaDeMeteoros() {
@@ -3871,15 +4009,45 @@ function ligarBotaoFavorito(botao, id) {
 
 let filtroAtual = 'todos';
 
+let buscaDoCatalogo = '';
+
+function normalizarBuscaDoCatalogo(texto) {
+  return String(texto || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+}
+
+function revelarCartoesDoCatalogo() {
+  if (typeof IntersectionObserver !== 'function' || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+  const observador = new IntersectionObserver((itens) => {
+    itens.forEach((item) => {
+      if (!item.isIntersecting) return;
+      item.target.classList.add('revelado');
+      observador.unobserve(item.target);
+    });
+  }, { rootMargin: '0px 0px -6% 0px' });
+  cardsGrid.querySelectorAll('.card').forEach((card) => {
+    card.classList.add('a-revelar');
+    observador.observe(card);
+  });
+}
+
 function renderGrid(filter = 'todos') {
   filtroAtual = filter;
   cardsGrid.innerHTML = '';
 
+  const procurado = normalizarBuscaDoCatalogo(buscaDoCatalogo);
   const filtrados = santosData.filter(s => {
+    if (procurado && !normalizarBuscaDoCatalogo(`${textoDoSanto(s).nome} ${s.nome}`).includes(procurado)) return false;
     if (filter === 'todos') return true;
     if (filter === 'favoritos') return ehFavorito(s.id);
     return s.categoria.includes(filter);
   });
+  const contaDoCatalogo = document.getElementById('catalogo-conta');
+  if (contaDoCatalogo) contaDoCatalogo.textContent = tr(filtrados.length === 1 ? '{n} santo' : '{n} santos', { n: filtrados.length });
+
+  if (procurado && filtrados.length === 0) {
+    cardsGrid.innerHTML = `<p class="not-found-msg" style="grid-column: 1 / -1;">${tr('Não encontrei nenhum santo com esse nome.')}</p>`;
+    return;
+  }
 
   if (filter === 'favoritos' && filtrados.length === 0) {
     cardsGrid.innerHTML = `<p class="not-found-msg" style="grid-column: 1 / -1;">Você ainda não tem santos favoritos. Toque no coração de um cartão para guardá-lo aqui.</p>`;
@@ -3909,6 +4077,7 @@ function renderGrid(filter = 'todos') {
           ${textoDoSanto(santo).nome}
         </h3>
         <p class="card-desc">${textoDoSanto(santo).resumo}</p>
+        ${santo.festa && /^\d{2}-\d{2}$/.test(santo.festa) ? `<span class="card-festa">${tr('Festa: {data}', { data: festaPorExtenso(santo.festa) })}</span>` : ''}
       </div>
     `;
 
@@ -3921,6 +4090,20 @@ function renderGrid(filter = 'todos') {
         wrapper.innerHTML = htmlDaFoto(imgUrl, santo.nome, 'card-img');
       }
     });
+  });
+  revelarCartoesDoCatalogo();
+}
+
+function iniciarBuscaDoCatalogo() {
+  const campo = document.getElementById('catalogo-busca');
+  if (!campo) return;
+  let espera = null;
+  campo.addEventListener('input', () => {
+    clearTimeout(espera);
+    espera = setTimeout(() => {
+      buscaDoCatalogo = campo.value;
+      renderGrid(filtroAtual);
+    }, 160);
   });
 }
 
@@ -5134,18 +5317,42 @@ function refazerBuscaDoPadroeiro(input) {
   }
 }
 
+const ICONES_DOS_TEMAS = {
+  'Viagens e estradas': 'trilha', 'Saúde e doentes': 'coracao', 'Gravidez e parto': 'coracao', 'Trabalho e emprego': 'chave', 'Dívidas e dificuldades financeiras': 'chave',
+  'Estudos e provas': 'capelo', 'Causas impossíveis e urgentes': 'vela', 'Família, mães e filhos': 'usuarios', 'Internet e tecnologia': 'video', 'Música e canto': 'som',
+  'Jornalismo e comunicação': 'lapis', 'Medo e proteção': 'escudo', 'Coisas perdidas': 'lupa', Jovens: 'estrela', Artistas: 'paleta', 'Justiça e advogados': 'tabuas',
+  'Professores e educação': 'livro', 'Pobres e caridade': 'coracao', Animais: 'pomba', 'Empregadas domésticas': 'pessoa', 'Eucaristia e coroinhas': 'calice',
+  'Paz e reconciliação': 'pomba', 'Hanseníase': 'cruz', Pureza: 'vela', 'Olhos e visão': 'lampada', Garganta: 'microfone', 'Tempestades e raios': 'alerta',
+  'Soldados e atletas': 'escudo', 'Padres e confissão': 'cruz',
+};
+let padroeiroComTodosOsTemas = false;
+
+function iconeDoTemaDoPadroeiro(rotulo) {
+  return `<svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-${ICONES_DOS_TEMAS[rotulo] || 'estrela'}"></use></svg>`;
+}
+
 function mostrarTemasDoPadroeiro(input) {
   const area = document.getElementById('padroeiro-temas');
   if (!area) return;
-  area.innerHTML = TEMAS_EM_DESTAQUE_DO_PADROEIRO.map((rotulo) => {
+  const rotulos = padroeiroComTodosOsTemas ? PADROEIROS.map((t) => t.rotulo) : TEMAS_EM_DESTAQUE_DO_PADROEIRO;
+  area.innerHTML = rotulos.map((rotulo) => {
     const tema = PADROEIROS.find((t) => t.rotulo === rotulo);
     if (!tema) return '';
-    const nomes = tema.santos.map((id) => santosData.find((s) => s.id === id)).filter(Boolean).slice(0, 2).map((s) => textoDoSanto(s).nome);
+    const santos = tema.santos.map((id) => santosData.find((s) => s.id === id)).filter(Boolean);
+    const nomes = santos.slice(0, 2).map((s) => textoDoSanto(s).nome);
     return `<button type="button" class="padroeiro-tema" data-tema="${rotulo}">
+      <span class="padroeiro-tema-icone">${iconeDoTemaDoPadroeiro(rotulo)}</span>
       <span class="padroeiro-tema-nome">${rotulo}</span>
       <span class="padroeiro-tema-santos">${nomes.join(', ')}</span>
     </button>`;
-  }).join('');
+  }).join('') + (padroeiroComTodosOsTemas ? '' : `<button type="button" class="padroeiro-todos" id="padroeiro-todos">${tr('Ver todos os temas')}</button>`);
+  const todos = document.getElementById('padroeiro-todos');
+  if (todos) {
+    todos.addEventListener('click', () => {
+      padroeiroComTodosOsTemas = true;
+      mostrarTemasDoPadroeiro(input);
+    });
+  }
   area.querySelectorAll('.padroeiro-tema').forEach((botao) => {
     botao.addEventListener('click', () => {
       temaEscolhidoDoPadroeiro = botao.dataset.tema;
@@ -5188,12 +5395,18 @@ function mostrarResultadosDoPadroeiro(valor) {
     return;
   }
 
-  resultados.innerHTML = grupos.map((grupo, g) => `
+  resultados.innerHTML = `<button type="button" class="padroeiro-voltar" id="padroeiro-voltar"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-voltar-seta"></use></svg><span>${tr('Ver todos os temas')}</span></button>` + grupos.map((grupo, g) => `
     <section class="padroeiro-grupo">
-      <h3 class="padroeiro-grupo-titulo">${grupo.rotulo}</h3>
+      <h3 class="padroeiro-grupo-titulo"><span class="padroeiro-tema-icone">${iconeDoTemaDoPadroeiro(grupo.rotulo)}</span>${grupo.rotulo}</h3>
       <div class="padroeiro-lista">${grupo.santos.map((santo) => cartaoDePadroeiro(santo, `padroeiro-foto-${g}`, grupo.rotulo)).join('')}</div>
     </section>`).join('');
 
+  document.getElementById('padroeiro-voltar').addEventListener('click', () => {
+    const input = document.getElementById('padroeiro-input');
+    if (input) input.value = '';
+    temaEscolhidoDoPadroeiro = null;
+    mostrarResultadosDoPadroeiro('');
+  });
   resultados.querySelectorAll('.padroeiro-cartao').forEach((cartao) => {
     cartao.addEventListener('click', () => showDetail(cartao.dataset.santo));
     cartao.addEventListener('keydown', (e) => {

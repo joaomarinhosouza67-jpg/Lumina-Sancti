@@ -6,6 +6,23 @@ let postagensDaComunidade = [];
 let carregandoComunidade = false;
 let sequenciaDasArtes = 0;
 let fotosDaComunidade = {};
+let comunidadeEntrando = false;
+
+function festaDaReacao(botao, tipo) {
+  if (!botao.getBoundingClientRect || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+  const caixa = botao.getBoundingClientRect();
+  const x = caixa.left + caixa.width / 2;
+  const y = caixa.top + caixa.height / 2;
+  for (let i = 0; i < 12; i += 1) {
+    const grao = document.createElement('i');
+    const angulo = -Math.PI / 2 + (i - 5.5) * 0.28 + (Math.random() - 0.5) * 0.2;
+    const forca = 60 + Math.random() * 70;
+    grao.className = `marco-festa ${tipo === 'amem' ? 'cruz' : 'estrela'}`;
+    grao.style.cssText = `left:${x}px;top:${y}px;--dx:${(Math.cos(angulo) * forca).toFixed(0)}px;--dy:${(Math.sin(angulo) * forca).toFixed(0)}px;--giro:${Math.round((Math.random() - 0.5) * 300)}deg;animation-delay:${(i * 0.012).toFixed(3)}s`;
+    document.body.appendChild(grao);
+    setTimeout(() => grao.remove(), 950);
+  }
+}
 
 function nomeDoSantoDoMarco(slug) {
   const santo = typeof santosData !== 'undefined' ? santosData.find((s) => s.id === slug) : null;
@@ -208,6 +225,8 @@ function abrirComunidade() {
 }
 
 function marcarAbaDaComunidade() {
+  const abas = document.querySelector('.comunidade-abas');
+  if (abas) abas.dataset.ativa = abaDaComunidade;
   document.querySelectorAll('.comunidade-aba').forEach((aba) => {
     const ativa = aba.dataset.aba === abaDaComunidade;
     aba.classList.toggle('ativa', ativa);
@@ -290,7 +309,8 @@ async function carregarComunidade(maisAntigas) {
   carregandoComunidade = true;
   if (!maisAntigas) {
     postagensDaComunidade = [];
-    lista.innerHTML = '<p class="perfis-carregando">Carregando...</p>';
+    lista.innerHTML = '<div class="marco-esqueleto"></div><div class="marco-esqueleto"></div>';
+    comunidadeEntrando = true;
   }
   if (mais) mais.hidden = true;
   const antes = maisAntigas && postagensDaComunidade.length ? postagensDaComunidade[postagensDaComunidade.length - 1].criado_em : null;
@@ -333,6 +353,8 @@ function renderizarComunidade() {
     if (postar) postar.addEventListener('click', abrirCompartilharMarco);
     return;
   }
+  lista.classList.toggle('entrando', comunidadeEntrando);
+  comunidadeEntrando = false;
   lista.innerHTML = postagensDaComunidade.map(cartaoDaPostagem).join('');
   ligarCartoesDaComunidade(lista, postagensDaComunidade, () => renderizarComunidade());
 }
@@ -365,6 +387,7 @@ function ligarCartoesDaComunidade(lugar, postagens, redesenhar) {
       botao.addEventListener('click', async () => {
         const tipo = botao.dataset.reacao;
         const ligar = !(postagem.minhas || []).includes(tipo);
+        if (ligar) festaDaReacao(botao, tipo);
         botao.disabled = true;
         try {
           const r = await chamarComunidade('reagir_marco', { _pid: perfil.id, _id: postagem.id, _tipo: tipo, _ligar: ligar });
