@@ -2256,12 +2256,14 @@ function continuarLicao() {
 function finalizarLicao() {
   const { trilha, licao, total } = licaoAtual;
   const acertosDePrimeira = Object.values(licaoAtual.primeiraTentativa).filter(Boolean).length;
+  const vaiVoar = typeof vooDaLumiPodeTocar === 'function' && vooDaLumiPodeTocar();
+  const folgaDoVoo = vaiVoar ? DURACAO_DO_VOO_DA_LUMI : 0;
 
   const estado = carregarProgressoTrilhas();
   const anterior = estado.licoes[licao.slug];
   if (anterior) marcarMissaoRevisada(trilha.slug, licao.slug);
   const trilhaJaConcluida = trilhaConcluida(trilha, estado);
-  if (trilha.santoId && typeof ganharCarta === 'function') setTimeout(() => { if (!trilhaJaConcluida && trilhaConcluida(trilha, carregarProgressoTrilhas())) ganharCarta(trilha.santoId); }, 1500);
+  if (trilha.santoId && typeof ganharCarta === 'function') setTimeout(() => { if (!trilhaJaConcluida && trilhaConcluida(trilha, carregarProgressoTrilhas())) ganharCarta(trilha.santoId); }, 1500 + folgaDoVoo);
   const feGanha = anterior ? FE_REVISAO : FE_BASE_LICAO + FE_POR_ACERTO_DE_PRIMEIRA * acertosDePrimeira;
   estado.fe += feGanha;
   estado.licoes[licao.slug] = {
@@ -2285,8 +2287,8 @@ function finalizarLicao() {
   licaoAtual.finalizada = true;
   licaoAtual.corretas = total;
   atualizarTopoDaLicao();
-  somDaLicao('fim');
 
+  const mostrarFimDaMissao = () => {
   const corpo = document.getElementById('licao-corpo');
   if (corpo) {
     corpo.innerHTML = `
@@ -2309,8 +2311,23 @@ function finalizarLicao() {
   avisarMascote('concluiu', { medalha: insigniaNova });
   prepararRodapeDaLicao(tt('continuar'), true);
   animarOfensivaAcesa(corpo);
+  };
+  if (vaiVoar) {
+    tocarVooDaLumi({
+      titulo: tt('missao_concluida'),
+      texto: `+${feGanha} ${tt('de_fe')}`,
+      aoEstourar: () => somDaLicao('fim'),
+      aoRevelar: () => {
+        mostrarFimDaMissao();
+        animarChegadaDoFimDaMissao(feGanha);
+      },
+    });
+  } else {
+    somDaLicao('fim');
+    mostrarFimDaMissao();
+  }
   if (perfeita && !perfilEhInfantil() && typeof oferecerCompartilharMissaoPerfeita === 'function') {
-    setTimeout(() => oferecerCompartilharMissaoPerfeita({ trilha, licao, chave: null }), 1600);
+    setTimeout(() => oferecerCompartilharMissaoPerfeita({ trilha, licao, chave: null }), 1600 + folgaDoVoo);
   }
 }
 

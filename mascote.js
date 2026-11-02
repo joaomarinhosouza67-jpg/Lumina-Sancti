@@ -225,7 +225,7 @@ let contadorDeLumis = 0;
 function desenhoDaLumi() {
   contadorDeLumis += 1;
   const id = `lumi-${contadorDeLumis}`;
-  const faisca = (dx, dy, atraso) => `<path class="lumi-faisca" style="--dx:${dx}px;--dy:${dy}px;animation-delay:${atraso}s" transform="translate(60 64)" d="M0 -7 C1 -2 2 -1 7 0 C2 1 1 2 0 7 C-1 2 -2 1 -7 0 C-2 -1 -1 -2 0 -7 Z"/>`;
+  const faisca = (dx, dy, atraso) => `<path class="lumi-faisca" style="--dx:${dx}px;--dy:${dy}px;--atraso:${atraso}s" transform="translate(60 64)" d="M0 -7 C1 -2 2 -1 7 0 C2 1 1 2 0 7 C-1 2 -2 1 -7 0 C-2 -1 -1 -2 0 -7 Z"/>`;
   return `
     <svg class="lumi-svg" viewBox="0 0 120 140" aria-hidden="true" focusable="false">
       <defs>
@@ -239,11 +239,13 @@ function desenhoDaLumi() {
           <stop offset="100%" stop-color="#f5d77a" stop-opacity="0"/>
         </radialGradient>
       </defs>
-      <circle class="lumi-aura" cx="60" cy="64" r="58" fill="url(#${id}-aura)"/>
+      <ellipse class="lumi-sombra" cx="60" cy="128" rx="27" ry="4.5"/>
       <g class="lumi-faiscas">
         ${faisca(-46, -40, 0)}${faisca(48, -38, 0.08)}${faisca(-54, 8, 0.16)}${faisca(54, 12, 0.05)}${faisca(-30, 46, 0.12)}${faisca(34, 44, 0.2)}
       </g>
       <g class="lumi-corpo-todo">
+        <circle class="lumi-aura" cx="60" cy="64" r="58" fill="url(#${id}-aura)"/>
+        <g class="lumi-giro">
         <g class="lumi-perna lumi-perna-esq">
           <path d="M52 96 L47 118"/>
           <ellipse cx="44" cy="120.5" rx="7" ry="4"/>
@@ -260,6 +262,7 @@ function desenhoDaLumi() {
           <path d="M100 70 Q107 77 107 87"/>
           <circle cx="107" cy="89.5" r="5"/>
         </g>
+        <g class="lumi-tronco">
         <path class="lumi-corpo" fill="url(#${id}-corpo)" d="M60 6 C68 36 86 56 114 64 C86 72 68 88 60 114 C52 88 34 72 6 64 C34 56 52 36 60 6 Z"/>
         <g class="lumi-rosto">
           <ellipse class="lumi-bochecha" cx="41.5" cy="70" rx="5.5" ry="3.2"/>
@@ -296,6 +299,8 @@ function desenhoDaLumi() {
           <path class="lumi-boca lumi-boca-triste" d="M53.5 76.5 Q60 70.5 66.5 76.5"/>
           <path class="lumi-lagrima" d="M46.5 66.5 C44.8 69.4 43.8 71.1 43.8 72.4 A2.7 2.7 0 0 0 49.2 72.4 C49.2 71.1 48.2 69.4 46.5 66.5 Z"/>
         </g>
+        </g>
+        </g>
       </g>
       <g class="lumi-zzz">
         <text x="86" y="32">z</text>
@@ -308,16 +313,24 @@ function desenhoDaLumi() {
 function criarPalcoDaLumi(id) {
   const palco = document.createElement('div');
   palco.id = id;
-  palco.className = 'lumi-palco';
+  palco.className = 'lumi-palco lumi-chegando';
   palco.innerHTML = `
     <button type="button" class="lumi" data-estado="parada" data-rosto="sorriso" data-bracos="baixo">${desenhoDaLumi()}</button>
     <p class="lumi-balao" role="status" aria-live="polite"></p>`;
   const botao = palco.querySelector('.lumi');
   botao.setAttribute('aria-label', comNomeDaLumi(falasDaLumi().tocarParaOuvir));
   botao.addEventListener('click', () => {
-    mudarLumi(palco, 'cutucada', botao.dataset.rosto);
+    const rostoDeAntes = botao.dataset.rosto;
+    mudarLumi(palco, 'cutucada', rostoDeAntes === 'sorriso' ? 'feliz' : rostoDeAntes);
+    if (rostoDeAntes === 'sorriso') {
+      setTimeout(() => { if (botao.dataset.estado === 'parada') botao.dataset.rosto = 'sorriso'; }, DURACAO_DOS_MOVIMENTOS.cutucada + 40);
+    }
     if (palco.falaParaRepetir) falarParaCrianca(palco.falaParaRepetir);
   });
+  palco.addEventListener('animationend', (evento) => {
+    if (evento.animationName === 'lumiChega') palco.classList.remove('lumi-chegando');
+  });
+  ligarGestosDaLumi();
   return palco;
 }
 
@@ -389,7 +402,38 @@ function removerLumi() {
   });
 }
 
-const DURACAO_DOS_MOVIMENTOS = { acertou: 1300, errou: 1900, concluiu: 1600, cutucada: 500 };
+const DURACAO_DOS_MOVIMENTOS = { acertou: 1300, errou: 1900, concluiu: 2100, cutucada: 720 };
+const GESTOS_DA_LUMI = { olha: 2300, acena: 1500, pulinho: 800, espreguica: 1900 };
+let gestosDaLumiLigados = false;
+
+function semMovimentoDaLumi() {
+  return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+}
+
+function fazerGestoDaLumi() {
+  const lumis = Array.from(document.querySelectorAll('.lumi-palco .lumi[data-estado="parada"]')).filter((lumi) => lumi.getClientRects().length && !lumi.dataset.gesto);
+  const nomes = Object.keys(GESTOS_DA_LUMI);
+  lumis.forEach((lumi) => {
+    const gesto = nomes[Math.floor(Math.random() * nomes.length)];
+    const rosto = lumi.dataset.rosto;
+    lumi.dataset.gesto = gesto;
+    if (gesto === 'espreguica' && rosto === 'sorriso') lumi.dataset.rosto = 'feliz';
+    setTimeout(() => {
+      delete lumi.dataset.gesto;
+      if (gesto === 'espreguica' && lumi.dataset.estado === 'parada') lumi.dataset.rosto = rosto;
+    }, GESTOS_DA_LUMI[gesto]);
+  });
+}
+
+function ligarGestosDaLumi() {
+  if (gestosDaLumiLigados || semMovimentoDaLumi()) return;
+  gestosDaLumiLigados = true;
+  const agendar = () => setTimeout(() => {
+    if (!document.hidden) fazerGestoDaLumi();
+    agendar();
+  }, 6000 + Math.random() * 6000);
+  agendar();
+}
 
 function mudarLumi(palco, estado, rosto, fala) {
   if (!palco) return;
@@ -397,8 +441,10 @@ function mudarLumi(palco, estado, rosto, fala) {
   const balao = palco.querySelector('.lumi-balao');
   clearTimeout(palco.temporizadorDaLumi);
   lumi.dataset.estado = 'parada';
+  delete lumi.dataset.gesto;
   void lumi.getBoundingClientRect();
   lumi.dataset.estado = estado;
+  lumi.dataset.variante = String(1 + Math.floor(Math.random() * 3));
   lumi.dataset.rosto = rosto;
   lumi.dataset.bracos = (estado === 'acertou' || estado === 'concluiu') ? 'cima' : 'baixo';
   if (fala !== undefined && balao) {
@@ -455,6 +501,288 @@ function mostrarAvisoDaLumiParaCriancas() {
 }
 
 let lumiPrimeiraPergunta = true;
+
+const DURACAO_DO_VOO_DA_LUMI = 2900;
+const MOMENTOS_DO_VOO = { chegada: 1250, estouro: 1500, partida: 2350 };
+const CAMINHOS_DO_VOO = [
+  [[-0.3, 0.86], [0.24, 0.62], [0.72, 0.44], [0.86, 0.2], [0.56, 0.07], [0.3, 0.23], [0.5, 0.4]],
+  [[1.3, 0.86], [0.76, 0.62], [0.28, 0.44], [0.14, 0.2], [0.44, 0.07], [0.7, 0.23], [0.5, 0.4]],
+  [[-0.3, 0.16], [0.4, 0.14], [0.92, 0.32], [0.62, 0.62], [0.14, 0.58], [0.24, 0.36], [0.5, 0.4]],
+];
+
+function vooDaLumiPodeTocar() {
+  try {
+    return !document.hidden
+      && typeof window.requestAnimationFrame === 'function'
+      && !!window.matchMedia
+      && !semMovimentoDaLumi()
+      && !!document.createElement('canvas').getContext('2d');
+  } catch (e) {
+    return false;
+  }
+}
+
+function amostrarCaminhoDoVoo(pontos, largura, altura) {
+  const lugar = pontos.map(([x, y]) => [x * largura, y * altura]);
+  const todos = [lugar[0], ...lugar, lugar[lugar.length - 1]];
+  const amostras = [];
+  for (let i = 1; i < todos.length - 2; i += 1) {
+    const [p0, p1, p2, p3] = [todos[i - 1], todos[i], todos[i + 1], todos[i + 2]];
+    for (let k = 0; k < 40; k += 1) {
+      const u = k / 40;
+      const junta = (a, b, c, d) => 0.5 * (2 * b + (c - a) * u + (2 * a - 5 * b + 4 * c - d) * u * u + (3 * b - a - 3 * c + d) * u * u * u);
+      amostras.push({ x: junta(p0[0], p1[0], p2[0], p3[0]), y: junta(p0[1], p1[1], p2[1], p3[1]) });
+    }
+  }
+  amostras.push({ x: lugar[lugar.length - 1][0], y: lugar[lugar.length - 1][1] });
+  let distancia = 0;
+  let direcao = null;
+  amostras.forEach((ponto, i) => {
+    const anterior = amostras[Math.max(0, i - 1)];
+    const proximo = amostras[Math.min(amostras.length - 1, i + 1)];
+    if (i > 0) distancia += Math.hypot(ponto.x - anterior.x, ponto.y - anterior.y);
+    let angulo = Math.atan2(proximo.y - anterior.y, proximo.x - anterior.x);
+    if (direcao !== null) {
+      while (angulo - direcao > Math.PI) angulo -= Math.PI * 2;
+      while (angulo - direcao < -Math.PI) angulo += Math.PI * 2;
+    }
+    direcao = angulo;
+    ponto.distancia = distancia;
+    ponto.angulo = angulo;
+  });
+  return { amostras, total: distancia };
+}
+
+function pontoDoCaminho(caminho, fracao) {
+  const alvo = caminho.total * fracao;
+  const { amostras } = caminho;
+  let de = 0;
+  let ate = amostras.length - 1;
+  while (ate - de > 1) {
+    const meio = (de + ate) >> 1;
+    if (amostras[meio].distancia < alvo) de = meio;
+    else ate = meio;
+  }
+  const a = amostras[de];
+  const b = amostras[ate];
+  const u = (alvo - a.distancia) / Math.max(0.001, b.distancia - a.distancia);
+  return { x: a.x + (b.x - a.x) * u, y: a.y + (b.y - a.y) * u, angulo: a.angulo + (b.angulo - a.angulo) * u };
+}
+
+function desenharFaiscaDoVoo() {
+  const tela = document.createElement('canvas');
+  tela.width = 48;
+  tela.height = 48;
+  const p = tela.getContext('2d');
+  const brilho = p.createRadialGradient(24, 24, 0, 24, 24, 24);
+  brilho.addColorStop(0, 'rgba(255, 244, 200, 0.75)');
+  brilho.addColorStop(1, 'rgba(240, 190, 80, 0)');
+  p.fillStyle = brilho;
+  p.fillRect(0, 0, 48, 48);
+  p.translate(24, 24);
+  p.fillStyle = '#ffe9a8';
+  p.beginPath();
+  p.moveTo(0, -20);
+  p.quadraticCurveTo(2, -2, 20, 0);
+  p.quadraticCurveTo(2, 2, 0, 20);
+  p.quadraticCurveTo(-2, 2, -20, 0);
+  p.quadraticCurveTo(-2, -2, 0, -20);
+  p.fill();
+  return tela;
+}
+
+function tocarVooDaLumi(opcoes) {
+  if (!vooDaLumiPodeTocar()) return false;
+  const tela = document.createElement('div');
+  tela.id = 'lumi-voo';
+  tela.className = 'lumi-voo';
+  tela.setAttribute('aria-live', 'polite');
+  tela.innerHTML = `
+    <div class="lumi-voo-fundo"></div>
+    <canvas class="lumi-voo-ceu" aria-hidden="true"></canvas>
+    <div class="lumi-voo-textos"><strong>${escaparTextoDoVoo(opcoes.titulo)}</strong><span>${escaparTextoDoVoo(opcoes.texto)}</span></div>
+    <div class="lumi lumi-voo-boneca" data-estado="voando" data-rosto="feliz" data-bracos="cima" aria-hidden="true">${desenhoDaLumi()}</div>`;
+  document.body.appendChild(tela);
+  if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+
+  const fundo = tela.querySelector('.lumi-voo-fundo');
+  const ceu = tela.querySelector('.lumi-voo-ceu');
+  const boneca = tela.querySelector('.lumi-voo-boneca');
+  const textos = tela.querySelector('.lumi-voo-textos');
+  const largura = window.innerWidth;
+  const altura = window.innerHeight;
+  const densidade = Math.min(window.devicePixelRatio || 1, 2);
+  ceu.width = Math.round(largura * densidade);
+  ceu.height = Math.round(altura * densidade);
+  const pincel = ceu.getContext('2d');
+  pincel.scale(densidade, densidade);
+  const faisca = desenharFaiscaDoVoo();
+  const caminho = amostrarCaminhoDoVoo(CAMINHOS_DO_VOO[Math.floor(Math.random() * CAMINHOS_DO_VOO.length)], largura, altura);
+  const centro = pontoDoCaminho(caminho, 1);
+  const anguloDeSaida = pontoDoCaminho(caminho, 0).angulo;
+  const giroFinal = Math.round(((centro.angulo - anguloDeSaida) * 180) / Math.PI / 360) * 360;
+  const particulas = [];
+  const ondas = [];
+  const comeco = performance.now();
+  let anterior = comeco;
+  let quadro = null;
+  let revelou = false;
+  let estourou = false;
+  let terminou = false;
+  let ultimoPonto = null;
+
+  const soltar = (x, y, vx, vy, vida, tamanho, gravidade) => {
+    if (particulas.length < 170) particulas.push({ x, y, vx, vy, vida, total: vida, tamanho, gravidade });
+  };
+  const revelar = () => {
+    if (revelou) return;
+    revelou = true;
+    opcoes.aoRevelar();
+  };
+  const estourar = () => {
+    if (estourou) return;
+    estourou = true;
+    tela.classList.add('estourou');
+    ondas.push({ raio: 40, vida: 620, total: 620 }, { raio: 10, vida: 860, total: 860 });
+    for (let i = 0; i < 52; i += 1) {
+      const angulo = Math.random() * Math.PI * 2;
+      const forca = 160 + Math.random() * 620;
+      soltar(centro.x, centro.y, Math.cos(angulo) * forca, Math.sin(angulo) * forca, 600 + Math.random() * 900, 10 + Math.random() * 26, 520);
+    }
+    if (opcoes.aoEstourar) opcoes.aoEstourar();
+  };
+  const terminar = () => {
+    if (terminou) return;
+    terminou = true;
+    if (quadro) cancelAnimationFrame(quadro);
+    clearTimeout(garantia);
+    document.removeEventListener('keydown', pularPeloTeclado, true);
+    estourou = true;
+    revelar();
+    tela.remove();
+  };
+  const pularPeloTeclado = (evento) => {
+    evento.preventDefault();
+    evento.stopPropagation();
+    terminar();
+  };
+  const garantia = setTimeout(terminar, DURACAO_DO_VOO_DA_LUMI + 1500);
+  tela.addEventListener('pointerdown', terminar);
+  document.addEventListener('keydown', pularPeloTeclado, true);
+
+  const poseDaLumi = (t) => {
+    const { chegada, estouro, partida } = MOMENTOS_DO_VOO;
+    if (t < chegada) {
+      const x = t / chegada;
+      const andou = x < 0.72 ? 0.86 * Math.pow(x / 0.72, 1.35) : 0.86 + 0.14 * (1 - Math.pow(1 - (x - 0.72) / 0.28, 3));
+      const ponto = pontoDoCaminho(caminho, andou);
+      const puxao = Math.max(0, Math.min(0.13, Math.sin(Math.PI * Math.min(1, x * 1.08)) * 0.16));
+      return { x: ponto.x, y: ponto.y, giro: ((ponto.angulo - anguloDeSaida) * 180) / Math.PI + 14 * (1 - x), direcao: (ponto.angulo * 180) / Math.PI, largo: 1 + puxao, alto: 1 - puxao * 0.75, tamanho: 0.62 + 0.38 * x };
+    }
+    if (t < estouro) {
+      const x = (t - chegada) / (estouro - chegada);
+      const suave = x * x * (3 - 2 * x);
+      return { x: centro.x, y: centro.y + 16 * suave, giro: giroFinal, direcao: 0, largo: 1 + 0.32 * suave, alto: 1 - 0.3 * suave, tamanho: 1 };
+    }
+    if (t < partida) {
+      const d = t - estouro;
+      const mola = Math.exp(-d / 190) * Math.cos(d / 42);
+      const pulinho = d > 280 ? Math.abs(Math.sin(((d - 280) / 300) * Math.PI)) * 26 * Math.exp(-(d - 280) / 900) : 0;
+      return { x: centro.x, y: centro.y + 16 * Math.exp(-d / 60) - pulinho, giro: giroFinal, direcao: 0, largo: 1 - 0.3 * mola, alto: 1 + 0.36 * mola, tamanho: 1.08 };
+    }
+    const d = t - partida;
+    if (d < 130) {
+      const x = d / 130;
+      return { x: centro.x, y: centro.y + 18 * x, giro: giroFinal, direcao: 0, largo: 1 + 0.26 * x, alto: 1 - 0.26 * x, tamanho: 1.08 };
+    }
+    const x = (d - 130) / 400;
+    return { x: centro.x, y: centro.y + 18 - Math.pow(x, 2.2) * (centro.y + 320), giro: giroFinal, direcao: 0, largo: Math.max(0.68, 1.26 - x * 2.4), alto: Math.min(1.42, 0.74 + x * 2.6), tamanho: 1.08 };
+  };
+
+  const pintar = (agora) => {
+    if (terminou) return;
+    const t = agora - comeco;
+    const dt = Math.min(48, agora - anterior) / 1000;
+    anterior = agora;
+    if (t >= MOMENTOS_DO_VOO.estouro) estourar();
+    if (t >= MOMENTOS_DO_VOO.partida + 170) revelar();
+    if (t >= DURACAO_DO_VOO_DA_LUMI) { terminar(); return; }
+
+    const pose = poseDaLumi(t);
+    boneca.style.transform = `translate3d(${pose.x.toFixed(1)}px, ${pose.y.toFixed(1)}px, 0) rotate(${pose.direcao.toFixed(1)}deg) scale(${(pose.largo * pose.tamanho).toFixed(3)}, ${(pose.alto * pose.tamanho).toFixed(3)}) rotate(${(pose.giro - pose.direcao).toFixed(1)}deg)`;
+    fundo.style.opacity = t < 220 ? (t / 220).toFixed(3) : (t > MOMENTOS_DO_VOO.partida + 170 ? Math.max(0, 1 - (t - MOMENTOS_DO_VOO.partida - 170) / 380).toFixed(3) : '1');
+    if (t > MOMENTOS_DO_VOO.partida) {
+      textos.style.animation = 'none';
+      textos.style.transform = 'none';
+      textos.style.opacity = Math.max(0, 1 - (t - MOMENTOS_DO_VOO.partida) / 170).toFixed(3);
+    }
+
+    if (ultimoPonto && (t < MOMENTOS_DO_VOO.chegada || t > MOMENTOS_DO_VOO.partida + 130)) {
+      const passos = Math.max(1, Math.round(Math.hypot(pose.x - ultimoPonto.x, pose.y - ultimoPonto.y) / 11));
+      for (let i = 0; i < passos; i += 1) {
+        const u = i / passos;
+        soltar(ultimoPonto.x + (pose.x - ultimoPonto.x) * u + (Math.random() - 0.5) * 20, ultimoPonto.y + (pose.y - ultimoPonto.y) * u + (Math.random() - 0.5) * 20, (Math.random() - 0.5) * 50, (Math.random() - 0.5) * 50 + 24, 320 + Math.random() * 380, 7 + Math.random() * 15, 60);
+      }
+    }
+    ultimoPonto = { x: pose.x, y: pose.y };
+
+    pincel.clearRect(0, 0, largura, altura);
+    pincel.globalCompositeOperation = 'lighter';
+    for (let i = particulas.length - 1; i >= 0; i -= 1) {
+      const grao = particulas[i];
+      grao.vida -= dt * 1000;
+      if (grao.vida <= 0) { particulas.splice(i, 1); continue; }
+      grao.vx *= 1 - 1.6 * dt;
+      grao.vy = grao.vy * (1 - 1.6 * dt) + grao.gravidade * dt;
+      grao.x += grao.vx * dt;
+      grao.y += grao.vy * dt;
+      const parte = grao.vida / grao.total;
+      const lado = grao.tamanho * (0.45 + parte * 0.75);
+      pincel.globalAlpha = Math.min(1, parte * 1.5);
+      pincel.drawImage(faisca, grao.x - lado / 2, grao.y - lado / 2, lado, lado);
+    }
+    for (let i = ondas.length - 1; i >= 0; i -= 1) {
+      const onda = ondas[i];
+      onda.vida -= dt * 1000;
+      if (onda.vida <= 0) { ondas.splice(i, 1); continue; }
+      const parte = 1 - onda.vida / onda.total;
+      pincel.globalAlpha = (1 - parte) * 0.5;
+      pincel.strokeStyle = '#ffe9a8';
+      pincel.lineWidth = 1 + (1 - parte) * 4;
+      pincel.beginPath();
+      pincel.arc(centro.x, centro.y, onda.raio + (1 - Math.pow(1 - parte, 3)) * Math.max(largura, altura) * 0.62, 0, Math.PI * 2);
+      pincel.stroke();
+    }
+    pincel.globalAlpha = 1;
+    pincel.globalCompositeOperation = 'source-over';
+    quadro = requestAnimationFrame(pintar);
+  };
+  quadro = requestAnimationFrame(pintar);
+  return true;
+}
+
+function escaparTextoDoVoo(texto) {
+  const caixa = document.createElement('div');
+  caixa.textContent = texto === undefined || texto === null ? '' : String(texto);
+  return caixa.innerHTML;
+}
+
+function animarChegadaDoFimDaMissao(feGanha) {
+  const fim = document.querySelector('#licao-corpo .licao-fim');
+  if (!fim) return;
+  fim.classList.add('lumi-chegou');
+  const numero = fim.querySelector('#licao-fe-ganha');
+  if (!numero) return;
+  const comeco = performance.now();
+  const contar = (agora) => {
+    const x = Math.min(1, (agora - comeco - 260) / 620);
+    const suave = x <= 0 ? 0 : 1 - Math.pow(1 - x, 3);
+    numero.textContent = `+${Math.round(feGanha * suave)}`;
+    if (x < 1 && numero.isConnected) requestAnimationFrame(contar);
+  };
+  numero.textContent = '+0';
+  requestAnimationFrame(contar);
+}
 
 function mascoteReage(evento, dados) {
   const info = dados || {};
