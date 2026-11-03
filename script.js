@@ -2692,7 +2692,7 @@ function mudarDeView(idNovaView, opcoes) {
   if (typeof paginaSoParaAdultos === 'function' && paginaSoParaAdultos(idNovaView)) return;
   if (typeof paginaBloqueadaPelaSuspensao === 'function' && paginaBloqueadaPelaSuspensao(idNovaView)) return;
   if (idNovaView === 'view-home' && typeof avisarFestaDosSantosPessoais === 'function') setTimeout(avisarFestaDosSantosPessoais, 1800);
-  const todasAsViews = ['view-home', 'view-detail', 'view-ia', 'view-auth', 'view-perfil', 'view-privacidade', 'view-oracoes', 'view-leitura', 'view-terco', 'view-padroeiro', 'view-trilhas', 'view-licao', 'view-perfis', 'view-ranking', 'view-planos', 'view-termos', 'view-completar', 'view-cenaculos', 'view-cenaculo', 'view-comunidade', 'view-cursos', 'view-suporte'];
+  const todasAsViews = ['view-home', 'view-detail', 'view-ia', 'view-auth', 'view-perfil', 'view-privacidade', 'view-oracoes', 'view-leitura', 'view-terco', 'view-padroeiro', 'view-trilhas', 'view-licao', 'view-perfis', 'view-ranking', 'view-planos', 'view-termos', 'view-completar', 'view-cenaculos', 'view-cenaculo', 'view-comunidade', 'view-cursos', 'view-jogos', 'view-suporte'];
   const viewAtual = todasAsViews.map(id => document.getElementById(id)).find(v => v && v.classList.contains('active'));
   if (idNovaView !== 'view-licao' && typeof pararVozInfantil === 'function') pararVozInfantil(false);
   if (idNovaView !== 'view-cursos' && typeof pararVideoDoCurso === 'function') pararVideoDoCurso();
@@ -3299,7 +3299,43 @@ async function enviarPerguntaLumina() {
   }
 }
 
-const SUGESTOES_DA_LUMINA = ['Quem foi São Francisco de Assis?', 'Qual santo me ajuda numa prova?', 'Me conte sobre um santo jovem.', 'O que é um doutor da Igreja?'];
+const SUGESTOES_DA_LUMINA = [
+  { icone: 'estrela', pergunta: 'Quem foi São Francisco de Assis?', resposta: 'São Francisco de Assis nasceu na Itália, por volta de 1182, numa família rica. Depois de uma conversão profunda, deixou tudo para viver o Evangelho na pobreza e na alegria. Cuidava dos pobres e dos doentes, chamava todas as criaturas de irmãs e fundou os frades franciscanos. Morreu em 1226 e é o padroeiro da ecologia. A festa dele é em 4 de outubro.' },
+  { icone: 'capelo', pergunta: 'Qual santo me ajuda numa prova?', resposta: 'Para os estudos, muitos católicos pedem a ajuda de São Tomás de Aquino, padroeiro dos estudantes, e de Santa Catarina de Alexandria, padroeira dos estudantes e dos filósofos. Antes de estudar, você pode rezar assim: São Tomás de Aquino, rogai por mim, para que eu aprenda com calma e faça o meu melhor. E lembre: o santo ajuda, mas a parte de estudar é sua!' },
+  { icone: 'coracao', pergunta: 'Me conte sobre um santo jovem.', resposta: 'Que tal São Carlo Acutis? Ele nasceu em 1991 e cresceu em Milão, na Itália. Gostava de videogames e de computadores, mas o centro da vida dele era a Eucaristia, que chamava de minha autoestrada para o céu. Usou a internet para montar uma exposição sobre milagres eucarísticos. Morreu em 2006, com apenas 15 anos, e foi canonizado em 2025.' },
+  { icone: 'livro', pergunta: 'O que é um doutor da Igreja?', resposta: 'Doutor da Igreja é um título que o Papa dá a santos que ensinaram a fé com uma sabedoria especial, e cujos escritos ajudam toda a Igreja até hoje. São poucos, menos de quarenta em toda a história. Entre eles estão Santo Agostinho, São Tomás de Aquino, Santa Teresa de Ávila e Santa Teresinha do Menino Jesus.' },
+];
+
+function esperarDaLumina(ms) {
+  return new Promise((resolver) => setTimeout(resolver, ms));
+}
+
+async function responderComRespostaPronta(item) {
+  const area = document.getElementById('lumina-resposta-area');
+  const input = document.getElementById('lumina-input');
+  const enviar = document.getElementById('lumina-enviar');
+  if (!area || !input || input.disabled) return;
+  const pergunta = tr(item.pergunta);
+  const resposta = tr(item.resposta);
+  input.disabled = true;
+  if (enviar) enviar.disabled = true;
+  mostrarConversaDaLumina(true);
+  area.querySelectorAll('.lumina-seguir').forEach((bloco) => bloco.remove());
+  const blocoPergunta = document.createElement('div');
+  blocoPergunta.className = 'lumina-mensagem lumina-mensagem-pergunta';
+  blocoPergunta.textContent = pergunta;
+  area.appendChild(blocoPergunta);
+  criarIndicadorPensando();
+  await esperarDaLumina(650);
+  esconderIndicadorPensando();
+  const blocoResposta = document.createElement('div');
+  blocoResposta.className = 'lumina-mensagem';
+  area.appendChild(blocoResposta);
+  await efeitoMaquinaDeEscrever(blocoResposta, resposta, 9);
+  acrescentarAcoesDaLumina(area, resposta);
+  input.disabled = false;
+  if (enviar) enviar.disabled = false;
+}
 
 function mostrarConversaDaLumina(comConversa) {
   const boasVindas = document.getElementById('lumina-boas-vindas');
@@ -3390,7 +3426,7 @@ function acrescentarAcoesDaLumina(area, resposta) {
 function desenharSugestoesDaLumina() {
   const lugar = document.getElementById('lumina-sugestoes');
   if (!lugar) return;
-  lugar.innerHTML = SUGESTOES_DA_LUMINA.map((texto) => `<button type="button" class="lumina-sugestao" data-pergunta="${escaparTextoDeOracao(tr(texto))}">${escaparTextoDeOracao(tr(texto))}</button>`).join('');
+  lugar.innerHTML = SUGESTOES_DA_LUMINA.map((item, i) => `<button type="button" class="lumina-pronta" data-pronta="${i}" style="--i:${i}"><span class="lumina-pronta-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-${item.icone}"></use></svg></span><span>${escaparTextoDeOracao(tr(item.pergunta))}</span></button>`).join('');
 }
 
 function iniciarPaginaDaLumina() {
@@ -3404,8 +3440,8 @@ function iniciarPaginaDaLumina() {
   const sugestoes = document.getElementById('lumina-sugestoes');
   if (sugestoes) {
     sugestoes.addEventListener('click', (evento) => {
-      const botao = evento.target.closest('[data-pergunta]');
-      if (botao) perguntarParaLumina(botao.dataset.pergunta);
+      const botao = evento.target.closest('[data-pronta]');
+      if (botao) responderComRespostaPronta(SUGESTOES_DA_LUMINA[Number(botao.dataset.pronta)]);
     });
   }
   const nova = document.getElementById('lumina-nova');

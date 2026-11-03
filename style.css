@@ -7614,10 +7614,6 @@ body.catalogo-interno #view-home .atalhos-app { display: none; }
 .intro-feixes { position: absolute; left: 50%; top: 42%; width: 190vmax; height: 190vmax; margin: -95vmax 0 0 -95vmax; pointer-events: none; opacity: 0; background: repeating-conic-gradient(rgba(255, 226, 150, 0.1) 0 4deg, transparent 4deg 18deg); -webkit-mask: radial-gradient(circle, #000 6%, transparent 52%); mask: radial-gradient(circle, #000 6%, transparent 52%); animation: introFeixes 1.3s ease 0.9s forwards, introFeixesGira 48s linear 0.9s infinite; }
 @keyframes introFeixes { to { opacity: 1; } }
 @keyframes introFeixesGira { to { rotate: 360deg; } }
-.intro-catedral { position: absolute; left: 50%; top: 42%; width: min(94vw, 78vh); height: min(94vw, 78vh); transform: translate(-50%, -50%); overflow: visible; pointer-events: none; filter: drop-shadow(0 0 6px rgba(240, 200, 110, 0.55)); }
-.intro-catedral path { fill: none; stroke: url(#intro-ouro); stroke-width: 2.6; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 0.82; animation: introTraco 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-.intro-catedral path.fino { stroke-width: 1.4; opacity: 0.55; }
-@keyframes introTraco { to { stroke-dashoffset: 0; } }
 .intro-brand { filter: drop-shadow(0 2px 14px rgba(0, 0, 0, 0.8)); animation: entradaNome 1.3s cubic-bezier(0.22, 1, 0.36, 1) 1.45s forwards, entradaReflexo 2.4s ease-in-out 1.6s forwards, introLetras 1.5s cubic-bezier(0.2, 0.9, 0.3, 1) 1.45s backwards; }
 @keyframes introLetras { from { letter-spacing: 0.72em; } to { letter-spacing: 0.3em; } }
 .intro-lema { filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.85)); }
@@ -7631,3 +7627,167 @@ body.catalogo-interno #view-home .atalhos-app { display: none; }
   .lumina-avatar-raios { top: 44px; }
 }
 #view-trilhas .no-wrapper.com-revisar { z-index: 30; }
+
+#view-ia .lumina-header { flex-direction: row; justify-content: center; gap: 12px; margin-bottom: 12px; padding: 12px 18px; border-radius: 20px; }
+#view-ia .lumina-avatar-raios { top: 50%; width: 300px; height: 300px; margin: -150px 0 0 -150px; }
+#view-ia .lumina-avatar { width: 48px; height: 48px; }
+#view-ia .lumina-avatar svg { width: 42px; height: 42px; }
+#view-ia .lumina-titulo { font-size: 1.9rem; }
+#view-ia #lumina-chat-area { display: flex; flex-direction: column; min-height: calc(100dvh - 250px); }
+#view-ia .lumina-resposta-area { flex: 1; }
+#view-ia .lumina-boas-vindas { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; padding: 10px 0 18px; }
+#view-ia .lumina-input-row { margin-top: auto; }
+.lumina-animacao { position: relative; width: 190px; height: 190px; display: flex; align-items: center; justify-content: center; }
+.lumina-animacao-estrela { position: relative; z-index: 1; width: 92px; height: 92px; fill: #f6dc8a; filter: drop-shadow(0 0 18px rgba(255, 215, 120, 0.95)); animation: luminaAnimEstrela 4s ease-in-out infinite; }
+.lumina-animacao-anel { position: absolute; inset: 40px; border-radius: 50%; border: 2px solid rgba(240, 207, 122, 0.55); animation: luminaAnimAnel 3s ease-out infinite; }
+.lumina-animacao-anel:nth-child(2) { animation-delay: 1s; }
+.lumina-animacao-anel:nth-child(3) { animation-delay: 2s; }
+.lumina-animacao-orbita { position: absolute; inset: 0; animation: luminaAnimGira 9s linear infinite; }
+.lumina-animacao-orbita i { position: absolute; width: 10px; height: 10px; margin: -5px 0 0 -5px; background: #fff1c2; clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); filter: drop-shadow(0 0 6px #ffd76a); animation: luminaAnimPisca 1.6s ease-in-out infinite; }
+.lumina-animacao-orbita i:nth-child(1) { left: 50%; top: 4%; }
+.lumina-animacao-orbita i:nth-child(2) { left: 92%; top: 70%; animation-delay: 0.5s; }
+.lumina-animacao-orbita i:nth-child(3) { left: 8%; top: 70%; animation-delay: 1s; }
+@keyframes luminaAnimEstrela { 0%, 100% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.1) rotate(12deg); } }
+@keyframes luminaAnimAnel { from { opacity: 0.9; transform: scale(0.6); } to { opacity: 0; transform: scale(1.9); } }
+@keyframes luminaAnimGira { to { rotate: 360deg; } }
+@keyframes luminaAnimPisca { 0%, 100% { opacity: 0.3; transform: scale(0.6); } 50% { opacity: 1; transform: scale(1.2); } }
+#view-ia .lumina-sugestoes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; width: 100%; max-width: 620px; margin: 0; }
+.lumina-pronta { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; min-height: 108px; padding: 14px; text-align: left; border-radius: 18px; border: 1px solid rgba(240, 207, 122, 0.4); background: radial-gradient(circle at 0 0, rgba(240, 207, 122, 0.16), transparent 60%), linear-gradient(160deg, rgba(30, 36, 84, 0.96), rgba(12, 15, 40, 0.96)); color: #fff1c2; font-family: var(--font-text); font-size: 0.9rem; font-weight: 700; line-height: 1.35; cursor: pointer; box-shadow: 0 10px 22px rgba(0, 0, 0, 0.3); transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease; animation: luminaProntaEntra 0.5s cubic-bezier(0.2, 1.2, 0.4, 1) backwards; animation-delay: calc(var(--i, 0) * 0.08s + 0.1s); }
+.lumina-pronta:hover { transform: translateY(-3px); border-color: #f0cf7a; box-shadow: 0 16px 28px rgba(0, 0, 0, 0.38), 0 0 18px rgba(240, 207, 122, 0.22); }
+.lumina-pronta-icone { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 50%; color: #2a1a03; background: radial-gradient(circle at 35% 28%, #fffaf0 0, #f6dc8a 26%, #d9a93f 62%, #8a5a14 100%); box-shadow: 0 0 14px rgba(240, 207, 122, 0.3); }
+.lumina-pronta-icone .icone { width: 19px; height: 19px; }
+@keyframes luminaProntaEntra { from { opacity: 0; transform: translateY(14px) scale(0.96); } to { opacity: 1; transform: none; } }
+@media (max-width: 767px) { #view-ia .lumina-header { padding: 10px 14px; } #view-ia .lumina-titulo { font-size: 1.7rem; } .lumina-animacao { width: 150px; height: 150px; } .lumina-animacao-estrela { width: 74px; height: 74px; } .lumina-animacao-anel { inset: 32px; } }
+
+.jogos-container { max-width: 980px; padding-bottom: 40px; }
+.jogos-topo { position: relative; overflow: hidden; margin: 10px 0 16px; padding: 18px 16px 20px; text-align: center; border-radius: 26px; border: 1px solid rgba(240, 207, 122, 0.45); background: radial-gradient(circle at 50% 0, rgba(255, 228, 150, 0.26), transparent 62%), linear-gradient(170deg, rgba(30, 36, 84, 0.98), rgba(12, 15, 40, 0.98)); box-shadow: 0 16px 34px rgba(0, 0, 0, 0.36); }
+.jogos-turma { display: flex; justify-content: center; align-items: flex-end; gap: 6px; margin-bottom: 6px; }
+.jogos-amigo { display: flex; flex-direction: column; align-items: center; gap: 2px; animation: jogosAmigoPula 2.6s ease-in-out infinite; animation-delay: calc(var(--i) * 0.25s); }
+.jogos-amigo small { font-size: 0.7rem; font-weight: 800; color: #f6e2a0; }
+.jogos-amigo .personagem, .jogos-amigo .lumi { width: 62px; height: 70px; }
+@keyframes jogosAmigoPula { 0%, 70%, 100% { transform: translateY(0); } 80% { transform: translateY(-10px); } 90% { transform: translateY(0) scale(1.05, 0.95); } }
+.jogos-titulo { margin: 0; font-family: var(--font-title); font-size: clamp(2.2rem, 7vw, 3rem); font-weight: 600; color: transparent; background: linear-gradient(180deg, #fff8dc, #f6dc8a 42%, #d9a93f 78%); -webkit-background-clip: text; background-clip: text; }
+.jogos-sub { margin: 2px 0 0; color: #e9d6a4; font-size: 0.95rem; }
+.jogos-idades { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 16px; padding: 2px; scrollbar-width: none; }
+.jogos-idades::-webkit-scrollbar { display: none; }
+.jogos-idade { flex-shrink: 0; padding: 10px 18px; border-radius: 999px; border: 1px solid rgba(240, 207, 122, 0.45); background: rgba(240, 207, 122, 0.06); color: #f6e2a0; font-family: var(--font-text); font-size: 0.9rem; font-weight: 800; cursor: pointer; }
+.jogos-idade.ativa { color: #1d1303; border-color: #fff1c2; background: linear-gradient(180deg, #f8dd8c, #d9a93f 60%, #b8862b); box-shadow: 0 6px 16px rgba(240, 207, 122, 0.3); }
+.jogos-grade { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.jogo-cartao { position: relative; display: flex; align-items: center; gap: 14px; padding: 14px; text-align: left; border-radius: 22px; border: 1px solid rgba(240, 207, 122, 0.4); background: radial-gradient(circle at 0 50%, rgba(240, 207, 122, 0.18), transparent 55%), linear-gradient(160deg, rgba(30, 36, 84, 0.96), rgba(12, 15, 40, 0.96)); color: var(--text-main); font-family: var(--font-text); cursor: pointer; box-shadow: 0 12px 26px rgba(0, 0, 0, 0.32); transition: transform 0.18s ease, border-color 0.18s ease; animation: jogoCartaoEntra 0.45s cubic-bezier(0.2, 1.2, 0.4, 1) backwards; animation-delay: calc(var(--i) * 0.07s); }
+.jogo-cartao:hover { transform: translateY(-3px); border-color: #f0cf7a; }
+@keyframes jogoCartaoEntra { from { opacity: 0; transform: translateY(16px) scale(0.96); } to { opacity: 1; transform: none; } }
+.jogo-cartao-arte { flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 84px; height: 92px; border-radius: 42px 42px 16px 16px; background: radial-gradient(circle at 50% 30%, rgba(255, 228, 150, 0.3), rgba(10, 13, 34, 0.7) 70%); border: 1px solid rgba(240, 207, 122, 0.4); }
+.jogo-cartao-arte .personagem, .jogo-cartao-arte .lumi { width: 66px; height: 76px; }
+.jogo-cartao-textos { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.jogo-cartao-textos strong { font-family: var(--font-title); font-size: 1.32rem; font-weight: 600; line-height: 1.1; color: #f6e2a0; }
+.jogo-cartao-textos small { font-size: 0.82rem; line-height: 1.35; color: var(--text-muted); }
+.jogo-cartao-estrelas, .jogo-fim-estrelas { display: flex; gap: 3px; }
+.jogo-cartao-estrelas i, .jogo-fim-estrelas i { width: 16px; height: 16px; background: rgba(255, 255, 255, 0.18); clip-path: polygon(50% 0, 62% 35%, 100% 38%, 70% 60%, 80% 98%, 50% 76%, 20% 98%, 30% 60%, 0 38%, 38% 35%); }
+.jogo-cartao-estrelas i.ganha, .jogo-fim-estrelas i.ganha { background: linear-gradient(180deg, #fff1c2, #e2b552); }
+.jogo-cartao-jogar { flex-shrink: 0; padding: 9px 14px; border-radius: 999px; color: #1d1303; background: linear-gradient(180deg, #fff1c2, #e2b552 55%, #b8862b); font-size: 0.86rem; font-weight: 800; box-shadow: 0 6px 14px rgba(240, 207, 122, 0.28); }
+
+.personagem { display: inline-block; width: 90px; height: 100px; }
+.personagem .personagem-svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.personagem .personagem-corpo { transform-box: view-box; transform-origin: 60px 120px; animation: personagemRespira 3s ease-in-out infinite; }
+.personagem-olhos { transform-box: fill-box; transform-origin: center; animation: lumiPisca 4.6s ease-in-out infinite; }
+.personagem-chama { transform-box: fill-box; transform-origin: 50% 100%; animation: personagemChama 0.9s ease-in-out infinite alternate; }
+.personagem-badalo { transform-box: view-box; transform-origin: 60px 100px; animation: personagemBadalo 2.4s ease-in-out infinite; }
+.personagem[data-estado="feliz"] .personagem-corpo, .personagem[data-estado="vitoria"] .personagem-corpo { animation: personagemPula 0.9s cubic-bezier(0.3, 0.7, 0.4, 1) both; }
+.personagem[data-estado="vitoria"] .personagem-corpo { animation-iteration-count: 2; }
+.personagem[data-estado="ops"] .personagem-corpo { animation: personagemOps 0.6s ease-in-out both; }
+@keyframes personagemRespira { 0%, 100% { transform: scale(1, 1); } 50% { transform: scale(1.025, 0.975); } }
+@keyframes personagemChama { from { transform: scale(1, 1) rotate(-3deg); } to { transform: scale(0.92, 1.1) rotate(3deg); } }
+@keyframes personagemBadalo { 0%, 100% { transform: rotate(-8deg); } 50% { transform: rotate(8deg); } }
+@keyframes personagemPula { 0% { transform: none; } 18% { transform: translateY(3px) scale(1.15, 0.85); } 45% { transform: translateY(-22px) scale(0.9, 1.12); } 72% { transform: translateY(0) scale(1.1, 0.9); } 100% { transform: none; } }
+@keyframes personagemOps { 0%, 100% { transform: none; } 20% { transform: rotate(-9deg); } 45% { transform: rotate(7deg); } 70% { transform: rotate(-4deg); } }
+
+.jogo-tela { position: relative; margin-top: 10px; }
+.jogo-cabecalho { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.jogo-voltar { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px 8px 10px; border-radius: 999px; border: 1px solid rgba(240, 207, 122, 0.45); background: rgba(240, 207, 122, 0.06); color: #f0cf7a; font-family: var(--font-text); font-size: 0.84rem; font-weight: 700; cursor: pointer; }
+.jogo-nome { flex: 1; min-width: 0; font-family: var(--font-title); font-size: 1.3rem; font-weight: 600; color: #f6e2a0; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.jogo-placar { min-width: 54px; padding: 6px 12px; border-radius: 999px; background: rgba(240, 207, 122, 0.14); border: 1px solid rgba(240, 207, 122, 0.45); color: #f6e2a0; font-size: 0.86rem; font-weight: 800; text-align: center; }
+.jogo-guia { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.jogo-personagem .personagem, .jogo-personagem .lumi { width: 78px; height: 88px; }
+.jogo-balao { position: relative; flex: 1; margin: 0; padding: 12px 16px; border-radius: 18px; background: #fffdf5; color: #121836; font-weight: 700; font-size: 1rem; line-height: 1.35; }
+.jogo-balao::before { content: ''; position: absolute; left: -8px; top: 50%; margin-top: -8px; border: 8px solid transparent; border-left: 0; border-right-color: #fffdf5; }
+.jogo-balao.aparecendo { animation: jogoBalao 0.35s cubic-bezier(0.2, 1.4, 0.4, 1); }
+@keyframes jogoBalao { from { transform: scale(0.9); opacity: 0.4; } to { transform: none; opacity: 1; } }
+.jogo-area { position: relative; min-height: 360px; }
+
+.jogo-ceu { position: relative; height: min(62vh, 480px); border-radius: 26px; overflow: hidden; border: 1px solid rgba(240, 207, 122, 0.35); background: radial-gradient(circle at 50% 120%, rgba(255, 210, 120, 0.22), transparent 60%), linear-gradient(180deg, #060818, #141a46); }
+.jogo-estrela { position: absolute; width: 72px; height: 72px; margin: -36px 0 0 -36px; padding: 0; border: 0; background: none; cursor: pointer; animation: jogoEstrelaSurge 0.5s cubic-bezier(0.2, 1.4, 0.4, 1) both; }
+.jogo-estrela svg { width: 100%; height: 100%; fill: rgba(255, 241, 194, 0.28); filter: drop-shadow(0 0 4px rgba(255, 241, 194, 0.4)); animation: jogoEstrelaChama 1.2s ease-in-out infinite; transition: fill 0.2s ease; }
+.jogo-estrela.acesa svg { fill: #ffe9a8; filter: drop-shadow(0 0 18px #ffd76a); animation: jogoEstrelaAcende 0.6s cubic-bezier(0.2, 1.5, 0.4, 1) both; }
+@keyframes jogoEstrelaSurge { from { opacity: 0; transform: scale(0.2); } to { opacity: 1; transform: none; } }
+@keyframes jogoEstrelaChama { 0%, 100% { transform: scale(0.9); } 50% { transform: scale(1.08); } }
+@keyframes jogoEstrelaAcende { 0% { transform: scale(0.8) rotate(0deg); } 60% { transform: scale(1.4) rotate(30deg); } 100% { transform: scale(1.1) rotate(45deg); } }
+
+.jogo-sombras { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.jogo-sombra-modelo { display: flex; align-items: center; justify-content: center; width: 150px; height: 160px; border-radius: 75px 75px 24px 24px; background: radial-gradient(circle at 50% 35%, rgba(255, 228, 150, 0.3), rgba(10, 13, 34, 0.7) 70%); border: 1px solid rgba(240, 207, 122, 0.45); }
+.jogo-sombra-modelo .personagem, .jogo-sombra-modelo .lumi { width: 110px; height: 124px; }
+.jogo-sombra-opcoes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; width: 100%; max-width: 480px; }
+.jogo-sombra { display: flex; align-items: center; justify-content: center; height: 130px; border-radius: 22px; border: 2px solid rgba(240, 207, 122, 0.35); background: rgba(240, 207, 122, 0.06); cursor: pointer; }
+.jogo-sombra .personagem, .jogo-sombra .lumi { width: 86px; height: 96px; filter: brightness(0) opacity(0.75); }
+.jogo-sombra.certa { border-color: #7ddc8a; background: rgba(125, 220, 138, 0.14); }
+.jogo-sombra.certa .personagem, .jogo-sombra.certa .lumi { filter: none; transition: filter 0.4s ease; }
+.jogo-sombra.errada, .jogo-peca.errada { animation: jogoTreme 0.45s ease; }
+@keyframes jogoTreme { 0%, 100% { transform: none; } 25% { transform: translateX(-8px); } 50% { transform: translateX(7px); } 75% { transform: translateX(-4px); } }
+
+.jogo-memoria { display: grid; grid-template-columns: repeat(var(--colunas), minmax(0, 1fr)); gap: 10px; max-width: 520px; margin: 0 auto; perspective: 900px; }
+.jogo-carta { aspect-ratio: 3 / 4; padding: 0; border: 0; background: none; cursor: pointer; }
+.jogo-carta-dentro { position: relative; display: block; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.45s cubic-bezier(0.3, 1.2, 0.4, 1); }
+.jogo-carta.virada .jogo-carta-dentro { transform: rotateY(180deg); }
+.jogo-carta-costas, .jogo-carta-frente { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; border-radius: 16px; backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35); }
+.jogo-carta-costas { border: 2px solid rgba(240, 207, 122, 0.6); background: radial-gradient(circle, rgba(240, 207, 122, 0.25) 0 18%, transparent 19%), repeating-linear-gradient(45deg, rgba(240, 207, 122, 0.08) 0 6px, transparent 6px 12px), linear-gradient(160deg, #232a5e, #0d1030); }
+.jogo-carta-frente { transform: rotateY(180deg); border: 2px solid #fff1c2; background: radial-gradient(circle at 50% 40%, #fffaf0, #f6dc8a 60%, #d9a93f); color: #3a2604; }
+.jogo-carta-frente .icone { width: 46%; height: 46%; }
+.jogo-carta.par .jogo-carta-frente { box-shadow: 0 0 22px rgba(255, 215, 120, 0.8); }
+
+.jogo-simbolos { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.jogo-simbolo-santo { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.jogo-simbolo-santo strong { font-family: var(--font-title); font-size: 1.5rem; color: #fff; text-align: center; }
+.jogo-simbolo-foto { display: flex; align-items: center; justify-content: center; width: 130px; height: 160px; overflow: hidden; border-radius: 65px 65px 16px 16px; border: 3px solid #e2b552; background: rgba(240, 207, 122, 0.1); color: #f0cf7a; box-shadow: 0 0 22px rgba(240, 207, 122, 0.3); }
+.jogo-simbolo-foto .icone { width: 46px; height: 46px; }
+.jogo-simbolo-foto img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+.jogo-opcoes { display: grid; gap: 10px; width: 100%; max-width: 480px; }
+.jogo-opcao { padding: 15px 16px; border-radius: 16px; border: 1px solid rgba(240, 207, 122, 0.45); background: linear-gradient(160deg, rgba(30, 36, 84, 0.96), rgba(12, 15, 40, 0.96)); color: #fff1c2; font-family: var(--font-text); font-size: 1rem; font-weight: 700; cursor: pointer; transition: transform 0.15s ease; }
+.jogo-opcao:hover { transform: translateY(-2px); }
+.jogo-opcao.certa { color: #0f2a14; border-color: #7ddc8a; background: linear-gradient(180deg, #b9f5c2, #7ddc8a); }
+.jogo-opcao.errada { opacity: 0.45; border-color: rgba(248, 113, 113, 0.6); }
+
+.jogo-historia { display: flex; flex-direction: column; gap: 14px; }
+.jogo-historia-santo { font-family: var(--font-title); font-size: 1.5rem; color: #fff; text-align: center; }
+.jogo-linha { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.jogo-linha-vaga { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 8px 12px; border-radius: 14px; border: 1px dashed rgba(240, 207, 122, 0.4); }
+.jogo-linha-vaga > span { flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: rgba(240, 207, 122, 0.15); color: #f0cf7a; font-weight: 800; font-size: 0.85rem; }
+.jogo-linha-vaga p { margin: 0; color: #fff; font-size: 0.92rem; line-height: 1.35; animation: jogoBalao 0.35s ease; }
+.jogo-linha-vaga.cheia { border-style: solid; border-color: rgba(125, 220, 138, 0.55); background: rgba(125, 220, 138, 0.08); }
+.jogo-linha-vaga.cheia > span { color: #0f2a14; background: #7ddc8a; }
+.jogo-pecas { display: grid; gap: 8px; }
+.jogo-peca { padding: 13px 14px; border-radius: 14px; border: 1px solid rgba(240, 207, 122, 0.45); background: linear-gradient(160deg, rgba(30, 36, 84, 0.96), rgba(12, 15, 40, 0.96)); color: #fff1c2; font-family: var(--font-text); font-size: 0.92rem; font-weight: 600; line-height: 1.35; text-align: left; cursor: pointer; }
+
+.jogo-palavras { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.jogo-grade-letras { display: grid; grid-template-columns: repeat(var(--lado), minmax(0, 1fr)); gap: 3px; width: 100%; max-width: 460px; padding: 8px; border-radius: 18px; border: 1px solid rgba(240, 207, 122, 0.4); background: rgba(10, 13, 34, 0.85); }
+.jogo-letra { aspect-ratio: 1; padding: 0; border: 0; border-radius: 8px; background: rgba(240, 207, 122, 0.06); color: #f6e2a0; font-family: var(--font-text); font-size: clamp(0.82rem, 3.6vw, 1.1rem); font-weight: 800; cursor: pointer; }
+.jogo-letra.marcada { color: #1d1303; background: #f0cf7a; }
+.jogo-letra.achada { color: #0f2a14; background: #7ddc8a; }
+.jogo-lista-palavras { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.jogo-lista-palavras li { padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(240, 207, 122, 0.4); color: #f6e2a0; font-size: 0.85rem; font-weight: 800; letter-spacing: 1px; }
+.jogo-lista-palavras li.achada { color: #0f2a14; background: #7ddc8a; border-color: #7ddc8a; text-decoration: line-through; }
+
+.jogo-fim { position: absolute; inset: -6px; z-index: 5; display: flex; align-items: center; justify-content: center; border-radius: 26px; background: rgba(6, 8, 24, 0.82); backdrop-filter: blur(3px); animation: jogoBalao 0.3s ease; }
+.jogo-fim-caixa { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 26px 24px; border-radius: 26px; border: 1px solid rgba(240, 207, 122, 0.6); background: radial-gradient(circle at 50% 0, rgba(255, 228, 150, 0.3), transparent 62%), linear-gradient(170deg, #1e2454, #0c0f28); box-shadow: 0 20px 44px rgba(0, 0, 0, 0.5); }
+.jogo-fim-estrelas i { width: 46px; height: 46px; animation: jogoFimEstrela 0.5s cubic-bezier(0.2, 1.6, 0.4, 1) both; animation-delay: calc(var(--i) * 0.18s); }
+@keyframes jogoFimEstrela { from { opacity: 0; transform: scale(0.2) rotate(-90deg); } to { opacity: 1; transform: none; } }
+.jogo-fim-caixa strong { font-family: var(--font-title); font-size: 2rem; color: #f6e2a0; }
+.jogo-fim-botoes { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+.jogo-botao { min-height: 48px; padding: 0 22px; border: 0; border-radius: 999px; color: #1d1303; background: linear-gradient(180deg, #fff1c2, #e2b552 55%, #b8862b); font-family: var(--font-text); font-size: 1rem; font-weight: 800; cursor: pointer; }
+.jogo-botao-claro { color: #f0cf7a; background: rgba(240, 207, 122, 0.08); border: 1px solid rgba(240, 207, 122, 0.5); }
+@media (min-width: 900px) { .atalhos-app { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+@media (prefers-reduced-motion: reduce) {
+  .lumina-animacao-estrela, .lumina-animacao-anel, .lumina-animacao-orbita, .lumina-animacao-orbita i, .lumina-pronta, .jogos-amigo, .jogo-cartao, .personagem .personagem-corpo, .personagem-chama, .personagem-badalo, .jogo-estrela, .jogo-estrela svg { animation: none; }
+}
+.jogo-cabecalho { display: grid; grid-template-columns: auto 1fr auto; grid-template-areas: "voltar . placar" "nome nome nome"; row-gap: 10px; }
+.jogo-voltar { grid-area: voltar; justify-self: start; }
+.jogo-placar { grid-area: placar; }
+.jogo-nome { grid-area: nome; font-size: 1.6rem; white-space: normal; }

@@ -2247,6 +2247,7 @@ function irPelaBarra(destino) {
   else if (destino === 'cenaculos') abrirCenaculos();
   else if (destino === 'comunidade' && typeof abrirComunidade === 'function') abrirComunidade();
   else if (destino === 'oracoes') mudarDeView('view-oracoes');
+  else if (destino === 'jogos' && typeof abrirJogos === 'function') abrirJogos();
   else if (destino === 'cursos') { if (typeof abrirCursos === 'function') abrirCursos(); else mudarDeView('view-cursos'); }
   else if (destino === 'conta') {
     if (typeof contaLogada !== 'function' || !contaLogada()) { if (typeof irParaLogin === 'function') irParaLogin(); }

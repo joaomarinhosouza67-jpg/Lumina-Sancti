@@ -50,7 +50,6 @@
   <div id="intro-screen" class="intro-screen" aria-hidden="true">
     <canvas id="intro-canvas" class="intro-canvas"></canvas>
     <div class="intro-feixes"></div>
-    <svg class="intro-catedral" id="intro-catedral" viewBox="0 0 1000 1000" aria-hidden="true"></svg>
     <div class="intro-brand">Lumina Sancti</div>
     <div class="intro-lema" data-i18n="hero_subtitulo">Luz dos Santos</div>
     <div class="intro-skip-hint">Toque para pular</div>
@@ -279,6 +278,7 @@
       <button class="side-nav-link side-nav-destaque" id="nav-trilhas"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-trilha"></use></svg><span data-i18n="trilhas_titulo">Trilhas dos Santos</span></button>
       <button class="side-nav-link side-nav-destaque" id="nav-cenaculos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-usuarios"></use></svg><span>Cenáculos</span></button>
       <button class="side-nav-link side-nav-destaque" id="nav-comunidade"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-comunidade"></use></svg><span>Comunidade</span></button>
+      <button class="side-nav-link side-nav-destaque" id="nav-jogos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-estrela"></use></svg><span>Joguinhos</span></button>
       <button class="side-nav-link side-nav-destaque" id="nav-cursos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-capelo"></use></svg><span>Cursos de aprofundamento</span></button>
       <button class="side-nav-link" id="nav-leitura"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-biblia"></use></svg><span data-i18n="nav_leitura">Leitura do dia</span></button>
       <button class="side-nav-link" id="nav-oracoes"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-livro"></use></svg><span data-i18n="nav_oracoes">Orações do dia a dia</span></button>
@@ -365,6 +365,10 @@
           <span class="atalho-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-comunidade"></use></svg></span>
           <span class="atalho-textos"><strong>Comunidade</strong><span>Siga outras pessoas e celebre juntos cada marco nas trilhas.</span></span>
         </button>
+        <button type="button" class="atalho-cartao" data-destino="jogos">
+          <span class="atalho-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-estrela"></use></svg></span>
+          <span class="atalho-textos"><strong>Joguinhos</strong><span>Jogos para crianças de todas as idades, com a Lumi e os amigos dela.</span></span>
+        </button>
         <button type="button" class="atalho-cartao" data-destino="cursos">
           <span class="atalho-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-capelo"></use></svg></span>
           <span class="atalho-textos"><strong>Cursos de aprofundamento</strong><span>Em breve: estudos sobre casamento, Missa, Bíblia e muito mais.</span></span>
@@ -450,7 +454,6 @@
           </div>
           <div>
             <h2 class="lumina-titulo">Lumina</h2>
-            <p class="lumina-subtitulo" data-i18n="lumina_subtitulo">A assistente exclusiva do Lumina Sancti — só sobre santos, beatos, veneráveis, doutores e anjos.</p>
           </div>
         </div>
 
@@ -465,7 +468,11 @@
             <p class="lumina-restantes" id="lumina-restantes"></p>
           </div>
           <div class="lumina-boas-vindas" id="lumina-boas-vindas">
-            <p class="lumina-mensagem">Olá! Eu sou a Lumina. Posso contar a história de um santo, ajudar você a encontrar um padroeiro ou explicar algo da vida da Igreja. Por onde começamos?</p>
+            <div class="lumina-animacao" aria-hidden="true">
+              <span class="lumina-animacao-anel"></span><span class="lumina-animacao-anel"></span><span class="lumina-animacao-anel"></span>
+              <span class="lumina-animacao-orbita"><i></i><i></i><i></i></span>
+              <svg class="lumina-animacao-estrela" viewBox="0 0 100 100"><path d="M50 0C52 35 65 48 100 50C65 52 52 65 50 100C48 65 35 52 0 50C35 48 48 35 50 0Z"/><path d="M50 15C52 38 62 48 85 50C62 52 52 62 50 85C48 62 38 52 15 50C38 48 48 38 50 15Z" opacity=".55" transform="rotate(45 50 50)"/></svg>
+            </div>
             <div class="lumina-sugestoes" id="lumina-sugestoes"></div>
           </div>
 
@@ -729,6 +736,10 @@
         </header>
         <div id="suporte-conteudo" class="suporte-conteudo"></div>
       </div>
+    </section>
+
+    <section id="view-jogos" class="view">
+      <div class="container jogos-container" id="jogos-container"></div>
     </section>
 
     <section id="view-cursos" class="view">
@@ -1360,6 +1371,7 @@
   <script src="oracoes-dados.js"></script>
   <script src="oracoes.js"></script>
   <script src="cursos.js"></script>
+  <script src="jogos.js"></script>
   <script src="widget.js"></script>
   <script src="historias.js"></script>
   <script src="trilhas.js"></script>
