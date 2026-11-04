@@ -264,6 +264,7 @@ function desenhoDaLumi() {
         </g>
         <g class="lumi-tronco">
         <path class="lumi-corpo" fill="url(#${id}-corpo)" d="M60 6 C68 36 86 56 114 64 C86 72 68 88 60 114 C52 88 34 72 6 64 C34 56 52 36 60 6 Z"/>
+        <path class="lumi-reflexo" d="M58 16 C61 33 69 45 84 54" fill="none" stroke="#fffbe8" stroke-width="3" stroke-linecap="round" opacity=".55"/>
         <g class="lumi-rosto">
           <ellipse class="lumi-bochecha" cx="41.5" cy="70" rx="5.5" ry="3.2"/>
           <ellipse class="lumi-bochecha" cx="78.5" cy="70" rx="5.5" ry="3.2"/>
@@ -272,6 +273,8 @@ function desenhoDaLumi() {
             <ellipse cx="70" cy="59.5" rx="4.4" ry="5.9"/>
             <circle class="lumi-brilho-olho" cx="51.7" cy="57" r="1.7"/>
             <circle class="lumi-brilho-olho" cx="71.7" cy="57" r="1.7"/>
+            <circle class="lumi-brilho-olho" cx="48.8" cy="62" r=".8"/>
+            <circle class="lumi-brilho-olho" cx="68.8" cy="62" r=".8"/>
           </g>
           <g class="lumi-olhos lumi-olhos-felizes">
             <path d="M45.3 61 Q50 54 54.7 61"/>
