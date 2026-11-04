@@ -568,6 +568,7 @@ async function abrirPerfilPublico(idDoPerfil) {
         ${rodapeDoPerfil(dados)}
       </div>`;
     if (typeof aplicarEnfeitesNoCartao === 'function') aplicarEnfeitesNoCartao(corpo.querySelector('.perfil-publico'), dados.enfeites);
+    if (typeof atualizarLigaNoPerfil === 'function') atualizarLigaNoPerfil(corpo, dados.perfil_id, Number(dados.fe || 0), dados.eu ? '' : dados.nome, !!dados.eu);
     if (typeof preencherResumoSocial === 'function') {
       preencherResumoSocial(corpo.querySelector('#perfil-publico-social'), dados.perfil_id).then((resumo) => {
         const lugarDoPedido = corpo.querySelector('#perfil-publico-pedido');

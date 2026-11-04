@@ -8398,3 +8398,69 @@ body.catalogo-interno #view-home .atalhos-app { display: none; }
 @keyframes ligaConfete { to { transform: translate(var(--x), 110vh) rotate(var(--giro)); } }
 @media (max-height: 700px) { .liga-tela-palco { width: min(48vw, 210px); margin-bottom: 10px; } .liga-tela-nome { font-size: 1.8rem; } .liga-tela-texto { min-height: 0; } }
 @media (prefers-reduced-motion: reduce) { .liga-cartao::after, .liga-cartao-emblema, .liga-tela-poeira i, .liga-tela-raios, .liga-tela-rosacea, .liga-tela-nevoa, .liga-tela-emblema-um, .liga-tela:not(.animando) .liga-tela-emblema, .liga-emblema.grande .liga-varredura, .liga-emblema.prisma.grande .liga-cristal, .liga-cartao.celestial, .liga-perfil.celestial { animation: none; } }
+@property --giro-liga { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+.liga-cartao-outros { display: flex; flex: none; flex-direction: column; gap: 4px; }
+.liga-cartao-outro { display: block; width: 30px; height: 28px; filter: drop-shadow(0 0 6px rgba(255, 233, 168, 0.5)); }
+.liga-cartao.especial, .liga-perfil.especial { border: 2px solid transparent; background: radial-gradient(circle at 12% 50%, color-mix(in srgb, var(--liga) 30%, transparent), transparent 46%) padding-box, linear-gradient(135deg, rgba(20, 14, 40, 0.98), rgba(6, 4, 18, 0.98)) padding-box, conic-gradient(from var(--giro-liga), var(--liga-clara), #ffe08a, var(--liga), #ffffff, var(--liga-clara)) border-box; animation: ligaGiraBorda 6s linear infinite; }
+.liga-cartao.especial .liga-cartao-textos > small:first-child, .liga-perfil.especial .liga-perfil-textos small:first-child { color: #ffe9a8; }
+@keyframes ligaGiraBorda { to { --giro-liga: 360deg; } }
+.liga-item-textos em { margin-top: 2px; color: var(--liga-clara, #f0cf7a); font-size: 0.74rem; font-style: normal; font-weight: 700; }
+.liga-item.impossivel { position: relative; border: 2px solid transparent; background: radial-gradient(circle at 12% 50%, rgba(255, 220, 240, 0.18), transparent 50%) padding-box, linear-gradient(135deg, #1d1a26, #08060f) padding-box, conic-gradient(from var(--giro-liga), #ff6ad5, #7af0ff, #b3ff7a, #ffe66a, #c47aff, #ff6ad5) border-box; box-shadow: 0 0 20px rgba(196, 122, 255, 0.35); animation: ligaGiraBorda 4s linear infinite; overflow: hidden; }
+.liga-item.impossivel::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at 16% 24%, #fff 0 1px, transparent 2px), radial-gradient(circle at 84% 30%, #c47aff 0 1.3px, transparent 2.6px), radial-gradient(circle at 70% 78%, #7af0ff 0 1px, transparent 2px), radial-gradient(circle at 30% 70%, #ffe66a 0 1.2px, transparent 2.4px); animation: ligaCintila 2.4s ease-in-out infinite; }
+.liga-item.impossivel strong { background: linear-gradient(90deg, #ff6ad5, #7af0ff, #b3ff7a, #ffe66a, #c47aff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.liga-item.impossivel .liga-item-emblema { width: 56px; height: 52px; }
+@keyframes ligaCintila { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+.ranking-liga.especial { filter: drop-shadow(0 0 6px rgba(255, 233, 168, 0.7)); }
+.liga-emblema.grande .liga-raios-atras { transform-origin: 100px 96px; animation: ligaGiraRaios 30s linear infinite; }
+@keyframes ligaGiraRaios { to { transform: rotate(360deg); } }
+.liga-tela-nome.muito-longo { font-size: clamp(1.45rem, 6.6vw, 2.1rem); }
+.liga-tela-porcentagem { min-height: 1.1em; color: var(--liga-clara); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.04em; opacity: 0.9; }
+.liga-tela-outros { display: flex; justify-content: center; gap: 10px; margin-top: 2px; }
+.liga-tela-outros[hidden] { display: none; }
+.liga-tela-outro { display: flex; flex-direction: column; align-items: center; gap: 2px; width: 74px; padding: 6px 4px; border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 14px; background: rgba(255, 255, 255, 0.05); color: rgba(255, 255, 255, 0.8); font-family: var(--font-text); cursor: pointer; transition: transform 0.15s ease, border-color 0.15s ease; }
+.liga-tela-outro .liga-emblema { width: 44px; height: 41px; }
+.liga-tela-outro small { font-size: 0.62rem; line-height: 1.15; }
+.liga-tela-outro.ativo { border-color: var(--liga-clara); background: color-mix(in srgb, var(--liga) 22%, transparent); }
+.liga-tela-outro:hover { transform: translateY(-2px); }
+.liga-tela-planta { position: absolute; inset: 0; display: none; color: rgba(95, 243, 255, 0.16); }
+.liga-tela-planta svg { width: 100%; height: 100%; }
+.liga-tela.arquiteto .liga-tela-planta { display: block; }
+.liga-tela.arquiteto .liga-tela-colunas { opacity: 0.35; }
+.liga-tela.arquiteto .liga-tela-fundo { background: radial-gradient(ellipse at 50% 38%, #0b3a4a 0%, #04121c 45%, #010409 100%), repeating-linear-gradient(0deg, rgba(95, 243, 255, 0.06) 0 1px, transparent 1px 32px), repeating-linear-gradient(90deg, rgba(95, 243, 255, 0.06) 0 1px, transparent 1px 32px); background-blend-mode: screen; }
+.liga-tela.arquiteto .liga-tela-nome span { background: linear-gradient(90deg, #5ff3ff, #ffffff, #ffe08a, #5ff3ff); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: ligaArcoIris 5s linear infinite; }
+.liga-tela.arquiteto .liga-tela-nome, .liga-tela.fundador .liga-tela-nome { text-shadow: none; filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.5)) drop-shadow(0 0 16px color-mix(in srgb, var(--liga-clara) 60%, transparent)); }
+.liga-tela.arquiteto .liga-tela-dono, .liga-tela.arquiteto .liga-tela-rotulo { color: #7ff6ff; }
+.liga-tela.fundador .liga-tela-fundo { background: radial-gradient(ellipse at 50% 36%, #5a1420 0%, #24060c 44%, #070104 100%); }
+.liga-tela.fundador .liga-tela-raios { background: repeating-conic-gradient(from 0deg, rgba(255, 224, 138, 0.42) 0deg 5deg, transparent 5deg 14deg); opacity: 0.8; }
+.liga-tela.fundador .liga-tela-nome span { background: linear-gradient(90deg, #fff3c4, #ffe08a, #ffffff, #ff8a9a, #fff3c4); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: ligaArcoIris 5s linear infinite; }
+.liga-tela.fundador .liga-tela-dono, .liga-tela.fundador .liga-tela-rotulo { color: #ffe08a; }
+.liga-tela.empireo .liga-tela-fundo { background: radial-gradient(ellipse at 50% 38%, #2a2a8a 0%, #0b0b3a 44%, #020212 100%); }
+.liga-tela.empireo .liga-tela-poeira i { background: #ffffff; box-shadow: 0 0 8px #b8c4ff; }
+.liga-tela-palco { perspective: 900px; }
+@keyframes ligaEntraCima { 0% { opacity: 0; transform: translateY(-90px) scale(1.25) rotateY(200deg); filter: brightness(3); } 60% { opacity: 1; transform: translateY(6px) scale(0.98) rotateY(-12deg); } 100% { opacity: 1; transform: none; filter: none; } }
+.liga-tela-faiscas { position: absolute; left: 50%; top: 42%; width: 0; height: 0; pointer-events: none; }
+.liga-tela-faiscas i { position: absolute; left: -3px; top: -3px; width: 6px; height: 6px; border-radius: 50%; background: #fff6d0; box-shadow: 0 0 8px 2px var(--liga-clara); opacity: 0; }
+.liga-tela.trocou .liga-tela-faiscas i { animation: ligaFaisca var(--t) cubic-bezier(0.1, 0.7, 0.3, 1) forwards; }
+@keyframes ligaFaisca { 0% { opacity: 1; transform: rotate(var(--a)) translateY(0) scale(1.4); } 100% { opacity: 0; transform: rotate(var(--a)) translateY(calc(var(--d) * -1)) scale(0.3); } }
+.liga-tela-clarao { position: absolute; inset: 0; z-index: 3; pointer-events: none; background: radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.9), color-mix(in srgb, var(--liga-clara) 40%, transparent) 40%, transparent 70%); opacity: 0; }
+.liga-tela.trocou .liga-tela-clarao { animation: ligaClaraoRapido 0.55s ease-out; }
+@keyframes ligaClaraoRapido { 0% { opacity: 0; } 20% { opacity: 0.85; } 100% { opacity: 0; } }
+.liga-tela.trocou .liga-tela-rotulo { animation: ligaRotulo 0.5s ease both, ligaRotuloBrilha 1.4s ease 0.5s; }
+@keyframes ligaRotuloBrilha { 50% { text-shadow: 0 0 14px var(--liga-clara); } }
+.liga-cinema.ativo .liga-cinema-escuro { animation: ligaAparece 0.4s ease var(--fim-cinema, 3.6s) forwards; }
+.liga-cinema-clarao { position: absolute; inset: 0; z-index: 4; pointer-events: none; background: radial-gradient(circle at 50% 46%, #ffffff 0%, color-mix(in srgb, var(--liga-clara) 60%, transparent) 35%, transparent 70%); opacity: 0; }
+.liga-cinema.ativo .liga-cinema-clarao { animation: ligaClaraoRapido 0.7s ease-out var(--impacto, 2.45s); }
+.liga-cinema-planta { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; pointer-events: none; opacity: 0; }
+.liga-cinema-planta path { stroke-dasharray: 1; stroke-dashoffset: 1; filter: drop-shadow(0 0 4px #5ff3ff); }
+.liga-cinema.ativo .liga-cinema-planta { animation: ligaPlanta 2.4s ease forwards; }
+.liga-cinema.ativo .liga-cinema-planta path { animation: ligaDesenha 1.5s ease forwards; }
+@keyframes ligaPlanta { 0% { opacity: 1; } 60% { opacity: 1; } 100% { opacity: 0.12; } }
+@keyframes ligaDesenha { to { stroke-dashoffset: 0; } }
+.liga-cinema-penas { position: absolute; inset: 0; z-index: 3; pointer-events: none; overflow: hidden; }
+.liga-cinema-penas i { position: absolute; top: -40px; width: 14px; height: 30px; border-radius: 50% 50% 50% 50% / 80% 80% 20% 20%; background: linear-gradient(180deg, #ffffff, rgba(255, 246, 220, 0.6)); box-shadow: 0 0 10px rgba(255, 240, 200, 0.7); opacity: 0; }
+.liga-cinema.ativo .liga-cinema-penas i { animation: ligaPena var(--t) ease-in var(--d) forwards; }
+@keyframes ligaPena { 0% { opacity: 0; transform: translate(0, 0) rotate(-20deg); } 15% { opacity: 0.95; } 50% { transform: translate(calc(var(--x) * 0.5), 50vh) rotate(25deg); } 100% { opacity: 0; transform: translate(var(--x), 105vh) rotate(-15deg); } }
+.liga-cinema.tema-arquiteto .liga-cinema-fundo { background: radial-gradient(ellipse at 50% 60%, #0b3a4a, #010409 70%); }
+.liga-cinema.tema-celestial .liga-cinema-fundo { background: radial-gradient(ellipse at 50% 30%, #3a2c5a, #0c0a1e 70%); }
+.liga-cinema.tema-fundador .liga-cinema-fundo { background: radial-gradient(ellipse at 50% 30%, #5a1420, #12060a 70%); }
+@media (prefers-reduced-motion: reduce) { .liga-cartao.especial, .liga-perfil.especial, .liga-item.impossivel, .liga-item.impossivel::after, .liga-emblema.grande .liga-raios-atras { animation: none; } }

@@ -1,7 +1,7 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js';
 
 const ESCALA = 1 / 50;
-const CORES_DOS_METAIS = { bronze: '#c98a52', prata: '#dfe5ee', ouro: '#f2c35a', real: '#ffe08a' };
+const CORES_DOS_METAIS = { bronze: '#c98a52', prata: '#dfe5ee', ouro: '#f2c35a', real: '#ffe08a', platina: '#eef3fa' };
 
 function para3d(x, y) {
   return new THREE.Vector2((x - 100) * ESCALA, -(y - 98) * ESCALA);
@@ -43,23 +43,73 @@ function formaDoCaminho(d) {
   return forma;
 }
 
-function texturaRedonda(cor) {
+function texturaDeCanvas(largura, altura, desenhar) {
   const tela = document.createElement('canvas');
-  tela.width = 64;
-  tela.height = 64;
-  const ctx = tela.getContext('2d');
-  const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-  grad.addColorStop(0, '#ffffff');
-  grad.addColorStop(0.25, cor);
-  grad.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, 64, 64);
+  tela.width = largura;
+  tela.height = altura;
+  desenhar(tela.getContext('2d'), largura, altura);
   const textura = new THREE.CanvasTexture(tela);
   textura.colorSpace = THREE.SRGBColorSpace;
   return textura;
 }
 
-function ambienteDaLiga(renderizador, corDaLiga) {
+function texturaRedonda(cor) {
+  return texturaDeCanvas(64, 64, (ctx) => {
+    const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+    grad.addColorStop(0, '#ffffff');
+    grad.addColorStop(0.25, cor);
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 64, 64);
+  });
+}
+
+function texturaDeAnel(cor) {
+  return texturaDeCanvas(256, 256, (ctx) => {
+    const grad = ctx.createRadialGradient(128, 128, 60, 128, 128, 128);
+    grad.addColorStop(0, 'rgba(255,255,255,0)');
+    grad.addColorStop(0.72, 'rgba(255,255,255,0)');
+    grad.addColorStop(0.86, cor);
+    grad.addColorStop(0.9, '#ffffff');
+    grad.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 256, 256);
+  });
+}
+
+function texturaDeNuvem() {
+  return texturaDeCanvas(256, 256, (ctx) => {
+    for (let i = 0; i < 9; i += 1) {
+      const x = 60 + Math.random() * 136;
+      const y = 80 + Math.random() * 96;
+      const r = 40 + Math.random() * 50;
+      const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
+      grad.addColorStop(0, 'rgba(255,248,232,0.55)');
+      grad.addColorStop(1, 'rgba(255,248,232,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 256, 256);
+    }
+  });
+}
+
+function texturaDeRaio() {
+  return texturaDeCanvas(64, 256, (ctx) => {
+    const lado = ctx.createLinearGradient(0, 0, 64, 0);
+    lado.addColorStop(0, 'rgba(255,240,200,0)');
+    lado.addColorStop(0.5, 'rgba(255,248,225,1)');
+    lado.addColorStop(1, 'rgba(255,240,200,0)');
+    ctx.fillStyle = lado;
+    ctx.fillRect(0, 0, 64, 256);
+    ctx.globalCompositeOperation = 'destination-in';
+    const cima = ctx.createLinearGradient(0, 0, 0, 256);
+    cima.addColorStop(0, 'rgba(0,0,0,1)');
+    cima.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = cima;
+    ctx.fillRect(0, 0, 64, 256);
+  });
+}
+
+function ambienteDaLiga(renderizador, corDaLiga, tema) {
   const cena = new THREE.Scene();
   cena.add(new THREE.Mesh(new THREE.BoxGeometry(24, 24, 24), new THREE.MeshBasicMaterial({ color: 0x080a14, side: THREE.BackSide })));
   const painel = (cor, forca, x, y, z, largura, altura) => {
@@ -68,12 +118,14 @@ function ambienteDaLiga(renderizador, corDaLiga) {
     placa.lookAt(0, 0, 0);
     cena.add(placa);
   };
+  const quente = tema === 'arquiteto' ? '#7ff6ff' : '#fff1c2';
   painel('#ffffff', 7, -5, 6, 7, 7, 2.2);
   painel('#ffffff', 4, 8, 2, 3, 1.6, 9);
   painel(corDaLiga, 5, -8, -2, -1, 3, 9);
   painel(corDaLiga, 3.5, 0, -9, 5, 9, 2);
-  painel('#fff1c2', 6, 3, 9, -4, 6, 2);
+  painel(quente, 6, 3, 9, -4, 6, 2);
   painel('#ffffff', 2.5, 0, 0, -10, 10, 1);
+  if (tema === 'celestial' || tema === 'fundador') { painel('#ffe7a8', 8, 0, 10, 2, 8, 3); painel('#ffd1f0', 3, 8, -3, -3, 2, 6); }
   const gerador = new THREE.PMREMGenerator(renderizador);
   const textura = gerador.fromScene(cena, 0.02).texture;
   gerador.dispose();
@@ -99,19 +151,18 @@ async function texturaDoSimbolo(svg, desfoque) {
   const imagem = new Image();
   imagem.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
   await imagem.decode();
-  const tela = document.createElement('canvas');
-  tela.width = 512;
-  tela.height = 512;
-  const ctx = tela.getContext('2d');
-  if (desfoque) ctx.filter = `blur(${desfoque}px)`;
-  ctx.drawImage(imagem, 0, 0, 512, 512);
-  const textura = new THREE.CanvasTexture(tela);
-  textura.colorSpace = THREE.SRGBColorSpace;
-  return textura;
+  return texturaDeCanvas(512, 512, (ctx) => {
+    if (desfoque) ctx.filter = `blur(${desfoque}px)`;
+    ctx.drawImage(imagem, 0, 0, 512, 512);
+  });
 }
 
 function suave(t) {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
+function saida(t) {
+  return 1 - Math.pow(1 - t, 3);
 }
 
 function voltaSuave(t) {
@@ -120,7 +171,17 @@ function voltaSuave(t) {
   return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
 }
 
+function faixa(t, a, b) {
+  return Math.max(0, Math.min(1, (t - a) / (b - a)));
+}
+
 export async function cinema3dDaLiga(lugar, dados) {
+  const tema = dados.tema || 'normal';
+  const especial = tema === 'celestial' || tema === 'arquiteto' || tema === 'fundador';
+  const atrasoDosCristais = especial ? 1.45 : 0;
+  const impacto = dados.impacto || (especial ? 4.35 : 2.45);
+  const fimDoCaminho = especial ? 5.9 : 3.1;
+  const giro = especial ? [4.6, 5.6] : [2.55, 3.35];
   const renderizador = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
   renderizador.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderizador.toneMapping = THREE.ACESFilmicToneMapping;
@@ -133,10 +194,11 @@ export async function cinema3dDaLiga(lugar, dados) {
   lugar.appendChild(brilho);
 
   const cena = new THREE.Scene();
-  cena.background = new THREE.Color(0x04050c);
-  cena.fog = new THREE.Fog(0x04050c, 7, 16);
-  cena.environment = ambienteDaLiga(renderizador, dados.cor);
-  const camera = new THREE.PerspectiveCamera(34, 1, 0.05, 60);
+  const fundoDaCena = { celestial: 0x0c0a1e, fundador: 0x12060a, arquiteto: 0x02060e, empireo: 0x03031a }[tema] || 0x04050c;
+  cena.background = new THREE.Color(fundoDaCena);
+  cena.fog = new THREE.Fog(fundoDaCena, 7, 18);
+  cena.environment = ambienteDaLiga(renderizador, dados.cor, tema);
+  const camera = new THREE.PerspectiveCamera(34, 1, 0.05, 80);
   cena.add(new THREE.AmbientLight(0xffffff, 0.25));
   const chave = new THREE.DirectionalLight(0xffffff, 2.4);
   chave.position.set(-3, 4, 5);
@@ -144,12 +206,14 @@ export async function cinema3dDaLiga(lugar, dados) {
   const luzColorida = new THREE.PointLight(new THREE.Color(dados.cor), 40, 12, 2);
   luzColorida.position.set(2, -1, 2.5);
   cena.add(luzColorida);
-  const luzQuente = new THREE.PointLight(0xfff1c2, 18, 10, 2);
+  const luzQuente = new THREE.PointLight(tema === 'arquiteto' ? 0x7ff6ff : 0xfff1c2, 18, 10, 2);
   luzQuente.position.set(-2, 2.5, 2);
   cena.add(luzQuente);
 
+  const suporte = new THREE.Group();
   const emblema = new THREE.Group();
-  cena.add(emblema);
+  suporte.add(emblema);
+  cena.add(suporte);
   const corDoMetal = new THREE.Color(CORES_DOS_METAIS[dados.metal] || CORES_DOS_METAIS.ouro);
   const metal = new THREE.MeshStandardMaterial({ color: corDoMetal, metalness: 1, roughness: 0.18, envMapIntensity: 1.5 });
   const metalEscuro = new THREE.MeshStandardMaterial({ color: 0x1a1f2e, metalness: 0.85, roughness: 0.35 });
@@ -164,20 +228,22 @@ export async function cinema3dDaLiga(lugar, dados) {
   moldura.position.z = -0.06;
   emblema.add(moldura);
 
+  const materialDasArestas = dados.arestas ? new THREE.LineBasicMaterial({ color: new THREE.Color(dados.arestas), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, toneMapped: false }) : null;
   const pecas = dados.facetas.map((faceta, k) => {
     const altura = 0.05 + ((k * 37) % 11) / 110;
     const { geometria, centro } = geometriaDaFaceta(faceta.pts, altura);
     const placaDeMetal = new THREE.Mesh(geometriaDaFaceta(faceta.pts, 0.03).geometria, new THREE.MeshStandardMaterial({ color: new THREE.Color(faceta.metal), metalness: 0.8, roughness: 0.48, flatShading: true, envMapIntensity: 0.35 }));
     placaDeMetal.position.set(centro.x, centro.y, -0.02);
     emblema.add(placaDeMetal);
-    const cor = new THREE.Color(faceta.cor).multiplyScalar(0.78);
-    const cristal = new THREE.Mesh(geometria, new THREE.MeshPhysicalMaterial({ color: cor, metalness: 0.2, roughness: 0.04, clearcoat: 1, clearcoatRoughness: 0.03, flatShading: true, emissive: cor, emissiveIntensity: 0.08, envMapIntensity: 1.8, iridescence: dados.prisma ? 0.9 : 0.25, iridescenceIOR: 1.6 }));
+    const cor = new THREE.Color(faceta.cor).multiplyScalar(dados.prisma ? 0.92 : 0.78);
+    const cristal = new THREE.Mesh(geometria, new THREE.MeshPhysicalMaterial({ color: cor, metalness: dados.arestas ? 0.5 : 0.2, roughness: 0.04, clearcoat: 1, clearcoatRoughness: 0.03, flatShading: true, emissive: cor, emissiveIntensity: 0.08, envMapIntensity: dados.arestas ? 2.4 : 1.8, iridescence: dados.prisma ? 0.9 : 0.25, iridescenceIOR: 1.6 }));
+    if (materialDasArestas) cristal.add(new THREE.LineSegments(new THREE.EdgesGeometry(geometria, 1), materialDasArestas));
     const inicio = new THREE.Vector3(centro.x + faceta.dx * ESCALA * 1.4, centro.y - faceta.dy * ESCALA * 1.4, 1.2 + ((k * 53) % 17) / 6);
-    const giro = new THREE.Euler(((k * 29) % 13) / 2 - 3, ((k * 41) % 11) / 2 - 2.5, (faceta.giro * Math.PI) / 180);
+    const rodada = new THREE.Euler(((k * 29) % 13) / 2 - 3, ((k * 41) % 11) / 2 - 2.5, (faceta.giro * Math.PI) / 180);
     cristal.position.copy(inicio);
     cristal.visible = false;
     emblema.add(cristal);
-    return { cristal, inicio, giro, alvo: new THREE.Vector3(centro.x, centro.y, 0), atraso: 0.95 + faceta.atraso };
+    return { cristal, inicio, rodada, alvo: new THREE.Vector3(centro.x, centro.y, 0), atraso: 0.95 + faceta.atraso + atrasoDosCristais };
   });
 
   const simbolo = new THREE.Mesh(new THREE.PlaneGeometry(4, 4), new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, toneMapped: false, depthWrite: false }));
@@ -205,18 +271,23 @@ export async function cinema3dDaLiga(lugar, dados) {
   }
 
   const extrudar = (forma, profundidade) => new THREE.ExtrudeGeometry(forma, { depth: profundidade, bevelEnabled: true, bevelThickness: 0.015, bevelSize: 0.012, bevelSegments: 2 });
+  const asas = [];
   if (dados.asas) {
     const escala = dados.escalaDasAsas || 1;
     const encaixe = para3d(36, 92);
-    dados.asas.forEach((d) => {
-      const geometria = extrudar(formaDoCaminho(d), 0.05);
-      const esquerda = new THREE.Mesh(geometria, new THREE.MeshStandardMaterial({ color: corDoMetal, metalness: 1, roughness: 0.22, side: THREE.DoubleSide }));
-      esquerda.scale.set(escala, escala, 1);
-      esquerda.position.set(encaixe.x * (1 - escala), encaixe.y * (1 - escala), -0.16);
-      const direita = esquerda.clone();
-      direita.scale.x = -escala;
-      direita.position.x = -esquerda.position.x;
-      emblema.add(esquerda, direita);
+    const materialDaAsa = new THREE.MeshStandardMaterial({ color: corDoMetal, metalness: 1, roughness: 0.22, side: THREE.DoubleSide, envMapIntensity: 1.5 });
+    [-1, 1].forEach((lado) => {
+      const grupo = new THREE.Group();
+      grupo.position.set(lado < 0 ? encaixe.x : -encaixe.x, encaixe.y, -0.16);
+      grupo.scale.set(lado < 0 ? escala : -escala, escala, 1);
+      dados.asas.forEach((d) => {
+        const pena = new THREE.Mesh(extrudar(formaDoCaminho(d), 0.05), materialDaAsa);
+        pena.position.set(-encaixe.x, -encaixe.y, 0);
+        grupo.add(pena);
+      });
+      grupo.userData.lado = lado;
+      emblema.add(grupo);
+      asas.push(grupo);
     });
   }
   if (dados.coroa) {
@@ -246,10 +317,15 @@ export async function cinema3dDaLiga(lugar, dados) {
       }
     });
   }
+  let halo = null;
+  let brilhoDoHalo = null;
   if (dados.aureola) {
-    const halo = new THREE.Mesh(new THREE.TorusGeometry(2.1, 0.04, 16, 120), metal);
+    halo = new THREE.Mesh(new THREE.TorusGeometry(2.1, 0.045, 16, 120), new THREE.MeshStandardMaterial({ color: corDoMetal, metalness: 1, roughness: 0.2, emissive: corDoMetal, emissiveIntensity: especial ? 0 : 0.4, envMapIntensity: 1.5 }));
     halo.position.z = -0.25;
-    emblema.add(halo);
+    brilhoDoHalo = new THREE.Sprite(new THREE.SpriteMaterial({ map: texturaDeAnel('#fff1c2'), blending: THREE.AdditiveBlending, transparent: true, depthWrite: false, toneMapped: false, opacity: especial ? 0 : 0.35 }));
+    brilhoDoHalo.scale.set(5.6, 5.6, 1);
+    brilhoDoHalo.position.z = -0.3;
+    emblema.add(halo, brilhoDoHalo);
   }
 
   const contorno = dados.pontos.map(([x, y]) => { const v = para3d(x, y).multiplyScalar(1.04); return new THREE.Vector3(v.x, v.y, 0.12); });
@@ -263,23 +339,84 @@ export async function cinema3dDaLiga(lugar, dados) {
     return sprite;
   });
 
+  const quantasLuzes = especial ? 420 : 240;
   const poeira = new THREE.BufferGeometry();
-  const posicoesDaPoeira = new Float32Array(240 * 3);
-  for (let i = 0; i < 240; i += 1) {
-    posicoesDaPoeira[i * 3] = (Math.random() - 0.5) * 9;
-    posicoesDaPoeira[i * 3 + 1] = (Math.random() - 0.5) * 7;
+  const posicoesDaPoeira = new Float32Array(quantasLuzes * 3);
+  for (let i = 0; i < quantasLuzes; i += 1) {
+    posicoesDaPoeira[i * 3] = (Math.random() - 0.5) * 10;
+    posicoesDaPoeira[i * 3 + 1] = (Math.random() - 0.5) * 9;
     posicoesDaPoeira[i * 3 + 2] = (Math.random() - 0.3) * 6;
   }
   poeira.setAttribute('position', new THREE.BufferAttribute(posicoesDaPoeira, 3));
-  const pontosDePoeira = new THREE.Points(poeira, new THREE.PointsMaterial({ size: 0.05, map: texturaRedonda(dados.claro), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0.7, toneMapped: false }));
+  const corDaPoeira = tema === 'arquiteto' ? '#7ff6ff' : (tema === 'celestial' || tema === 'fundador' ? '#ffe7a8' : dados.claro);
+  const pontosDePoeira = new THREE.Points(poeira, new THREE.PointsMaterial({ size: especial ? 0.06 : 0.05, map: texturaRedonda(corDaPoeira), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0.75, toneMapped: false }));
   cena.add(pontosDePoeira);
-  const rosacea = new THREE.Mesh(new THREE.PlaneGeometry(8, 8), new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.5, toneMapped: false, depthWrite: false, fog: false }));
-  rosacea.position.set(0, 0.5, -4.5);
-  cena.add(rosacea);
-  if (dados.svgDaRosacea) texturaDoSimbolo(dados.svgDaRosacea, 0).then((t) => { rosacea.material.map = t; rosacea.material.needsUpdate = true; }).catch(() => {});
+  if (tema !== 'arquiteto') {
+    const rosacea = new THREE.Mesh(new THREE.PlaneGeometry(8, 8), new THREE.MeshBasicMaterial({ transparent: true, opacity: especial ? 0.32 : 0.5, toneMapped: false, depthWrite: false, fog: false }));
+    rosacea.position.set(0, 0.5, -4.5);
+    cena.add(rosacea);
+    if (dados.svgDaRosacea) texturaDoSimbolo(dados.svgDaRosacea, 0).then((t) => { rosacea.material.map = t; rosacea.material.needsUpdate = true; }).catch(() => {});
+  }
 
-  const posicoes = new THREE.CatmullRomCurve3([new THREE.Vector3(-1.3, 1.6, 1.6), new THREE.Vector3(-0.3, 0.9, 1.9), new THREE.Vector3(0.8, -0.4, 2.2), new THREE.Vector3(0.4, 0.0, 4.6), new THREE.Vector3(0, -0.15, 7.4)]);
-  const alvos = new THREE.CatmullRomCurve3([new THREE.Vector3(-0.8, 0.9, 0), new THREE.Vector3(0, 0.5, 0), new THREE.Vector3(0.3, -0.3, 0), new THREE.Vector3(0.1, -0.2, 0), new THREE.Vector3(0, -0.3, 0)]);
+  const onda = new THREE.Sprite(new THREE.SpriteMaterial({ map: texturaDeAnel(dados.claro), blending: THREE.AdditiveBlending, transparent: true, depthWrite: false, toneMapped: false, opacity: 0 }));
+  onda.position.z = 0.3;
+  cena.add(onda);
+
+  const nuvens = [];
+  const raios = [];
+  if (tema === 'celestial' || tema === 'fundador') {
+    const texturaDaNuvem = texturaDeNuvem();
+    for (let i = 0; i < 16; i += 1) {
+      const nuvem = new THREE.Sprite(new THREE.SpriteMaterial({ map: texturaDaNuvem, transparent: true, depthWrite: false, opacity: 0.9, color: tema === 'fundador' ? 0xffd9c2 : 0xfff6e8 }));
+      const lado = i % 2 === 0 ? -1 : 1;
+      const x = lado * (0.2 + Math.random() * 1.6);
+      nuvem.position.set(x, -1.5 + Math.random() * 4, 1 + Math.random() * 2.5);
+      const tamanho = 3 + Math.random() * 3;
+      nuvem.scale.set(tamanho, tamanho * 0.7, 1);
+      nuvem.userData = { lado, x0: x, velocidade: 3 + Math.random() * 3 };
+      cena.add(nuvem);
+      nuvens.push(nuvem);
+    }
+    const texturaDoRaio = texturaDeRaio();
+    for (let i = 0; i < 7; i += 1) {
+      const raio = new THREE.Mesh(new THREE.PlaneGeometry(1.1 + Math.random() * 0.8, 14), new THREE.MeshBasicMaterial({ map: texturaDoRaio, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false, side: THREE.DoubleSide, color: tema === 'fundador' ? 0xffc27a : 0xfff3d6 }));
+      raio.position.set(-3 + i, 4.5, -1.5);
+      raio.rotation.z = (i - 3) * 0.12;
+      raio.userData = { fase: Math.random() * 6 };
+      cena.add(raio);
+      raios.push(raio);
+    }
+  }
+  let grade = null;
+  let codigo = null;
+  if (tema === 'arquiteto') {
+    grade = new THREE.GridHelper(16, 32, 0x5ff3ff, 0x1d6f80);
+    grade.position.y = -2.45;
+    grade.material.transparent = true;
+    grade.material.opacity = 0;
+    cena.add(grade);
+    const pontos = new Float32Array(200 * 3);
+    for (let i = 0; i < 200; i += 1) {
+      const a = Math.random() * Math.PI * 2;
+      const r = 2.4 + Math.random() * 1.4;
+      pontos[i * 3] = Math.cos(a) * r;
+      pontos[i * 3 + 1] = -2 + Math.random() * 4.5;
+      pontos[i * 3 + 2] = Math.sin(a) * r;
+    }
+    const geometria = new THREE.BufferGeometry();
+    geometria.setAttribute('position', new THREE.BufferAttribute(pontos, 3));
+    codigo = new THREE.Points(geometria, new THREE.PointsMaterial({ size: 0.07, map: texturaRedonda('#5ff3ff'), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0, toneMapped: false }));
+    cena.add(codigo);
+  }
+
+  const caminhos = {
+    normal: [[[-1.3, 1.6, 1.6], [-0.3, 0.9, 1.9], [0.8, -0.4, 2.2], [0.4, 0.0, 4.6], [0, -0.15, 7.4]], [[-0.8, 0.9, 0], [0, 0.5, 0], [0.3, -0.3, 0], [0.1, -0.2, 0], [0, -0.3, 0]]],
+    celestial: [[[0, -2.4, 7.4], [0.1, -0.6, 5.8], [-1.1, 1.0, 2.4], [0.9, -0.4, 2.6], [0, -0.15, 7.8]], [[0, 2.4, 0], [0, 0.8, 0], [-0.5, 0.6, 0], [0.3, -0.2, 0], [0, -0.3, 0]]],
+    arquiteto: [[[0, -1.6, 7.8], [0.3, -1.0, 5.6], [-1.0, 1.0, 2.4], [0.9, -0.4, 2.6], [0, -0.15, 7.8]], [[0, -2.2, 0], [0, -0.6, 0], [-0.5, 0.6, 0], [0.3, -0.2, 0], [0, -0.3, 0]]],
+  };
+  const escolhido = caminhos[tema === 'fundador' ? 'celestial' : tema] || caminhos.normal;
+  const posicoes = new THREE.CatmullRomCurve3(escolhido[0].map((p) => new THREE.Vector3(...p)));
+  const alvos = new THREE.CatmullRomCurve3(escolhido[1].map((p) => new THREE.Vector3(...p)));
 
   const medir = () => {
     const largura = lugar.clientWidth || window.innerWidth;
@@ -302,36 +439,74 @@ export async function cinema3dDaLiga(lugar, dados) {
   const quadro = (agora) => {
     if (parado || !lugar.isConnected) { parar(); return; }
     const t = Math.max(0, (agora - inicio) / 1000);
-    const caminho = suave(Math.min(1, t / 3.1));
+    const caminho = suave(Math.min(1, t / fimDoCaminho));
     camera.position.copy(posicoes.getPoint(caminho));
     alvos.getPoint(caminho, alvo);
+    const tremor = faixa(t, impacto, impacto + 0.5);
+    if (tremor > 0 && tremor < 1) {
+      const forca = (1 - tremor) * 0.06;
+      camera.position.x += (Math.random() - 0.5) * forca;
+      camera.position.y += (Math.random() - 0.5) * forca;
+    }
     camera.lookAt(alvo);
-    emblema.rotation.y = -0.38 * (1 - caminho) + Math.sin(t * 1.3) * 0.06 * caminho;
+    if (tema === 'celestial' || tema === 'fundador') suporte.position.y = 4.6 * (1 - saida(faixa(t, 0.5, 1.9)));
+    else if (tema === 'arquiteto') suporte.position.y = -4.6 * (1 - saida(faixa(t, 0.5, 1.9)));
+    const voltas = suave(faixa(t, giro[0], giro[1])) * Math.PI * 2;
+    emblema.rotation.y = -0.38 * (1 - caminho) + Math.sin(t * 1.3) * 0.06 * caminho + voltas;
     emblema.rotation.x = 0.12 * (1 - caminho);
+    asas.forEach((grupo) => {
+      const aberta = especial ? saida(faixa(t, 2.0, 2.9)) : 1;
+      grupo.rotation.z = grupo.userData.lado < 0 ? -1.05 * (1 - aberta) : 1.05 * (1 - aberta);
+    });
     pecas.forEach((p) => {
       const fase = (t - p.atraso) / 0.8;
       if (fase <= 0) { p.cristal.visible = false; return; }
       p.cristal.visible = true;
       const e = voltaSuave(Math.min(1, fase));
       p.cristal.position.lerpVectors(p.inicio, p.alvo, Math.min(1.05, e));
-      p.cristal.rotation.set(p.giro.x * (1 - e), p.giro.y * (1 - e), p.giro.z * (1 - e));
+      p.cristal.rotation.set(p.rodada.x * (1 - e), p.rodada.y * (1 - e), p.rodada.z * (1 - e));
       const s = 0.3 + 0.7 * Math.min(1, e);
       p.cristal.scale.set(s, s, s);
     });
-    const corrida = t < 0.15 ? -1 : ((t - 0.15) / 1.4);
+    if (materialDasArestas) materialDasArestas.opacity = faixa(t, 1.2 + atrasoDosCristais, 2.6 + atrasoDosCristais) * (0.75 + Math.sin(t * 7) * 0.2);
+    const comecoDaEnergia = 0.15 + (especial ? 1.0 : 0);
+    const corrida = t < comecoDaEnergia ? -1 : ((t - comecoDaEnergia) / 1.4);
     rastro.forEach((sprite, i) => {
       if (corrida < 0 || corrida > 2) { sprite.material.opacity = 0; return; }
       const u = (((corrida % 1) - i * 0.012) + 1) % 1;
       caminhoDaEnergia.getPoint(u, sprite.position);
       sprite.material.opacity = (1 - i / rastro.length) * (corrida > 1.85 ? (2 - corrida) / 0.15 : 1);
     });
-    const simboloFase = Math.max(0, Math.min(1, (t - 2.2) / 0.5));
+    const simboloFase = faixa(t, 2.2 + atrasoDosCristais, 2.7 + atrasoDosCristais);
     simbolo.material.opacity = simboloFase;
     aura.material.opacity = simboloFase * (0.7 + Math.sin(t * 6) * 0.15);
+    if (halo && especial) {
+      const aceso = faixa(t, impacto - 0.6, impacto);
+      halo.material.emissiveIntensity = aceso * 2.2;
+      brilhoDoHalo.material.opacity = aceso * (0.75 + Math.sin(t * 5) * 0.2);
+      brilhoDoHalo.scale.setScalar(5.2 + aceso * 0.8);
+    }
+    const ondaFase = faixa(t, impacto, impacto + 0.9);
+    onda.material.opacity = ondaFase > 0 && ondaFase < 1 ? (1 - ondaFase) * 0.9 : 0;
+    onda.scale.setScalar(0.4 + ondaFase * 8);
+    nuvens.forEach((nuvem) => {
+      const abre = saida(faixa(t, 0.1, 1.8));
+      nuvem.position.x = nuvem.userData.x0 + nuvem.userData.lado * abre * nuvem.userData.velocidade;
+      nuvem.material.opacity = 0.9 * (1 - faixa(t, 1.2, 2.2));
+    });
+    raios.forEach((raio) => {
+      raio.material.opacity = faixa(t, 0.2, 1.3) * (0.35 + Math.sin(t * 1.6 + raio.userData.fase) * 0.12) * (1 - faixa(t, 5.6, 6.3) * 0.6);
+      raio.rotation.z += 0.0008;
+    });
+    if (grade) grade.material.opacity = faixa(t, 0, 0.9) * 0.55 * (1 - faixa(t, 5.4, 6.2) * 0.7);
+    if (codigo) {
+      codigo.material.opacity = faixa(t, 0.6, 1.6) * 0.9;
+      codigo.rotation.y = t * 0.6;
+    }
     luzColorida.position.set(Math.cos(t * 1.4) * 2.6, Math.sin(t * 0.9) * 1.6, 2.4);
-    luzColorida.intensity = 8 + 32 * Math.min(1, t / 1.4);
+    luzColorida.intensity = 8 + 32 * Math.min(1, t / (especial ? 3 : 1.4));
     pontosDePoeira.rotation.y = t * 0.03;
-    pontosDePoeira.position.y = t * 0.05;
+    pontosDePoeira.position.y = (tema === 'celestial' || tema === 'fundador' ? 0.25 : 0.05) * t;
     renderizador.render(cena, camera);
     try {
       ctxBrilho.clearRect(0, 0, brilho.width, brilho.height);

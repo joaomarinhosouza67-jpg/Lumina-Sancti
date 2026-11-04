@@ -1259,6 +1259,7 @@ async function abrirPainelDoPerfil(membroId) {
         ? `<ul class="painel-insignias">${itens}</ul>`
         : '<p class="painel-vazio">Ainda nenhuma. Complete uma trilha inteira para ganhar a primeira.</p>'}`;
     if (typeof aplicarEnfeitesNoPainel === 'function') aplicarEnfeitesNoPainel(conteudo, membroId);
+    if (typeof atualizarLigaNoPerfil === 'function') atualizarLigaNoPerfil(conteudo, membroId, m.fe, membroAtivo && membroAtivo.id === membroId ? '' : m.nome, !!(membroAtivo && membroAtivo.id === membroId));
     if (membroAtivo && membroAtivo.id === membroId && membroAtivo.tipo === 'crianca') {
       conteudo.insertAdjacentHTML('beforeend', `
         <div class="painel-kids-acoes">
@@ -1431,6 +1432,7 @@ async function renderizarRanking() {
       lista.innerHTML = topoDaLiga + htmlDoRanking(itens, naLiga ? 'Ainda não há mais ninguém na sua liga.' : 'Ainda não há ninguém no ranking global.');
       ligarCliquesDoRanking(lista);
       if (typeof enfeitarLinhasDoRanking === 'function') enfeitarLinhasDoRanking(lista, false);
+      if (typeof enfeitarRankingComCargos === 'function') enfeitarRankingComCargos(lista);
     } else {
       const [{ data, error }] = await Promise.all([
         supabaseCliente.rpc('leaderboard_family', { _pid: membroAtivo.id, _period: periodoDoRanking }),
@@ -1447,6 +1449,7 @@ async function renderizarRanking() {
       lista.innerHTML = htmlDoRanking(itens, 'Ainda não há ninguém da família no ranking.');
       ligarCliquesDoRanking(lista);
       if (typeof enfeitarLinhasDoRanking === 'function') enfeitarLinhasDoRanking(lista, true);
+      if (typeof enfeitarRankingComCargos === 'function') enfeitarRankingComCargos(lista);
     }
   } catch (e) {
     if (String((e && e.message) || '').includes('recurso_de_assinante')) {
