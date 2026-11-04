@@ -34,9 +34,9 @@ const LIGAS_DA_FE = [
   { id: 'empireo', nome: 'Empíreo', minimo: 1000000, matiz: 236, saturacao: 80, luz: 58, metal: 'platina', forma: 'catedral', simbolo: 'empireo', joias: true, ramos: true, asas: true, seisAsas: true, aureola: true, coroa: true, cosmos: true, raiosAtras: true, secreto: true, semDivisoes: true, tema: 'empireo' },
 ].map(CORES_DA_LIGA);
 const RANKS_ESPECIAIS = {
-  [INDICE_CELESTIAL]: CORES_DA_LIGA({ id: 'celestial', nome: 'Celestial', matiz: 46, saturacao: 100, luz: 72, metal: 'real', forma: 'ogiva', simbolo: 'cruz', joias: true, ramos: true, asas: true, seisAsas: true, aureola: true, coroa: true, prisma: true, raiosAtras: true, especial: true, impossivel: true, semDivisoes: true, tema: 'celestial' }),
-  [INDICE_ARQUITETO]: CORES_DA_LIGA({ id: 'arquiteto', nome: 'Arquiteto da Luz', matiz: 188, saturacao: 100, luz: 58, metal: 'real', forma: 'catedral', simbolo: 'rosacea', joias: true, ramos: true, asas: true, aureola: true, obsidiana: true, especial: true, semDivisoes: true, tema: 'arquiteto' }),
-  [INDICE_FUNDADOR]: CORES_DA_LIGA({ id: 'fundador', nome: 'Fundador', matiz: 352, saturacao: 72, luz: 42, metal: 'real', forma: 'escudo', simbolo: 'coroaReal', joias: true, ramos: true, asas: true, seisAsas: true, aureola: true, coroa: true, raiosAtras: true, especial: true, semDivisoes: true, tema: 'fundador' }),
+  [INDICE_CELESTIAL]: CORES_DA_LIGA({ id: 'celestial', nome: 'Celestial', matiz: 46, saturacao: 100, luz: 72, metal: 'real', forma: 'ogiva', simbolo: 'cruz', joias: true, ramos: true, asas: true, seisAsas: true, aureola: true, aureolaDupla: true, coroa: true, prisma: true, raiosAtras: true, raiosArcoIris: true, nuvensNaBase: true, estrelasEmOrbita: true, especial: true, impossivel: true, semDivisoes: true, tema: 'celestial' }),
+  [INDICE_ARQUITETO]: CORES_DA_LIGA({ id: 'arquiteto', nome: 'Arquiteto da Luz', matiz: 188, saturacao: 100, luz: 58, metal: 'real', forma: 'catedral', simbolo: 'rosacea', joias: true, ramos: true, torres: true, anelHolografico: true, obsidiana: true, gradeDeLuz: true, especial: true, semDivisoes: true, tema: 'arquiteto' }),
+  [INDICE_FUNDADOR]: CORES_DA_LIGA({ id: 'fundador', nome: 'Fundador', matiz: 44, saturacao: 92, luz: 60, metal: 'real', forma: 'escudo', simbolo: 'igreja', joias: true, ramos: true, manto: true, cetros: true, coroa: true, coroaGrande: true, raiosAtras: true, perola: true, especial: true, semDivisoes: true, tema: 'fundador' }),
 };
 const FORMAS_DAS_LIGAS = {
   hexagono: [[100, 14], [166, 50], [166, 132], [100, 180], [34, 132], [34, 50]],
@@ -47,6 +47,11 @@ const FORMAS_DAS_LIGAS = {
 };
 const PENAS_DAS_ASAS_DA_LIGA = ['M38 62 C16 54 4 38 0 16 C14 28 26 34 42 40Z', 'M36 90 C10 88 -6 72 -12 48 C4 60 18 64 38 66Z', 'M36 118 C10 122 -8 108 -18 86 C2 96 18 98 38 96Z', 'M40 144 C18 152 0 146 -12 128 C6 134 22 132 40 124Z'];
 const COROA_DA_LIGA = 'M74 16 L80 -8 L91 6 L100 -14 L109 6 L120 -8 L126 16Z';
+const MANTO_DA_LIGA = 'M100 -6 C70 -4 30 6 6 32 C-10 74 -16 142 -22 208 C6 196 28 216 52 204 C70 214 86 200 100 208 Z';
+const ARMINHO_DA_LIGA = 'M100 10 C74 12 42 22 24 44 C12 82 8 140 4 194 C24 188 40 200 58 194 C76 200 90 192 100 196 Z';
+const TORRE_DA_LIGA = 'M-4 194 V78 L8 40 L20 78 V194 Z';
+const GORRO_DA_COROA = 'M76 15 C80 -2 90 -10 100 -12 C110 -10 120 -2 124 15Z';
+const NUVENS_DA_BASE = [[40, 200, 26], [70, 210, 30], [100, 214, 34], [130, 210, 30], [160, 200, 26], [22, 214, 18], [178, 214, 18], [55, 222, 22], [145, 222, 22], [100, 228, 26]];
 let contadorDeEmblemas = 0;
 let modulo3dDaLiga = null;
 let feDaLigaAtual = 0;
@@ -242,6 +247,7 @@ function facetasDaLiga(indice) {
     if (liga.obsidiana) { matiz = 226; saturacao = 34; base = 18; aresta = 'hsl(186, 100%, 70%)'; }
     if (liga.escuroDourado) { matiz = 30; saturacao = 30; base = 16; aresta = 'hsl(44, 100%, 66%)'; }
     if (liga.cosmos) { matiz = (232 + faceta.anel * 22 + ruidoDaLiga(k, 9) * 30) % 360; saturacao = 76; base = 34; }
+    if (liga.perola) { matiz = (ruidoDaLiga(k, 5) * 360 + angulo * 40) % 360; saturacao = 34; base = 84; aresta = 'hsl(44, 90%, 70%)'; }
     const l = Math.max(6, Math.min(94, base + luz * (liga.obsidiana || liga.escuroDourado ? 7 : 14) + extra + (ruidoDaLiga(k + 60, semente) - 0.5) * 12));
     const estrelaNoCosmos = liga.cosmos && ruidoDaLiga(k + 7, 3) > 0.82;
     const cinza = Math.max(10, Math.min(46, 24 + luz * 10 + (ruidoDaLiga(k + 80, semente) - 0.5) * 10));
@@ -310,6 +316,7 @@ function simboloDaLiga(nome) {
     orbe: { cheio: [circuloDaLiga(100, 108, 24), 'M97 60 H103 V70 H110 V76 H103 V84 H97 V76 H90 V70 H97Z'], escuro: ['M76 105 H124 V111 H76Z', 'M97 84 H103 V132 H97Z'] },
     empireo: { cheio: [estrelaDaLigaSvg(100, 94, 46, 18, 12)], escuro: [circuloDaLiga(100, 94, 15)], linha: [circuloDaLiga(100, 94, 9)] },
     rosacea: { linha: [circuloDaLiga(100, 94, 36)], cheio: petalas, escuro: [estrelaDaLigaSvg(100, 94, 8, 3, 4)] },
+    igreja: { cheio: ['M64 140 V98 L78 84 V60 L87 46 L96 60 V74 H104 V60 L113 46 L122 60 V84 L136 98 V140 Z', 'M85 40 H89 V46 H85Z', 'M111 40 H115 V46 H111Z', 'M86 34 H88 V44 H86Z M83 37 H91 V39 H83Z', 'M112 34 H114 V44 H112Z M109 37 H117 V39 H109Z'], escuro: [circuloDaLiga(100, 98, 9), 'M92 140 V122 C92 112 108 112 108 122 V140 Z', 'M84 102 H90 V114 H84Z', 'M110 102 H116 V114 H110Z'], linha: [circuloDaLiga(100, 98, 5)] },
     coroaReal: { cheio: ['M60 122 L56 82 L78 100 L100 72 L122 100 L144 82 L140 122Z', 'M60 124 H140 V136 H60Z', 'M97 44 H103 V54 H110 V60 H103 V70 H97 V60 H90 V54 H97Z'], escuro: [circuloDaLiga(80, 130, 4), circuloDaLiga(100, 130, 4), circuloDaLiga(120, 130, 4)] },
     cruz: { cheio: ['M94 52 H106 V80 H128 V92 H106 V138 H94 V92 H72 V80 H94Z'], linha: [raios(100, 86, 32, 44, -180, 150, 12)] },
   }[nome] || { cheio: [] };
@@ -345,6 +352,36 @@ function corpoDoSimboloDaLiga(liga, idDoBrilho) {
   ].join('');
 }
 
+function decoracoesEspeciaisDaLiga(liga, g) {
+  const atras = [];
+  const frente = [];
+  if (liga.manto) {
+    const lado = '<path d="' + MANTO_DA_LIGA + '" fill="url(#' + g + '-manto)" stroke="url(#' + g + '-m)" stroke-width="3"/><path d="' + ARMINHO_DA_LIGA + '" fill="url(#' + g + '-arminho)"/>' + Array.from({ length: 9 }, (_, i) => { const x = 20 + (i % 3) * 22 + (Math.floor(i / 3) % 2) * 10; const y = 70 + Math.floor(i / 3) * 40; return '<path d="M' + x + ' ' + y + ' l2.2 5 l-2.2 6 l-2.2 -6Z" fill="#1b1018"/>'; }).join('') + '<path d="M30 40 C26 90 24 150 18 196 M58 26 C52 90 54 150 50 200" fill="none" stroke="#000" stroke-opacity=".22" stroke-width="5" stroke-linecap="round"/>';
+    atras.push(lado + '<g transform="translate(200 0) scale(-1 1)">' + lado + '</g>');
+  }
+  if (liga.cetros) {
+    const cetro = '<path d="M16 214 L184 -10" stroke="url(#' + g + '-m)" stroke-width="7" stroke-linecap="round"/><path d="M16 214 L184 -10" stroke="#5a3a0c" stroke-width="1.4" stroke-dasharray="3 9" opacity=".6"/><circle cx="186" cy="-13" r="9" fill="url(#' + g + '-m)" stroke="#5a3a0c" stroke-width="1.2"/><path d="M186 -30 V-20 M181 -25 H191" stroke="url(#' + g + '-m)" stroke-width="3" stroke-linecap="round"/><circle cx="183" cy="-16" r="2.4" fill="#fff" opacity=".8"/>';
+    atras.push(cetro + '<g transform="translate(200 0) scale(-1 1)">' + cetro + '</g>');
+  }
+  if (liga.torres) {
+    const torre = '<path d="' + TORRE_DA_LIGA + '" fill="url(#' + g + '-m)" stroke="#3a2608" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 40 V18" stroke="url(#' + g + '-m)" stroke-width="2.6"/><path d="M4 26 H12" stroke="url(#' + g + '-m)" stroke-width="2.4"/><path d="M4 96 C4 88 12 88 12 96 V116 H4Z M4 132 C4 124 12 124 12 132 V152 H4Z" fill="#06202a" stroke="#5ff3ff" stroke-width="1"/><path d="M-4 168 H20 M-4 176 H20" stroke="#3a2608" stroke-width="1"/>';
+    atras.push(torre + '<g transform="translate(200 0) scale(-1 1)">' + torre + '</g>');
+  }
+  if (liga.anelHolografico) {
+    const marcas = Array.from({ length: 48 }, (_, i) => { const a = (i * 7.5 * Math.PI) / 180; const r2 = i % 4 === 0 ? 129 : 124; return 'M' + (100 + Math.cos(a) * 119).toFixed(1) + ' ' + (96 + Math.sin(a) * 119).toFixed(1) + ' L' + (100 + Math.cos(a) * r2).toFixed(1) + ' ' + (96 + Math.sin(a) * r2).toFixed(1); }).join(' ');
+    atras.unshift('<g class="liga-anel-holografico"><circle cx="100" cy="96" r="119" fill="none" stroke="#5ff3ff" stroke-width="1.6" opacity=".75"/><circle cx="100" cy="96" r="111" fill="none" stroke="#5ff3ff" stroke-width=".8" stroke-dasharray="4 6" opacity=".6"/><path d="' + marcas + '" stroke="#5ff3ff" stroke-width="1.4" opacity=".8"/></g>');
+  }
+  if (liga.aureolaDupla) atras.unshift('<circle cx="100" cy="96" r="126" fill="none" stroke="url(#' + g + '-m)" stroke-width="1.6" opacity=".7"/><circle cx="100" cy="96" r="129.5" fill="none" stroke="url(#' + g + '-m)" stroke-width="1" stroke-dasharray="2 6" opacity=".7"/>');
+  if (liga.estrelasEmOrbita) {
+    frente.push('<g class="liga-estrelas-orbita">' + Array.from({ length: 10 }, (_, i) => { const a = (i * 36 * Math.PI) / 180 + 0.3; const r = 124; return '<path class="liga-estrelinha" d="' + estrelaDaLigaSvg(100 + Math.cos(a) * r, 96 + Math.sin(a) * r, i % 2 ? 6 : 9, i % 2 ? 2 : 3, 4) + '" fill="#fff"/>'; }).join('') + '</g>');
+  }
+  if (liga.nuvensNaBase) {
+    frente.push('<g class="liga-nuvens-base">' + NUVENS_DA_BASE.map(([x, y, r]) => '<circle cx="' + x + '" cy="' + y + '" r="' + r + '" fill="url(#' + g + '-nuvem)"/>').join('') + '</g>');
+  }
+  if (liga.gradeDeLuz) frente.push('<g class="liga-grade-de-luz" clip-path="url(#' + g + '-c)" opacity=".35"><path d="' + Array.from({ length: 10 }, (_, i) => 'M20 ' + (10 + i * 19) + ' H180').join(' ') + ' ' + Array.from({ length: 9 }, (_, i) => 'M' + (30 + i * 18) + ' 0 V200').join(' ') + '" stroke="#5ff3ff" stroke-width=".6"/></g>');
+  return { atras: atras.join(''), frente: frente.join('') };
+}
+
 function emblemaDaLiga(indice, opcoes) {
   const o = opcoes || {};
   const liga = ligaDoIndice(indice);
@@ -364,7 +401,8 @@ function emblemaDaLiga(indice, opcoes) {
     (simbolo.cheio || []).map((d) => `<path d="${d}" fill="${liga.claro}" stroke="${liga.claro}" stroke-width="8" stroke-linejoin="round"/>`).join(''),
   ].join('');
   const joias = liga.joias ? pontos.filter((_, i) => i % 2 === 0).map(([x, y]) => `<circle cx="${x}" cy="${y}" r="6" fill="url(#${g}-j)" stroke="url(#${g}-m)" stroke-width="1.8"/><circle cx="${x - 1.8}" cy="${y - 2}" r="1.6" fill="#fff" opacity=".85"/>`).join('') : '';
-  const raiosAtras = liga.raiosAtras ? `<g class="liga-raios-atras" opacity=".85">${Array.from({ length: 18 }, (_, i) => { const a = (i * 20 * Math.PI) / 180; const r2 = i % 2 ? 128 : 142; return `<path d="M${(100 + Math.cos(a - 0.05) * 60).toFixed(1)} ${(96 + Math.sin(a - 0.05) * 60).toFixed(1)} L${(100 + Math.cos(a) * r2).toFixed(1)} ${(96 + Math.sin(a) * r2).toFixed(1)} L${(100 + Math.cos(a + 0.05) * 60).toFixed(1)} ${(96 + Math.sin(a + 0.05) * 60).toFixed(1)}Z" fill="url(#${g}-m)" opacity="${i % 2 ? 0.55 : 0.9}"/>`; }).join('')}</g>` : '';
+  const raiosAtras = liga.raiosAtras ? `<g class="liga-raios-atras" opacity=".85">${Array.from({ length: liga.raiosArcoIris ? 24 : 18 }, (_, i) => { const passo = liga.raiosArcoIris ? 15 : 20; const a = (i * passo * Math.PI) / 180; const r2 = i % 2 ? 128 : 146; const cor = liga.raiosArcoIris ? `hsl(${(i * passo) % 360}, 90%, 78%)` : `url(#${g}-m)`; return `<path d="M${(100 + Math.cos(a - 0.05) * 60).toFixed(1)} ${(96 + Math.sin(a - 0.05) * 60).toFixed(1)} L${(100 + Math.cos(a) * r2).toFixed(1)} ${(96 + Math.sin(a) * r2).toFixed(1)} L${(100 + Math.cos(a + 0.05) * 60).toFixed(1)} ${(96 + Math.sin(a + 0.05) * 60).toFixed(1)}Z" fill="${cor}" opacity="${i % 2 ? 0.55 : 0.9}"/>`; }).join('')}</g>` : '';
+  const especiais = decoracoesEspeciaisDaLiga(liga, g);
   const divisao = o.divisao !== undefined && !liga.semDivisoes;
   return `<svg class="liga-emblema ${liga.prisma ? 'prisma' : ''} ${o.classe || ''}" viewBox="${pedestal ? '-30 -40 260 280' : '-30 -40 260 244'}" aria-hidden="true">
     <defs>
@@ -376,11 +414,15 @@ function emblemaDaLiga(indice, opcoes) {
       <radialGradient id="${g}-h" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="${liga.claro}" stop-opacity=".75"/><stop offset="1" stop-color="${liga.claro}" stop-opacity="0"/></radialGradient>
       <filter id="${g}-f" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="4"/></filter>
       <clipPath id="${g}-c"><path d="${contorno}"/></clipPath>
+      <linearGradient id="${g}-manto" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d2324e"/><stop offset=".45" stop-color="#8c1027"/><stop offset="1" stop-color="#3e0512"/></linearGradient>
+      <linearGradient id="${g}-arminho" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f4eee6"/><stop offset="1" stop-color="#ffffff"/></linearGradient>
+      <radialGradient id="${g}-nuvem" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#f3ecff"/><stop offset="1" stop-color="#cbbcf0"/></radialGradient>
     </defs>
+    ${especiais.atras}
     ${raiosAtras}
     ${liga.aureola ? `<circle cx="100" cy="96" r="116" fill="url(#${g}-h)"/><circle cx="100" cy="96" r="104" fill="none" stroke="url(#${g}-m)" stroke-width="3.4"/><path d="${Array.from({ length: 32 }, (_, i) => { const a = (i * 11.25 * Math.PI) / 180; const r2 = i % 2 ? 112 : 122; return `M${(100 + Math.cos(a) * 106).toFixed(1)} ${(96 + Math.sin(a) * 106).toFixed(1)} L${(100 + Math.cos(a) * r2).toFixed(1)} ${(96 + Math.sin(a) * r2).toFixed(1)}`; }).join(' ')}" stroke="url(#${g}-m)" stroke-width="3" stroke-linecap="round"/>` : ''}
     ${umLado ? `${umLado}<g transform="translate(200 0) scale(-1 1)">${umLado}</g>` : ''}
-    ${pedestal ? `<g class="liga-pedestal"><path d="M88 182 L93 200 H107 L112 182Z" fill="url(#${g}-m)" stroke="#2a1a06" stroke-width="1"/><path d="M68 200 H132 L142 218 H58Z" fill="#1d2233" stroke="url(#${g}-m)" stroke-width="2.6" stroke-linejoin="round"/><path d="M50 218 H150 L156 232 H44Z" fill="#141826" stroke="url(#${g}-m)" stroke-width="2.6" stroke-linejoin="round"/><path d="${estrelaDaLigaSvg(100, 209, 6.5, 2.4, 4)}" fill="url(#${g}-m)"/></g>` : ''}
+    ${pedestal && !liga.nuvensNaBase ? `<g class="liga-pedestal"><path d="M88 182 L93 200 H107 L112 182Z" fill="url(#${g}-m)" stroke="#2a1a06" stroke-width="1"/><path d="M68 200 H132 L142 218 H58Z" fill="#1d2233" stroke="url(#${g}-m)" stroke-width="2.6" stroke-linejoin="round"/><path d="M50 218 H150 L156 232 H44Z" fill="#141826" stroke="url(#${g}-m)" stroke-width="2.6" stroke-linejoin="round"/><path d="${estrelaDaLigaSvg(100, 209, 6.5, 2.4, 4)}" fill="url(#${g}-m)"/></g>` : ''}
     ${liga.ramos ? `${folhasDoRamo(`url(#${g}-m)`)}<g transform="translate(200 0) scale(-1 1)">${folhasDoRamo(`url(#${g}-m)`)}</g>` : ''}
     <path d="${contorno}" fill="none" stroke="${liga.cor}" stroke-width="22" stroke-linejoin="round" opacity=".35" filter="url(#${g}-f)"/>
     <g clip-path="url(#${g}-c)">
@@ -395,7 +437,8 @@ function emblemaDaLiga(indice, opcoes) {
     <path d="${contorno}" fill="none" stroke="${metal[0]}" stroke-width="1.4" stroke-linejoin="round" opacity=".85" transform="translate(100 98) scale(.952) translate(-100 -98)"/>
     ${joias}
     ${o.cinema ? `<path class="liga-energia liga-energia-larga" d="${contorno}" pathLength="100" fill="none" stroke="${liga.claro}" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" filter="url(#${g}-f)"/><path class="liga-energia" d="${contorno}" pathLength="100" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>` : ''}
-    ${liga.coroa ? `<path d="${COROA_DA_LIGA}" fill="url(#${g}-m)" stroke="#5a3a0c" stroke-width="1.3" stroke-linejoin="round"/><circle cx="100" cy="4" r="3.6" fill="url(#${g}-j)"/><circle cx="84" cy="8" r="2.6" fill="url(#${g}-j)"/><circle cx="116" cy="8" r="2.6" fill="url(#${g}-j)"/>` : ''}
+    ${especiais.frente}
+    ${liga.coroa ? `<g class="liga-coroa"${liga.coroaGrande ? ' transform="translate(100 14) scale(1.5) translate(-100 -14)"' : ''}>${liga.coroaGrande ? `<path d="${GORRO_DA_COROA}" fill="#8c1027" stroke="#3e0512" stroke-width=".8"/>` : ''}<path d="${COROA_DA_LIGA}" fill="url(#${g}-m)" stroke="#5a3a0c" stroke-width="1.3" stroke-linejoin="round"/>${liga.coroaGrande ? `<path d="M74 16 H126 V20 H74Z" fill="url(#${g}-m)" stroke="#5a3a0c" stroke-width=".9"/><circle cx="80" cy="18" r="1.3" fill="#fff"/><circle cx="88" cy="18" r="1.3" fill="#fff"/><circle cx="96" cy="18" r="1.3" fill="#fff"/><circle cx="104" cy="18" r="1.3" fill="#fff"/><circle cx="112" cy="18" r="1.3" fill="#fff"/><circle cx="120" cy="18" r="1.3" fill="#fff"/><circle cx="100" cy="-16" r="3" fill="url(#${g}-m)" stroke="#5a3a0c" stroke-width=".7"/><path d="M100 -27 V-19 M96.5 -24 H103.5" stroke="url(#${g}-m)" stroke-width="2.2" stroke-linecap="round"/><circle cx="90" cy="10" r="2.2" fill="#d2324e"/><circle cx="110" cy="10" r="2.2" fill="#2f7de1"/>` : ''}<circle cx="100" cy="4" r="3.6" fill="url(#${g}-j)"/><circle cx="84" cy="8" r="2.6" fill="url(#${g}-j)"/><circle cx="116" cy="8" r="2.6" fill="url(#${g}-j)"/></g>` : ''}
     <g class="liga-simbolo"><g opacity=".55" filter="url(#${g}-f)">${brilhoDoSimbolo}</g>${corpoDoSimboloDaLiga(liga, `${g}-s`)}</g>
     ${divisao ? `<g class="liga-placa"><path d="M74 146 H126 L133 157 L126 168 H74 L67 157Z" fill="url(#${g}-m)" stroke="#3a2608" stroke-width="1.4" stroke-linejoin="round"/><text x="100" y="163.5" text-anchor="middle" font-family="Cinzel, Georgia, serif" font-weight="700" font-size="16" fill="#2e1d05">${DIVISOES_DAS_LIGAS[o.divisao]}</text></g>` : ''}
     ${liga.semDivisoes && o.divisao !== undefined ? `<path d="${estrelaDaLigaSvg(100, 158, 11, 4, 4)}" fill="url(#${g}-m)" stroke="#3a2608" stroke-width="1"/>` : ''}
@@ -432,7 +475,9 @@ function carregar3dDaLiga() {
 function dadosDoCinema3d(pos) {
   const liga = pos.liga;
   return {
-    pontos: FORMAS_DAS_LIGAS[liga.forma], facetas: facetasDaLiga(pos.indice), cor: liga.cor, claro: liga.claro, escuro: liga.escuro, metal: liga.metal, pedestal: true,
+    pontos: FORMAS_DAS_LIGAS[liga.forma], facetas: facetasDaLiga(pos.indice), cor: liga.cor, claro: liga.claro, escuro: liga.escuro, metal: liga.metal, pedestal: !liga.nuvensNaBase,
+    manto: liga.manto ? [MANTO_DA_LIGA, ARMINHO_DA_LIGA] : null, cetros: !!liga.cetros, torres: liga.torres ? TORRE_DA_LIGA : null, gorro: liga.coroaGrande ? GORRO_DA_COROA : null,
+    nuvensNaBase: liga.nuvensNaBase ? NUVENS_DA_BASE : null, anelHolografico: !!liga.anelHolografico, aureolaDupla: !!liga.aureolaDupla, estrelasEmOrbita: !!liga.estrelasEmOrbita,
     asas: liga.asas || liga.asinhas ? PENAS_DAS_ASAS_DA_LIGA : null, escalaDasAsas: liga.asinhas && !liga.asas ? 0.7 : 1, coroa: liga.coroa ? COROA_DA_LIGA : null, ramos: !!liga.ramos, aureola: !!liga.aureola, prisma: !!liga.prisma,
     arestas: liga.obsidiana ? '#5ff3ff' : (liga.escuroDourado ? '#ffd76a' : ''), tema: temaDaLiga(liga), duracao: duracaoDoCinema(liga) / 1000, impacto: momentoDoImpacto(liga) / 1000,
     svgDoSimbolo: svgDoSimboloDaLiga(pos.indice, pos.divisao), svgDaRosacea: rosaceaDaLiga(liga, true),
@@ -451,6 +496,20 @@ function momentoDoImpacto(liga) {
   return cinemaLongo(liga) ? 4350 : 2450;
 }
 
+function impulsoDaLiga(ctx, segundos, queda) {
+  const tamanho = Math.floor(ctx.sampleRate * segundos);
+  const impulso = ctx.createBuffer(2, tamanho, ctx.sampleRate);
+  for (let c = 0; c < 2; c += 1) {
+    const dados = impulso.getChannelData(c);
+    for (let i = 0; i < tamanho; i += 1) {
+      const t = i / tamanho;
+      const reflexo = i < ctx.sampleRate * 0.03 && i % Math.floor(ctx.sampleRate * (0.007 + c * 0.002)) === 0 ? 0.6 : 0;
+      dados[i] = ((Math.random() * 2 - 1) + reflexo) * Math.pow(1 - t, queda);
+    }
+  }
+  return impulso;
+}
+
 function audioDaLiga() {
   try {
     const Classe = window.AudioContext || window.webkitAudioContext;
@@ -458,24 +517,29 @@ function audioDaLiga() {
     if (!contextoDoSomDaLiga) {
       const ctx = new Classe();
       const mestre = ctx.createGain();
-      mestre.gain.value = 0.6;
+      mestre.gain.value = 0.85;
       const compressor = ctx.createDynamicsCompressor();
+      compressor.threshold.value = -16;
+      compressor.knee.value = 12;
+      compressor.ratio.value = 4;
+      compressor.attack.value = 0.003;
+      compressor.release.value = 0.2;
       mestre.connect(compressor);
       compressor.connect(ctx.destination);
-      const eco = ctx.createConvolver();
-      const tamanho = Math.floor(ctx.sampleRate * 2.6);
-      const impulso = ctx.createBuffer(2, tamanho, ctx.sampleRate);
-      for (let c = 0; c < 2; c += 1) {
-        const dados = impulso.getChannelData(c);
-        for (let i = 0; i < tamanho; i += 1) dados[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / tamanho, 3);
-      }
-      eco.buffer = impulso;
-      const molhado = ctx.createGain();
-      molhado.gain.value = 0.35;
-      eco.connect(molhado);
-      molhado.connect(mestre);
+      const salao = ctx.createConvolver();
+      salao.buffer = impulsoDaLiga(ctx, 3.2, 3.4);
+      const voltaDoSalao = ctx.createGain();
+      voltaDoSalao.gain.value = 0.42;
+      salao.connect(voltaDoSalao);
+      voltaDoSalao.connect(mestre);
+      const sala = ctx.createConvolver();
+      sala.buffer = impulsoDaLiga(ctx, 0.55, 5);
+      const voltaDaSala = ctx.createGain();
+      voltaDaSala.gain.value = 0.5;
+      sala.connect(voltaDaSala);
+      voltaDaSala.connect(mestre);
       contextoDoSomDaLiga = ctx;
-      saidaDoSomDaLiga = { seco: mestre, eco };
+      saidaDoSomDaLiga = { seco: mestre, eco: salao, sala };
     }
     if (contextoDoSomDaLiga.state === 'suspended') contextoDoSomDaLiga.resume().catch(() => {});
     return contextoDoSomDaLiga;
@@ -484,82 +548,100 @@ function audioDaLiga() {
   }
 }
 
-function somDaLiga(tipo, atraso, duracao) {
+function somDaLiga(tipo, atraso, duracao, forca, tom) {
   const ctx = audioDaLiga();
   if (!ctx) return;
   try {
-    const t0 = ctx.currentTime + (atraso || 0);
-    const ligar = (no, eco) => {
+    const t0 = ctx.currentTime + Math.max(0, atraso || 0);
+    const intensidade = forca === undefined ? 1 : forca;
+    const altura = tom === undefined ? 1 : tom;
+    const ligar = (no, eco, sala) => {
       no.connect(saidaDoSomDaLiga.seco);
-      if (eco) {
-        const g = ctx.createGain();
-        g.gain.value = eco;
-        no.connect(g);
-        g.connect(saidaDoSomDaLiga.eco);
-      }
+      if (eco) { const g = ctx.createGain(); g.gain.value = eco; no.connect(g); g.connect(saidaDoSomDaLiga.eco); }
+      if (sala) { const g = ctx.createGain(); g.gain.value = sala; no.connect(g); g.connect(saidaDoSomDaLiga.sala); }
     };
     if (!ruidoGuardadoDaLiga) {
       ruidoGuardadoDaLiga = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
       const d = ruidoGuardadoDaLiga.getChannelData(0);
-      for (let i = 0; i < d.length; i += 1) d[i] = Math.random() * 2 - 1;
+      let rosa = 0;
+      for (let i = 0; i < d.length; i += 1) { rosa = rosa * 0.6 + (Math.random() * 2 - 1) * 0.4; d[i] = i % 2 ? rosa : Math.random() * 2 - 1; }
     }
-    const tom = (freq, onda, ini, dur, vol, eco, ate) => {
+    const envelope = (g, ini, ataque, pico, queda) => {
+      g.gain.setValueAtTime(0.00001, ini);
+      g.gain.exponentialRampToValueAtTime(Math.max(0.00002, pico), ini + ataque);
+      g.gain.exponentialRampToValueAtTime(0.00001, ini + ataque + queda);
+    };
+    const oscilador = (onda, freq, ini, ataque, pico, queda, ate, eco, sala) => {
       const osc = ctx.createOscillator();
       const g = ctx.createGain();
       osc.type = onda;
       osc.frequency.setValueAtTime(freq, ini);
-      if (ate) osc.frequency.exponentialRampToValueAtTime(ate, ini + dur);
-      g.gain.setValueAtTime(0.0001, ini);
-      g.gain.exponentialRampToValueAtTime(vol, ini + Math.min(0.03, dur / 4));
-      g.gain.exponentialRampToValueAtTime(0.0001, ini + dur);
+      if (ate) osc.frequency.exponentialRampToValueAtTime(ate, ini + Math.min(queda, 0.25));
+      envelope(g, ini, ataque, pico, queda);
       osc.connect(g);
-      ligar(g, eco);
+      ligar(g, eco, sala);
       osc.start(ini);
-      osc.stop(ini + dur + 0.05);
+      osc.stop(ini + ataque + queda + 0.05);
     };
-    const ruido = (ini, dur, vol, filtroTipo, f1, f2, q, eco) => {
+    const ruido = (ini, dur, pico, filtroTipo, f1, f2, q, eco, sala, ataque) => {
       const fonte = ctx.createBufferSource();
       fonte.buffer = ruidoGuardadoDaLiga;
+      fonte.playbackRate.value = 0.9 + Math.random() * 0.2;
       const filtro = ctx.createBiquadFilter();
       filtro.type = filtroTipo;
-      filtro.Q.value = q || 1;
+      filtro.Q.value = q || 0.8;
       filtro.frequency.setValueAtTime(f1, ini);
       if (f2) filtro.frequency.exponentialRampToValueAtTime(f2, ini + dur);
       const g = ctx.createGain();
-      g.gain.setValueAtTime(0.0001, ini);
-      g.gain.exponentialRampToValueAtTime(vol, ini + dur * 0.3);
-      g.gain.exponentialRampToValueAtTime(0.0001, ini + dur);
+      envelope(g, ini, ataque || Math.min(0.004, dur / 4), pico, dur);
       fonte.connect(filtro);
       filtro.connect(g);
-      ligar(g, eco);
-      fonte.start(ini);
-      fonte.stop(ini + dur + 0.05);
+      ligar(g, eco, sala);
+      fonte.start(ini, Math.random() * 1.2);
+      fonte.stop(ini + dur + 0.1);
     };
-    const longo = (freqs, onda, ini, dur, vol, eco, filtro) => {
-      freqs.forEach((f, i) => {
-        [-6, 6].forEach((cents) => {
+    const encaixe = (ini, f, a) => {
+      oscilador('sine', 150 * a, ini, 0.003, 0.62 * f, 0.2, 52 * a, 0.08, 0.35);
+      oscilador('sine', 82 * a, ini, 0.004, 0.32 * f, 0.26, 44 * a, 0.05, 0.3);
+      oscilador('triangle', 310 * a, ini, 0.002, 0.12 * f, 0.07, 180 * a, 0, 0.3);
+      ruido(ini, 0.018, 0.5 * f, 'bandpass', 2400 * a, 0, 0.9, 0.05, 0.4, 0.001);
+      ruido(ini, 0.06, 0.32 * f, 'lowpass', 1100 * a, 300, 0.7, 0.05, 0.4, 0.002);
+      [[1, 0.22, 0.05], [2.41, 0.14, 0.025], [4.37, 0.08, 0.012], [6.9, 0.05, 0.006]].forEach(([p, queda, pico]) => oscilador('sine', 640 * a * p, ini + 0.002, 0.002, pico * f, queda, 0, 0.2, 0.25));
+    };
+    const timbale = (ini, freq, f) => {
+      oscilador('sine', freq * 1.12, ini, 0.004, 0.6 * f, 1.9, freq, 0.25, 0.2);
+      oscilador('sine', freq * 1.5, ini, 0.004, 0.18 * f, 1.1, freq * 1.47, 0.3, 0.2);
+      oscilador('sine', freq * 1.98, ini, 0.004, 0.09 * f, 0.7, 0, 0.3, 0.2);
+      oscilador('sine', freq * 2.44, ini, 0.004, 0.05 * f, 0.5, 0, 0.3, 0.2);
+      ruido(ini, 0.09, 0.45 * f, 'lowpass', 1500, 250, 0.8, 0.2, 0.3, 0.002);
+    };
+    const cordas = (freqs, ini, dur, pico, brilho) => {
+      freqs.forEach((freq, i) => {
+        [-7, 0, 7].forEach((cents) => {
           const osc = ctx.createOscillator();
-          osc.type = onda;
-          osc.frequency.value = f;
-          osc.detune.value = cents;
+          osc.type = 'sawtooth';
+          osc.frequency.value = freq;
+          osc.detune.value = cents + (Math.random() - 0.5) * 3;
           const vib = ctx.createOscillator();
           const prof = ctx.createGain();
-          vib.frequency.value = 5 + i * 0.3;
-          prof.gain.value = f * 0.006;
+          vib.frequency.value = 4.6 + i * 0.25 + Math.random() * 0.3;
+          prof.gain.value = freq * 0.004;
           vib.connect(prof);
           prof.connect(osc.frequency);
-          const passa = ctx.createBiquadFilter();
-          passa.type = filtro ? 'bandpass' : 'lowpass';
-          passa.frequency.value = filtro || 1800;
-          passa.Q.value = filtro ? 1.2 : 0.7;
+          const filtro = ctx.createBiquadFilter();
+          filtro.type = 'lowpass';
+          filtro.Q.value = 0.6;
+          filtro.frequency.setValueAtTime(500, ini);
+          filtro.frequency.linearRampToValueAtTime(brilho || 2600, ini + dur * 0.4);
+          filtro.frequency.linearRampToValueAtTime(1200, ini + dur);
           const g = ctx.createGain();
-          g.gain.setValueAtTime(0.0001, ini);
-          g.gain.exponentialRampToValueAtTime(vol, ini + Math.min(1.1, dur * 0.35));
-          g.gain.setValueAtTime(vol, ini + dur * 0.7);
-          g.gain.exponentialRampToValueAtTime(0.0001, ini + dur);
-          osc.connect(passa);
-          passa.connect(g);
-          ligar(g, eco);
+          g.gain.setValueAtTime(0.00001, ini);
+          g.gain.exponentialRampToValueAtTime(pico, ini + Math.min(0.9, dur * 0.3));
+          g.gain.setValueAtTime(pico, ini + dur * 0.65);
+          g.gain.exponentialRampToValueAtTime(0.00001, ini + dur);
+          osc.connect(filtro);
+          filtro.connect(g);
+          ligar(g, 0.55, 0);
           osc.start(ini);
           vib.start(ini);
           osc.stop(ini + dur + 0.05);
@@ -567,76 +649,108 @@ function somDaLiga(tipo, atraso, duracao) {
         });
       });
     };
-    const metal = (freq, ini, dur, vol) => {
-      [0, 7].forEach((cents) => {
-        const osc = ctx.createOscillator();
-        osc.type = 'sawtooth';
-        osc.frequency.value = freq;
-        osc.detune.value = cents;
-        const filtro = ctx.createBiquadFilter();
-        filtro.type = 'lowpass';
-        filtro.frequency.setValueAtTime(500, ini);
-        filtro.frequency.exponentialRampToValueAtTime(3200, ini + 0.08);
-        filtro.frequency.exponentialRampToValueAtTime(1300, ini + dur);
-        const g = ctx.createGain();
-        g.gain.setValueAtTime(0.0001, ini);
-        g.gain.exponentialRampToValueAtTime(vol, ini + 0.04);
-        g.gain.setValueAtTime(vol * 0.8, ini + dur * 0.6);
-        g.gain.exponentialRampToValueAtTime(0.0001, ini + dur);
-        osc.connect(filtro);
-        filtro.connect(g);
-        ligar(g, 0.3);
-        osc.start(ini);
-        osc.stop(ini + dur + 0.05);
+    const coro = (freqs, ini, dur, pico) => {
+      freqs.forEach((freq) => {
+        [-5, 5].forEach((cents) => {
+          const osc = ctx.createOscillator();
+          osc.type = 'sawtooth';
+          osc.frequency.value = freq;
+          osc.detune.value = cents;
+          const vib = ctx.createOscillator();
+          const prof = ctx.createGain();
+          vib.frequency.value = 5.2 + Math.random() * 0.6;
+          prof.gain.value = freq * 0.007;
+          vib.connect(prof);
+          prof.connect(osc.frequency);
+          const g = ctx.createGain();
+          g.gain.setValueAtTime(0.00001, ini);
+          g.gain.exponentialRampToValueAtTime(pico, ini + Math.min(1.4, dur * 0.35));
+          g.gain.setValueAtTime(pico, ini + dur * 0.7);
+          g.gain.exponentialRampToValueAtTime(0.00001, ini + dur);
+          [[730, 6], [1090, 7], [2440, 9]].forEach(([fFormante, qFormante], k) => {
+            const formante = ctx.createBiquadFilter();
+            formante.type = 'bandpass';
+            formante.frequency.value = fFormante;
+            formante.Q.value = qFormante;
+            const nivel = ctx.createGain();
+            nivel.gain.value = [1, 0.6, 0.25][k];
+            osc.connect(formante);
+            formante.connect(nivel);
+            nivel.connect(g);
+          });
+          ligar(g, 0.75, 0);
+          osc.start(ini);
+          vib.start(ini);
+          osc.stop(ini + dur + 0.05);
+          vib.stop(ini + dur + 0.05);
+        });
       });
     };
-    if (tipo === 'barra') tom(392, 'triangle', t0, 0.6, 0.06, 0.2, 784);
-    else if (tipo === 'estrela') { tom(1319, 'sine', t0, 0.3, 0.12, 0.4); tom(1976, 'sine', t0 + 0.03, 0.25, 0.06, 0.4); }
-    else if (tipo === 'varrida') ruido(t0, 0.9, 0.22, 'bandpass', 300, 3400, 1.2, 0.3);
-    else if (tipo === 'subida') [523, 659, 784, 1047, 1319].forEach((f, i) => tom(f, 'triangle', t0 + i * 0.07, 0.6, 0.08, 0.35));
-    else if (tipo === 'troca') {
-      tom(220, 'sine', t0, 0.5, 0.25, 0.2, 90);
-      ruido(t0, 0.35, 0.15, 'lowpass', 2400, 400, 0.7, 0.2);
-      [784, 988, 1175, 1568].forEach((f, i) => tom(f, 'sine', t0 + 0.05 + i * 0.04, 1.5, 0.07, 0.6));
-    } else if (tipo === 'rasgo') {
-      for (let i = 0; i < 7; i += 1) ruido(t0 + i * 0.045, 0.1 + Math.random() * 0.1, 0.2, 'bandpass', 1600 + Math.random() * 2600, 0, 2.5, 0.1);
-      ruido(t0, 0.55, 0.12, 'highpass', 3000, 0, 0.7, 0.15);
-    } else if (tipo === 'zumbido') {
-      longo([55, 82.5, 110], 'sine', t0, duracao || 3.6, 0.09, 0.2);
-      ruido(t0, duracao || 3.6, 0.05, 'lowpass', 240, 0, 0.7, 0.2);
-    } else if (tipo === 'cristais') {
-      const notas = [1568, 1760, 2093, 2349, 2637, 3136];
-      for (let i = 0; i < 24; i += 1) {
-        const f = notas[i % notas.length] * (i % 3 === 0 ? 1 : 0.5);
-        const ini = t0 + i * 0.065 + Math.random() * 0.03;
-        tom(f, 'sine', ini, 0.4, 0.05, 0.5);
-        tom(f * 2.76, 'sine', ini, 0.2, 0.015, 0.5);
+    const brilho = (ini, quantos, pico) => {
+      for (let i = 0; i < quantos; i += 1) {
+        const f = [2093, 2349, 2637, 3136, 3520, 4186][Math.floor(Math.random() * 6)];
+        oscilador('sine', f, ini + i * 0.055 + Math.random() * 0.03, 0.004, pico, 0.9 + Math.random() * 0.6, 0, 0.75, 0);
       }
+    };
+    const sino = (ini, base, pico) => [[1, 3.2], [2.76, 2.1], [5.4, 1.3], [8.93, 0.8], [13.34, 0.5]].forEach(([p, queda], i) => oscilador('sine', base * p, ini, 0.002, pico / (i + 1), queda, 0, 0.6, 0));
+    if (tipo === 'encaixe') encaixe(t0, intensidade, altura);
+    else if (tipo === 'estrela') encaixe(t0, 0.45 * intensidade, 1.5 * altura);
+    else if (tipo === 'barra') ruido(t0, 0.55, 0.08, 'bandpass', 500, 2600, 1.4, 0.3, 0, 0.3);
+    else if (tipo === 'varrida') { ruido(t0, 0.85, 0.2, 'bandpass', 250, 3800, 1.3, 0.35, 0, 0.5); ruido(t0 + 0.05, 0.7, 0.06, 'highpass', 6000, 0, 0.7, 0.4, 0, 0.4); }
+    else if (tipo === 'subida') { [0, 0.11, 0.22].forEach((d, i) => encaixe(t0 + d, 0.6 + i * 0.15, 0.9 + i * 0.12)); }
+    else if (tipo === 'troca') {
+      encaixe(t0, 1.25, 0.75);
+      timbale(t0 + 0.02, 110, 0.8);
+      brilho(t0 + 0.05, 10, 0.022);
+      cordas([261.6, 329.6, 392], t0 + 0.05, 1.8, 0.012, 2200);
+    } else if (tipo === 'rasgo') {
+      for (let i = 0; i < 14; i += 1) ruido(t0 + i * 0.026 + Math.random() * 0.012, 0.03 + Math.random() * 0.05, 0.14 + Math.random() * 0.16, 'bandpass', 1300 + Math.random() * 3600, 0, 1.6, 0.08, 0.2, 0.001);
+      ruido(t0, 0.48, 0.1, 'highpass', 2600, 0, 0.7, 0.15, 0.1, 0.01);
+      ruido(t0 + 0.02, 0.35, 0.09, 'lowpass', 900, 300, 0.7, 0.1, 0.2, 0.01);
+    } else if (tipo === 'zumbido') {
+      const dur = duracao || 3.6;
+      [41.2, 61.7, 82.4].forEach((f, i) => oscilador('sine', f, t0, Math.min(1.2, dur * 0.3), 0.12 / (i + 1), dur, 0, 0.3, 0));
+      ruido(t0, dur, 0.035, 'lowpass', 180, 0, 0.7, 0.3, 0, Math.min(1.2, dur * 0.3));
+    } else if (tipo === 'encaixes') {
+      (duracao || []).forEach(([quando, f, a]) => encaixe(t0 + quando, f, a));
     } else if (tipo === 'impacto') {
-      tom(150, 'sine', t0, 1.1, 0.5, 0.25, 36);
-      ruido(t0, 0.7, 0.35, 'lowpass', 1400, 120, 0.8, 0.3);
-      ruido(t0, 1.6, 0.08, 'highpass', 5000, 0, 0.7, 0.6);
-    } else if (tipo === 'brilho') {
-      for (let i = 0; i < 9; i += 1) tom(2000 + Math.random() * 2600, 'sine', t0 + i * 0.06, 1, 0.025, 0.7);
-    } else if (tipo === 'fanfarra') {
-      [[392, 0], [523, 0.13], [659, 0.26], [784, 0.39]].forEach(([f, d]) => metal(f, t0 + d, 0.32, 0.05));
-      [523, 659, 784, 1047].forEach((f) => metal(f, t0 + 0.6, 1.9, 0.045));
-      metal(262, t0 + 0.6, 1.9, 0.05);
-    } else if (tipo === 'fanfarraReal') {
-      [[392, 0], [392, 0.16], [523, 0.32], [659, 0.48], [784, 0.64]].forEach(([f, d]) => metal(f, t0 + d, 0.3, 0.055));
-      [523, 659, 784, 1047, 1319].forEach((f) => metal(f, t0 + 0.9, 2.6, 0.04));
-      metal(131, t0 + 0.9, 2.6, 0.05);
-      tom(65, 'sine', t0 + 0.9, 2, 0.25, 0.3);
-    } else if (tipo === 'sinos') {
-      [880, 1318.5].forEach((base, k) => [1, 2.76, 5.4, 8.93].forEach((p, i) => tom(base * p, 'sine', t0 + k * 0.35, 2.6 / (1 + i * 0.4), 0.07 / (i + 1), 0.7)));
-    } else if (tipo === 'coro') {
-      longo([220, 277.2, 329.6, 440, 554.4], 'sawtooth', t0, duracao || 5, 0.018, 0.6, 900);
-      longo([440, 554.4, 659.3], 'sawtooth', t0 + 0.4, (duracao || 5) - 0.4, 0.012, 0.7, 1300);
+      oscilador('sine', 92, t0, 0.003, 0.9, 2.2, 31, 0.35, 0.2);
+      oscilador('sine', 46, t0, 0.01, 0.55, 2.6, 28, 0.3, 0);
+      timbale(t0, 73.4, 1.1);
+      ruido(t0, 0.9, 0.42, 'lowpass', 2200, 90, 0.8, 0.45, 0.3, 0.002);
+      ruido(t0 + 0.01, 2.4, 0.07, 'highpass', 4800, 0, 0.7, 0.7, 0, 0.02);
+      brilho(t0 + 0.08, 16, 0.02);
+    } else if (tipo === 'brilho') brilho(t0, 12, 0.022);
+    else if (tipo === 'fanfarra' || tipo === 'fanfarraReal' || tipo === 'orquestra') {
+      const real = tipo === 'fanfarraReal';
+      for (let i = 0; i < 9; i += 1) timbale(t0 + i * 0.055, 98, 0.18 + i * 0.07);
+      timbale(t0 + 0.55, real ? 82.4 : 98, 1.15);
+      encaixe(t0 + 0.55, 1.1, 0.7);
+      cordas(real ? [98, 146.8, 196, 246.9, 293.7, 392] : [130.8, 196, 261.6, 329.6, 392], t0 + 0.5, real ? 3.6 : 3, real ? 0.016 : 0.014, real ? 3200 : 2800);
+      brilho(t0 + 0.6, 14, 0.02);
+      sino(t0 + 0.6, real ? 523.3 : 659.3, 0.05);
+    } else if (tipo === 'sinos') { sino(t0, 880, 0.06); sino(t0 + 0.38, 1318.5, 0.045); }
+    else if (tipo === 'coro') {
+      const dur = duracao || 5;
+      coro([220, 277.2, 329.6, 440], t0, dur, 0.04);
+      coro([554.4, 659.3], t0 + 0.5, dur - 0.5, 0.025);
     } else if (tipo === 'digital') {
-      [523, 784, 1047, 1568, 2093, 1568, 1047, 1568, 2093, 2637, 3136, 2637, 2093, 2637, 3136, 4186].forEach((f, i) => tom(f, 'square', t0 + i * 0.045, 0.12, 0.018, 0.25));
+      [523, 784, 1047, 1568, 2093, 1568, 1047, 1568, 2093, 2637, 3136, 2637].forEach((f, i) => { oscilador('square', f, t0 + i * 0.05, 0.002, 0.012, 0.09, 0, 0.3, 0); oscilador('sine', f / 2, t0 + i * 0.05, 0.002, 0.02, 0.12, 0, 0.3, 0); });
     }
   } catch (e) {
   }
+}
+
+function encaixesDoCinema(liga, indice) {
+  const deslocamento = cinemaLongo(liga) ? 1.45 : 0;
+  const momentos = facetasDaLiga(indice).map((f) => 0.95 + f.atraso + 0.5 + deslocamento).sort((a, b) => a - b);
+  const grupos = [];
+  momentos.forEach((m) => {
+    const ultimo = grupos[grupos.length - 1];
+    if (ultimo && m - ultimo.quando < 0.12) ultimo.quantos += 1;
+    else grupos.push({ quando: m, quantos: 1 });
+  });
+  return grupos.map((g, i) => [g.quando, Math.min(1.1, 0.42 + g.quantos * 0.13), 0.82 + (i / Math.max(1, grupos.length - 1)) * 0.45]);
 }
 
 function chaveDaLiga() {
@@ -742,24 +856,49 @@ function htmlDaLigaAtual(fe) {
 }
 
 function cartaoDaLigaNoPerfil(fe, dono, cargo) {
-  const pos = posicoesDaPessoa(fe, cargo || null)[0];
+  const posicoes = posicoesDaPessoa(fe, cargo || null);
+  const pos = posicoes[0];
+  const outros = posicoes.slice(1).map((p) => `<span class="liga-cartao-outro" title="${escaparDaLiga(nomeDaDivisao(p))}">${emblemaDaLiga(p.indice, { pedestal: false })}</span>`).join('');
   return `
     <button type="button" class="liga-perfil ${classesDaLiga(pos.liga)}" data-liga-fe="${pos.fe}" data-liga-dono="${escaparDaLiga(dono || '')}" data-liga-cargo="${escaparDaLiga(cargo || '')}" style="${estiloDaLiga(pos.liga)}">
       <span class="liga-perfil-emblema">${emblemaDaLiga(pos.indice, { pedestal: false })}</span>
       <span class="liga-perfil-textos"><small>${textoDaLiga(pos.especial ? 'Rank especial' : (pos.liga.secreto ? 'Rank secreto' : 'Liga'))}</small><strong>${nomeDaDivisao(pos)}</strong><small>${textoDaLiga('{n} de Fé no total', { n: numeroDaLiga(pos.fe) })}</small></span>
+      ${outros ? `<span class="liga-cartao-outros">${outros}</span>` : ''}
       <span class="liga-perfil-ver">${textoDaLiga('Ver liga')}</span>
     </button>`;
 }
 
+function htmlDosRanksNaFoto(fe, dono, cargo) {
+  const posicoes = posicoesDaPessoa(fe, cargo);
+  return `<div class="perfil-ranks${posicoes.length > 1 ? ' varios' : ''}">${posicoes.map((p, i) => `<button type="button" class="perfil-rank${p.especial ? ' especial' : ''}" data-liga-fe="${p.fe}" data-liga-dono="${escaparDaLiga(dono || '')}" data-liga-cargo="${escaparDaLiga(cargo || '')}" data-liga-qual="${i}" title="${escaparDaLiga(nomeDaDivisao(p))}" aria-label="${escaparDaLiga(nomeDaDivisao(p))}">${emblemaDaLiga(p.indice, { pedestal: false })}</button>`).join('')}</div>`;
+}
+
+function colocarRanksNaFoto(lugar, fe, dono, cargo) {
+  const antigo = lugar.querySelector('.perfil-ranks');
+  if (antigo) antigo.remove();
+  const capa = lugar.querySelector('.perfil-publico-capa');
+  if (capa) {
+    capa.insertAdjacentHTML('beforeend', htmlDosRanksNaFoto(fe, dono, cargo));
+    capa.classList.add('com-ranks');
+    return;
+  }
+  const topo = lugar.querySelector('.painel-topo');
+  if (!topo) return;
+  const nome = topo.querySelector('.painel-nome');
+  if (nome) nome.insertAdjacentHTML('beforebegin', htmlDosRanksNaFoto(fe, dono, cargo));
+  else topo.insertAdjacentHTML('beforeend', htmlDosRanksNaFoto(fe, dono, cargo));
+}
+
 function atualizarLigaNoPerfil(lugar, perfilId, fe, dono, ehEu) {
   if (!lugar) return;
-  const trocar = (cargo) => {
+  const aplicar = (cargo) => {
     const atual = lugar.querySelector('.liga-perfil');
-    if (!cargo || !atual) return;
-    atual.outerHTML = cartaoDaLigaNoPerfil(fe, dono, cargo);
+    if (atual && cargo) atual.outerHTML = cartaoDaLigaNoPerfil(fe, dono, cargo);
+    colocarRanksNaFoto(lugar, fe, dono, cargo || null);
   };
-  if (ehEu) { carregarMeuCargoNaLiga().then(() => trocar(meuCargoNaLiga())); return; }
-  cargosDosPerfis([perfilId]).then((mapa) => trocar(mapa[perfilId]));
+  aplicar(null);
+  if (ehEu) { carregarMeuCargoNaLiga().then(() => { if (meuCargoNaLiga()) aplicar(meuCargoNaLiga()); }); return; }
+  cargosDosPerfis([perfilId]).then((mapa) => { if (mapa[perfilId]) aplicar(mapa[perfilId]); });
 }
 
 function enfeitarRankingComCargos(lista) {
@@ -1044,18 +1183,19 @@ function htmlDoCinemaDaLiga(pos) {
     <span class="liga-cinema-pular">${escaparDaLiga(textoDaLiga('Toque para pular'))}</span>`;
 }
 
-function sonsDoCinema(liga, inicio) {
+function sonsDoCinema(pos, inicio) {
   const s = (tipo, ms, dur) => agendarNaTela(() => somDaLiga(tipo, 0, dur), inicio + ms);
-  const tema = temaDaLiga(liga);
+  const tema = temaDaLiga(pos.liga);
+  encaixesDoCinema(pos.liga, pos.indice).forEach(([quando, forca, tom]) => agendarNaTela(() => somDaLiga('encaixe', 0, undefined, forca, tom), inicio + quando * 1000));
   if (tema === 'celestial') {
-    s('coro', 100, 6.2); s('varrida', 300); s('sinos', 1700); s('varrida', 2000); s('cristais', 2400); s('brilho', 3800); s('impacto', 4350); s('sinos', 4400);
+    s('coro', 100, 6.2); s('varrida', 300); s('sinos', 1700); s('varrida', 2000); s('brilho', 3800); s('impacto', 4350); s('sinos', 4500);
   } else if (tema === 'arquiteto') {
-    s('digital', 100); s('zumbido', 0, 6); s('varrida', 500); s('digital', 1300); s('cristais', 2400); s('brilho', 3600); s('impacto', 4350); s('digital', 4500);
+    s('digital', 100); s('zumbido', 0, 6); s('varrida', 500); s('digital', 1300); s('brilho', 3600); s('impacto', 4350);
   } else if (tema === 'fundador') {
-    s('zumbido', 0, 6); s('coro', 200, 6); s('varrida', 600); s('sinos', 1800); s('cristais', 2400); s('brilho', 3800); s('impacto', 4350); s('sinos', 4450);
+    s('zumbido', 0, 6); s('coro', 200, 6); s('varrida', 600); s('sinos', 1800); s('brilho', 3800); s('impacto', 4350); s('sinos', 4500);
   } else {
-    s('zumbido', 0, tema === 'empireo' ? 3.8 : 3.4); s('varrida', 150); s('cristais', 950); s('brilho', 2200); s('impacto', 2450);
-    if (tema === 'empireo') { s('coro', 300, 3.6); s('sinos', 2500); }
+    s('zumbido', 0, tema === 'empireo' ? 3.8 : 3.4); s('varrida', 150); s('brilho', 2200); s('impacto', 2450);
+    if (tema === 'empireo') { s('coro', 300, 3.6); s('sinos', 2550); }
   }
 }
 
@@ -1117,7 +1257,7 @@ function mostrarSubidaDeLiga(de, para, fe, opcoes) {
   const inicioDoRasgo = o.repetir ? 150 : 1100;
   if (!o.repetir) {
     agendarNaTela(() => { tela.querySelector('.liga-tela-barra-cheia').style.width = '100%'; somDaLiga('barra'); }, 250);
-    agendarNaTela(() => { tela.querySelector('.liga-tela-pips').classList.add('cheias'); [0, 0.08, 0.16, 0.24, 0.32].forEach((d) => somDaLiga('estrela', d)); }, 750);
+    agendarNaTela(() => { tela.querySelector('.liga-tela-pips').classList.add('cheias'); [0, 0.11, 0.22, 0.33, 0.44].forEach((d, i) => somDaLiga('encaixe', d, undefined, 0.55 + i * 0.1, 1.2 + i * 0.12)); }, 750);
   }
   agendarNaTela(() => { tela.classList.add('rasgando'); somDaLiga('rasgo'); }, inicioDoRasgo);
   agendarNaTela(() => {
@@ -1130,7 +1270,7 @@ function mostrarSubidaDeLiga(de, para, fe, opcoes) {
       else cena3d = c;
     }).catch(() => cinema.classList.remove('em-3d'));
   }, inicioDoRasgo + 250);
-  sonsDoCinema(depois.liga, inicioDoRasgo + 250);
+  sonsDoCinema(depois, inicioDoRasgo + 250);
   agendarNaTela(final, inicioDoRasgo + 250 + duracao);
 }
 
@@ -1161,14 +1301,39 @@ document.addEventListener('click', (evento) => {
   const fe = Number(botao.dataset.ligaFe) || 0;
   const dono = botao.dataset.ligaDono || '';
   const cargo = botao.dataset.ligaCargo || null;
+  const qual = Number(botao.dataset.ligaQual) || 0;
   const posicoes = posicoesDaPessoa(fe, cargo);
-  if (dono && !menosMovimentoNaLiga()) reverAnimacaoDaLiga(fe, dono, posicoes, 0);
-  else abrirTelaDaLiga(fe, { dono, posicoes });
+  if (dono && !menosMovimentoNaLiga()) reverAnimacaoDaLiga(fe, dono, posicoes, qual);
+  else abrirTelaDaLiga(fe, { dono, posicoes, qual });
 });
 
 function seloDaLigaNoRanking(fe, cargo) {
   const pos = posicoesDaPessoa(fe, cargo || null)[0];
   return `<span class="ranking-liga${pos.especial ? ' especial' : ''}" title="${escaparDaLiga(nomeDaDivisao(pos))}">${emblemaDaLiga(pos.indice, { pedestal: false })}</span>`;
+}
+
+const CADEADO_DA_LIGA = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2.5" fill="currentColor"/><path d="M8 11 V8 a4 4 0 0 1 8 0 V11" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="12" cy="16" r="1.6" fill="#0b0d22"/></svg>';
+
+function htmlDaVitrineDasLigas(atual, escolhida, quantos) {
+  const liga = LIGAS_DA_FE[escolhida] || LIGAS_DA_FE[0];
+  const porcentagem = textoDaPorcentagem(posicaoNaLiga(liga.minimo));
+  const botoes = LIGAS_DA_FE.map((l, i) => {
+    const bloqueada = i > atual;
+    return `<button type="button" class="vitrine-liga${i === atual ? ' atual' : ''}${i === escolhida ? ' escolhida' : ''}${bloqueada ? ' bloqueada' : ''}" data-vitrine-liga="${i}" style="--liga:${l.cor}" aria-label="${escaparDaLiga(bloqueada ? textoDaLiga('Liga bloqueada') : textoDaLiga(l.nome))}"><span class="vitrine-liga-emblema">${emblemaDaLiga(i, { pedestal: false })}</span>${bloqueada ? `<span class="vitrine-liga-cadeado">${CADEADO_DA_LIGA}</span>` : ''}</button>`;
+  }).join('');
+  return `
+    <div class="vitrine-ligas-moldura"><div class="vitrine-ligas" id="vitrine-ligas">${botoes}</div></div>
+    <div class="vitrine-titulo" style="--liga:${liga.cor};--liga-clara:${liga.claro}">
+      <strong>${textoDaLiga('Liga {nome}', { nome: textoDaLiga(liga.nome) })}</strong>
+      <small>${quantos === 1 ? textoDaLiga('1 pessoa nesta liga') : textoDaLiga('{n} pessoas nesta liga', { n: quantos })}${porcentagem ? ` · ${porcentagem}` : ''}</small>
+    </div>`;
+}
+
+function centralizarVitrineDasLigas(lugar) {
+  const vitrine = lugar.querySelector('#vitrine-ligas');
+  const escolhida = vitrine && vitrine.querySelector('.vitrine-liga.escolhida');
+  if (!vitrine || !escolhida) return;
+  vitrine.scrollLeft = escolhida.offsetLeft - vitrine.clientWidth / 2 + escolhida.clientWidth / 2;
 }
 
 function htmlDoTopoDaLiga(indice) {

@@ -290,10 +290,137 @@ export async function cinema3dDaLiga(lugar, dados) {
       asas.push(grupo);
     });
   }
+  const veludo = new THREE.MeshPhysicalMaterial({ color: 0x8c1027, roughness: 0.6, sheen: 1, sheenRoughness: 0.32, sheenColor: new THREE.Color(0xff7a92), side: THREE.DoubleSide, envMapIntensity: 0.55 });
   if (dados.coroa) {
-    const coroa = new THREE.Mesh(extrudar(formaDoCaminho(dados.coroa), 0.08), metal);
+    const coroa = new THREE.Group();
+    coroa.add(new THREE.Mesh(extrudar(formaDoCaminho(dados.coroa), 0.08), metal));
+    if (dados.gorro) {
+      const gorro = new THREE.Mesh(extrudar(formaDoCaminho(dados.gorro), 0.05), veludo);
+      gorro.position.z = -0.05;
+      const aro = new THREE.Mesh(extrudar(formaDoCaminho('M74 16 H126 V20 H74 Z'), 0.1), metal);
+      const globo = new THREE.Mesh(new THREE.SphereGeometry(0.065, 24, 16), metal);
+      const p = para3d(100, -16);
+      globo.position.set(p.x, p.y, 0.04);
+      const cruzV = new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.17, 0.035), metal);
+      cruzV.position.set(p.x, p.y + 0.15, 0.04);
+      const cruzH = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.035, 0.035), metal);
+      cruzH.position.set(p.x, p.y + 0.17, 0.04);
+      coroa.add(gorro, aro, globo, cruzV, cruzH);
+      const centro = para3d(100, 14);
+      coroa.scale.set(1.5, 1.5, 1.5);
+      coroa.position.set(centro.x * -0.5, centro.y * -0.5, 0);
+    }
     coroa.position.z = -0.02;
     emblema.add(coroa);
+  }
+  const mantos = [];
+  if (dados.manto) {
+    const arminho = new THREE.MeshPhysicalMaterial({ color: 0xf7f2ea, roughness: 0.92, sheen: 1, sheenRoughness: 0.6, sheenColor: new THREE.Color(0xffffff), side: THREE.DoubleSide });
+    const pintas = new THREE.MeshStandardMaterial({ color: 0x1b1018, roughness: 0.7 });
+    [-1, 1].forEach((lado) => {
+      const grupo = new THREE.Group();
+      const pano = new THREE.Mesh(extrudar(formaDoCaminho(dados.manto[0]), 0.05), veludo);
+      const forro = new THREE.Mesh(extrudar(formaDoCaminho(dados.manto[1]), 0.02), arminho);
+      forro.position.z = 0.06;
+      grupo.add(pano, forro);
+      for (let i = 0; i < 9; i += 1) {
+        const v = para3d(20 + (i % 3) * 22 + (Math.floor(i / 3) % 2) * 10, 75 + Math.floor(i / 3) * 40);
+        const pinta = new THREE.Mesh(new THREE.ConeGeometry(0.035, 0.13, 4), pintas);
+        pinta.position.set(v.x, v.y, 0.1);
+        grupo.add(pinta);
+      }
+      grupo.scale.x = lado;
+      grupo.position.z = -0.42;
+      grupo.userData.lado = lado;
+      emblema.add(grupo);
+      mantos.push(grupo);
+    });
+  }
+  if (dados.cetros) {
+    [-1, 1].forEach((lado) => {
+      const a = para3d(lado < 0 ? 16 : 184, 214);
+      const b = para3d(lado < 0 ? 184 : 16, -10);
+      const comprimento = Math.hypot(b.x - a.x, b.y - a.y);
+      const z = -0.3 + lado * 0.04;
+      const haste = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.065, comprimento, 20), metal);
+      haste.position.set((a.x + b.x) / 2, (a.y + b.y) / 2, z);
+      haste.rotation.z = Math.atan2(b.y - a.y, b.x - a.x) - Math.PI / 2;
+      const globo = new THREE.Mesh(new THREE.SphereGeometry(0.18, 32, 20), metal);
+      globo.position.set(b.x, b.y, z);
+      const cruzV = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.3, 0.06), metal);
+      cruzV.position.set(b.x, b.y + 0.3, z);
+      const cruzH = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.06, 0.06), metal);
+      cruzH.position.set(b.x, b.y + 0.34, z);
+      emblema.add(haste, globo, cruzV, cruzH);
+    });
+  }
+  const torres = [];
+  if (dados.torres) {
+    const janela = new THREE.MeshBasicMaterial({ color: 0x5ff3ff, toneMapped: false });
+    [-1, 1].forEach((lado) => {
+      const grupo = new THREE.Group();
+      grupo.add(new THREE.Mesh(extrudar(formaDoCaminho(dados.torres), 0.2), metal));
+      [[8, 106], [8, 142]].forEach(([x, y]) => {
+        const v = para3d(x, y);
+        const vidro = new THREE.Mesh(new THREE.PlaneGeometry(0.15, 0.38), janela);
+        vidro.position.set(v.x, v.y, 0.24);
+        grupo.add(vidro);
+      });
+      const ponta = para3d(8, 30);
+      const cruzV = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.3, 0.04), metal);
+      cruzV.position.set(ponta.x, ponta.y, 0.1);
+      const cruzH = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.04, 0.04), metal);
+      cruzH.position.set(ponta.x, ponta.y + 0.05, 0.1);
+      grupo.add(cruzV, cruzH);
+      grupo.scale.x = lado;
+      grupo.position.z = -0.24;
+      emblema.add(grupo);
+      torres.push(grupo);
+    });
+  }
+  const aneis = [];
+  if (dados.anelHolografico || dados.aureolaDupla) {
+    const corDoAnel = dados.anelHolografico ? 0x5ff3ff : corDoMetal;
+    [[2.4, 0.016], [2.27, 0.008]].forEach(([raio, grossura], i) => {
+      const anelDeLuz = new THREE.Mesh(new THREE.TorusGeometry(raio, grossura, 8, 160), new THREE.MeshBasicMaterial({ color: corDoAnel, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, toneMapped: false, depthWrite: false }));
+      anelDeLuz.position.z = -0.32;
+      anelDeLuz.userData.sentido = i ? -1 : 1;
+      emblema.add(anelDeLuz);
+      aneis.push(anelDeLuz);
+    });
+  }
+  const estrelas = [];
+  if (dados.estrelasEmOrbita) {
+    const texturaDaEstrela = texturaRedonda('#ffffff');
+    for (let i = 0; i < 12; i += 1) {
+      const estrela = new THREE.Sprite(new THREE.SpriteMaterial({ map: texturaDaEstrela, blending: THREE.AdditiveBlending, transparent: true, depthWrite: false, toneMapped: false, opacity: 0, color: new THREE.Color().setHSL(i / 12, 0.9, 0.82) }));
+      estrela.userData.angulo = (i / 12) * Math.PI * 2;
+      estrela.userData.fase = i * 0.7;
+      emblema.add(estrela);
+      estrelas.push(estrela);
+    }
+  }
+  const nuvensDaBase = [];
+  if (dados.nuvensNaBase) {
+    const texturaDaNuvemDaBase = texturaDeCanvas(128, 128, (ctx) => {
+      const grad = ctx.createRadialGradient(54, 50, 4, 64, 64, 62);
+      grad.addColorStop(0, 'rgba(255,255,255,1)');
+      grad.addColorStop(0.55, 'rgba(246,240,255,0.95)');
+      grad.addColorStop(0.85, 'rgba(214,200,246,0.55)');
+      grad.addColorStop(1, 'rgba(214,200,246,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 128, 128);
+    });
+    dados.nuvensNaBase.forEach(([x, y, r], i) => {
+      const v = para3d(x, y);
+      const nuvem = new THREE.Sprite(new THREE.SpriteMaterial({ map: texturaDaNuvemDaBase, transparent: true, depthWrite: false, opacity: 0 }));
+      nuvem.scale.setScalar((r * 2.6) * ESCALA);
+      nuvem.position.set(v.x, v.y, 0.3 + (i % 3) * 0.04);
+      nuvem.userData.y0 = v.y;
+      nuvem.userData.fase = i * 0.9;
+      emblema.add(nuvem);
+      nuvensDaBase.push(nuvem);
+    });
   }
   if (dados.ramos) {
     const folha = new THREE.Shape();
@@ -457,6 +584,29 @@ export async function cinema3dDaLiga(lugar, dados) {
     asas.forEach((grupo) => {
       const aberta = especial ? saida(faixa(t, 2.0, 2.9)) : 1;
       grupo.rotation.z = grupo.userData.lado < 0 ? -1.05 * (1 - aberta) : 1.05 * (1 - aberta);
+    });
+    mantos.forEach((grupo) => {
+      const aberto = saida(faixa(t, 1.9, 3.0));
+      grupo.rotation.y = -grupo.userData.lado * 1.35 * (1 - aberto);
+    });
+    torres.forEach((grupo) => {
+      const sobe = saida(faixa(t, 1.9, 3.1));
+      grupo.position.y = -3.2 * (1 - sobe);
+    });
+    aneis.forEach((anelDeLuz) => {
+      anelDeLuz.material.opacity = faixa(t, impacto - 0.4, impacto + 0.2) * (0.6 + Math.sin(t * 3 + anelDeLuz.userData.sentido) * 0.2);
+      anelDeLuz.rotation.z = t * 0.25 * anelDeLuz.userData.sentido;
+    });
+    estrelas.forEach((estrela) => {
+      const angulo = estrela.userData.angulo + t * 0.35;
+      estrela.position.set(Math.cos(angulo) * 2.5, Math.sin(angulo) * 2.5, -0.2);
+      const pisca = 0.55 + Math.sin(t * 4 + estrela.userData.fase) * 0.45;
+      estrela.material.opacity = faixa(t, impacto - 0.2, impacto + 0.6) * pisca;
+      estrela.scale.setScalar(0.18 + pisca * 0.16);
+    });
+    nuvensDaBase.forEach((nuvem) => {
+      nuvem.material.opacity = faixa(t, 1.6, 2.6) * 0.96;
+      nuvem.position.y = nuvem.userData.y0 + Math.sin(t * 0.9 + nuvem.userData.fase) * 0.03;
     });
     pecas.forEach((p) => {
       const fase = (t - p.atraso) / 0.8;

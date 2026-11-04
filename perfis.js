@@ -1334,6 +1334,48 @@ function marcarAbaDoRanking() {
   document.querySelectorAll('.ranking-periodo').forEach((b) => b.classList.toggle('active', b.dataset.periodo === periodoDoRanking));
   const periodos = document.querySelector('.ranking-periodos');
   if (periodos) periodos.style.display = abaDoRanking === 'liga' ? 'none' : '';
+  const abas = document.getElementById('ranking-abas');
+  if (abas) abas.style.display = abaDoRanking === 'liga' ? 'none' : '';
+}
+
+let linhasDaMinhaLiga = [];
+let minhaLigaNoRanking = 0;
+let ligaEscolhidaNoRanking = null;
+
+async function desenharMinhaLiga(lista) {
+  const escolhida = ligaEscolhidaNoRanking === null ? minhaLigaNoRanking : ligaEscolhidaNoRanking;
+  const daLiga = linhasDaMinhaLiga.filter((l) => indiceDaLiga(l.faith) === escolhida).map((l, i) => Object.assign({}, l, { rank: i + 1 }));
+  const podeAbrirPerfil = typeof abrirPerfilPublico === 'function';
+  const fotos = typeof enderecosAssinados === 'function'
+    ? await enderecosAssinados('avatars', daLiga.filter((l) => !l.is_me).map((l) => l.avatar_path))
+    : {};
+  const itens = daLiga.map((l) => ({
+    posicao: l.rank, nome: l.display_name, avatar: l.avatar_key, fe: l.faith, destaque: l.is_me,
+    fotoUrl: l.is_me ? membroAtivo.fotoUrl : (fotos[l.avatar_path] || ''),
+    publicoId: podeAbrirPerfil ? l.profile_id : null, perfilId: l.profile_id,
+  }));
+  lista.innerHTML = htmlDaVitrineDasLigas(minhaLigaNoRanking, escolhida, itens.length)
+    + htmlDoRanking(itens, tr('Ainda não há ninguém nesta liga.'))
+    + `<button type="button" class="ranking-voltar-geral" id="ranking-voltar-geral">${tr('Ver o ranking da família e o global')}</button>`;
+  ligarCliquesDoRanking(lista);
+  if (typeof enfeitarLinhasDoRanking === 'function') enfeitarLinhasDoRanking(lista, false);
+  if (typeof enfeitarRankingComCargos === 'function') enfeitarRankingComCargos(lista);
+  requestAnimationFrame(() => centralizarVitrineDasLigas(lista));
+  lista.querySelectorAll('[data-vitrine-liga]').forEach((botao) => botao.addEventListener('click', () => {
+    if (botao.classList.contains('bloqueada')) {
+      botao.classList.remove('balanca');
+      void botao.offsetWidth;
+      botao.classList.add('balanca');
+      if (typeof somDaLiga === 'function') somDaLiga('encaixe', 0, undefined, 0.35, 0.7);
+      if (typeof mostrarAvisoTrilhas === 'function') mostrarAvisoTrilhas(tr('Essa liga ainda está bloqueada. Continue juntando Fé!'));
+      return;
+    }
+    ligaEscolhidaNoRanking = Number(botao.dataset.vitrineLiga) || 0;
+    if (typeof somDaLiga === 'function') somDaLiga('encaixe', 0, undefined, 0.5, 1.2);
+    desenharMinhaLiga(lista);
+  }));
+  const voltar = lista.querySelector('#ranking-voltar-geral');
+  if (voltar) voltar.addEventListener('click', () => { abaDoRanking = 'familia'; marcarAbaDoRanking(); renderizarRanking(); });
 }
 
 function seloDaLigaNaLinha(fe) {
@@ -1413,13 +1455,16 @@ async function renderizarRanking() {
       const { error } = resposta;
       let data = resposta.data || [];
       let topoDaLiga = '';
+      if (error) throw error;
       if (naLiga) {
         const eu = data.find((l) => l.is_me);
-        const minhaLiga = indiceDaLiga(eu ? eu.faith : 0);
-        data = data.filter((l) => indiceDaLiga(l.faith) === minhaLiga).map((l, i) => Object.assign({}, l, { rank: i + 1 }));
-        topoDaLiga = htmlDoTopoDaLiga(minhaLiga);
+        linhasDaMinhaLiga = data;
+        minhaLigaNoRanking = indiceDaLiga(eu ? eu.faith : 0);
+        if (ligaEscolhidaNoRanking === null || ligaEscolhidaNoRanking > minhaLigaNoRanking) ligaEscolhidaNoRanking = minhaLigaNoRanking;
+        if (typeof carregarPorcentagensDasLigas === 'function') await carregarPorcentagensDasLigas();
+        await desenharMinhaLiga(lista);
+        return;
       }
-      if (error) throw error;
       const podeAbrirPerfil = typeof abrirPerfilPublico === 'function';
       const fotos = typeof enderecosAssinados === 'function'
         ? await enderecosAssinados('avatars', (data || []).filter((l) => !l.is_me).map((l) => l.avatar_path))

@@ -197,35 +197,66 @@ function medalhaSvg(trilha, opcoes) {
   const id = `medalha-${++contadorDeMedalhas}`;
   const cx = 60;
   const cy = 98;
-  const cor = conquistada ? estilo.cor : '#475569';
-  const corClara = misturarCor(cor, '#ffffff', conquistada ? 0.45 : 0.25);
-  const corEscura = misturarCor(cor, '#000000', 0.45);
+  const cor = conquistada ? estilo.cor : '#4b5566';
+  const corClara = misturarCor(cor, '#ffffff', conquistada ? 0.5 : 0.25);
+  const corEscura = misturarCor(cor, '#000000', 0.5);
+  const corFunda = misturarCor(cor, '#000000', 0.72);
   const metal = conquistada
-    ? '<stop offset="0" stop-color="#fffbe6"/><stop offset="0.3" stop-color="#facc15"/><stop offset="0.62" stop-color="#b7791f"/><stop offset="1" stop-color="#fde68a"/>'
-    : '<stop offset="0" stop-color="#94a3b8"/><stop offset="0.55" stop-color="#475569"/><stop offset="1" stop-color="#64748b"/>';
+    ? '<stop offset="0" stop-color="#fffbe6"/><stop offset="0.18" stop-color="#ffe7a1"/><stop offset="0.42" stop-color="#e2ad3c"/><stop offset="0.62" stop-color="#9a6514"/><stop offset="0.8" stop-color="#f1c862"/><stop offset="1" stop-color="#fff2c2"/>'
+    : '<stop offset="0" stop-color="#c3cad5"/><stop offset="0.4" stop-color="#6b7584"/><stop offset="0.7" stop-color="#3b4350"/><stop offset="1" stop-color="#8a94a3"/>';
+  const relevo = conquistada
+    ? '<stop offset="0" stop-color="#fff8d8"/><stop offset="0.5" stop-color="#f3c454"/><stop offset="1" stop-color="#a86f17"/>'
+    : '<stop offset="0" stop-color="#d7dde6"/><stop offset="1" stop-color="#7d8796"/>';
   const forma = formaDaMedalha(estilo.forma, cx, cy);
   const emblema = EMBLEMAS_DAS_MEDALHAS[estilo.emblema] || EMBLEMAS_DAS_MEDALHAS.estrela;
-  const corDoEmblema = conquistada ? '#ffffff' : '#94a3b8';
+  const listras = [36, 42, 48].map((x) => `<path d="M${x} 0 L${x + 14} 52" stroke="${corClara}" stroke-width="1.6" opacity="0.5"/><path d="M${120 - x} 0 L${106 - x} 52" stroke="${corClara}" stroke-width="1.6" opacity="0.5"/>`).join('');
   return `
     <svg class="medalha-svg ${conquistada ? 'medalha-conquistada' : 'medalha-trancada'} ${classe}" viewBox="0 0 120 142" role="img" aria-label="${titulo}">
       <defs>
         <linearGradient id="${id}-metal" x1="0" y1="0" x2="1" y2="1">${metal}</linearGradient>
-        <radialGradient id="${id}-disco" cx="0.38" cy="0.32" r="0.8"><stop offset="0" stop-color="${corClara}"/><stop offset="0.55" stop-color="${cor}"/><stop offset="1" stop-color="${corEscura}"/></radialGradient>
-        <linearGradient id="${id}-fita" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${corEscura}"/><stop offset="1" stop-color="${cor}"/></linearGradient>
+        <linearGradient id="${id}-relevo" x1="0" y1="0" x2="0.4" y2="1">${relevo}</linearGradient>
+        <radialGradient id="${id}-disco" cx="0.36" cy="0.3" r="0.85"><stop offset="0" stop-color="${corClara}"/><stop offset="0.45" stop-color="${cor}"/><stop offset="0.85" stop-color="${corEscura}"/><stop offset="1" stop-color="${corFunda}"/></radialGradient>
+        <linearGradient id="${id}-fita" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${corFunda}"/><stop offset="0.25" stop-color="${cor}"/><stop offset="0.5" stop-color="${corClara}"/><stop offset="0.75" stop-color="${cor}"/><stop offset="1" stop-color="${corFunda}"/></linearGradient>
+        <linearGradient id="${id}-dobra" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0.45"/><stop offset="0.35" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.35"/></linearGradient>
+        <radialGradient id="${id}-gloss" cx="0.4" cy="0.2" r="0.7"><stop offset="0" stop-color="#fff" stop-opacity="0.55"/><stop offset="0.6" stop-color="#fff" stop-opacity="0.05"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+        <filter id="${id}-alto" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="2.2" result="borrado"/>
+          <feSpecularLighting in="borrado" surfaceScale="5" specularConstant="1.15" specularExponent="22" lighting-color="#ffffff" result="brilho"><fePointLight x="10" y="-30" z="90"/></feSpecularLighting>
+          <feComposite in="brilho" in2="SourceAlpha" operator="in" result="brilhoDentro"/>
+          <feComposite in="SourceGraphic" in2="brilhoDentro" operator="arithmetic" k1="0" k2="1" k3="0.75" k4="0"/>
+        </filter>
+        <filter id="${id}-sombra" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="3" stdDeviation="2.6" flood-color="#000" flood-opacity="0.55"/></filter>
         <clipPath id="${id}-corte">${forma}</clipPath>
       </defs>
-      <g class="medalha-fita">
-        <polygon points="30,2 54,2 68,54 52,60" fill="url(#${id}-fita)"/>
-        <polygon points="90,2 66,2 52,54 68,60" fill="url(#${id}-fita)"/>
-        <path d="M42 2 L60 56 M78 2 L60 56" stroke="${corClara}" stroke-width="3" opacity="0.55"/>
+      <g class="medalha-fita" filter="url(#${id}-sombra)">
+        <path d="M28 0 H56 L68 52 L60 58 L50 50 Z" fill="url(#${id}-fita)"/>
+        <path d="M92 0 H64 L52 52 L60 58 L70 50 Z" fill="url(#${id}-fita)"/>
+        <g clip-path="none">${listras}</g>
+        <path d="M28 0 H56 L68 52 L60 58 L50 50 Z" fill="url(#${id}-dobra)"/>
+        <path d="M92 0 H64 L52 52 L60 58 L70 50 Z" fill="url(#${id}-dobra)"/>
+        <path d="M52 52 L60 58 L68 52" fill="none" stroke="${corFunda}" stroke-width="1.2" opacity="0.7"/>
       </g>
-      <circle cx="60" cy="58" r="7" fill="url(#${id}-metal)" stroke="${corEscura}" stroke-width="1.2"/>
-      <g class="medalha-corpo">
-        <g fill="url(#${id}-metal)" stroke="${conquistada ? '#92400e' : '#334155'}" stroke-width="1.4">${forma}</g>
-        <circle cx="${cx}" cy="${cy}" r="27" fill="url(#${id}-disco)" stroke="${conquistada ? '#fef3c7' : '#94a3b8'}" stroke-width="2.4"/>
-        <circle cx="${cx}" cy="${cy}" r="22.5" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1" stroke-dasharray="1.2 3"/>
-        <svg x="${cx - 15}" y="${cy - 15}" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="${corDoEmblema}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="medalha-emblema">${emblema}</svg>
-        ${conquistada ? `<g clip-path="url(#${id}-corte)"><g transform="rotate(24 60 98)"><rect class="medalha-reflexo" x="0" y="20" width="20" height="160" fill="rgba(255,255,255,0.5)"/></g></g>` : ''}
+      <g filter="url(#${id}-alto)">
+        <ellipse cx="60" cy="58.5" rx="7.6" ry="5" fill="none" stroke="url(#${id}-metal)" stroke-width="3.2"/>
+        <rect x="56.5" y="60.5" width="7" height="6" rx="2" fill="url(#${id}-metal)"/>
+      </g>
+      <g class="medalha-corpo" filter="url(#${id}-sombra)">
+        <g filter="url(#${id}-alto)">
+          <g fill="url(#${id}-metal)" stroke="${conquistada ? '#7a4a0c' : '#2b313b'}" stroke-width="1.2">${forma}</g>
+        </g>
+        <g clip-path="url(#${id}-corte)"><g fill="none" stroke="${conquistada ? '#8a5a12' : '#2b313b'}" stroke-width="2.6" stroke-dasharray="0.9 1.5" opacity="0.65" transform="translate(60 98) scale(0.93) translate(-60 -98)">${forma.replace(/<(circle|polygon|path)/g, '<$1 fill="none"')}</g></g>
+        <circle cx="${cx}" cy="${cy}" r="29.5" fill="none" stroke="${conquistada ? '#7a4a0c' : '#2b313b'}" stroke-width="1.6" opacity="0.8"/>
+        <circle cx="${cx}" cy="${cy}" r="28" fill="url(#${id}-disco)"/>
+        <circle cx="${cx}" cy="${cy}" r="27.2" fill="none" stroke="#000" stroke-opacity="0.35" stroke-width="2" transform="translate(0.8 1)"/>
+        <circle cx="${cx}" cy="${cy}" r="27.4" fill="none" stroke="${conquistada ? '#fff3c8' : '#c3cad5'}" stroke-width="1.2" stroke-opacity="0.85"/>
+        <circle cx="${cx}" cy="${cy}" r="22.5" fill="none" stroke="#fff" stroke-opacity="0.22" stroke-width="0.8" stroke-dasharray="0.8 2.4"/>
+        <svg x="${cx - 16}" y="${cy - 16}" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="medalha-emblema">
+          <g stroke="#000" stroke-opacity="0.45" transform="translate(0.45 0.6)">${emblema}</g>
+          <g stroke="url(#${id}-relevo)">${emblema}</g>
+          <g stroke="#fff" stroke-opacity="${conquistada ? 0.55 : 0.3}" stroke-width="0.6" transform="translate(-0.25 -0.3)">${emblema}</g>
+        </svg>
+        <ellipse cx="${cx - 6}" cy="${cy - 12}" rx="20" ry="12" fill="url(#${id}-gloss)"/>
+        ${conquistada ? `<g clip-path="url(#${id}-corte)"><g transform="rotate(24 60 98)"><rect class="medalha-reflexo" x="0" y="20" width="20" height="160" fill="rgba(255,255,255,0.5)"/></g></g><path class="medalha-faisca" d="M38 72 l1.6 4.4 4.4 1.6 -4.4 1.6 -1.6 4.4 -1.6 -4.4 -4.4 -1.6 4.4 -1.6Z" fill="#fff"/>` : ''}
       </g>
     </svg>`;
 }
