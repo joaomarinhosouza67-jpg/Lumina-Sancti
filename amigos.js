@@ -546,6 +546,7 @@ async function abrirPerfilPublico(idDoPerfil) {
           </div>
         </div>
         ${acoesDoPerfil(dados)}
+        ${typeof cartaoDaLigaNoPerfil === 'function' ? cartaoDaLigaNoPerfil(Number(dados.fe || 0), dados.eu ? '' : dados.nome) : ''}
         <section class="perfil-secao">
           <h4 class="perfil-secao-titulo">Estatísticas</h4>
           <div class="perfil-publico-numeros">

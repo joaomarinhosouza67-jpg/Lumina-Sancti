@@ -1253,6 +1253,7 @@ async function abrirPainelDoPerfil(membroId) {
         <div><strong>${icone('chama')}${m.ofensiva}</strong><span>Ofensiva</span></div>
         <div><strong>${icone('medalha')}${insignias.length}</strong><span>Insígnias</span></div>
       </div>
+      ${typeof cartaoDaLigaNoPerfil === 'function' ? cartaoDaLigaNoPerfil(m.fe, membroAtivo && membroAtivo.id === membroId ? '' : m.nome) : ''}
       <h5 class="painel-subtitulo">Insígnias conquistadas</h5>
       ${itens
         ? `<ul class="painel-insignias">${itens}</ul>`
