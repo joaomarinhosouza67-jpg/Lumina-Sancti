@@ -1918,6 +1918,7 @@ function renderizarPlacarDasTrilhas(estado) {
     <div class="stat stat-ofensiva${estado.ofensiva > 0 ? ' acesa' : ''}"><span class="stat-icone">${icone('chama')}</span><span class="stat-valor">${estado.ofensiva}</span><small>${tt('ofensiva')}</small></div>
     <div class="stat stat-santidade${porcento <= 20 ? ' baixa' : ''}"><span class="stat-icone">${icone('pomba')}</span><span class="stat-valor">${santidadeTexto}</span><small>${tt('santidade')}</small><span class="stat-barra" aria-hidden="true"><span style="width:${porcento}%"></span></span></div>
   `;
+  if (typeof colocarLigaNasTrilhas === 'function') colocarLigaNasTrilhas(estado.fe);
 }
 
 let feDaRevisaoNaConta = FE_REVISAO;

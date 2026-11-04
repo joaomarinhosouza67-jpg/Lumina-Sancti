@@ -1316,6 +1316,8 @@ function abrirRanking() {
   const ehCrianca = membroAtivo.tipo === 'crianca';
   const abaGlobal = document.getElementById('ranking-aba-global');
   if (abaGlobal) abaGlobal.style.display = ehCrianca ? 'none' : '';
+  const abaDaLiga = document.getElementById('ranking-aba-liga');
+  if (abaDaLiga) abaDaLiga.style.display = ehCrianca || typeof indiceDaLiga !== 'function' ? 'none' : '';
   if (ehCrianca) abaDoRanking = 'familia';
   mudarDeView('view-ranking');
   marcarAbaDoRanking();
@@ -1328,6 +1330,12 @@ function marcarAbaDoRanking() {
   if (aviso) aviso.hidden = abaDoRanking !== 'familia' || cobrando;
   document.querySelectorAll('.ranking-aba').forEach((b) => b.classList.toggle('active', b.dataset.aba === abaDoRanking));
   document.querySelectorAll('.ranking-periodo').forEach((b) => b.classList.toggle('active', b.dataset.periodo === periodoDoRanking));
+  const periodos = document.querySelector('.ranking-periodos');
+  if (periodos) periodos.style.display = abaDoRanking === 'liga' ? 'none' : '';
+}
+
+function seloDaLigaNaLinha(fe) {
+  return typeof seloDaLigaNoRanking === 'function' && (periodoDoRanking === 'all' || abaDoRanking === 'liga') ? seloDaLigaNoRanking(fe) : '';
 }
 
 function estrelaDaFeNoRanking() {
@@ -1349,6 +1357,7 @@ function linhaDoRanking(item, ordem) {
       ${desenharAvatar(item.avatar, item.fotoUrl, 'pequeno')}
       <span class="ranking-nome">${escaparTexto(item.nome)}${item.destaque ? ' <small>você</small>' : ''}</span>
       ${typeof item.ofensiva === 'number' ? `<span class="ranking-numero ranking-ofensiva">${icone('chama')}${item.ofensiva}</span>` : ''}
+      ${seloDaLigaNaLinha(item.fe)}
       <span class="ranking-numero ranking-fe">${estrelaDaFeNoRanking()}${item.fe}</span>
     </${tag}>`;
 }
@@ -1364,6 +1373,7 @@ function lugarNoPodio(item) {
       <strong class="podio-nome">${escaparTexto(item.nome)}</strong>
       ${item.destaque ? '<small class="podio-voce">você</small>' : ''}
       <span class="podio-fe">${estrelaDaFeNoRanking()}${item.fe}</span>
+      ${seloDaLigaNaLinha(item.fe)}
       <span class="podio-degrau"><b>${item.posicao}</b></span>
     </${tag}>`;
 }
@@ -1393,10 +1403,20 @@ async function renderizarRanking() {
   if (!lista) return;
   lista.innerHTML = '<p class="perfis-carregando">Carregando...</p>';
   try {
-    if (abaDoRanking === 'global' && membroAtivo.tipo === 'adulto') {
-      const { data, error } = await supabaseCliente.rpc('leaderboard_global', {
-        _pid: membroAtivo.id, _period: periodoDoRanking, _limit: 50,
+    if ((abaDoRanking === 'global' || abaDoRanking === 'liga') && membroAtivo.tipo === 'adulto') {
+      const naLiga = abaDoRanking === 'liga' && typeof indiceDaLiga === 'function';
+      const resposta = await supabaseCliente.rpc('leaderboard_global', {
+        _pid: membroAtivo.id, _period: naLiga ? 'all' : periodoDoRanking, _limit: naLiga ? 100 : 50,
       });
+      const { error } = resposta;
+      let data = resposta.data || [];
+      let topoDaLiga = '';
+      if (naLiga) {
+        const eu = data.find((l) => l.is_me);
+        const minhaLiga = indiceDaLiga(eu ? eu.faith : 0);
+        data = data.filter((l) => indiceDaLiga(l.faith) === minhaLiga).map((l, i) => Object.assign({}, l, { rank: i + 1 }));
+        topoDaLiga = htmlDoTopoDaLiga(minhaLiga);
+      }
       if (error) throw error;
       const podeAbrirPerfil = typeof abrirPerfilPublico === 'function';
       const fotos = typeof enderecosAssinados === 'function'
@@ -1407,7 +1427,7 @@ async function renderizarRanking() {
         fotoUrl: l.is_me ? membroAtivo.fotoUrl : (fotos[l.avatar_path] || ''),
         publicoId: podeAbrirPerfil ? l.profile_id : null, perfilId: l.profile_id,
       }));
-      lista.innerHTML = htmlDoRanking(itens, 'Ainda não há ninguém no ranking global.');
+      lista.innerHTML = topoDaLiga + htmlDoRanking(itens, naLiga ? 'Ainda não há mais ninguém na sua liga.' : 'Ainda não há ninguém no ranking global.');
       ligarCliquesDoRanking(lista);
       if (typeof enfeitarLinhasDoRanking === 'function') enfeitarLinhasDoRanking(lista, false);
     } else {

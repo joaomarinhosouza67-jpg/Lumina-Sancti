@@ -8207,3 +8207,73 @@ body.catalogo-interno #view-home .atalhos-app { display: none; }
 .pastor-modo-estrelas i.ganha { background: #ffe066; }
 @media (max-width: 420px) { .pastor-modo > strong { font-size: 1.12rem; } .pastor-modo > small { font-size: 0.76rem; } .pastor-escolha-mel .personagem { width: 70px; height: 78px; } .pastor-curral { width: 35%; right: 2%; } }
 @media (prefers-reduced-motion: reduce) { .pastor-nuvem, .pastor-sol, .pastor-flor, .pastor-arvore, .pastor-estrelas, .pastor-vagalumes i, .pastor-modo, .pastor-modo-arte > span { animation: none; } }
+#trilhas-liga { width: 100%; }
+.liga-cartao { position: relative; display: flex; align-items: center; gap: 14px; width: 100%; margin: 12px 0 4px; padding: 12px 16px; overflow: hidden; border-radius: 20px; border: 1px solid color-mix(in srgb, var(--liga) 55%, transparent); background: linear-gradient(135deg, color-mix(in srgb, var(--liga) 24%, rgba(16, 20, 52, 0.96)), rgba(10, 13, 36, 0.96) 70%); color: #fff1c2; text-align: left; font-family: var(--font-text); cursor: pointer; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3); transition: transform 0.15s ease; }
+.liga-cartao:hover { transform: translateY(-2px); }
+.liga-cartao:active { transform: translateY(2px); }
+.liga-cartao::after { content: ''; position: absolute; top: 0; bottom: 0; left: -40%; width: 30%; background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.16), transparent); transform: skewX(-20deg); animation: ligaReflexo 5s ease-in-out infinite; pointer-events: none; }
+@keyframes ligaReflexo { 0%, 70% { left: -40%; } 100% { left: 130%; } }
+.liga-cartao-emblema { flex: none; width: 60px; height: 60px; animation: ligaFlutua 3s ease-in-out infinite; }
+.liga-cartao-emblema svg, .liga-item-emblema svg, .ranking-liga svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.liga-cartao-emblema svg { filter: drop-shadow(0 0 10px color-mix(in srgb, var(--liga) 60%, transparent)); }
+@keyframes ligaFlutua { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-4px) rotate(2deg); } }
+.liga-cartao-textos { display: flex; flex: 1; flex-direction: column; gap: 4px; min-width: 0; }
+.liga-cartao-textos > small:first-child { font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); }
+.liga-cartao-textos strong { font-family: var(--font-title); font-size: 1.35rem; line-height: 1.1; color: #fff; }
+.liga-cartao-barra { display: block; height: 8px; overflow: hidden; border-radius: 999px; background: rgba(255, 255, 255, 0.12); }
+.liga-cartao-barra span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--liga), #fff1c2); box-shadow: 0 0 10px color-mix(in srgb, var(--liga) 70%, transparent); }
+.liga-cartao-textos > small:last-child { font-size: 0.78rem; color: var(--text-muted); }
+.ligas-lista { display: flex; flex-direction: column-reverse; gap: 8px; margin-top: 12px; }
+.liga-item { display: flex; align-items: center; gap: 12px; padding: 8px 12px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.08); background: rgba(255, 255, 255, 0.04); }
+.liga-item.atual { border-color: var(--liga); background: color-mix(in srgb, var(--liga) 18%, transparent); box-shadow: 0 0 18px color-mix(in srgb, var(--liga) 35%, transparent); }
+.liga-item.futura .liga-item-emblema { filter: grayscale(0.85) brightness(0.55); }
+.liga-item.futura .liga-item-textos { opacity: 0.6; }
+.liga-item-emblema { flex: none; width: 44px; height: 44px; }
+.liga-item-textos { display: flex; flex: 1; flex-direction: column; }
+.liga-item-textos strong { color: #fff1c2; font-size: 1rem; }
+.liga-item-textos small { color: var(--text-muted); font-size: 0.78rem; }
+.liga-item-voce { padding: 3px 10px; border-radius: 999px; background: var(--liga); color: #1a1030; font-size: 0.75rem; font-weight: 900; }
+.ranking-liga { display: inline-flex; flex: none; width: 26px; height: 26px; }
+.podio-lugar .ranking-liga { width: 30px; height: 30px; margin: 2px auto 0; }
+.ranking-liga-topo { display: flex; align-items: center; gap: 12px; margin: 0 0 14px; padding: 12px 14px; border-radius: 18px; border: 1px solid color-mix(in srgb, var(--liga) 55%, transparent); background: linear-gradient(135deg, color-mix(in srgb, var(--liga) 22%, rgba(16, 20, 52, 0.96)), rgba(10, 13, 36, 0.96)); }
+.ranking-liga-topo .ranking-liga { width: 52px; height: 52px; }
+.ranking-liga-topo strong { display: block; font-family: var(--font-title); font-size: 1.25rem; color: #fff; }
+.ranking-liga-topo small { color: var(--text-muted); font-size: 0.82rem; }
+.liga-subida { position: fixed; inset: 0; z-index: 10050; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; font-family: var(--font-text); }
+.liga-subida.saindo { animation: ligaSai 0.4s ease forwards; }
+.liga-subida-fundo { position: absolute; inset: 0; background: radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--liga) 42%, #0b0f2e) 0%, #070a22 55%, #02030c 100%); animation: ligaAparece 0.5s ease both; }
+.liga-subida-feixes { position: absolute; left: 50%; top: 40%; width: 220vmax; height: 220vmax; margin: -110vmax 0 0 -110vmax; background: repeating-conic-gradient(from 0deg, color-mix(in srgb, var(--liga-clara) 20%, transparent) 0deg 5deg, transparent 5deg 15deg); -webkit-mask-image: radial-gradient(circle, #000 0, transparent 30%); mask-image: radial-gradient(circle, #000 0, transparent 30%); animation: ligaGira 16s linear infinite, ligaAparece 1s ease 1.7s both; }
+.liga-subida-palco { position: relative; width: min(58vw, 250px); height: min(58vw, 250px); perspective: 900px; }
+.liga-subida-palco::after { content: ''; position: absolute; left: 50%; top: 50%; width: 12px; height: 12px; margin: -6px; border-radius: 50%; background: #fff; opacity: 0; pointer-events: none; animation: ligaFlash 0.75s ease-out 1.6s both; }
+.liga-subida-antiga, .liga-subida-nova { position: absolute; inset: 0; }
+.liga-subida-antiga svg, .liga-subida-nova svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.liga-subida-antiga { animation: ligaAntigaEntra 0.6s cubic-bezier(0.3, 1.5, 0.5, 1) 0.2s both, ligaAntigaTreme 0.45s ease-in 1.15s forwards, ligaAntigaQuebra 0.3s ease-in 1.6s forwards; }
+.liga-subida-cacos { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
+.liga-subida-cacos i { position: absolute; left: -7px; top: -11px; width: 14px; height: 22px; background: linear-gradient(var(--liga-clara), var(--liga), var(--liga-escura)); clip-path: polygon(50% 0, 100% 55%, 35% 100%, 0 40%); opacity: 0; animation: ligaCaco 0.95s cubic-bezier(0.15, 0.7, 0.3, 1) 1.6s forwards; }
+.liga-subida-anel { position: absolute; inset: 8%; border-radius: 50%; border: 4px solid var(--liga-clara); opacity: 0; animation: ligaAnel 1.1s ease-out 1.7s forwards; }
+.liga-subida-anel.segundo { border-color: var(--liga); animation-delay: 1.95s; }
+.liga-subida-raios { position: absolute; inset: -45%; border-radius: 50%; background: repeating-conic-gradient(from 0deg, transparent 0deg 13deg, color-mix(in srgb, var(--liga-clara) 50%, transparent) 13deg 19deg); -webkit-mask-image: radial-gradient(circle, #000 18%, transparent 66%); mask-image: radial-gradient(circle, #000 18%, transparent 66%); opacity: 0; animation: ligaGira 10s linear infinite, ligaAparece 0.6s ease 1.8s forwards; }
+.liga-subida-nova { opacity: 0; animation: ligaNovaEntra 1s cubic-bezier(0.2, 1.3, 0.4, 1) 1.75s forwards, ligaNovaFlutua 3s ease-in-out 2.9s infinite; }
+.liga-subida-textos { z-index: 2; position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; margin-top: 22px; padding: 0 24px; text-align: center; }
+.liga-subida-textos small { font-size: 0.85rem; font-weight: 900; letter-spacing: 0.3em; text-transform: uppercase; color: var(--liga-clara); opacity: 0; animation: ligaTextoSobe 0.5s ease 2.3s forwards; }
+.liga-subida-textos strong { font-family: var(--font-title); font-size: clamp(2.4rem, 11vw, 3.6rem); line-height: 1.05; background: linear-gradient(100deg, var(--liga) 0%, #ffffff 42%, var(--liga-clara) 52%, var(--liga) 100%); background-size: 260% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.4)); opacity: 0; animation: ligaNome 0.75s cubic-bezier(0.2, 1.5, 0.4, 1) 2.45s forwards, ligaBrilhoNome 2.6s linear 3.2s infinite; }
+.liga-subida-textos span { max-width: 32ch; color: rgba(255, 255, 255, 0.86); opacity: 0; animation: ligaTextoSobe 0.5s ease 2.75s forwards; }
+.liga-subida-botao { margin-top: 16px; padding: 14px 44px; border: 0; border-radius: 16px; background: linear-gradient(180deg, #ffe48a, #e0a93a); color: #3a2208; font-family: var(--font-text); font-size: 1.05rem; font-weight: 900; cursor: pointer; box-shadow: 0 5px 0 #8a5a14; opacity: 0; animation: ligaTextoSobe 0.5s ease 3.05s forwards; }
+.liga-subida-botao:active { transform: translateY(4px); box-shadow: 0 1px 0 #8a5a14; }
+.liga-confete { position: absolute; top: -14px; width: 9px; height: 14px; border-radius: 2px; background: var(--cor); animation-name: ligaConfete; animation-timing-function: linear; animation-fill-mode: forwards; pointer-events: none; }
+@keyframes ligaAparece { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ligaGira { to { transform: rotate(360deg); } }
+@keyframes ligaSai { to { opacity: 0; transform: scale(1.04); } }
+@keyframes ligaFlash { 0% { opacity: 1; box-shadow: 0 0 0 0 rgba(255, 255, 255, 1); } 35% { opacity: 1; box-shadow: 0 0 120px 170px rgba(255, 255, 255, 0.95); } 100% { opacity: 0; box-shadow: 0 0 200px 280px rgba(255, 255, 255, 0); } }
+@keyframes ligaAntigaEntra { from { opacity: 0; transform: scale(0.2); } to { opacity: 1; transform: scale(0.78); } }
+@keyframes ligaAntigaTreme { 0% { transform: scale(0.78); } 20% { transform: scale(0.8) rotate(-4deg); } 40% { transform: scale(0.82) rotate(5deg); } 60% { transform: scale(0.84) rotate(-6deg); } 80% { transform: scale(0.86) rotate(7deg); } 100% { transform: scale(0.9) rotate(0deg); filter: brightness(2.2); } }
+@keyframes ligaAntigaQuebra { to { opacity: 0; transform: scale(1.3); filter: brightness(3) blur(4px); } }
+@keyframes ligaCaco { 0% { opacity: 1; transform: rotate(var(--a)) translateY(0) rotate(0deg); } 100% { opacity: 0; transform: rotate(var(--a)) translateY(calc(var(--d) * -1)) rotate(280deg); } }
+@keyframes ligaAnel { 0% { opacity: 1; transform: scale(0.4); } 100% { opacity: 0; transform: scale(2.4); } }
+@keyframes ligaNovaEntra { 0% { opacity: 0; transform: scale(2.8) rotateY(540deg); filter: brightness(3); } 60% { opacity: 1; transform: scale(0.92) rotateY(-14deg); filter: brightness(1.4); } 100% { opacity: 1; transform: scale(1) rotateY(0deg); filter: brightness(1) drop-shadow(0 0 26px var(--liga)); } }
+@keyframes ligaNovaFlutua { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes ligaTextoSobe { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes ligaNome { from { opacity: 0; transform: scale(0.4); letter-spacing: 0.4em; } to { opacity: 1; transform: scale(1); letter-spacing: 0.02em; } }
+@keyframes ligaBrilhoNome { from { background-position: 100% 0; } to { background-position: -160% 0; } }
+@keyframes ligaConfete { to { transform: translate(var(--x), 110vh) rotate(var(--giro)); } }
+@media (prefers-reduced-motion: reduce) { .liga-cartao::after, .liga-cartao-emblema, .liga-subida-feixes, .liga-subida-raios { animation: none; } .liga-subida-nova { animation: ligaAparece 0.3s ease 0.2s forwards; } .liga-subida-antiga, .liga-subida-cacos i, .liga-subida-anel, .liga-subida-palco::after { display: none; } .liga-subida-textos small, .liga-subida-textos strong, .liga-subida-textos span, .liga-subida-botao { animation: ligaAparece 0.3s ease 0.3s forwards; } }
