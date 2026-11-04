@@ -189,7 +189,7 @@ function carregarMeuCargoNaLiga() {
   if (!banco || !quem) return Promise.resolve(null);
   if (cargoPedidoPara === quem) return Promise.resolve(cargoNaLigaAtual);
   cargoPedidoPara = quem;
-  return Promise.resolve(banco.rpc('meu_cargo_na_liga'))
+  return Promise.resolve(banco.rpc('meu_cargo_na_liga', { _pid: quem }))
     .then((resposta) => {
       const valor = resposta && !resposta.error ? resposta.data : null;
       cargoNaLigaAtual = valor === 'fundador' || valor === 'arquiteto' ? valor : null;
