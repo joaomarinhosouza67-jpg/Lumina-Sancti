@@ -275,6 +275,7 @@
       <button class="filter-btn side-filter" data-filter="beatos" data-i18n="filtro_beatos">Beatos</button>
 
       <div class="sidebar-divisor"></div>
+      <button class="side-nav-link side-nav-destaque side-nav-advento" id="nav-advento" hidden><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-vela"></use></svg><span>Calendário do Advento</span></button>
       <button class="side-nav-link side-nav-destaque" id="nav-trilhas"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-trilha"></use></svg><span data-i18n="trilhas_titulo">Trilhas dos Santos</span></button>
       <button class="side-nav-link side-nav-destaque" id="nav-cenaculos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-usuarios"></use></svg><span>Cenáculos</span></button>
       <button class="side-nav-link side-nav-destaque" id="nav-comunidade"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-comunidade"></use></svg><span>Comunidade</span></button>
@@ -283,6 +284,8 @@
       <button class="side-nav-link" id="nav-leitura"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-biblia"></use></svg><span data-i18n="nav_leitura">Leitura do dia</span></button>
       <button class="side-nav-link" id="nav-oracoes"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-livro"></use></svg><span data-i18n="nav_oracoes">Orações do dia a dia</span></button>
       <button class="side-nav-link" id="nav-terco"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-terco"></use></svg><span data-i18n="nav_terco">Terço guiado</span></button>
+      <button class="side-nav-link" id="nav-novenas"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-vela"></use></svg><span>Novenas</span></button>
+      <button class="side-nav-link" id="nav-exame"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-coracao"></use></svg><span>Exame de consciência</span></button>
       <button class="side-nav-link" id="nav-padroeiro"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lupa"></use></svg><span data-i18n="nav_padroeiro">Padroeiro de...</span></button>
       <button class="side-nav-link" id="nav-planos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-estrela"></use></svg><span>Planos</span></button>
       <button class="side-nav-link" id="nav-suporte"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-ajuda"></use></svg><span>Fale com a equipe</span><span class="aviso-suporte" data-aviso-suporte hidden></span></button>
@@ -345,6 +348,10 @@
         </div>
       </section>
 
+      <section class="advento-inicio container" id="advento-inicio" aria-label="Calendário do Advento" hidden></section>
+
+      <section class="novena-inicio container" id="novena-inicio" aria-label="Novena" hidden></section>
+
       <section class="frase-do-dia-inicio container" id="frase-do-dia" aria-label="Frase do dia"></section>
 
       <section class="oracao-do-dia-inicio container" id="oracao-do-dia-inicio" aria-label="Oração do dia"></section>
@@ -353,6 +360,10 @@
       </section>
 
       <section class="atalhos-app container" id="atalhos-app">
+        <button type="button" class="atalho-cartao atalho-advento" id="atalho-advento" hidden>
+          <span class="atalho-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-vela"></use></svg></span>
+          <span class="atalho-textos"><strong>Calendário do Advento</strong><span>Uma portinha por dia até o Natal, com coroa e presépio.</span></span>
+        </button>
         <button type="button" class="atalho-cartao" data-destino="trilhas">
           <span class="atalho-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-trilha"></use></svg></span>
           <span class="atalho-textos"><strong data-i18n="trilhas_titulo">Trilhas dos Santos</strong><span>Aprenda com a vida dos santos, missão por missão.</span></span>
@@ -685,6 +696,10 @@
         <header class="oracoes-topo">
           <h2 class="section-title">Orações do dia a dia</h2>
           <p class="oracoes-sub">Mais de 90 orações da Igreja em português, inglês e espanhol, para cada momento da vida.</p>
+          <div class="oracoes-devocoes">
+            <button type="button" class="oracoes-devocao" data-abrir-devocao="novenas"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-vela"></use></svg><span>Novenas</span></button>
+            <button type="button" class="oracoes-devocao" data-abrir-devocao="exame"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-coracao"></use></svg><span>Exame de consciência</span></button>
+          </div>
         </header>
 
         <div class="oracoes-destaques">
@@ -736,6 +751,18 @@
         </header>
         <div id="suporte-conteudo" class="suporte-conteudo"></div>
       </div>
+    </section>
+
+    <section id="view-exame" class="view">
+      <div class="container devocao-container" id="exame-conteudo"></div>
+    </section>
+
+    <section id="view-novenas" class="view">
+      <div class="container devocao-container" id="novenas-conteudo"></div>
+    </section>
+
+    <section id="view-advento" class="view">
+      <div class="container advento-container" id="advento-conteudo"></div>
     </section>
 
     <section id="view-jogos" class="view">
@@ -1374,6 +1401,11 @@
   <script src="cursos.js"></script>
   <script src="jogos.js"></script>
   <script src="ligas.js"></script>
+  <script src="advento-dados.js"></script>
+  <script src="advento.js"></script>
+  <script src="exame-dados.js"></script>
+  <script src="novenas-dados.js"></script>
+  <script src="devocoes.js"></script>
   <script src="widget.js"></script>
   <script src="historias.js"></script>
   <script src="trilhas.js"></script>

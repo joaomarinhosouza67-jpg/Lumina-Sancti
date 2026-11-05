@@ -475,7 +475,7 @@ function carregar3dDaLiga() {
 function dadosDoCinema3d(pos) {
   const liga = pos.liga;
   return {
-    pontos: FORMAS_DAS_LIGAS[liga.forma], facetas: facetasDaLiga(pos.indice), cor: liga.cor, claro: liga.claro, escuro: liga.escuro, metal: liga.metal, pedestal: !liga.nuvensNaBase,
+    pontos: FORMAS_DAS_LIGAS[liga.forma], facetas: ((chegadas) => facetasDaLiga(pos.indice).map((f, k) => Object.assign({}, f, { chegada: chegadas[k] })))(chegadasDasFacetas(liga, pos.indice)), alongamento: alongamentoDaMontagem(liga), vooDaPeca: VOO_DA_PECA, cor: liga.cor, claro: liga.claro, escuro: liga.escuro, metal: liga.metal, pedestal: !liga.nuvensNaBase,
     manto: liga.manto ? [MANTO_DA_LIGA, ARMINHO_DA_LIGA] : null, cetros: !!liga.cetros, torres: liga.torres ? TORRE_DA_LIGA : null, gorro: liga.coroaGrande ? GORRO_DA_COROA : null,
     nuvensNaBase: liga.nuvensNaBase ? NUVENS_DA_BASE : null, anelHolografico: !!liga.anelHolografico, aureolaDupla: !!liga.aureolaDupla, estrelasEmOrbita: !!liga.estrelasEmOrbita,
     asas: liga.asas || liga.asinhas ? PENAS_DAS_ASAS_DA_LIGA : null, escalaDasAsas: liga.asinhas && !liga.asas ? 0.7 : 1, coroa: liga.coroa ? COROA_DA_LIGA : null, ramos: !!liga.ramos, aureola: !!liga.aureola, prisma: !!liga.prisma,
@@ -488,12 +488,31 @@ function cinemaLongo(liga) {
   return ['celestial', 'arquiteto', 'fundador'].includes(temaDaLiga(liga));
 }
 
+const VOO_DA_PECA = 0.95;
+
+function alongamentoDaMontagem(liga) {
+  return cinemaLongo(liga) ? 4.2 : 2.7;
+}
+
 function duracaoDoCinema(liga) {
-  return cinemaLongo(liga) ? 6400 : 3900;
+  return (cinemaLongo(liga) ? 6400 : 3900) + alongamentoDaMontagem(liga) * 1000;
 }
 
 function momentoDoImpacto(liga) {
-  return cinemaLongo(liga) ? 4350 : 2450;
+  return (cinemaLongo(liga) ? 4350 : 2450) + alongamentoDaMontagem(liga) * 1000;
+}
+
+function chegadasDasFacetas(liga, indice) {
+  const facetas = facetasDaLiga(indice);
+  const grupos = cinemaLongo(liga) ? 12 : 9;
+  const passo = cinemaLongo(liga) ? 0.43 : 0.41;
+  const ordem = facetas.map((f, k) => ({ k, atraso: f.atraso })).sort((a, b) => a.atraso - b.atraso);
+  const chegadas = new Array(facetas.length);
+  ordem.forEach((item, posicao) => {
+    const grupo = Math.min(grupos - 1, Math.floor((posicao * grupos) / facetas.length));
+    chegadas[item.k] = 0.95 + grupo * passo + ruidoDaLiga(item.k, 41) * 0.07;
+  });
+  return chegadas;
 }
 
 function impulsoDaLiga(ctx, segundos, queda) {
@@ -743,7 +762,7 @@ function somDaLiga(tipo, atraso, duracao, forca, tom) {
 
 function encaixesDoCinema(liga, indice) {
   const deslocamento = cinemaLongo(liga) ? 1.45 : 0;
-  const momentos = facetasDaLiga(indice).map((f) => 0.95 + f.atraso + 0.5 + deslocamento).sort((a, b) => a - b);
+  const momentos = chegadasDasFacetas(liga, indice).map((quando) => quando + VOO_DA_PECA * 0.62 + deslocamento).sort((a, b) => a - b);
   const grupos = [];
   momentos.forEach((m) => {
     const ultimo = grupos[grupos.length - 1];
@@ -1186,16 +1205,18 @@ function htmlDoCinemaDaLiga(pos) {
 function sonsDoCinema(pos, inicio) {
   const s = (tipo, ms, dur) => agendarNaTela(() => somDaLiga(tipo, 0, dur), inicio + ms);
   const tema = temaDaLiga(pos.liga);
+  const mais = alongamentoDaMontagem(pos.liga);
+  const a = mais * 1000;
   encaixesDoCinema(pos.liga, pos.indice).forEach(([quando, forca, tom]) => agendarNaTela(() => somDaLiga('encaixe', 0, undefined, forca, tom), inicio + quando * 1000));
   if (tema === 'celestial') {
-    s('coro', 100, 6.2); s('varrida', 300); s('sinos', 1700); s('varrida', 2000); s('brilho', 3800); s('impacto', 4350); s('sinos', 4500);
+    s('coro', 100, 6.2 + mais); s('varrida', 300); s('sinos', 1700); s('varrida', 2000 + a); s('brilho', 3800 + a); s('impacto', 4350 + a); s('sinos', 4500 + a);
   } else if (tema === 'arquiteto') {
-    s('digital', 100); s('zumbido', 0, 6); s('varrida', 500); s('digital', 1300); s('brilho', 3600); s('impacto', 4350);
+    s('digital', 100); s('zumbido', 0, 6 + mais); s('varrida', 500); s('digital', 1300); s('digital', 1300 + a * 0.6); s('brilho', 3600 + a); s('impacto', 4350 + a);
   } else if (tema === 'fundador') {
-    s('zumbido', 0, 6); s('coro', 200, 6); s('varrida', 600); s('sinos', 1800); s('brilho', 3800); s('impacto', 4350); s('sinos', 4500);
+    s('zumbido', 0, 6 + mais); s('coro', 200, 6 + mais); s('varrida', 600); s('sinos', 1800); s('varrida', 1800 + a); s('brilho', 3800 + a); s('impacto', 4350 + a); s('sinos', 4500 + a);
   } else {
-    s('zumbido', 0, tema === 'empireo' ? 3.8 : 3.4); s('varrida', 150); s('brilho', 2200); s('impacto', 2450);
-    if (tema === 'empireo') { s('coro', 300, 3.6); s('sinos', 2550); }
+    s('zumbido', 0, (tema === 'empireo' ? 3.8 : 3.4) + mais); s('varrida', 150); s('varrida', 1500 + a); s('brilho', 2200 + a); s('impacto', 2450 + a);
+    if (tema === 'empireo') { s('coro', 300, 3.6 + mais); s('sinos', 2550 + a); }
   }
 }
 
@@ -1214,18 +1235,36 @@ function mostrarSubidaDeLiga(de, para, fe, opcoes) {
   const duracao = duracaoDoCinema(depois.liga);
   cinema.style.setProperty('--fim-cinema', `${((duracao - 300) / 1000).toFixed(2)}s`);
   cinema.style.setProperty('--impacto', `${(momentoDoImpacto(depois.liga) / 1000).toFixed(2)}s`);
+  cinema.style.setProperty('--alongar', `${alongamentoDaMontagem(depois.liga).toFixed(2)}s`);
+  const chegadasDoCinema = chegadasDasFacetas(depois.liga, depois.indice);
+  cinema.querySelectorAll('.liga-faceta').forEach((faceta, k) => {
+    const chegada = chegadasDoCinema[k];
+    if (chegada !== undefined) faceta.style.setProperty('--d', `${(chegada - 0.95).toFixed(2)}s`);
+  });
   let terminou = false;
   let modulo = null;
   let cena3d = null;
   tela.pararCena3d = () => { if (cena3d) cena3d.parar(); };
-  if (!menosMovimentoNaLiga()) carregar3dDaLiga().then((m) => { modulo = m; });
+  let preparo = null;
+  const preparar3d = () => {
+    if (preparo || !modulo || typeof modulo.cinema3dDaLiga !== 'function') return preparo;
+    preparo = modulo.cinema3dDaLiga(cinema.querySelector('.liga-cinema-palco3d'), Object.assign(dadosDoCinema3d(depois), { esperar: true }))
+      .then((c) => {
+        if (terminou) { c.parar(); return null; }
+        cena3d = c;
+        return c;
+      })
+      .catch(() => null);
+    return preparo;
+  };
+  const carregando3d = menosMovimentoNaLiga() ? null : carregar3dDaLiga().then((m) => { modulo = m; return m; });
   const final = () => {
     if (terminou || !tela.isConnected) return;
     terminou = true;
     if (cena3d) cena3d.parar();
     temporizadoresDaTela.forEach(clearTimeout);
     temporizadoresDaTela = [];
-    cinema.classList.remove('ativo');
+    cinema.classList.remove('ativo', 'carregando');
     tela.classList.remove('rasgando', 'em-cinema');
     tela.classList.add('revelando');
     const nome = textoDaLiga(depois.liga.nome);
@@ -1259,19 +1298,41 @@ function mostrarSubidaDeLiga(de, para, fe, opcoes) {
     agendarNaTela(() => { tela.querySelector('.liga-tela-barra-cheia').style.width = '100%'; somDaLiga('barra'); }, 250);
     agendarNaTela(() => { tela.querySelector('.liga-tela-pips').classList.add('cheias'); [0, 0.11, 0.22, 0.33, 0.44].forEach((d, i) => somDaLiga('encaixe', d, undefined, 0.55 + i * 0.1, 1.2 + i * 0.12)); }, 750);
   }
-  agendarNaTela(() => { tela.classList.add('rasgando'); somDaLiga('rasgo'); }, inicioDoRasgo);
+  let promessa3d = null;
+  const comecarAPreparar = () => {
+    if (promessa3d || !carregando3d) return promessa3d;
+    promessa3d = carregando3d
+      .then(() => new Promise((pronto) => requestAnimationFrame(() => setTimeout(pronto, 30))))
+      .then(() => (terminou ? null : preparar3d()))
+      .catch(() => null);
+    return promessa3d;
+  };
+  agendarNaTela(() => { tela.classList.add('rasgando'); somDaLiga('rasgo'); comecarAPreparar(); }, inicioDoRasgo);
   agendarNaTela(() => {
+    let comecou = false;
+    let carregouEm = 0;
+    const iniciar = (c) => {
+      if (comecou || terminou || !tela.isConnected) return;
+      comecou = true;
+      tela.classList.add('em-cinema');
+      if (carregouEm && Date.now() - carregouEm > 60) cinema.classList.add('sem-revelar');
+      cinema.classList.remove('carregando');
+      cinema.classList.add('ativo');
+      if (c) {
+        cinema.classList.add('em-3d');
+        c.comecar();
+      }
+      sonsDoCinema(depois, 0);
+      agendarNaTela(final, duracao);
+    };
+    const pronto = comecarAPreparar();
+    if (!pronto) { iniciar(null); return; }
     tela.classList.add('em-cinema');
-    cinema.classList.add('ativo');
-    if (!modulo || typeof modulo.cinema3dDaLiga !== 'function') return;
-    cinema.classList.add('em-3d');
-    modulo.cinema3dDaLiga(cinema.querySelector('.liga-cinema-palco3d'), dadosDoCinema3d(depois)).then((c) => {
-      if (terminou) c.parar();
-      else cena3d = c;
-    }).catch(() => cinema.classList.remove('em-3d'));
+    cinema.classList.add('carregando');
+    carregouEm = Date.now();
+    pronto.then((c) => iniciar(c));
+    agendarNaTela(() => iniciar(null), 4500);
   }, inicioDoRasgo + 250);
-  sonsDoCinema(depois, inicioDoRasgo + 250);
-  agendarNaTela(final, inicioDoRasgo + 250 + duracao);
 }
 
 function reverAnimacaoDaLiga(fe, dono, posicoes, qual) {

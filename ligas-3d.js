@@ -179,9 +179,11 @@ export async function cinema3dDaLiga(lugar, dados) {
   const tema = dados.tema || 'normal';
   const especial = tema === 'celestial' || tema === 'arquiteto' || tema === 'fundador';
   const atrasoDosCristais = especial ? 1.45 : 0;
-  const impacto = dados.impacto || (especial ? 4.35 : 2.45);
-  const fimDoCaminho = especial ? 5.9 : 3.1;
-  const giro = especial ? [4.6, 5.6] : [2.55, 3.35];
+  const mais = dados.alongamento || 0;
+  const vooDaPeca = dados.vooDaPeca || 0.8;
+  const impacto = dados.impacto || ((especial ? 4.35 : 2.45) + mais);
+  const fimDoCaminho = (especial ? 5.9 : 3.1) + mais;
+  const giro = especial ? [4.6 + mais, 5.6 + mais] : [2.55 + mais, 3.35 + mais];
   const renderizador = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
   renderizador.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderizador.toneMapping = THREE.ACESFilmicToneMapping;
@@ -243,7 +245,7 @@ export async function cinema3dDaLiga(lugar, dados) {
     cristal.position.copy(inicio);
     cristal.visible = false;
     emblema.add(cristal);
-    return { cristal, inicio, rodada, alvo: new THREE.Vector3(centro.x, centro.y, 0), atraso: 0.95 + faceta.atraso + atrasoDosCristais };
+    return { cristal, inicio, rodada, alvo: new THREE.Vector3(centro.x, centro.y, 0), atraso: (faceta.chegada !== undefined ? faceta.chegada : 0.95 + faceta.atraso) + atrasoDosCristais };
   });
 
   const simbolo = new THREE.Mesh(new THREE.PlaneGeometry(4, 4), new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, toneMapped: false, depthWrite: false }));
@@ -560,11 +562,12 @@ export async function cinema3dDaLiga(lugar, dados) {
   medir();
   window.addEventListener('resize', medir);
 
-  const inicio = performance.now();
+  let inicio = null;
   let parado = false;
   const alvo = new THREE.Vector3();
   const quadro = (agora) => {
     if (parado || !lugar.isConnected) { parar(); return; }
+    if (inicio === null) inicio = agora;
     const t = Math.max(0, (agora - inicio) / 1000);
     const caminho = suave(Math.min(1, t / fimDoCaminho));
     camera.position.copy(posicoes.getPoint(caminho));
@@ -582,15 +585,15 @@ export async function cinema3dDaLiga(lugar, dados) {
     emblema.rotation.y = -0.38 * (1 - caminho) + Math.sin(t * 1.3) * 0.06 * caminho + voltas;
     emblema.rotation.x = 0.12 * (1 - caminho);
     asas.forEach((grupo) => {
-      const aberta = especial ? saida(faixa(t, 2.0, 2.9)) : 1;
+      const aberta = especial ? saida(faixa(t, 2.0 + mais, 2.9 + mais)) : 1;
       grupo.rotation.z = grupo.userData.lado < 0 ? -1.05 * (1 - aberta) : 1.05 * (1 - aberta);
     });
     mantos.forEach((grupo) => {
-      const aberto = saida(faixa(t, 1.9, 3.0));
+      const aberto = saida(faixa(t, 1.9 + mais, 3.0 + mais));
       grupo.rotation.y = -grupo.userData.lado * 1.35 * (1 - aberto);
     });
     torres.forEach((grupo) => {
-      const sobe = saida(faixa(t, 1.9, 3.1));
+      const sobe = saida(faixa(t, 1.9 + mais, 3.1 + mais));
       grupo.position.y = -3.2 * (1 - sobe);
     });
     aneis.forEach((anelDeLuz) => {
@@ -605,11 +608,11 @@ export async function cinema3dDaLiga(lugar, dados) {
       estrela.scale.setScalar(0.18 + pisca * 0.16);
     });
     nuvensDaBase.forEach((nuvem) => {
-      nuvem.material.opacity = faixa(t, 1.6, 2.6) * 0.96;
+      nuvem.material.opacity = faixa(t, 1.6 + mais, 2.6 + mais) * 0.96;
       nuvem.position.y = nuvem.userData.y0 + Math.sin(t * 0.9 + nuvem.userData.fase) * 0.03;
     });
     pecas.forEach((p) => {
-      const fase = (t - p.atraso) / 0.8;
+      const fase = (t - p.atraso) / vooDaPeca;
       if (fase <= 0) { p.cristal.visible = false; return; }
       p.cristal.visible = true;
       const e = voltaSuave(Math.min(1, fase));
@@ -618,16 +621,17 @@ export async function cinema3dDaLiga(lugar, dados) {
       const s = 0.3 + 0.7 * Math.min(1, e);
       p.cristal.scale.set(s, s, s);
     });
-    if (materialDasArestas) materialDasArestas.opacity = faixa(t, 1.2 + atrasoDosCristais, 2.6 + atrasoDosCristais) * (0.75 + Math.sin(t * 7) * 0.2);
+    if (materialDasArestas) materialDasArestas.opacity = faixa(t, 1.2 + atrasoDosCristais + mais, 2.6 + atrasoDosCristais + mais) * (0.75 + Math.sin(t * 7) * 0.2);
     const comecoDaEnergia = 0.15 + (especial ? 1.0 : 0);
     const corrida = t < comecoDaEnergia ? -1 : ((t - comecoDaEnergia) / 1.4);
     rastro.forEach((sprite, i) => {
-      if (corrida < 0 || corrida > 2) { sprite.material.opacity = 0; return; }
+      const voltasDaLuz = 2 + Math.floor(mais / 1.4);
+      if (corrida < 0 || corrida > voltasDaLuz) { sprite.material.opacity = 0; return; }
       const u = (((corrida % 1) - i * 0.012) + 1) % 1;
       caminhoDaEnergia.getPoint(u, sprite.position);
-      sprite.material.opacity = (1 - i / rastro.length) * (corrida > 1.85 ? (2 - corrida) / 0.15 : 1);
+      sprite.material.opacity = (1 - i / rastro.length) * (corrida > voltasDaLuz - 0.15 ? (voltasDaLuz - corrida) / 0.15 : 1);
     });
-    const simboloFase = faixa(t, 2.2 + atrasoDosCristais, 2.7 + atrasoDosCristais);
+    const simboloFase = faixa(t, 2.2 + atrasoDosCristais + mais, 2.7 + atrasoDosCristais + mais);
     simbolo.material.opacity = simboloFase;
     aura.material.opacity = simboloFase * (0.7 + Math.sin(t * 6) * 0.15);
     if (halo && especial) {
@@ -645,16 +649,16 @@ export async function cinema3dDaLiga(lugar, dados) {
       nuvem.material.opacity = 0.9 * (1 - faixa(t, 1.2, 2.2));
     });
     raios.forEach((raio) => {
-      raio.material.opacity = faixa(t, 0.2, 1.3) * (0.35 + Math.sin(t * 1.6 + raio.userData.fase) * 0.12) * (1 - faixa(t, 5.6, 6.3) * 0.6);
+      raio.material.opacity = faixa(t, 0.2, 1.3) * (0.35 + Math.sin(t * 1.6 + raio.userData.fase) * 0.12) * (1 - faixa(t, 5.6 + mais, 6.3 + mais) * 0.6);
       raio.rotation.z += 0.0008;
     });
-    if (grade) grade.material.opacity = faixa(t, 0, 0.9) * 0.55 * (1 - faixa(t, 5.4, 6.2) * 0.7);
+    if (grade) grade.material.opacity = faixa(t, 0, 0.9) * 0.55 * (1 - faixa(t, 5.4 + mais, 6.2 + mais) * 0.7);
     if (codigo) {
       codigo.material.opacity = faixa(t, 0.6, 1.6) * 0.9;
       codigo.rotation.y = t * 0.6;
     }
     luzColorida.position.set(Math.cos(t * 1.4) * 2.6, Math.sin(t * 0.9) * 1.6, 2.4);
-    luzColorida.intensity = 8 + 32 * Math.min(1, t / (especial ? 3 : 1.4));
+    luzColorida.intensity = 8 + 32 * Math.min(1, t / ((especial ? 3 : 1.4) + mais * 0.6));
     pontosDePoeira.rotation.y = t * 0.03;
     pontosDePoeira.position.y = (tema === 'celestial' || tema === 'fundador' ? 0.25 : 0.05) * t;
     renderizador.render(cena, camera);
@@ -677,7 +681,23 @@ export async function cinema3dDaLiga(lugar, dados) {
     renderizador.dispose();
     renderizador.forceContextLoss();
   }
-  renderizador.compile(cena, camera);
-  requestAnimationFrame(quadro);
-  return { parar };
+  camera.position.copy(posicoes.getPoint(0));
+  camera.lookAt(alvos.getPoint(0));
+  const escondidos = [];
+  cena.traverse((obj) => { if (!obj.visible) { escondidos.push(obj); obj.visible = true; } });
+  if (typeof renderizador.compileAsync === 'function') {
+    try { await renderizador.compileAsync(cena, camera); } catch (e) { renderizador.compile(cena, camera); }
+  } else {
+    renderizador.compile(cena, camera);
+  }
+  renderizador.render(cena, camera);
+  escondidos.forEach((obj) => { obj.visible = false; });
+  let comecou = false;
+  const comecar = () => {
+    if (comecou || parado) return;
+    comecou = true;
+    requestAnimationFrame(quadro);
+  };
+  if (!dados.esperar) comecar();
+  return { parar, comecar };
 }

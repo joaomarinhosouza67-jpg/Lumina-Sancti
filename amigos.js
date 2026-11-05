@@ -1298,6 +1298,8 @@ function abrirAlbumDeSantos(opcoes) {
     .map((item, i) => Object.assign(item, { numero: i + 1 }));
   const tenho = ordenados.filter((item) => cartas[item.santo.id]).length;
   const paginas = [{ capa: true }];
+  const especiais = !deAmigo && typeof cartasEspeciaisDoAlbum === 'function' ? cartasEspeciaisDoAlbum() : [];
+  if (especiais.length) paginas.push({ especial: true, itens: especiais });
   const inicioDaSecao = {};
   ORDEM_DAS_RARIDADES.forEach((raridade) => {
     const secao = ordenados.filter((item) => item.raridade === raridade);
@@ -1348,6 +1350,11 @@ function abrirAlbumDeSantos(opcoes) {
         ${deAmigo ? `<p class="album-capa-explica">${tr('Álbum de {nome}', { nome: escaparTexto(opcoes.dono || '') })}</p>` : `<p class="album-capa-explica">${tr('Termine a trilha de um santo para colar a figurinha dele. Faça todas as missões com 3 estrelas e ela fica dourada.')}</p>
         <p class="album-capa-trilhas">${tr('{n} santos já têm trilha. Novas trilhas liberam novas figurinhas.', { n: comTrilha.size })}</p>`}
       </div>
+    </section>`;
+    if (pagina.especial) return `<section class="album-pagina album-especial">
+      <header class="album-pagina-topo"><span class="album-pagina-selo" aria-hidden="true"></span><h3>${tr('Edição especial')}</h3><small>${pagina.itens.filter((item) => item.ganhou).length}/${pagina.itens.length}</small></header>
+      <div class="album-pagina-grade album-especial-grade">${pagina.itens.map((item) => `<div class="album-vaga album-vaga-especial${item.ganhou ? ' cheia' : ''}" data-especial="${item.id}">${item.html}${item.ganhou ? '' : `<span class="album-vaga-dica">${escaparTexto(item.dica)}</span>`}</div>`).join('')}</div>
+      <footer class="album-pagina-numero">${indice}</footer>
     </section>`;
     const coladas = pagina.secao.filter((item) => cartas[item.santo.id]).length;
     return `<section class="album-pagina ${pagina.raridade}">
