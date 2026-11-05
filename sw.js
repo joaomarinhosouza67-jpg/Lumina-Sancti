@@ -1,4 +1,4 @@
-const CACHE_NOME = 'lumina-sancti-1.22.88';
+const CACHE_NOME = 'lumina-sancti-1.22.89';
 const CACHE_DO_WIDGET = 'lumina-widget';
 const ETIQUETA_DO_WIDGET = 'lumina-dia';
 const ARQUIVOS_ESSENCIAIS = [
@@ -24,6 +24,8 @@ const ARQUIVOS_ESSENCIAIS = [
   './exame-dados.js',
   './novenas-dados.js',
   './devocoes.js',
+  './dormir.js',
+  './retrospectiva.js',
   './ligas-3d.js',
   './widget.js',
   './historias.js',

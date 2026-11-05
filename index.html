@@ -276,9 +276,11 @@
 
       <div class="sidebar-divisor"></div>
       <button class="side-nav-link side-nav-destaque side-nav-advento" id="nav-advento" hidden><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-vela"></use></svg><span>Calendário do Advento</span></button>
+      <button class="side-nav-link side-nav-destaque side-nav-advento" id="nav-retrospectiva" hidden><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-estrela"></use></svg><span>Retrospectiva do ano</span></button>
       <button class="side-nav-link side-nav-destaque" id="nav-trilhas"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-trilha"></use></svg><span data-i18n="trilhas_titulo">Trilhas dos Santos</span></button>
       <button class="side-nav-link side-nav-destaque" id="nav-cenaculos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-usuarios"></use></svg><span>Cenáculos</span></button>
       <button class="side-nav-link side-nav-destaque" id="nav-comunidade"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-comunidade"></use></svg><span>Comunidade</span></button>
+      <button class="side-nav-link side-nav-destaque" id="nav-dormir"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lampada"></use></svg><span>Histórias para dormir</span></button>
       <button class="side-nav-link side-nav-destaque" id="nav-jogos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-estrela"></use></svg><span>Joguinhos</span></button>
       <button class="side-nav-link side-nav-destaque" id="nav-cursos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-capelo"></use></svg><span>Cursos de aprofundamento</span></button>
       <button class="side-nav-link" id="nav-leitura"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-biblia"></use></svg><span data-i18n="nav_leitura">Leitura do dia</span></button>
@@ -352,6 +354,8 @@
 
       <section class="novena-inicio container" id="novena-inicio" aria-label="Novena" hidden></section>
 
+      <section class="retrospectiva-inicio container" id="retrospectiva-inicio" aria-label="Retrospectiva" hidden></section>
+
       <section class="frase-do-dia-inicio container" id="frase-do-dia" aria-label="Frase do dia"></section>
 
       <section class="oracao-do-dia-inicio container" id="oracao-do-dia-inicio" aria-label="Oração do dia"></section>
@@ -375,6 +379,10 @@
         <button type="button" class="atalho-cartao" data-destino="comunidade">
           <span class="atalho-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-comunidade"></use></svg></span>
           <span class="atalho-textos"><strong>Comunidade</strong><span>Siga outras pessoas e celebre juntos cada marco nas trilhas.</span></span>
+        </button>
+        <button type="button" class="atalho-cartao atalho-dormir" id="atalho-dormir">
+          <span class="atalho-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lampada"></use></svg></span>
+          <span class="atalho-textos"><strong>Histórias para dormir</strong><span>Uma história de santo contada bem baixinho, com a tela escurecendo devagar.</span></span>
         </button>
         <button type="button" class="atalho-cartao" data-destino="jogos">
           <span class="atalho-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-estrela"></use></svg></span>
@@ -751,6 +759,10 @@
         </header>
         <div id="suporte-conteudo" class="suporte-conteudo"></div>
       </div>
+    </section>
+
+    <section id="view-dormir" class="view">
+      <div class="dormir-tela" id="dormir-conteudo"></div>
     </section>
 
     <section id="view-exame" class="view">
@@ -1406,6 +1418,8 @@
   <script src="exame-dados.js"></script>
   <script src="novenas-dados.js"></script>
   <script src="devocoes.js"></script>
+  <script src="dormir.js"></script>
+  <script src="retrospectiva.js"></script>
   <script src="widget.js"></script>
   <script src="historias.js"></script>
   <script src="trilhas.js"></script>

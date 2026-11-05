@@ -8764,3 +8764,114 @@ body.adv-janela-aberta { overflow: hidden; }
   .dev-dias { gap: 4px; }
   .dev-dia { font-size: 0.85rem; }
 }
+
+.dormir-tela { position: relative; min-height: calc(100vh - 60px); overflow: hidden; background: linear-gradient(180deg, #040616 0%, #0b1033 45%, #1a1c4a 100%); color: #e9e4f7; }
+.dormir-ceu { position: absolute; inset: 0; pointer-events: none; }
+.dormir-estrelas i { position: absolute; border-radius: 50%; background: #fff; box-shadow: 0 0 6px rgba(255, 255, 255, 0.8); animation: dormirPisca var(--t) ease-in-out var(--d) infinite; }
+@keyframes dormirPisca { 50% { opacity: 0.2; transform: scale(0.6); } }
+.dormir-lua { position: absolute; top: 46px; right: 9%; width: 92px; height: 92px; border-radius: 50%; background: radial-gradient(circle at 38% 38%, #fffbe8, #f3e3a8 55%, #d9c27a); box-shadow: 0 0 60px 18px rgba(255, 240, 190, 0.22); }
+.dormir-lua::after { content: ''; position: absolute; top: -8px; left: 26px; width: 92px; height: 92px; border-radius: 50%; background: #0a0f30; }
+.dormir-nuvem { position: absolute; height: 40px; border-radius: 40px; background: rgba(170, 160, 230, 0.12); filter: blur(2px); animation: dormirNuvem 60s linear infinite; }
+.dormir-nuvem.um { top: 22%; left: -30%; width: 260px; }
+.dormir-nuvem.dois { top: 58%; left: -40%; width: 340px; animation-duration: 85s; animation-delay: -30s; }
+@keyframes dormirNuvem { to { transform: translateX(180vw); } }
+.dormir-miolo { position: relative; z-index: 2; max-width: 820px; margin: 0 auto; padding: 18px 16px 60px; }
+.dormir-voltar { margin-bottom: 8px; }
+.dormir-topo { text-align: center; }
+.dormir-topo h2 { margin: 4px 0 6px; font-family: var(--font-title); font-size: 2.2rem; color: #fff1c4; }
+.dormir-topo p { max-width: 520px; margin: 0 auto; color: #c9c3e6; line-height: 1.6; }
+.dormir-sem-voz { margin-top: 10px !important; padding: 8px 12px; border-radius: 12px; background: rgba(255, 255, 255, 0.06); }
+.dormir-lumi { width: 120px; height: 140px; margin: 0 auto; }
+.dormir-lumi.pequena { width: 70px; height: 82px; margin: 0; }
+.dormir-opcoes { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; margin: 18px 0 10px; font-size: 0.85rem; color: #c9c3e6; }
+.dormir-opcao { padding: 7px 14px; border-radius: 999px; border: 1px solid rgba(200, 190, 255, 0.3); background: rgba(255, 255, 255, 0.04); color: #e9e4f7; font: inherit; cursor: pointer; }
+.dormir-opcao.ativa { background: rgba(255, 241, 196, 0.16); border-color: #f5d77a; color: #fff1c4; }
+.dormir-surpresa { display: block; margin: 8px auto 18px; padding: 12px 26px; border: 0; border-radius: 999px; background: linear-gradient(180deg, #f5d77a, #c9952c); color: #2a1a05; font: inherit; font-weight: 800; cursor: pointer; box-shadow: 0 10px 26px -10px rgba(245, 215, 122, 0.8); }
+.dormir-santos { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 14px; }
+.dormir-santo { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px 6px; border-radius: 18px; border: 1px solid rgba(200, 190, 255, 0.16); background: rgba(255, 255, 255, 0.04); color: #e9e4f7; font: inherit; cursor: pointer; transition: transform 0.2s, background 0.2s; }
+.dormir-santo:hover, .dormir-santo:focus-visible { transform: translateY(-3px); background: rgba(255, 255, 255, 0.08); }
+.dormir-santo-foto { width: 74px; height: 74px; border-radius: 50%; background: #2a2860 radial-gradient(circle at 50% 35%, #fff3c4, #c9952c 60%, #4a3a12) center / cover no-repeat; border: 2px solid rgba(245, 215, 122, 0.7); box-shadow: 0 0 18px rgba(245, 215, 122, 0.25); }
+.dormir-santo-foto.grande { width: 96px; height: 96px; }
+.dormir-santo-nome { font-size: 0.85rem; text-align: center; line-height: 1.3; }
+.dormir-cabeca { display: flex; align-items: flex-end; justify-content: center; gap: 4px; margin: 6px 0 14px; }
+.dormir-carregando { margin-top: 30vh; text-align: center; color: #c9c3e6; }
+.dormir-texto { height: min(52vh, 460px); overflow-y: auto; padding: 0 6px; scroll-behavior: smooth; -webkit-mask: linear-gradient(180deg, transparent, #000 12%, #000 80%, transparent); mask: linear-gradient(180deg, transparent, #000 12%, #000 80%, transparent); }
+.dormir-parte { margin: 0 0 18px; font-family: var(--font-title); font-size: 1.32rem; line-height: 1.75; color: rgba(233, 228, 247, 0.38); transition: color 0.6s ease; }
+.dormir-parte.titulo { font-size: 1.6rem; color: rgba(255, 241, 196, 0.4); text-align: center; }
+.dormir-parte.atual { color: #fff8e6; }
+.dormir-parte.titulo.atual { color: #fff1c4; }
+.dormir-parte.fim, .dormir-parte.oracao { text-align: center; font-style: italic; }
+.dormir-parte:first-child { margin-top: 18vh; }
+.dormir-parte:last-child { margin-bottom: 30vh; }
+.dormir-controles { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 14px; }
+.dormir-botao { display: inline-flex; align-items: center; justify-content: center; width: 52px; height: 52px; border-radius: 50%; border: 1px solid rgba(200, 190, 255, 0.3); background: rgba(255, 255, 255, 0.05); color: #e9e4f7; cursor: pointer; }
+.dormir-botao svg { width: 22px; height: 22px; fill: currentColor; }
+.dormir-botao.principal { width: 66px; height: 66px; background: linear-gradient(180deg, #f5d77a, #c9952c); color: #2a1a05; border: 0; }
+.dormir-botao.principal svg { width: 28px; height: 28px; }
+.dormir-botao.texto { width: auto; padding: 0 18px; border-radius: 999px; font: inherit; font-size: 0.9rem; }
+.dormir-escuro { position: absolute; inset: 0; z-index: 3; background: #000; opacity: var(--escurecer, 0.15); pointer-events: none; transition: opacity 3s ease; }
+.dormir-tela.apagada .dormir-escuro { opacity: 0.96; pointer-events: auto; cursor: pointer; transition: opacity 6s ease; }
+.dormir-tela.apagada .dormir-escuro::after { content: ''; position: absolute; left: 50%; bottom: 40px; width: 8px; height: 8px; margin-left: -4px; border-radius: 50%; background: rgba(255, 241, 196, 0.35); animation: dormirPisca 4s ease-in-out infinite; }
+.atalho-dormir { border-color: rgba(150, 140, 240, 0.5); background: linear-gradient(135deg, rgba(60, 60, 160, 0.3), var(--bg-alt)); }
+@media (max-width: 720px) {
+  .dormir-topo h2 { font-size: 1.8rem; }
+  .dormir-parte { font-size: 1.18rem; }
+  .dormir-santos { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .dormir-santo-foto { width: 62px; height: 62px; }
+  .dormir-lua { width: 64px; height: 64px; top: 30px; }
+  .dormir-lua::after { width: 64px; height: 64px; left: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dormir-estrelas i, .dormir-nuvem, .dormir-tela.apagada .dormir-escuro::after { animation: none; }
+}
+
+
+.retrospectiva-inicio { margin-top: 14px; }
+.retro-inicio { width: 100%; display: flex; align-items: center; gap: 16px; padding: 16px 20px; border-radius: 22px; border: 1px solid rgba(245, 215, 122, 0.55); background: radial-gradient(ellipse at 10% 50%, rgba(255, 214, 120, 0.25), transparent 55%), linear-gradient(135deg, #3a1f6e, #1a0f3a 60%, #0d0a22); color: var(--text-main); font: inherit; text-align: left; cursor: pointer; box-shadow: var(--shadow-md); }
+.retro-inicio-estrela { flex: 0 0 auto; width: 54px; height: 54px; background: radial-gradient(circle, #fff6d6, #f5d77a 40%, transparent 70%); clip-path: polygon(50% 0, 61% 38%, 100% 50%, 61% 62%, 50% 100%, 39% 62%, 0 50%, 39% 38%); animation: retroEstrela 3s ease-in-out infinite; }
+.retro-inicio small { display: block; font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: #e8c3ff; }
+.retro-inicio strong { display: block; font-family: var(--font-title); font-size: 1.45rem; color: #ffe7a8; }
+.retro-inicio span span { color: var(--text-muted); font-size: 0.92rem; }
+@keyframes retroEstrela { 50% { transform: scale(1.12) rotate(10deg); } }
+body.retro-aberta { overflow: hidden; }
+.retro { position: fixed; inset: 0; z-index: 9300; display: flex; align-items: center; justify-content: center; background: radial-gradient(ellipse at 50% 30%, var(--retro-cor, #3a1f6e), #07081a 75%); color: #fff8e6; opacity: 0; transition: opacity 0.4s ease, background 0.8s ease; }
+.retro.aberta { opacity: 1; }
+.retro-barras { position: absolute; top: 12px; left: 12px; right: 60px; display: flex; gap: 5px; z-index: 3; }
+.retro-barras i { flex: 1; height: 4px; border-radius: 4px; background: rgba(255, 255, 255, 0.25); overflow: hidden; }
+.retro-barras b { display: block; width: 0; height: 100%; background: #fff1c4; }
+.retro-barras i.cheia b { width: 100%; }
+.retro-barras i.andando b { animation: retroBarra 6.5s linear forwards; }
+@keyframes retroBarra { to { width: 100%; } }
+.retro-fechar { position: absolute; top: 4px; right: 10px; z-index: 4; width: 44px; height: 44px; border: 0; background: none; color: #fff; font-size: 2rem; cursor: pointer; }
+.retro-lado { position: absolute; top: 60px; bottom: 0; width: 34%; z-index: 2; border: 0; background: transparent; cursor: pointer; }
+.retro-lado.voltar { left: 0; }
+.retro-lado.avancar { right: 0; }
+.retro-palco { position: relative; z-index: 1; width: min(460px, 100%); padding: 0 22px; }
+.retro-tela { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; animation: retroEntra 0.6s cubic-bezier(0.2, 0.9, 0.3, 1.1) both; }
+.retro-tela.final { position: relative; z-index: 3; }
+@keyframes retroEntra { from { opacity: 0; transform: translateY(26px) scale(0.96); } }
+.retro-tela small { font-size: 0.8rem; letter-spacing: 0.22em; text-transform: uppercase; color: #f5d77a; }
+.retro-tela h2 { margin: 0; font-family: var(--font-title); font-size: 2.4rem; line-height: 1.1; color: #fff1c4; }
+.retro-tela p { margin: 0; font-size: 1.1rem; line-height: 1.5; color: #e9e1ff; }
+.retro-numero { font-family: var(--font-title); font-size: 5.2rem; line-height: 1; color: #ffe7a8; text-shadow: 0 0 30px rgba(255, 210, 120, 0.45); }
+.retro-destaque { font-weight: 700; color: #fff1c4 !important; }
+.retro-estrela { width: 110px; height: 110px; background: radial-gradient(circle, #fff, #f5d77a 40%, rgba(245, 215, 122, 0) 72%); clip-path: polygon(50% 0, 61% 38%, 100% 50%, 61% 62%, 50% 100%, 39% 62%, 0 50%, 39% 38%); animation: retroEstrela 3s ease-in-out infinite; }
+.retro-emblema { width: 180px; height: 200px; }
+.retro-emblema .liga-emblema { width: 100%; height: 100%; }
+.retro-medalhas { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.retro-medalha { width: 64px; height: 80px; }
+.retro-medalha svg { width: 100%; height: 100%; }
+.retro-chama { width: 96px; height: 128px; transform-origin: 50% 100%; filter: drop-shadow(0 0 24px rgba(255, 150, 60, 0.6)); animation: retroChama 1.2s ease-in-out infinite; }
+.retro-chama svg { width: 100%; height: 100%; }
+@keyframes retroChama { 50% { transform: scale(0.94, 1.06) skewX(3deg); } }
+.retro-santo-foto { width: 150px; height: 150px; border-radius: 50%; border: 4px solid #f5d77a; background: #3a2a6a radial-gradient(circle at 50% 35%, #fff3c4, #c9952c 60%, #4a3a12) center / cover no-repeat; box-shadow: 0 0 40px rgba(245, 215, 122, 0.4); }
+.retro-resumo { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; margin: 8px 0; }
+.retro-resumo div { padding: 14px 8px; border-radius: 16px; border: 1px solid rgba(245, 215, 122, 0.4); background: rgba(255, 255, 255, 0.06); }
+.retro-resumo strong { display: block; font-family: var(--font-title); font-size: 1.7rem; color: #ffe7a8; }
+.retro-resumo span { font-size: 0.85rem; color: #d9d2ef; }
+.retro-acoes { display: flex; gap: 10px; margin-top: 8px; }
+.retro-compartilhar { padding: 13px 26px; border: 0; border-radius: 999px; background: linear-gradient(180deg, #f5d77a, #c9952c); color: #2a1a05; font: inherit; font-weight: 800; cursor: pointer; }
+.retro-de-novo { padding: 13px 20px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.35); background: transparent; color: #fff; font: inherit; cursor: pointer; }
+@media (prefers-reduced-motion: reduce) {
+  .retro-inicio-estrela, .retro-estrela, .retro-chama, .retro-tela, .retro-barras i.andando b { animation: none; }
+}
