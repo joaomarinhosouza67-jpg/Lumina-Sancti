@@ -2684,7 +2684,7 @@ function atualizarInterfaceDeConta() {
   const chatArea = document.getElementById('lumina-chat-area');
   if (precisaLogin && chatArea) {
     precisaLogin.style.display = logado ? 'none' : 'block';
-    chatArea.style.display = logado ? 'block' : 'none';
+    chatArea.style.display = logado ? '' : 'none';
   }
 }
 
@@ -3208,13 +3208,40 @@ function iniciarPaginaDePerfil() {
 
 const AI_FUNCTION_URL = () => `${SUPABASE_URL}/functions/v1/perguntar-sobre-santo`;
 
+const FRASES_DA_LUMINA_PENSANDO = ['Pensando', 'Procurando na vida dos santos', 'Preparando a resposta'];
+let temporizadorDaLuminaPensando = null;
+
+function tempoDaLuminaPensar() {
+  return 2000 + Math.round(Math.random() * 1000);
+}
+
 function criarIndicadorPensando() {
-  const div = document.getElementById('lumina-pensando');
-  if (div) div.style.display = 'flex';
+  esconderIndicadorPensando();
+  const area = document.getElementById('lumina-resposta-area');
+  if (!area) return;
+  const bolha = document.createElement('div');
+  bolha.className = 'lumina-pensando-bolha';
+  bolha.id = 'lumina-pensando-bolha';
+  bolha.setAttribute('role', 'status');
+  bolha.innerHTML = `<span class="lumina-pensando-estrela" aria-hidden="true"><svg viewBox="0 0 100 100"><path d="M50 0C52 35 65 48 100 50C65 52 52 65 50 100C48 65 35 52 0 50C35 48 48 35 50 0Z"/></svg></span><span class="lumina-pensando-texto">${tr(FRASES_DA_LUMINA_PENSANDO[0])}</span><span class="lumina-pensando-pontos" aria-hidden="true"><i></i><i></i><i></i></span>`;
+  area.appendChild(bolha);
+  try { bolha.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } catch (e) {  }
+  let frase = 0;
+  temporizadorDaLuminaPensando = setInterval(() => {
+    const texto = bolha.querySelector('.lumina-pensando-texto');
+    if (!texto) return;
+    frase = (frase + 1) % FRASES_DA_LUMINA_PENSANDO.length;
+    texto.classList.remove('trocando');
+    void texto.offsetWidth;
+    texto.textContent = tr(FRASES_DA_LUMINA_PENSANDO[frase]);
+    texto.classList.add('trocando');
+  }, 1300);
 }
 function esconderIndicadorPensando() {
-  const div = document.getElementById('lumina-pensando');
-  if (div) div.style.display = 'none';
+  clearInterval(temporizadorDaLuminaPensando);
+  temporizadorDaLuminaPensando = null;
+  const bolha = document.getElementById('lumina-pensando-bolha');
+  if (bolha) bolha.remove();
 }
 
 function efeitoMaquinaDeEscrever(elemento, textoCompleto, velocidadeMs = 18) {
@@ -3265,11 +3292,14 @@ async function enviarPerguntaLumina() {
   try {
     const { data: sessaoDaPergunta } = await supabaseCliente.auth.getSession();
     const token = sessaoDaPergunta.session ? sessaoDaPergunta.session.access_token : '';
-    const resp = await fetch(AI_FUNCTION_URL(), {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-      body: JSON.stringify({ pergunta }),
-    });
+    const [resp] = await Promise.all([
+      fetch(AI_FUNCTION_URL(), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ pergunta }),
+      }),
+      esperarDaLumina(tempoDaLuminaPensar()),
+    ]);
     const dados = await resp.json().catch(() => null);
 
     esconderIndicadorPensando();
@@ -3331,7 +3361,7 @@ async function responderComRespostaPronta(item) {
   blocoPergunta.textContent = pergunta;
   area.appendChild(blocoPergunta);
   criarIndicadorPensando();
-  await esperarDaLumina(650);
+  await esperarDaLumina(tempoDaLuminaPensar());
   esconderIndicadorPensando();
   const blocoResposta = document.createElement('div');
   blocoResposta.className = 'lumina-mensagem';

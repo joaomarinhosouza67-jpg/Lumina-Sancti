@@ -8875,3 +8875,73 @@ body.retro-aberta { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .retro-inicio-estrela, .retro-estrela, .retro-chama, .retro-tela, .retro-barras i.andando b { animation: none; }
 }
+
+body:has(#view-ia.active) .catedral-lado,
+body:has(#view-cenaculos.active) .catedral-lado,
+body:has(#view-cenaculo.active) .catedral-lado { display: none !important; }
+
+.cenaculo-balao { padding: 7px 10px 6px 12px; border-radius: 14px; background: #1d2452; color: #f3f0e6; border: 1px solid rgba(240, 207, 122, 0.12); box-shadow: 0 2px 5px rgba(0, 0, 0, 0.35); }
+.cenaculo-msg.comeco .cenaculo-balao { border-top-left-radius: 3px; }
+.cenaculo-msg.comeco .cenaculo-balao::before { border-top-color: #1d2452; }
+.cenaculo-msg.minha .cenaculo-balao { background: linear-gradient(180deg, #f6d987 0%, #ebc35f 100%); color: #24180a; border-color: rgba(168, 116, 34, 0.35); }
+.cenaculo-msg.minha.comeco .cenaculo-balao { border-top-left-radius: 14px; border-top-right-radius: 3px; }
+.cenaculo-msg.minha.comeco .cenaculo-balao::before { border-top-color: #f6d987; }
+.cenaculo-balao .cenaculo-hora { display: inline-flex; align-items: center; gap: 3px; color: #a9a6c8; }
+.cenaculo-msg.minha .cenaculo-hora { color: rgba(36, 24, 10, 0.62); }
+.cenaculo-msg.minha .cenaculo-apagada { color: rgba(36, 24, 10, 0.62); }
+.cenaculo-msg.sem-balao .cenaculo-balao { border: 0; background: transparent; box-shadow: none; }
+.cenaculo-msg.sem-balao .cenaculo-hora, .cenaculo-msg.minha.sem-balao .cenaculo-hora { background: rgba(10, 14, 34, 0.72); color: #e9e1cf; }
+.cenaculo-msg.minha.com-gif:not(.sem-balao) .cenaculo-balao { background: #2a2a1a; }
+.cenaculo-visto { display: inline-flex; width: 17px; height: 11px; color: rgba(36, 24, 10, 0.5); }
+.cenaculo-visto svg { display: block; width: 100%; height: 100%; }
+.cenaculo-visto.vista { color: #1569d6; }
+.cenaculo-msg.sem-balao .cenaculo-visto, .cenaculo-msg.com-gif .cenaculo-visto { color: rgba(233, 225, 207, 0.75); }
+.cenaculo-msg.sem-balao .cenaculo-visto.vista, .cenaculo-msg.com-gif .cenaculo-visto.vista { color: #53bdeb; }
+.cenaculo-msg.minha .cenaculo-onda i { background: rgba(36, 24, 10, 0.26); }
+.cenaculo-msg.minha .cenaculo-onda i.tocada { background: #24180a; }
+.cenaculo-msg.minha .cenaculo-audio-tocar { background: #24180a; color: #f6d987; }
+.cenaculo-msg.minha .cenaculo-audio-tempo, .cenaculo-msg.minha .cenaculo-audio-velocidade { color: rgba(36, 24, 10, 0.75); }
+#cenaculo-membros-contagem[data-estado="online"] { color: #86e3a6; font-weight: 600; }
+#cenaculo-membros-contagem[data-estado="digitando"] { color: var(--primary-claro); font-style: italic; }
+.cenaculo-figurinha-lumina { display: block; width: 150px; height: 150px; }
+.cenaculo-figurinha-lumina svg, .figurinha-lumina-opcao svg { display: block; width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.4)); }
+.cenaculo-figurinha-lumina .figurinha-lumina-arte { transform-box: view-box; transform-origin: 80px 70px; animation: figurinhaViva 2.8s ease-in-out infinite; }
+@keyframes figurinhaViva { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-4px) rotate(-2deg); } }
+.figurinha-lumina-opcao { aspect-ratio: 1; padding: 6px; border-radius: 14px; background: rgba(255, 255, 255, 0.04); transition: transform 0.15s ease, background 0.15s ease; }
+.figurinha-lumina-opcao:hover, .figurinha-lumina-opcao:focus-visible { transform: scale(1.06); background: rgba(240, 207, 122, 0.12); }
+
+#view-ia .lumina-container { max-width: 1100px; width: 100%; min-height: calc(100dvh - 92px); display: flex; flex-direction: column; padding-top: 12px; }
+#view-ia .btn-back { align-self: flex-start; margin-bottom: 4px; }
+#view-ia #lumina-chat-area { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+#view-ia .lumina-topo-chat, #view-ia .lumina-resposta-area, #view-ia .lumina-input-row, #view-ia .lumina-erro { width: 100%; max-width: 860px; margin-left: auto; margin-right: auto; }
+#view-ia .lumina-resposta-area { padding: 6px 0 18px; }
+#view-ia .lumina-boas-vindas { flex: 1; justify-content: center; gap: 28px; padding: 10px 0 24px; }
+#view-ia .lumina-sugestoes { max-width: 900px; }
+@media (min-width: 900px) { #view-ia .lumina-sugestoes { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+#view-ia .lumina-input-row { margin-top: auto; }
+.lumina-saudacao { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; animation: luminaBolha 0.5s ease both; }
+.lumina-saudacao-estrela { width: 34px; height: 34px; fill: #f6dc8a; filter: drop-shadow(0 0 10px rgba(255, 215, 120, 0.85)); animation: luminaEstrelinha 3.4s ease-in-out infinite; }
+@keyframes luminaEstrelinha { 0%, 100% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(45deg) scale(1.12); } }
+.lumina-saudacao-titulo { margin: 2px 0 0; font-family: var(--font-title); font-weight: 700; font-size: clamp(1.8rem, 4.4vw, 2.6rem); line-height: 1.1; color: transparent; background: linear-gradient(180deg, #fff8dc, #f6dc8a 45%, #d9a93f); -webkit-background-clip: text; background-clip: text; }
+.lumina-saudacao-texto { margin: 0; max-width: 46ch; color: var(--text-muted); font-size: 1rem; line-height: 1.5; }
+.lumina-pensando-bolha { align-self: flex-start; display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px 10px 12px; border-radius: 20px; border: 1px solid rgba(240, 207, 122, 0.28); background: rgba(20, 24, 60, 0.94); box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3); animation: luminaBolha 0.32s ease both; }
+.lumina-pensando-estrela { display: grid; place-items: center; width: 24px; height: 24px; }
+.lumina-pensando-estrela svg { width: 22px; height: 22px; fill: #f6dc8a; filter: drop-shadow(0 0 6px rgba(255, 215, 120, 0.9)); animation: luminaPensaGira 1.6s cubic-bezier(0.5, 0, 0.5, 1) infinite; }
+@keyframes luminaPensaGira { 0% { transform: rotate(0deg) scale(0.82); } 50% { transform: rotate(180deg) scale(1.12); } 100% { transform: rotate(360deg) scale(0.82); } }
+.lumina-pensando-texto { font-weight: 700; font-size: 0.93rem; color: transparent; background: linear-gradient(90deg, #a99460 0%, #fff4d0 45%, #a99460 90%); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; animation: luminaBrilhoTexto 1.6s linear infinite; }
+.lumina-pensando-texto.trocando { animation: luminaBrilhoTexto 1.6s linear infinite, luminaTrocaFrase 0.35s ease; }
+@keyframes luminaBrilhoTexto { from { background-position: 120% 0; } to { background-position: -120% 0; } }
+@keyframes luminaTrocaFrase { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.lumina-pensando-pontos { display: inline-flex; gap: 3px; }
+.lumina-pensando-pontos i { width: 5px; height: 5px; border-radius: 50%; background: #f0cf7a; animation: luminaPonto 1s ease-in-out infinite; }
+.lumina-pensando-pontos i:nth-child(2) { animation-delay: 0.15s; }
+.lumina-pensando-pontos i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes luminaPonto { 0%, 100% { opacity: 0.3; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-3px); } }
+@media (prefers-reduced-motion: reduce) {
+  .cenaculo-figurinha-lumina .figurinha-lumina-arte, .lumina-saudacao-estrela, .lumina-pensando-estrela svg, .lumina-pensando-texto, .lumina-pensando-pontos i { animation: none; }
+  .lumina-pensando-texto { color: #f3e7c4; }
+}
+#view-ia .btn-back { margin-left: max(0px, calc((100% - 860px) / 2)); }
+.cenaculo-gifs-grade { grid-auto-rows: max-content; align-content: start; }
+.figurinha-lumina-opcao { align-self: start; overflow: visible; }
+.figurinha-lumina-opcao svg { height: auto; aspect-ratio: 1; }
