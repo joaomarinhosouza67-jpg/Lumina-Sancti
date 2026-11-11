@@ -2113,7 +2113,7 @@ const TRADUCOES = {
     conta_reenviar: 'Reenviar código',
     lumina_subtitulo: 'A assistente exclusiva do Lumina Sancti — só sobre santos, beatos, veneráveis, doutores e anjos.',
     lumina_precisa_login: 'Para conversar com a Lumina, entre na sua conta (é rápido e gratuito).',
-    lumina_placeholder: 'Pergunte sobre um santo, beato, doutor ou anjo...',
+    lumina_placeholder: 'Pergunte sobre os santos, a Bíblia, as orações, a fé...',
     perfil_titulo: 'Meu perfil',
     perfil_salvar: 'Salvar alterações',
     perfil_zona_perigo: 'Excluir conta',
@@ -2203,7 +2203,7 @@ const TRADUCOES = {
     conta_reenviar: 'Resend code',
     lumina_subtitulo: "Lumina Sancti's own assistant — only about saints, blesseds, venerables, doctors and angels.",
     lumina_precisa_login: 'To talk with Lumina, sign in to your account (it\'s quick and free).',
-    lumina_placeholder: 'Ask about a saint, blessed, doctor or angel...',
+    lumina_placeholder: 'Ask about the saints, the Bible, prayers, the faith...',
     perfil_titulo: 'My profile',
     perfil_salvar: 'Save changes',
     perfil_zona_perigo: 'Delete account',
@@ -2293,7 +2293,7 @@ const TRADUCOES = {
     conta_reenviar: 'Reenviar código',
     lumina_subtitulo: 'La asistente exclusiva de Lumina Sancti — solo sobre santos, beatos, venerables, doctores y ángeles.',
     lumina_precisa_login: 'Para hablar con Lumina, entra en tu cuenta (es rápido y gratis).',
-    lumina_placeholder: 'Pregunta sobre un santo, beato, doctor o ángel...',
+    lumina_placeholder: 'Pregunta sobre los santos, la Biblia, las oraciones, la fe...',
     perfil_titulo: 'Mi perfil',
     perfil_salvar: 'Guardar cambios',
     perfil_zona_perigo: 'Eliminar cuenta',
@@ -3206,7 +3206,14 @@ function iniciarPaginaDePerfil() {
   });
 }
 
-const AI_FUNCTION_URL = () => `${SUPABASE_URL}/functions/v1/perguntar-sobre-santo`;
+const AI_FUNCTION_URL = () => 'https://lumina-ia.5dh6gl58df5c.workers.dev/perguntar';
+
+function historicoDaConversaComLumina(area) {
+  return Array.from(area.querySelectorAll('.lumina-mensagem'))
+    .map((bloco) => ({ papel: bloco.classList.contains('lumina-mensagem-pergunta') ? 'pessoa' : 'lumina', texto: bloco.textContent.trim() }))
+    .filter((m) => m.texto)
+    .slice(-6);
+}
 
 const FRASES_DA_LUMINA_PENSANDO = ['Pensando', 'Procurando na vida dos santos', 'Preparando a resposta'];
 let temporizadorDaLuminaPensando = null;
@@ -3280,6 +3287,8 @@ async function enviarPerguntaLumina() {
   botaoEnviar.disabled = true;
   mostrarConversaDaLumina(true);
   areaResposta.querySelectorAll('.lumina-seguir').forEach((bloco) => bloco.remove());
+  const historico = historicoDaConversaComLumina(areaResposta);
+  const perfilDaPergunta = typeof perfilAdultoAtivo === 'function' ? perfilAdultoAtivo() : null;
 
   const blocoPergunta = document.createElement('div');
   blocoPergunta.className = 'lumina-mensagem lumina-mensagem-pergunta';
@@ -3296,7 +3305,7 @@ async function enviarPerguntaLumina() {
       fetch(AI_FUNCTION_URL(), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ pergunta }),
+        body: JSON.stringify({ pergunta, historico, idioma: idiomaAtual, perfil: perfilDaPergunta ? perfilDaPergunta.id : null }),
       }),
       esperarDaLumina(tempoDaLuminaPensar()),
     ]);
@@ -3321,8 +3330,10 @@ async function enviarPerguntaLumina() {
     acrescentarAcoesDaLumina(areaResposta, dados.resposta);
     areaResposta.scrollTop = areaResposta.scrollHeight;
 
-    if (typeof dados.perguntasRestantesHoje === 'number') {
-      restantesEl.textContent = tr('{n} pergunta(s) restante(s) hoje', { n: dados.perguntasRestantesHoje });
+    if (typeof dados.perguntasRestantes === 'number') {
+      restantesEl.textContent = dados.periodo === 'semana'
+        ? tr('{n} pergunta(s) restante(s) nesta semana', { n: dados.perguntasRestantes })
+        : tr('{n} pergunta(s) restante(s) hoje', { n: dados.perguntasRestantes });
     }
   } catch (e) {
     esconderIndicadorPensando();
@@ -5632,14 +5643,56 @@ function iniciarInstalacaoDoApp() {
 }
 
 const PLANOS = [
-  { id: 'free', nome: 'Gratuito', mensal: null, anual: null, perfis: '1 perfil', destaque: false,
-    itens: ['Todas as biografias dos santos', 'Santo do Dia, orações e terço guiado', 'Trilhas dos Santos', 'Lumina: 5 perguntas por dia', 'Um perfil, de adulto ou de criança'] },
-  { id: 'individual', nome: 'Individual', mensal: 'R$ 19,90', anual: 'R$ 219', porMesNoAnual: 'R$ 18,25', perfis: '1 perfil', destaque: false,
-    itens: ['Tudo do plano Gratuito', 'Mais perguntas à Lumina', 'Quiz dos Santos criado por IA (em breve)', 'Narração com voz natural (em breve)'] },
-  { id: 'duo', nome: 'Duo', mensal: 'R$ 31,90', anual: 'R$ 349', porMesNoAnual: 'R$ 29,08', perfis: '2 perfis', destaque: false,
-    itens: ['Tudo do plano Individual', 'Para duas pessoas', 'Ranking entre vocês dois'] },
-  { id: 'familia', nome: 'Família', mensal: 'R$ 43,80', anual: 'R$ 481', porMesNoAnual: 'R$ 40,08', perfis: 'Até 6 perfis', destaque: true,
-    itens: ['Tudo do plano Individual', 'Até 6 perfis, de adultos e crianças', 'Modo Kids para as crianças', 'Ranking da família'] },
+  { id: 'free', nome: 'Gratuito', mensal: null, anual: null, perfis: '1 perfil', destaque: false, emblema: 'estrela',
+    frase: 'Para começar a caminhar com os santos.',
+    itens: [
+      ['trilha', 'Trilhas dos santos, álbum de figurinhas e Ligas da Fé'],
+      ['terco', 'Terço guiado, novenas, orações e exame de consciência'],
+      ['trofeu', 'Joguinhos da fé para todas as idades'],
+      ['vela', 'Histórias para dormir e Calendário do Advento'],
+      ['conversa', 'Cenáculos e Comunidade com os amigos da fé'],
+      ['estrela', 'Lumina: 5 perguntas por semana'],
+      ['pessoa', 'Um perfil, de adulto ou de criança'],
+    ] },
+  { id: 'individual', nome: 'Individual', mensal: 'R$ 19,90', anual: 'R$ 219', porMesNoAnual: 'R$ 18,25', perfis: '1 perfil', destaque: false, emblema: 'pessoa',
+    frase: 'Para ir mais fundo na fé, no seu ritmo.',
+    itens: [
+      ['check', 'Tudo do plano Gratuito', true],
+      ['estrela', 'Lumina: 20 perguntas por dia'],
+      ['capelo', 'Cursos de aprofundamento para assinantes'],
+      ['coroa', 'Todos os enfeites do perfil: molduras, efeitos e faixas'],
+      ['lampada', 'Quiz dos Santos criado por IA (em breve)'],
+      ['som', 'Narração com voz natural (em breve)'],
+    ] },
+  { id: 'duo', nome: 'Duo', mensal: 'R$ 31,90', anual: 'R$ 349', porMesNoAnual: 'R$ 29,08', perfis: '2 perfis', destaque: false, emblema: 'aliancas',
+    frase: 'Para o casal, os amigos ou dois irmãos.',
+    itens: [
+      ['check', 'Tudo do plano Individual', true],
+      ['usuarios', 'Dois perfis, cada um com as suas trilhas e a sua liga'],
+      ['estrela', 'Lumina: 20 perguntas por dia em cada perfil'],
+      ['trofeu', 'Ranking só entre vocês dois'],
+    ] },
+  { id: 'familia', nome: 'Família', mensal: 'R$ 43,80', anual: 'R$ 481', porMesNoAnual: 'R$ 40,08', perfis: 'Até 6 perfis', destaque: true, emblema: 'igreja',
+    frase: 'Para a casa inteira crescer na fé junta.',
+    itens: [
+      ['check', 'Tudo do plano Individual', true],
+      ['usuarios', 'Até 6 perfis, de adultos e crianças'],
+      ['coracao', 'Modo Kids com a Lumi e o PIN dos pais'],
+      ['estrela', 'Lumina: 20 perguntas por dia em cada perfil de adulto'],
+      ['trofeu', 'Ranking da família'],
+    ] },
+];
+const COMPARACAO_DOS_PLANOS = [
+  ['Trilhas, álbum de figurinhas e Ligas da Fé', true, true, true, true],
+  ['Terço, novenas, orações e exame de consciência', true, true, true, true],
+  ['Joguinhos da fé', true, true, true, true],
+  ['Histórias para dormir e Advento', true, true, true, true],
+  ['Cenáculos e Comunidade', true, true, true, true],
+  ['Perguntas à Lumina', '5 por semana', '20 por dia', '20 por dia', '20 por dia'],
+  ['Perfis', '1', '1', '2', 'Até 6'],
+  ['Cursos de aprofundamento', false, true, true, true],
+  ['Enfeites do perfil', 'Básicos', 'Todos', 'Todos', 'Todos'],
+  ['Ranking da família', false, false, true, true],
 ];
 let periodoDosPlanos = 'mensal';
 
@@ -5678,14 +5731,16 @@ function renderizarPlanos() {
     botao.classList.toggle('ativo', botao.dataset.periodo === periodoDosPlanos);
     botao.setAttribute('aria-pressed', botao.dataset.periodo === periodoDosPlanos ? 'true' : 'false');
   });
-  grade.innerHTML = PLANOS.map((plano) => `
-    <div class="plano-cartao${plano.destaque ? ' destaque' : ''}" data-plano-cartao="${plano.id}">
+  grade.innerHTML = PLANOS.map((plano, ordem) => `
+    <div class="plano-cartao plano-${plano.id}${plano.destaque ? ' destaque' : ''}" data-plano-cartao="${plano.id}" style="--ordem:${ordem}">
       ${plano.destaque ? '<span class="plano-selo">Mais completo</span>' : ''}
+      <span class="plano-emblema" aria-hidden="true">${icone(plano.emblema)}</span>
       <h3 class="plano-nome">${plano.nome}</h3>
       <p class="plano-perfis">${plano.perfis}</p>
+      <p class="plano-frase">${plano.frase}</p>
       ${precoDoPlano(plano)}
       <ul class="plano-itens">
-        ${plano.itens.map((item) => `<li>${icone('check')}<span>${item}</span></li>`).join('')}
+        ${plano.itens.map(([nomeDoIcone, texto, base]) => `<li${base ? ' class="plano-item-base"' : ''}><span class="plano-item-icone">${icone(nomeDoIcone)}</span><span>${texto}</span></li>`).join('')}
       </ul>
       ${botaoDoPlano(plano)}
     </div>`).join('');
@@ -5695,7 +5750,29 @@ function renderizarPlanos() {
   grade.querySelectorAll('[data-gerenciar]').forEach((botao) => {
     botao.addEventListener('click', () => { if (typeof gerenciarAssinatura === 'function') gerenciarAssinatura(botao); });
   });
+  desenharComparacaoDosPlanos();
   if (typeof atualizarRodapeDosPlanos === 'function') atualizarRodapeDosPlanos();
+}
+
+function celulaDaComparacao(valor) {
+  if (valor === true) return `<span class="planos-comparar-sim" aria-label="Sim">${icone('check')}</span>`;
+  if (valor === false) return '<span class="planos-comparar-nao" aria-label="Não">—</span>';
+  return `<span class="planos-comparar-texto">${valor}</span>`;
+}
+
+function desenharComparacaoDosPlanos() {
+  const lugar = document.getElementById('planos-comparar');
+  if (!lugar) return;
+  lugar.innerHTML = `
+    <h3 class="planos-comparar-titulo">Compare os planos</h3>
+    <div class="planos-comparar-rolagem">
+      <table class="planos-comparar-tabela">
+        <thead><tr><th></th>${PLANOS.map((p) => `<th class="${p.destaque ? 'destaque' : ''}">${p.nome}</th>`).join('')}</tr></thead>
+        <tbody>
+          ${COMPARACAO_DOS_PLANOS.map(([nome, ...valores]) => `<tr><th scope="row">${nome}</th>${valores.map((v, i) => `<td class="${PLANOS[i].destaque ? 'destaque' : ''}">${celulaDaComparacao(v)}</td>`).join('')}</tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
 }
 
 function abrirPlanos() {

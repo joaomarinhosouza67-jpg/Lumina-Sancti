@@ -487,7 +487,7 @@
           <div id="lumina-resposta-area" class="lumina-resposta-area"></div>
 
           <div class="lumina-input-row">
-            <input type="text" id="lumina-input" class="lumina-input" data-i18n-placeholder="lumina_placeholder" placeholder="Pergunte sobre um santo, beato, doutor ou anjo...">
+            <input type="text" id="lumina-input" class="lumina-input" data-i18n-placeholder="lumina_placeholder" placeholder="Pergunte sobre os santos, a Bíblia, as orações, a fé...">
             <button id="lumina-enviar" class="btn-lumina-enviar" aria-label="Enviar">
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </button>
@@ -1006,13 +1006,18 @@
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
           <span data-i18n="voltar_inicio">Voltar para o início</span>
         </button>
-        <h2 class="section-title trilhas-titulo">Planos</h2>
-        <p class="trilhas-intro">Escolha o jeito de caminhar com os santos: sozinho, a dois ou com toda a família.</p>
+        <div class="planos-topo">
+          <span class="planos-topo-brilho" aria-hidden="true"></span>
+          <h2 class="section-title trilhas-titulo">Planos</h2>
+          <p class="trilhas-intro">Escolha o jeito de caminhar com os santos: sozinho, a dois ou com toda a família.</p>
+          <p class="planos-topo-gratis"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-check"></use></svg> Quase tudo é grátis para sempre. Os planos ajudam a manter o Lumina Sancti no ar e trazem mais perfis, mais Lumina e os cursos.</p>
+        </div>
         <div class="planos-periodo" role="group" aria-label="Como pagar">
           <button type="button" class="planos-periodo-botao ativo" data-periodo="mensal" aria-pressed="true">Mensal</button>
           <button type="button" class="planos-periodo-botao" data-periodo="anual" aria-pressed="false">Anual <small>1 mês de desconto</small></button>
         </div>
         <div id="planos-grade" class="planos-grade"></div>
+        <div id="planos-comparar" class="planos-comparar"></div>
         <div class="planos-rodape">
           <div id="planos-situacao" class="planos-situacao" hidden></div>
           <p class="planos-mensagem" id="planos-mensagem" aria-live="polite"></p>
