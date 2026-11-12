@@ -8,6 +8,7 @@ const IDADES_DOS_JOGOS = [
   { id: 'adultos', rotulo: 'Adultos' },
 ];
 const JOGOS = [
+  { id: 'quizia', nome: 'Quiz dos Santos', texto: 'A Lumina cria perguntas sobre o santo que você quiser.', idades: ['13a17', 'adultos'], personagem: 'lumi', icone: 'lampada', cor: '#c9b8ff', comIa: true },
   { id: 'estrelas', nome: 'Acenda as estrelas', texto: 'Toque nas estrelinhas para encher o céu de luz.', idades: ['pequeninos', 'ate7'], personagem: 'lumi', icone: 'estrela', cor: '#f0cf7a' },
   { id: 'bolhas', nome: 'Bolhas de luz', texto: 'Estoure as bolhas antes que elas voem embora.', idades: ['pequeninos', 'ate7'], personagem: 'mel', icone: 'coracao', cor: '#8fd3ff' },
   { id: 'sombras', nome: 'Qual é a sombra?', texto: 'Ajude a Mel a achar a sombra certa de cada amigo.', idades: ['pequeninos', 'ate7'], personagem: 'mel', icone: 'pessoa', cor: '#c9b8ff' },
@@ -399,6 +400,7 @@ function mostrarListaDeJogos(opcoes) {
           <span class="jogo-cartao-rodape">
             <span class="jogo-cartao-estrelas" aria-label="${textoDoJogo('{n} de 3 estrelas', { n: recordes[jogo.id] || 0 })}">${[1, 2, 3].map((n) => `<i class="${(recordes[jogo.id] || 0) >= n ? 'ganha' : ''}"></i>`).join('')}</span>
             ${jogo.contraIa ? `<span class="jogo-cartao-ia">${textoDoJogo('Contra a Lumi')}</span>` : ''}
+            ${jogo.comIa ? `<span class="jogo-cartao-ia">${textoDoJogo('Com a Lumina')}</span>` : ''}
           </span>
         </span>
         <span class="jogo-cartao-jogar">${textoDoJogo('Jogar')}</span>
@@ -454,11 +456,15 @@ function comecarJogo(id, opcoes) {
     }
     configuracao = Object.assign({}, configuracao, { nivel: 0 });
   }
+  if (jogo.comIa && !configuracao.santo) {
+    mostrarEscolhaDoQuizDaLumina(jogo);
+    return;
+  }
   if (jogo.contraIa && configuracao.nivel === undefined && !configuracao.direto) {
     mostrarEscolhaDeNivel(jogo);
     return;
   }
-  jogoAtual = { jogo, erros: 0, fim: false, timers: [], intervalos: [], limpezas: [], nivel: configuracao.nivel !== undefined ? configuracao.nivel : nivelPadraoDoJogo(), fase: configuracao.fase };
+  jogoAtual = { jogo, erros: 0, fim: false, timers: [], intervalos: [], limpezas: [], nivel: configuracao.nivel !== undefined ? configuracao.nivel : nivelPadraoDoJogo(), fase: configuracao.fase, santo: configuracao.santo };
   lugar.innerHTML = `
     <div class="jogo-tela" data-jogo="${jogo.id}" style="--cor:${jogo.cor}">
       <div class="jogo-cabecalho">
@@ -480,7 +486,7 @@ function comecarJogo(id, opcoes) {
     estrelas: jogoDasEstrelas, bolhas: jogoDasBolhas, sombras: jogoDasSombras, contar: jogoDeContar, ovelhas: jogoDasOvelhas, vitral: jogoDoVitral,
     diferente: jogoDoDiferente, sinos: jogoDosSinos, girar: jogoDeGirar, memoria: jogoDaMemoria, simon: jogoSigaALuz, velha: jogoDaVelha,
     simbolos: jogoDosSimbolos, historia: jogoDaHistoria, palavras: jogoDasPalavras, quemsou: jogoQuemSouEu, oracao: jogoDaOracao,
-    anagrama: jogoDoAnagrama, quiz: jogoDoQuiz, duelo: jogoDoDuelo,
+    anagrama: jogoDoAnagrama, quiz: jogoDoQuiz, duelo: jogoDoDuelo, quizia: jogoDoQuizDaLumina,
   }[id];
   comecar(document.getElementById('jogo-area'));
 }
@@ -2241,9 +2247,299 @@ function jogoDoDuelo(area) {
   falarNoJogo(textoDoJogo('Você começa! Quem achar mais pares vence.'));
 }
 
+const QUIZ_DA_LUMINA_URL = 'https://lumina-ia.5dh6gl58df5c.workers.dev/quiz';
+const PALAVRAS_SEM_PESO_NO_QUIZ = ['o', 'a', 'os', 'as', 'um', 'uma', 'de', 'do', 'da', 'dos', 'das', 'em', 'no', 'na', 'the', 'an', 'of', 'el', 'la', 'los', 'las', 'del', 'en', 'un', 'una'];
+let ultimosSantosDoQuiz = [];
+
+function escaparNoJogo(texto) {
+  return String(texto === undefined || texto === null ? '' : texto).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function semAcentoNoJogo(texto) {
+  return String(texto || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
+function nomeDoSantoNoJogo(santo) {
+  return typeof textoDoSanto === 'function' ? textoDoSanto(santo).nome : santo.nome;
+}
+
+function apoioDoSantoNoQuiz(santo) {
+  const textos = typeof textoDoSanto === 'function' ? textoDoSanto(santo) : santo;
+  return `${textos.resumo || ''} ${textos.texto || ''}`.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 1600);
+}
+
+function nomeSemTitulo(nome) {
+  return semAcentoNoJogo(nome).replace(/^(sao|santo|santa|san|saint|st|beato|beata|beatified|blessed)\s+/, '');
+}
+
+function santoDoAppPeloNome(nome) {
+  const procurado = nomeSemTitulo(nome);
+  if (procurado.length < 3) return null;
+  return santosParaOsJogos().find((santo) => [santo.nome, nomeDoSantoNoJogo(santo)].some((outro) => {
+    const limpo = nomeSemTitulo(outro);
+    return limpo === procurado || (procurado.length >= 6 && limpo.startsWith(`${procurado} `));
+  })) || null;
+}
+
+function santoParaOQuiz(santo, modo) {
+  return { id: santo.id, nome: nomeDoSantoNoJogo(santo), sobre: apoioDoSantoNoQuiz(santo), modo };
+}
+
+function sortearSantoDoQuiz() {
+  const santos = santosParaOsJogos();
+  const livres = santos.filter((santo) => !ultimosSantosDoQuiz.includes(santo.id));
+  return sortearDoJogo(livres.length ? livres : santos);
+}
+
+function distanciaEntre(a, b) {
+  const linha = Array.from({ length: b.length + 1 }, (_, i) => i);
+  for (let i = 1; i <= a.length; i += 1) {
+    let anterior = linha[0];
+    linha[0] = i;
+    for (let j = 1; j <= b.length; j += 1) {
+      const guardado = linha[j];
+      linha[j] = Math.min(linha[j] + 1, linha[j - 1] + 1, anterior + (a[i - 1] === b[j - 1] ? 0 : 1));
+      anterior = guardado;
+    }
+  }
+  return linha[b.length];
+}
+
+function respostaAbertaCerta(digitado, aceitas) {
+  const limpar = (texto) => semAcentoNoJogo(texto).split(' ').filter((palavra) => palavra && !PALAVRAS_SEM_PESO_NO_QUIZ.includes(palavra)).join(' ');
+  const resposta = limpar(digitado);
+  if (!resposta) return false;
+  return (aceitas || []).some((aceita) => {
+    const certa = limpar(aceita);
+    if (!certa) return false;
+    if (resposta === certa) return true;
+    if (certa.length >= 4 && ` ${resposta} `.includes(` ${certa} `)) return true;
+    const limite = certa.length <= 4 ? 0 : certa.length <= 8 ? 1 : 2;
+    return distanciaEntre(resposta, certa) <= limite;
+  });
+}
+
+function abrirQuizDaLumina() {
+  abrirJogos();
+  const jogo = JOGOS.find((j) => j.id === 'quizia');
+  const visiveis = idadesVisiveisDosJogos().map((idade) => idade.id);
+  if (jogo && !jogo.idades.includes(idadeDosJogos)) {
+    const idade = jogo.idades.slice().reverse().find((id) => visiveis.includes(id));
+    if (idade) idadeDosJogos = idade;
+  }
+  comecarJogo('quizia');
+}
+
+function mostrarEscolhaDoQuizDaLumina(jogo, opcoes) {
+  const lugar = document.getElementById('jogos-container');
+  if (!lugar) return;
+  pararJogoAtual();
+  const config = opcoes || {};
+  const logado = typeof sessaoAtual === 'undefined' || !!sessaoAtual;
+  lugar.innerHTML = `
+    <div class="jogo-tela" data-jogo="${jogo.id}" style="--cor:${jogo.cor}">
+      <div class="jogo-cabecalho"><button type="button" class="jogo-voltar" id="jogo-voltar"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>${textoDoJogo('Outros jogos')}</span></button><strong class="jogo-nome">${textoDoJogo(jogo.nome)}</strong><span class="jogo-placar"></span></div>
+      <div class="quizia-escolha">
+        <span class="quizia-arte">${htmlDoPersonagem('lumi')}</span>
+        ${logado ? `
+        <strong class="quizia-titulo">${textoDoJogo('Sobre qual santo?')}</strong>
+        <div class="quizia-modos">
+          <button type="button" class="quizia-modo" data-modo="surpresa"><span class="quizia-modo-icone">${iconeDoJogo('estrela')}</span><span>${textoDoJogo('Santo surpresa')}</span></button>
+          <button type="button" class="quizia-modo" data-modo="lista"><span class="quizia-modo-icone">${iconeDoJogo('livro')}</span><span>${textoDoJogo('Escolher da lista')}</span></button>
+          <button type="button" class="quizia-modo" data-modo="digitar"><span class="quizia-modo-icone">${iconeDoJogo('lapis')}</span><span>${textoDoJogo('Digitar o nome')}</span></button>
+        </div>
+        <div class="quizia-painel" id="quizia-painel"></div>` : `
+        <strong class="quizia-titulo">${textoDoJogo('Entre na sua conta para jogar o quiz com a Lumina.')}</strong>
+        <button type="button" class="jogo-botao" id="quizia-entrar">${textoDoJogo('Entrar / Criar conta')}</button>`}
+        <p class="quizia-aviso" id="quizia-aviso" aria-live="polite">${escaparNoJogo(config.aviso || '')}</p>
+        ${config.precisaLogin && logado ? `<button type="button" class="jogo-botao" id="quizia-entrar">${textoDoJogo('Entrar / Criar conta')}</button>` : ''}
+      </div>
+    </div>`;
+  document.getElementById('jogo-voltar').addEventListener('click', () => mostrarListaDeJogos());
+  const entrar = document.getElementById('quizia-entrar');
+  if (entrar) entrar.addEventListener('click', () => { if (typeof irParaLogin === 'function') irParaLogin(); });
+  if (!logado) return;
+  const painel = document.getElementById('quizia-painel');
+  const comecar = (santo) => {
+    ultimosSantosDoQuiz = [santo.id].concat(ultimosSantosDoQuiz.filter((id) => id && id !== santo.id)).slice(0, 12);
+    comecarJogo(jogo.id, { santo });
+  };
+  const marcarModo = (modo) => lugar.querySelectorAll('.quizia-modo').forEach((botao) => botao.classList.toggle('ativo', botao.dataset.modo === modo));
+  const abrirLista = () => {
+    marcarModo('lista');
+    const santos = santosParaOsJogos().slice().sort((a, b) => nomeSemTitulo(nomeDoSantoNoJogo(a)).localeCompare(nomeSemTitulo(nomeDoSantoNoJogo(b))));
+    painel.innerHTML = `
+      <input type="search" class="quizia-campo" id="quizia-busca" placeholder="${escaparNoJogo(textoDoJogo('Procurar santo'))}" autocomplete="off">
+      <div class="quizia-lista" id="quizia-lista">${santos.map((santo) => `<button type="button" class="quizia-santo" data-santo="${santo.id}" data-busca="${escaparNoJogo(`${semAcentoNoJogo(santo.nome)} ${semAcentoNoJogo(nomeDoSantoNoJogo(santo))}`)}">${escaparNoJogo(nomeDoSantoNoJogo(santo))}</button>`).join('')}</div>`;
+    const busca = document.getElementById('quizia-busca');
+    busca.addEventListener('input', () => {
+      const termo = semAcentoNoJogo(busca.value);
+      painel.querySelectorAll('.quizia-santo').forEach((botao) => { botao.hidden = !!termo && !botao.dataset.busca.includes(termo); });
+    });
+    painel.querySelectorAll('.quizia-santo').forEach((botao) => {
+      botao.addEventListener('click', () => {
+        const santo = santosParaOsJogos().find((s) => s.id === botao.dataset.santo);
+        if (santo) comecar(santoParaOQuiz(santo, 'lista'));
+      });
+    });
+  };
+  const abrirDigitar = (nome) => {
+    marcarModo('digitar');
+    painel.innerHTML = `
+      <form class="quizia-digitar" id="quizia-form">
+        <input type="text" class="quizia-campo" id="quizia-nome" maxlength="80" autocomplete="off" placeholder="${escaparNoJogo(textoDoJogo('Ex.: Santa Rita de Cássia'))}" value="${escaparNoJogo(nome || '')}">
+        <button type="submit" class="jogo-botao">${textoDoJogo('Criar quiz')}</button>
+      </form>`;
+    const campo = document.getElementById('quizia-nome');
+    document.getElementById('quizia-form').addEventListener('submit', (evento) => {
+      evento.preventDefault();
+      const digitado = campo.value.replace(/\s+/g, ' ').trim();
+      if (digitado.length < 2) { campo.focus(); return; }
+      const doApp = santoDoAppPeloNome(digitado);
+      comecar(doApp ? Object.assign(santoParaOQuiz(doApp, 'digitar'), { digitado }) : { id: '', nome: digitado, sobre: '', modo: 'digitar', digitado });
+    });
+    if (!(typeof window.matchMedia === 'function' && window.matchMedia('(pointer: coarse)').matches)) campo.focus();
+  };
+  lugar.querySelectorAll('.quizia-modo').forEach((botao) => {
+    botao.addEventListener('click', () => {
+      document.getElementById('quizia-aviso').textContent = '';
+      if (botao.dataset.modo === 'surpresa') {
+        const santo = sortearSantoDoQuiz();
+        if (santo) comecar(santoParaOQuiz(santo, 'surpresa'));
+      } else if (botao.dataset.modo === 'lista') abrirLista();
+      else abrirDigitar();
+    });
+  });
+  if (config.modo === 'lista') abrirLista();
+  if (config.modo === 'digitar') abrirDigitar(config.digitado);
+}
+
+async function pedirQuizDaLumina(santo) {
+  let token = '';
+  try {
+    const sessao = await supabaseCliente.auth.getSession();
+    token = sessao.data.session ? sessao.data.session.access_token : '';
+  } catch (e) {
+    token = '';
+  }
+  const perfil = typeof perfilAdultoAtivo === 'function' ? perfilAdultoAtivo() : null;
+  const resposta = await fetch(QUIZ_DA_LUMINA_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ santo: santo.nome, sobre: santo.sobre || '', idioma: typeof idiomaAtual === 'string' ? idiomaAtual : 'pt', perfil: perfil ? perfil.id : null }),
+  });
+  const dados = await resposta.json().catch(() => null);
+  return { ok: resposta.ok && !!dados && Array.isArray(dados.perguntas) && dados.perguntas.length > 0, dados: dados || {} };
+}
+
+async function jogoDoQuizDaLumina(area) {
+  const partida = jogoAtual;
+  const santo = partida.santo;
+  area.innerHTML = '<div class="quizia-carregando" aria-hidden="true"><span></span><span></span><span></span></div>';
+  falarNoJogo(textoDoJogo('Preparando as perguntas sobre {nome}...', { nome: santo.nome }));
+  let pedido = { ok: false, dados: {} };
+  try {
+    pedido = await pedirQuizDaLumina(santo);
+  } catch (e) {
+    pedido = { ok: false, dados: {} };
+  }
+  if (jogoAtual !== partida) return;
+  if (!pedido.ok) {
+    if (pedido.dados.precisaLogin) {
+      try { await supabaseCliente.auth.signOut({ scope: 'local' }); } catch (e) {
+      }
+    }
+    mostrarEscolhaDoQuizDaLumina(partida.jogo, {
+      aviso: pedido.dados.erro || textoDoJogo('Não consegui falar com a Lumina agora. Tente de novo em instantes.'),
+      precisaLogin: !!pedido.dados.precisaLogin,
+      modo: santo.modo === 'surpresa' ? '' : santo.modo,
+      digitado: santo.digitado || santo.nome,
+    });
+    return;
+  }
+  const perguntas = pedido.dados.perguntas;
+  const nomeDoSanto = pedido.dados.santo || santo.nome;
+  const restantes = pedido.dados.quizzesRestantes;
+  const periodo = pedido.dados.periodo;
+  let indice = 0;
+  let acertos = 0;
+  const mostrar = () => {
+    if (jogoAtual !== partida) return;
+    if (indice >= perguntas.length) {
+      let mensagem = textoDoJogo('Você acertou {n} de {total} sobre {santo}.', { n: acertos, total: perguntas.length, santo: nomeDoSanto });
+      if (typeof restantes === 'number') mensagem += ` ${textoDoJogo(periodo === 'dia' ? 'Quizzes restantes hoje: {n}' : 'Quizzes restantes nesta semana: {n}', { n: restantes })}`;
+      terminarJogo(estrelasPelosErros(partida.erros, [0, 2]), mensagem.replace(/[<>&]/g, ''));
+      return;
+    }
+    const pergunta = perguntas[indice];
+    const aberta = pergunta.tipo === 'aberta';
+    let respondida = false;
+    placarDoJogo(`${indice + 1}/${perguntas.length}`);
+    area.innerHTML = `
+      <div class="jogo-quiz quizia-quiz">
+        <p class="jogo-quiz-pergunta">${escaparNoJogo(pergunta.pergunta)}</p>
+        ${aberta ? `
+        <form class="quizia-digitar" id="quizia-aberta">
+          <input type="text" class="quizia-campo" id="quizia-resposta" maxlength="80" autocomplete="off" placeholder="${escaparNoJogo(textoDoJogo('Sua resposta'))}">
+          <button type="submit" class="jogo-botao">${textoDoJogo('Responder')}</button>
+        </form>` : `<div class="jogo-opcoes">${pergunta.opcoes.map((opcao, i) => `<button type="button" class="jogo-opcao" data-opcao="${i}">${escaparNoJogo(opcao)}</button>`).join('')}</div>`}
+        <div class="quizia-resultado" id="quizia-resultado" hidden></div>
+      </div>`;
+    falarNoJogo(nomeDoSanto);
+    const fechar = (acertou, alvo, certaParaMostrar) => {
+      if (respondida) return;
+      respondida = true;
+      if (acertou) { acertos += 1; acertouNoJogo(textoDoJogo('Isso mesmo!'), alvo); }
+      else errouNoJogo(textoDoJogo('Não foi dessa vez.'), alvo);
+      const resultado = document.getElementById('quizia-resultado');
+      if (!resultado) return;
+      resultado.innerHTML = `
+        ${!acertou && certaParaMostrar ? `<strong>${textoDoJogo('Resposta: {resposta}', { resposta: escaparNoJogo(certaParaMostrar) })}</strong>` : ''}
+        ${pergunta.explicacao ? `<p>${escaparNoJogo(pergunta.explicacao)}</p>` : ''}
+        <button type="button" class="jogo-botao" id="quizia-proxima">${textoDoJogo(indice + 1 < perguntas.length ? 'Próxima' : 'Ver resultado')}</button>`;
+      resultado.hidden = false;
+      const proxima = document.getElementById('quizia-proxima');
+      proxima.addEventListener('click', () => { indice += 1; mostrar(); });
+      if (proxima.focus) proxima.focus({ preventScroll: true });
+      if (resultado.scrollIntoView) resultado.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    };
+    if (aberta) {
+      const campo = document.getElementById('quizia-resposta');
+      document.getElementById('quizia-aberta').addEventListener('submit', (evento) => {
+        evento.preventDefault();
+        if (respondida) return;
+        if (!campo.value.trim()) { campo.focus(); return; }
+        const acertou = respostaAbertaCerta(campo.value, pergunta.aceitas || [pergunta.resposta]);
+        campo.disabled = true;
+        campo.classList.add(acertou ? 'certa' : 'errada');
+        const botao = area.querySelector('#quizia-aberta .jogo-botao');
+        if (botao) botao.disabled = true;
+        fechar(acertou, campo, pergunta.resposta);
+      });
+      if (!(typeof window.matchMedia === 'function' && window.matchMedia('(pointer: coarse)').matches)) campo.focus();
+    } else {
+      area.querySelectorAll('.jogo-opcao').forEach((botao) => {
+        botao.addEventListener('click', () => {
+          if (respondida) return;
+          const acertou = Number(botao.dataset.opcao) === pergunta.certa;
+          area.querySelectorAll('.jogo-opcao').forEach((outro) => {
+            outro.disabled = true;
+            if (Number(outro.dataset.opcao) === pergunta.certa) outro.classList.add('certa');
+          });
+          if (!acertou) botao.classList.add('errada');
+          fechar(acertou, botao, '');
+        });
+      });
+    }
+  };
+  mostrar();
+}
+
 function iniciarJogos() {
   const nav = document.getElementById('nav-jogos');
   if (nav) nav.addEventListener('click', abrirJogos);
+  const atalhoDoQuiz = document.getElementById('lumina-quiz');
+  if (atalhoDoQuiz) atalhoDoQuiz.addEventListener('click', abrirQuizDaLumina);
   window.addEventListener('resize', () => { if (idadeDosJogos === 'pequeninos' && document.getElementById('pequeninos-caminho')) desenharLinhaDosPequeninos(); });
 }
 

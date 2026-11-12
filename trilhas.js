@@ -800,7 +800,6 @@ const TEXTOS_TRILHAS = {
     revisao_de: 'Revisão da missão {n} · {titulo}',
     revisar_feita: 'Missão concluída',
     revisar_titulo: 'Missão {n} · {titulo}',
-    revisar_texto: 'Revise com perguntas novas e ganhe mais Fé.',
     revisar_botao: 'Revisar',
     revisar_fe: '+{n} Fé',
     missao_bloqueada: ' (bloqueada)',
@@ -899,7 +898,6 @@ const TEXTOS_TRILHAS = {
     revisao_de: 'Review of mission {n} · {titulo}',
     revisar_feita: 'Mission complete',
     revisar_titulo: 'Mission {n} · {titulo}',
-    revisar_texto: 'Review with new questions and earn more Faith.',
     revisar_botao: 'Review',
     revisar_fe: '+{n} Faith',
     missao_bloqueada: ' (locked)',
@@ -998,7 +996,6 @@ const TEXTOS_TRILHAS = {
     revisao_de: 'Repaso de la misión {n} · {titulo}',
     revisar_feita: 'Misión cumplida',
     revisar_titulo: 'Misión {n} · {titulo}',
-    revisar_texto: 'Repasa con preguntas nuevas y gana más Fe.',
     revisar_botao: 'Repasar',
     revisar_fe: '+{n} Fe',
     missao_bloqueada: ' (bloqueada)',
@@ -1989,11 +1986,9 @@ function abrirBalaoDeRevisao(botao) {
   balao.setAttribute('role', 'dialog');
   balao.innerHTML = jaRevisada ? `
     <span class="no-revisar-selo">${icone('estrela')} ${tr('Missão revisada')}</span>
-    <strong class="no-revisar-titulo">${tt('revisar_titulo', { n: indice + 1, titulo: trilha.licoes[indice].titulo })}</strong>
-    <p class="no-revisar-texto">${tr('Você já revisou esta missão. Ela agora é dourada.')}</p>` : `
+    <strong class="no-revisar-titulo">${tt('revisar_titulo', { n: indice + 1, titulo: trilha.licoes[indice].titulo })}</strong>` : `
     <span class="no-revisar-selo">${icone('check')} ${tt('revisar_feita')}</span>
     <strong class="no-revisar-titulo">${tt('revisar_titulo', { n: indice + 1, titulo: trilha.licoes[indice].titulo })}</strong>
-    <p class="no-revisar-texto">${tt('revisar_texto')}</p>
     <button type="button" class="no-revisar-botao">
       <span>${tt('revisar_botao')}</span>
       <span class="no-revisar-fe">${estrelaDaFe('pequena')} ${tt('revisar_fe', { n: fe })}</span>

@@ -3251,22 +3251,24 @@ function esconderIndicadorPensando() {
   if (bolha) bolha.remove();
 }
 
-function efeitoMaquinaDeEscrever(elemento, textoCompleto, velocidadeMs = 18) {
+function efeitoMaquinaDeEscrever(elemento, textoCompleto) {
   return new Promise((resolve) => {
+    const texto = String(textoCompleto || '');
+    const duracao = Math.min(1500, Math.max(300, texto.length * 2));
+    const inicio = Date.now();
     elemento.textContent = '';
     elemento.classList.add('cursor-digitando');
-    let i = 0;
-    function proximaLetra() {
-      if (i < textoCompleto.length) {
-        elemento.textContent += textoCompleto.charAt(i);
-        i++;
-        setTimeout(proximaLetra, velocidadeMs);
+    function escrever() {
+      const fracao = Math.min(1, (Date.now() - inicio) / duracao);
+      elemento.textContent = texto.slice(0, Math.ceil(texto.length * fracao));
+      if (fracao < 1) {
+        setTimeout(escrever, 16);
       } else {
         elemento.classList.remove('cursor-digitando');
         resolve();
       }
     }
-    proximaLetra();
+    escrever();
   });
 }
 
@@ -3377,7 +3379,7 @@ async function responderComRespostaPronta(item) {
   const blocoResposta = document.createElement('div');
   blocoResposta.className = 'lumina-mensagem';
   area.appendChild(blocoResposta);
-  await efeitoMaquinaDeEscrever(blocoResposta, resposta, 9);
+  await efeitoMaquinaDeEscrever(blocoResposta, resposta);
   acrescentarAcoesDaLumina(area, resposta);
   input.disabled = false;
   if (enviar) enviar.disabled = false;
@@ -5644,7 +5646,6 @@ function iniciarInstalacaoDoApp() {
 
 const PLANOS = [
   { id: 'free', nome: 'Gratuito', mensal: null, anual: null, perfis: '1 perfil', destaque: false, emblema: 'estrela',
-    frase: 'Para começar a caminhar com os santos.',
     itens: [
       ['trilha', 'Trilhas dos santos, álbum de figurinhas e Ligas da Fé'],
       ['terco', 'Terço guiado, novenas, orações e exame de consciência'],
@@ -5652,20 +5653,19 @@ const PLANOS = [
       ['vela', 'Histórias para dormir e Calendário do Advento'],
       ['conversa', 'Cenáculos e Comunidade com os amigos da fé'],
       ['estrela', 'Lumina: 5 perguntas por semana'],
+      ['lampada', 'Quiz dos Santos com a Lumina: 3 por semana'],
       ['pessoa', 'Um perfil, de adulto ou de criança'],
     ] },
   { id: 'individual', nome: 'Individual', mensal: 'R$ 19,90', anual: 'R$ 219', porMesNoAnual: 'R$ 18,25', perfis: '1 perfil', destaque: false, emblema: 'pessoa',
-    frase: 'Para ir mais fundo na fé, no seu ritmo.',
     itens: [
       ['check', 'Tudo do plano Gratuito', true],
       ['estrela', 'Lumina: 20 perguntas por dia'],
       ['capelo', 'Cursos de aprofundamento para assinantes'],
       ['coroa', 'Todos os enfeites do perfil: molduras, efeitos e faixas'],
-      ['lampada', 'Quiz dos Santos criado por IA (em breve)'],
+      ['lampada', 'Quiz dos Santos com a Lumina: 10 por dia'],
       ['som', 'Narração com voz natural (em breve)'],
     ] },
   { id: 'duo', nome: 'Duo', mensal: 'R$ 31,90', anual: 'R$ 349', porMesNoAnual: 'R$ 29,08', perfis: '2 perfis', destaque: false, emblema: 'aliancas',
-    frase: 'Para o casal, os amigos ou dois irmãos.',
     itens: [
       ['check', 'Tudo do plano Individual', true],
       ['usuarios', 'Dois perfis, cada um com as suas trilhas e a sua liga'],
@@ -5673,7 +5673,6 @@ const PLANOS = [
       ['trofeu', 'Ranking só entre vocês dois'],
     ] },
   { id: 'familia', nome: 'Família', mensal: 'R$ 43,80', anual: 'R$ 481', porMesNoAnual: 'R$ 40,08', perfis: 'Até 6 perfis', destaque: true, emblema: 'igreja',
-    frase: 'Para a casa inteira crescer na fé junta.',
     itens: [
       ['check', 'Tudo do plano Individual', true],
       ['usuarios', 'Até 6 perfis, de adultos e crianças'],
@@ -5689,6 +5688,7 @@ const COMPARACAO_DOS_PLANOS = [
   ['Histórias para dormir e Advento', true, true, true, true],
   ['Cenáculos e Comunidade', true, true, true, true],
   ['Perguntas à Lumina', '5 por semana', '20 por dia', '20 por dia', '20 por dia'],
+  ['Quiz dos Santos com a Lumina', '3 por semana', '10 por dia', '10 por dia', '10 por dia'],
   ['Perfis', '1', '1', '2', 'Até 6'],
   ['Cursos de aprofundamento', false, true, true, true],
   ['Enfeites do perfil', 'Básicos', 'Todos', 'Todos', 'Todos'],
@@ -5737,7 +5737,6 @@ function renderizarPlanos() {
       <span class="plano-emblema" aria-hidden="true">${icone(plano.emblema)}</span>
       <h3 class="plano-nome">${plano.nome}</h3>
       <p class="plano-perfis">${plano.perfis}</p>
-      <p class="plano-frase">${plano.frase}</p>
       ${precoDoPlano(plano)}
       <ul class="plano-itens">
         ${plano.itens.map(([nomeDoIcone, texto, base]) => `<li${base ? ' class="plano-item-base"' : ''}><span class="plano-item-icone">${icone(nomeDoIcone)}</span><span>${texto}</span></li>`).join('')}
