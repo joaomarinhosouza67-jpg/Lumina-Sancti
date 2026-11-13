@@ -464,7 +464,7 @@ function comecarJogo(id, opcoes) {
     mostrarEscolhaDeNivel(jogo);
     return;
   }
-  jogoAtual = { jogo, erros: 0, fim: false, timers: [], intervalos: [], limpezas: [], nivel: configuracao.nivel !== undefined ? configuracao.nivel : nivelPadraoDoJogo(), fase: configuracao.fase, santo: configuracao.santo };
+  jogoAtual = { jogo, erros: 0, fim: false, timers: [], intervalos: [], limpezas: [], nivel: configuracao.nivel !== undefined ? configuracao.nivel : nivelPadraoDoJogo(), fase: configuracao.fase, santo: configuracao.santo, nivelSanto: !!configuracao.nivelSanto };
   lugar.innerHTML = `
     <div class="jogo-tela" data-jogo="${jogo.id}" style="--cor:${jogo.cor}">
       <div class="jogo-cabecalho">
@@ -524,6 +524,7 @@ function terminarJogo(estrelas, mensagem) {
   jogoAtual.fim = true;
   const { jogo, fase } = jogoAtual;
   guardarRecordeDoJogo(jogo.id, estrelas);
+  if (typeof registrarDesafio === 'function') registrarDesafio(jogo.id === 'quizia' ? 'quiz' : 'jogo');
   let proximaFase;
   if (fase !== undefined) {
     const progresso = progressoDaTrilhaDosPequeninos();
@@ -2250,6 +2251,22 @@ function jogoDoDuelo(area) {
 const QUIZ_DA_LUMINA_URL = 'https://lumina-ia.5dh6gl58df5c.workers.dev/quiz';
 const PALAVRAS_SEM_PESO_NO_QUIZ = ['o', 'a', 'os', 'as', 'um', 'uma', 'de', 'do', 'da', 'dos', 'das', 'em', 'no', 'na', 'the', 'an', 'of', 'el', 'la', 'los', 'las', 'del', 'en', 'un', 'una'];
 let ultimosSantosDoQuiz = [];
+const NIVEIS_DO_QUIZ_DA_LUMINA = [['facil', 'Fácil'], ['medio', 'Médio'], ['dificil', 'Difícil'], ['santo', 'Nível Santo']];
+const CHAVE_DO_NIVEL_DO_QUIZ = 'lumina-sancti-quiz-nivel';
+
+function nivelDoQuizDaLumina() {
+  try {
+    const salvo = localStorage.getItem(CHAVE_DO_NIVEL_DO_QUIZ);
+    return NIVEIS_DO_QUIZ_DA_LUMINA.some(([id]) => id === salvo) ? salvo : 'medio';
+  } catch (e) {
+    return 'medio';
+  }
+}
+
+function guardarNivelDoQuiz(nivel) {
+  try { localStorage.setItem(CHAVE_DO_NIVEL_DO_QUIZ, nivel); } catch (e) {
+  }
+}
 
 function escaparNoJogo(texto) {
   return String(texto === undefined || texto === null ? '' : texto).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -2268,15 +2285,15 @@ function apoioDoSantoNoQuiz(santo) {
   return `${textos.resumo || ''} ${textos.texto || ''}`.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 1600);
 }
 
-function nomeSemTitulo(nome) {
+function nomeDoQuizSemTitulo(nome) {
   return semAcentoNoJogo(nome).replace(/^(sao|santo|santa|san|saint|st|beato|beata|beatified|blessed)\s+/, '');
 }
 
 function santoDoAppPeloNome(nome) {
-  const procurado = nomeSemTitulo(nome);
+  const procurado = nomeDoQuizSemTitulo(nome);
   if (procurado.length < 3) return null;
   return santosParaOsJogos().find((santo) => [santo.nome, nomeDoSantoNoJogo(santo)].some((outro) => {
-    const limpo = nomeSemTitulo(outro);
+    const limpo = nomeDoQuizSemTitulo(outro);
     return limpo === procurado || (procurado.length >= 6 && limpo.startsWith(`${procurado} `));
   })) || null;
 }
@@ -2319,13 +2336,26 @@ function respostaAbertaCerta(digitado, aceitas) {
   });
 }
 
-function abrirQuizDaLumina() {
+function abrirQuizDaLumina(opcoes) {
+  const pedido = opcoes && typeof opcoes === 'object' && !(typeof Event !== 'undefined' && opcoes instanceof Event) ? opcoes : {};
   abrirJogos();
   const jogo = JOGOS.find((j) => j.id === 'quizia');
   const visiveis = idadesVisiveisDosJogos().map((idade) => idade.id);
   if (jogo && !jogo.idades.includes(idadeDosJogos)) {
     const idade = jogo.idades.slice().reverse().find((id) => visiveis.includes(id));
     if (idade) idadeDosJogos = idade;
+  }
+  if (pedido.santoId) {
+    const santo = santosParaOsJogos().find((s) => s.id === pedido.santoId);
+    if (santo && (typeof sessaoAtual === 'undefined' || sessaoAtual)) {
+      ultimosSantosDoQuiz = [santo.id].concat(ultimosSantosDoQuiz.filter((id) => id !== santo.id)).slice(0, 12);
+      comecarJogo('quizia', { santo: santoParaOQuiz(santo, 'lista') });
+      return;
+    }
+  }
+  if (pedido.digitado && jogo) {
+    mostrarEscolhaDoQuizDaLumina(jogo, { modo: 'digitar', digitado: pedido.digitado });
+    return;
   }
   comecarJogo('quizia');
 }
@@ -2342,13 +2372,24 @@ function mostrarEscolhaDoQuizDaLumina(jogo, opcoes) {
       <div class="quizia-escolha">
         <span class="quizia-arte">${htmlDoPersonagem('lumi')}</span>
         ${logado ? `
+        <div class="quizia-niveis" role="radiogroup" aria-label="${escaparNoJogo(textoDoJogo('Nível'))}">${NIVEIS_DO_QUIZ_DA_LUMINA.map(([id, rotulo]) => `<button type="button" class="quizia-nivel${id === 'santo' ? ' quizia-nivel-santo' : ''}${nivelDoQuizDaLumina() === id ? ' ativo' : ''}" data-nivel="${id}" role="radio" aria-checked="${nivelDoQuizDaLumina() === id}">${id === 'santo' ? iconeDoJogo('coroa') : ''}${textoDoJogo(rotulo)}</button>`).join('')}</div>
+        ${nivelDoQuizDaLumina() === 'santo' ? `
+        <div class="quizia-santo-intro">
+          <strong class="quizia-titulo">${textoDoJogo('Nível Santo')}</strong>
+          <ul class="quizia-santo-regras">
+            <li>${iconeDoJogo('lapis')}${textoDoJogo('20 perguntas abertas')}</li>
+            <li>${iconeDoJogo('pessoa')}${textoDoJogo('Santos sorteados')}</li>
+            <li>${iconeDoJogo('estrela')}${textoDoJogo('3 de Fé por acerto, 20 a mais se acertar tudo')}</li>
+          </ul>
+          <button type="button" class="jogo-botao" id="quizia-santo-comecar">${textoDoJogo('Começar')}</button>
+        </div>` : `
         <strong class="quizia-titulo">${textoDoJogo('Sobre qual santo?')}</strong>
         <div class="quizia-modos">
           <button type="button" class="quizia-modo" data-modo="surpresa"><span class="quizia-modo-icone">${iconeDoJogo('estrela')}</span><span>${textoDoJogo('Santo surpresa')}</span></button>
           <button type="button" class="quizia-modo" data-modo="lista"><span class="quizia-modo-icone">${iconeDoJogo('livro')}</span><span>${textoDoJogo('Escolher da lista')}</span></button>
           <button type="button" class="quizia-modo" data-modo="digitar"><span class="quizia-modo-icone">${iconeDoJogo('lapis')}</span><span>${textoDoJogo('Digitar o nome')}</span></button>
         </div>
-        <div class="quizia-painel" id="quizia-painel"></div>` : `
+        <div class="quizia-painel" id="quizia-painel"></div>`}` : `
         <strong class="quizia-titulo">${textoDoJogo('Entre na sua conta para jogar o quiz com a Lumina.')}</strong>
         <button type="button" class="jogo-botao" id="quizia-entrar">${textoDoJogo('Entrar / Criar conta')}</button>`}
         <p class="quizia-aviso" id="quizia-aviso" aria-live="polite">${escaparNoJogo(config.aviso || '')}</p>
@@ -2359,7 +2400,15 @@ function mostrarEscolhaDoQuizDaLumina(jogo, opcoes) {
   const entrar = document.getElementById('quizia-entrar');
   if (entrar) entrar.addEventListener('click', () => { if (typeof irParaLogin === 'function') irParaLogin(); });
   if (!logado) return;
+  lugar.querySelectorAll('.quizia-nivel').forEach((botao) => botao.addEventListener('click', () => {
+    if (botao.dataset.nivel === nivelDoQuizDaLumina()) return;
+    guardarNivelDoQuiz(botao.dataset.nivel);
+    mostrarEscolhaDoQuizDaLumina(jogo, { modo: config.modo, digitado: config.digitado });
+  }));
+  const comecarSanto = document.getElementById('quizia-santo-comecar');
+  if (comecarSanto) comecarSanto.addEventListener('click', () => comecarJogo(jogo.id, { santo: { id: '', nome: textoDoJogo('Nível Santo'), modo: 'santo' }, nivelSanto: true }));
   const painel = document.getElementById('quizia-painel');
+  if (!painel) return;
   const comecar = (santo) => {
     ultimosSantosDoQuiz = [santo.id].concat(ultimosSantosDoQuiz.filter((id) => id && id !== santo.id)).slice(0, 12);
     comecarJogo(jogo.id, { santo });
@@ -2367,7 +2416,7 @@ function mostrarEscolhaDoQuizDaLumina(jogo, opcoes) {
   const marcarModo = (modo) => lugar.querySelectorAll('.quizia-modo').forEach((botao) => botao.classList.toggle('ativo', botao.dataset.modo === modo));
   const abrirLista = () => {
     marcarModo('lista');
-    const santos = santosParaOsJogos().slice().sort((a, b) => nomeSemTitulo(nomeDoSantoNoJogo(a)).localeCompare(nomeSemTitulo(nomeDoSantoNoJogo(b))));
+    const santos = santosParaOsJogos().slice().sort((a, b) => nomeDoQuizSemTitulo(nomeDoSantoNoJogo(a)).localeCompare(nomeDoQuizSemTitulo(nomeDoSantoNoJogo(b))));
     painel.innerHTML = `
       <input type="search" class="quizia-campo" id="quizia-busca" placeholder="${escaparNoJogo(textoDoJogo('Procurar santo'))}" autocomplete="off">
       <div class="quizia-lista" id="quizia-lista">${santos.map((santo) => `<button type="button" class="quizia-santo" data-santo="${santo.id}" data-busca="${escaparNoJogo(`${semAcentoNoJogo(santo.nome)} ${semAcentoNoJogo(nomeDoSantoNoJogo(santo))}`)}">${escaparNoJogo(nomeDoSantoNoJogo(santo))}</button>`).join('')}</div>`;
@@ -2426,13 +2475,14 @@ async function pedirQuizDaLumina(santo) {
   const resposta = await fetch(QUIZ_DA_LUMINA_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-    body: JSON.stringify({ santo: santo.nome, sobre: santo.sobre || '', idioma: typeof idiomaAtual === 'string' ? idiomaAtual : 'pt', perfil: perfil ? perfil.id : null }),
+    body: JSON.stringify({ santo: santo.nome, sobre: santo.sobre || '', idioma: typeof idiomaAtual === 'string' ? idiomaAtual : 'pt', perfil: perfil ? perfil.id : null, nivel: nivelDoQuizDaLumina() === 'santo' ? 'medio' : nivelDoQuizDaLumina() }),
   });
   const dados = await resposta.json().catch(() => null);
   return { ok: resposta.ok && !!dados && Array.isArray(dados.perguntas) && dados.perguntas.length > 0, dados: dados || {} };
 }
 
 async function jogoDoQuizDaLumina(area) {
+  if (jogoAtual && jogoAtual.nivelSanto) return jogoDoNivelSanto(area);
   const partida = jogoAtual;
   const santo = partida.santo;
   area.innerHTML = '<div class="quizia-carregando" aria-hidden="true"><span></span><span></span><span></span></div>';
@@ -2535,11 +2585,104 @@ async function jogoDoQuizDaLumina(area) {
   mostrar();
 }
 
+async function chamarNivelSanto(funcao, parametros) {
+  const perfil = typeof perfilAdultoAtivo === 'function' ? perfilAdultoAtivo() : null;
+  if (!perfil || typeof supabaseCliente === 'undefined' || !supabaseCliente) throw new Error('sem_perfil');
+  const { data, error } = await supabaseCliente.rpc(funcao, Object.assign({ _pid: perfil.id }, parametros || {}));
+  if (error) throw error;
+  return data;
+}
+
+async function jogoDoNivelSanto(area) {
+  const partida = jogoAtual;
+  area.innerHTML = '<div class="quizia-carregando" aria-hidden="true"><span></span><span></span><span></span></div>';
+  falarNoJogo(textoDoJogo('Sorteando os santos...'));
+  let dados = null;
+  try {
+    dados = await chamarNivelSanto('quiz_santo_comecar', { _idioma: typeof idiomaAtual === 'string' ? idiomaAtual : 'pt' });
+  } catch (e) {
+    dados = null;
+  }
+  if (jogoAtual !== partida) return;
+  if (!dados || !Array.isArray(dados.perguntas) || !dados.perguntas.length) {
+    mostrarEscolhaDoQuizDaLumina(partida.jogo, { aviso: textoDoJogo('Não deu para começar o Nível Santo agora. Tente de novo.') });
+    return;
+  }
+  const perguntas = dados.perguntas;
+  let indice = 0;
+  let acertos = 0;
+  const mostrar = async () => {
+    if (jogoAtual !== partida) return;
+    if (indice >= perguntas.length) {
+      area.innerHTML = '<div class="quizia-carregando" aria-hidden="true"><span></span><span></span><span></span></div>';
+      let fim = null;
+      try { fim = await chamarNivelSanto('quiz_santo_terminar', { _partida: dados.partida }); } catch (e) { fim = null; }
+      if (jogoAtual !== partida) return;
+      const certos = fim ? Number(fim.acertos) : acertos;
+      const fe = fim ? Number(fim.fe) || 0 : 0;
+      const membro = typeof obterMembroAtivo === 'function' ? obterMembroAtivo() : null;
+      if (membro && fe && typeof membro.fe === 'number') membro.fe += fe;
+      const estrelas = certos >= 18 ? 3 : certos >= 12 ? 2 : 1;
+      let mensagem = textoDoJogo('Você acertou {n} de {total}.', { n: certos, total: perguntas.length });
+      if (fe) mensagem += ` ${textoDoJogo('+{n} de Fé', { n: fe })}`;
+      area.innerHTML = '';
+      terminarJogo(estrelas, mensagem);
+      return;
+    }
+    const pergunta = perguntas[indice];
+    let respondida = false;
+    placarDoJogo(`${indice + 1}/${perguntas.length}`);
+    area.innerHTML = `
+      <div class="jogo-quiz quizia-quiz quizia-santo">
+        <div class="quizia-santo-placar"><span>${iconeDoJogo('check')}<b>${acertos}</b></span><span class="quizia-santo-barra"><i style="width:${Math.round((indice / perguntas.length) * 100)}%"></i></span></div>
+        <p class="jogo-quiz-pergunta">${escaparNoJogo(pergunta.texto)}</p>
+        <form class="quizia-digitar" id="quizia-aberta">
+          <input type="text" class="quizia-campo" id="quizia-resposta" maxlength="80" autocomplete="off" placeholder="${escaparNoJogo(textoDoJogo('Nome do santo'))}">
+          <button type="submit" class="jogo-botao">${textoDoJogo('Responder')}</button>
+        </form>
+        <div class="quizia-resultado" id="quizia-resultado" hidden></div>
+      </div>`;
+    falarNoJogo(textoDoJogo('Pergunta {n}', { n: indice + 1 }));
+    const campo = document.getElementById('quizia-resposta');
+    const botao = area.querySelector('#quizia-aberta .jogo-botao');
+    document.getElementById('quizia-aberta').addEventListener('submit', async (evento) => {
+      evento.preventDefault();
+      if (respondida) return;
+      if (!campo.value.trim()) { campo.focus(); return; }
+      respondida = true;
+      campo.disabled = true;
+      botao.disabled = true;
+      let r = null;
+      try { r = await chamarNivelSanto('quiz_santo_responder', { _partida: dados.partida, _n: pergunta.n, _resposta: campo.value.trim().slice(0, 80) }); } catch (e) { r = null; }
+      if (jogoAtual !== partida) return;
+      const certa = !!(r && r.certa);
+      campo.classList.add(certa ? 'certa' : 'errada');
+      if (certa) { acertos += 1; acertouNoJogo(textoDoJogo('Isso mesmo!'), campo); } else errouNoJogo(textoDoJogo('Não foi dessa vez.'), campo);
+      const resultado = document.getElementById('quizia-resultado');
+      resultado.innerHTML = `
+        ${r && r.resposta ? `<strong>${certa ? escaparNoJogo(r.resposta) : textoDoJogo('Resposta: {resposta}', { resposta: escaparNoJogo(r.resposta) })}</strong>` : ''}
+        <button type="button" class="jogo-botao" id="quizia-proxima">${textoDoJogo(indice + 1 < perguntas.length ? 'Próxima' : 'Ver resultado')}</button>`;
+      resultado.hidden = false;
+      const proxima = document.getElementById('quizia-proxima');
+      proxima.addEventListener('click', () => { indice += 1; mostrar(); });
+      if (proxima.focus) proxima.focus({ preventScroll: true });
+    });
+    if (!(typeof window.matchMedia === 'function' && window.matchMedia('(pointer: coarse)').matches)) campo.focus();
+  };
+  mostrar();
+}
+
 function iniciarJogos() {
   const nav = document.getElementById('nav-jogos');
   if (nav) nav.addEventListener('click', abrirJogos);
   const atalhoDoQuiz = document.getElementById('lumina-quiz');
-  if (atalhoDoQuiz) atalhoDoQuiz.addEventListener('click', abrirQuizDaLumina);
+  if (atalhoDoQuiz) atalhoDoQuiz.addEventListener('click', () => abrirQuizDaLumina());
+  const cartaoDoQuiz = document.getElementById('quiz-inicio-cartao');
+  if (cartaoDoQuiz) cartaoDoQuiz.addEventListener('click', () => abrirQuizDaLumina());
+  const arteDoQuiz = document.getElementById('quiz-inicio-arte');
+  if (arteDoQuiz) arteDoQuiz.innerHTML = htmlDoPersonagem('lumi');
+  const menuDoQuiz = document.getElementById('nav-quiz');
+  if (menuDoQuiz) menuDoQuiz.addEventListener('click', () => { if (typeof closeSidebar === 'function') closeSidebar(); abrirQuizDaLumina(); });
   window.addEventListener('resize', () => { if (idadeDosJogos === 'pequeninos' && document.getElementById('pequeninos-caminho')) desenharLinhaDosPequeninos(); });
 }
 

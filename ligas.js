@@ -1375,26 +1375,29 @@ function seloDaLigaNoRanking(fe, cargo) {
 
 const CADEADO_DA_LIGA = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2.5" fill="currentColor"/><path d="M8 11 V8 a4 4 0 0 1 8 0 V11" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="12" cy="16" r="1.6" fill="#0b0d22"/></svg>';
 
-function htmlDaVitrineDasLigas(atual, escolhida, quantos) {
-  const liga = LIGAS_DA_FE[escolhida] || LIGAS_DA_FE[0];
-  const porcentagem = textoDaPorcentagem(posicaoNaLiga(liga.minimo));
-  const botoes = LIGAS_DA_FE.map((l, i) => {
-    const bloqueada = i > atual;
-    return `<button type="button" class="vitrine-liga${i === atual ? ' atual' : ''}${i === escolhida ? ' escolhida' : ''}${bloqueada ? ' bloqueada' : ''}" data-vitrine-liga="${i}" style="--liga:${l.cor}" aria-label="${escaparDaLiga(bloqueada ? textoDaLiga('Liga bloqueada') : textoDaLiga(l.nome))}"><span class="vitrine-liga-emblema">${emblemaDaLiga(i, { pedestal: false })}</span>${bloqueada ? `<span class="vitrine-liga-cadeado">${CADEADO_DA_LIGA}</span>` : ''}</button>`;
-  }).join('');
-  return `
-    <div class="vitrine-ligas-moldura"><div class="vitrine-ligas" id="vitrine-ligas">${botoes}</div></div>
-    <div class="vitrine-titulo" style="--liga:${liga.cor};--liga-clara:${liga.claro}">
-      <strong>${textoDaLiga('Liga {nome}', { nome: textoDaLiga(liga.nome) })}</strong>
-      <small>${quantos === 1 ? textoDaLiga('1 pessoa nesta liga') : textoDaLiga('{n} pessoas nesta liga', { n: quantos })}${porcentagem ? ` · ${porcentagem}` : ''}</small>
-    </div>`;
+const RELOGIO_DA_SEMANA = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+
+function diasQueFaltamNaSemana(terminaEm) {
+  const falta = new Date(terminaEm).getTime() - Date.now();
+  if (!(falta > 0)) return textoDaLiga('Termina hoje');
+  const horas = Math.floor(falta / 3600000);
+  if (horas >= 24) {
+    const dias = Math.floor(horas / 24);
+    return dias === 1 ? textoDaLiga('1 dia') : textoDaLiga('{n} dias', { n: dias });
+  }
+  return horas <= 1 ? textoDaLiga('1 hora') : textoDaLiga('{n} horas', { n: horas });
 }
 
-function centralizarVitrineDasLigas(lugar) {
-  const vitrine = lugar.querySelector('#vitrine-ligas');
-  const escolhida = vitrine && vitrine.querySelector('.vitrine-liga.escolhida');
-  if (!vitrine || !escolhida) return;
-  vitrine.scrollLeft = escolhida.offsetLeft - vitrine.clientWidth / 2 + escolhida.clientWidth / 2;
+function htmlDoTopoDaSemana(atual, terminaEm) {
+  const liga = LIGAS_DA_FE[atual] || LIGAS_DA_FE[0];
+  const inicio = Math.max(0, Math.min(atual - 2, LIGAS_DA_FE.length - 5));
+  const vizinhas = LIGAS_DA_FE.slice(inicio, inicio + 5).map((l, k) => ({ l, i: inicio + k }));
+  return `
+    <div class="semana-topo" style="--liga:${liga.cor};--liga-clara:${liga.claro}">
+      <div class="semana-emblemas" aria-hidden="true">${vizinhas.map(({ l, i }) => `<span class="semana-emblema${i === atual ? ' atual' : ''}${i > atual ? ' bloqueada' : ''}" style="--liga:${l.cor}">${emblemaDaLiga(i, { pedestal: false })}${i > atual ? `<span class="semana-cadeado">${CADEADO_DA_LIGA}</span>` : ''}</span>`).join('')}</div>
+      <strong class="semana-nome">${textoDaLiga('Liga {nome}', { nome: textoDaLiga(liga.nome) })}</strong>
+      <span class="semana-tempo">${RELOGIO_DA_SEMANA}${escaparDaLiga(diasQueFaltamNaSemana(terminaEm))}</span>
+    </div>`;
 }
 
 function htmlDoTopoDaLiga(indice) {

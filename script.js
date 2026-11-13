@@ -3547,6 +3547,9 @@ function iniciarNavegacaoDeContas() {
   iniciarPaginaDePerfil();
   iniciarPaginaDaLumina();
   iniciarBuscaDoCatalogo();
+  iniciarFaixaDeHoje();
+  medirAlturaDoTopo();
+  window.addEventListener('resize', medirAlturaDoTopo);
 }
 
 function iniciarChuvaDeMeteoros() {
@@ -4102,8 +4105,11 @@ function normalizarBuscaDoCatalogo(texto) {
 function revelarCartoesDoCatalogo() {
   if (typeof IntersectionObserver !== 'function' || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
   const observador = new IntersectionObserver((itens) => {
+    let ordem = 0;
     itens.forEach((item) => {
       if (!item.isIntersecting) return;
+      item.target.style.setProperty('--atraso', `${Math.min(ordem, 6) * 0.07}s`);
+      ordem += 1;
       item.target.classList.add('revelado');
       observador.unobserve(item.target);
     });
@@ -4119,17 +4125,23 @@ function renderGrid(filter = 'todos') {
   cardsGrid.innerHTML = '';
 
   const procurado = normalizarBuscaDoCatalogo(buscaDoCatalogo);
+  const nomeBate = (s) => normalizarBuscaDoCatalogo(`${textoDoSanto(s).nome} ${s.nome}`).includes(procurado);
+  const resumoBate = (s) => normalizarBuscaDoCatalogo(`${textoDoSanto(s).resumo} ${s.resumo}`).includes(procurado);
   const filtrados = santosData.filter(s => {
-    if (procurado && !normalizarBuscaDoCatalogo(`${textoDoSanto(s).nome} ${s.nome}`).includes(procurado)) return false;
+    if (procurado && !nomeBate(s) && !(procurado.length >= 4 && resumoBate(s))) return false;
     if (filter === 'todos') return true;
     if (filter === 'favoritos') return ehFavorito(s.id);
     return s.categoria.includes(filter);
   });
+  if (procurado) filtrados.sort((a, b) => Number(nomeBate(b)) - Number(nomeBate(a)));
   const contaDoCatalogo = document.getElementById('catalogo-conta');
   if (contaDoCatalogo) contaDoCatalogo.textContent = tr(filtrados.length === 1 ? '{n} santo' : '{n} santos', { n: filtrados.length });
 
   if (procurado && filtrados.length === 0) {
-    cardsGrid.innerHTML = `<p class="not-found-msg" style="grid-column: 1 / -1;">${tr('Não encontrei nenhum santo com esse nome.')}</p>`;
+    const podeFazerQuiz = typeof abrirQuizDaLumina === 'function' && !(typeof modoInfantilAtivo === 'function' && modoInfantilAtivo()) && buscaDoCatalogo.trim().length >= 3;
+    cardsGrid.innerHTML = `<p class="not-found-msg" style="grid-column: 1 / -1;">${tr('Não encontrei nenhum santo com esse nome.')}${podeFazerQuiz ? `<br><button type="button" class="catalogo-quiz-sugestao" id="catalogo-quiz-sugestao">${tr('Fazer um quiz sobre "{nome}"', { nome: escaparTextoDeOracao(buscaDoCatalogo.trim().slice(0, 60)) })}</button>` : ''}</p>`;
+    const sugestao = document.getElementById('catalogo-quiz-sugestao');
+    if (sugestao) sugestao.addEventListener('click', () => abrirQuizDaLumina({ digitado: buscaDoCatalogo.trim().slice(0, 80) }));
     return;
   }
 
@@ -4181,14 +4193,73 @@ function renderGrid(filter = 'todos') {
 function iniciarBuscaDoCatalogo() {
   const campo = document.getElementById('catalogo-busca');
   if (!campo) return;
+  const limpar = document.getElementById('catalogo-limpar');
   let espera = null;
+  const aplicar = () => {
+    buscaDoCatalogo = campo.value;
+    if (limpar) limpar.hidden = !campo.value;
+    renderGrid(filtroAtual);
+  };
   campo.addEventListener('input', () => {
+    if (limpar) limpar.hidden = !campo.value;
     clearTimeout(espera);
-    espera = setTimeout(() => {
-      buscaDoCatalogo = campo.value;
-      renderGrid(filtroAtual);
-    }, 160);
+    espera = setTimeout(aplicar, 160);
   });
+  campo.addEventListener('keydown', (evento) => {
+    if (evento.key === 'Escape' && campo.value) { evento.preventDefault(); campo.value = ''; aplicar(); }
+    if (evento.key === 'Enter') campo.blur();
+  });
+  if (limpar) {
+    limpar.addEventListener('click', (evento) => {
+      evento.preventDefault();
+      campo.value = '';
+      aplicar();
+      campo.focus();
+    });
+  }
+}
+
+function itensDaFaixaDeHoje() {
+  const faixa = document.getElementById('hoje-faixa');
+  if (!faixa) return [];
+  return Array.from(faixa.querySelectorAll(':scope > section:not(#santo-do-dia), #santo-do-dia > .sdd-card')).filter((item) => item.offsetWidth > 0);
+}
+
+function atualizarPontosDeHoje() {
+  const faixa = document.getElementById('hoje-faixa');
+  const pontos = document.getElementById('hoje-pontos');
+  if (!faixa || !pontos) return;
+  const itens = itensDaFaixaDeHoje();
+  const rolavel = faixa.scrollWidth > faixa.clientWidth + 4;
+  if (!rolavel || itens.length < 2) { pontos.innerHTML = ''; return; }
+  if (pontos.children.length !== itens.length) pontos.innerHTML = itens.map(() => '<i></i>').join('');
+  const fim = faixa.scrollLeft + faixa.clientWidth >= faixa.scrollWidth - 4;
+  const meio = faixa.scrollLeft + faixa.clientWidth / 2;
+  let ativo = 0;
+  itens.forEach((item, i) => { if (item.offsetLeft <= meio) ativo = i; });
+  if (fim) ativo = itens.length - 1;
+  Array.from(pontos.children).forEach((ponto, i) => ponto.classList.toggle('ativo', i === ativo));
+}
+
+function iniciarFaixaDeHoje() {
+  const faixa = document.getElementById('hoje-faixa');
+  if (!faixa) return;
+  let pedido = 0;
+  let mexeu = false;
+  ['pointerdown', 'touchstart', 'wheel', 'keydown'].forEach((tipo) => faixa.addEventListener(tipo, () => { mexeu = true; }, { passive: true }));
+  const voltarAoComeco = () => { if (!mexeu && faixa.scrollLeft) faixa.scrollLeft = 0; atualizarPontosDeHoje(); };
+  faixa.addEventListener('scroll', () => {
+    if (pedido) return;
+    pedido = requestAnimationFrame(() => { pedido = 0; atualizarPontosDeHoje(); });
+  }, { passive: true });
+  window.addEventListener('resize', atualizarPontosDeHoje);
+  [300, 900, 1500, 2500, 4000].forEach((ms) => setTimeout(voltarAoComeco, ms));
+  document.querySelectorAll('#atalhos-app > .atalho-cartao').forEach((cartao, i) => cartao.style.setProperty('--i', i));
+}
+
+function medirAlturaDoTopo() {
+  const barra = document.querySelector('.navbar');
+  if (barra) document.documentElement.style.setProperty('--altura-do-topo', `${barra.offsetHeight}px`);
 }
 
 function pararLeituraDeBiografia() {
@@ -4328,6 +4399,10 @@ function showDetail(id) {
         <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-trilha"></use></svg>
         ${textoDaInterface('fazer_trilha', { santo: trilhaDoSanto.santo })}
       </button>` : ''}
+      <button class="btn-ask-ai btn-quiz-santo" id="btn-quiz-santo">
+        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lampada"></use></svg>
+        ${tr('Fazer o quiz sobre {santo}', { santo: textos.nome })}
+      </button>
       <button class="btn-ask-ai" id="btn-ask-ai-santo">
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.34 6.34l2.83 2.83M14.83 14.83l2.83 2.83M17.66 6.34l-2.83 2.83M9.17 14.83l-2.83 2.83"/><circle cx="12" cy="12" r="2.2" fill="currentColor" stroke="none"/></svg>
         ${textoDaInterface('perguntar_lumina', { santo: textos.nome })}
@@ -4338,6 +4413,13 @@ function showDetail(id) {
     if (typeof colocarHistoriaCompleta === 'function') colocarHistoriaCompleta(santo);
     if (typeof preencherOracaoEFrasesDoSanto === 'function') preencherOracaoEFrasesDoSanto(santo, document.getElementById('bio-oracao-e-frases'));
 
+    const btnQuizSanto = document.getElementById('btn-quiz-santo');
+    if (btnQuizSanto) {
+      btnQuizSanto.addEventListener('click', () => {
+        pararLeituraDeBiografia();
+        if (typeof abrirQuizDaLumina === 'function') abrirQuizDaLumina({ santoId: santo.id });
+      });
+    }
     const btnFazerTrilha = document.getElementById('btn-fazer-trilha');
     if (btnFazerTrilha && trilhaDoSanto) {
       btnFazerTrilha.addEventListener('click', () => {
@@ -4592,8 +4674,10 @@ window.addEventListener('scroll', () => {
   const currentScroll = window.pageYOffset;
   if (currentScroll > lastScroll && currentScroll > 80) {
     navbar.classList.add('hidden');
+    document.body.classList.add('topo-escondido');
   } else {
     navbar.classList.remove('hidden');
+    document.body.classList.remove('topo-escondido');
   }
   lastScroll = currentScroll;
 });
@@ -5167,9 +5251,16 @@ function renderizarPassoDoTerco() {
   const btnProximo = document.getElementById('terco-proximo');
   btnAnterior.disabled = indicePassoTerco === 0;
   btnProximo.textContent = (indicePassoTerco === passosTercoAtual.length - 1) ? 'Concluir' : 'Próxima →';
+  if (indicePassoTerco === passosTercoAtual.length - 1 && passosTercoAtual.length > 5 && typeof registrarDesafio === 'function' && !tercoJaContouNoDesafio) {
+    tercoJaContouNoDesafio = true;
+    registrarDesafio('terco');
+  }
 }
 
+let tercoJaContouNoDesafio = false;
+
 function iniciarTerco(chaveMisterio) {
+  tercoJaContouNoDesafio = false;
   passosTercoAtual = montarPassosDoTerco(chaveMisterio);
   indicePassoTerco = 0;
   const nome = chaveMisterio === 'misericordia' ? TERCO_DA_MISERICORDIA.nome : MISTERIOS_DO_TERCO[chaveMisterio].nome;
@@ -5506,7 +5597,45 @@ function mostrarResultadosDoPadroeiro(valor) {
   }));
 }
 
+function mostrarMeuSantoDoPadroeiro(santo, vazio) {
+  const lugar = document.getElementById('padroeiro-meu-resultado');
+  if (!lugar) return;
+  if (!santo) { lugar.innerHTML = `<p class="padroeiro-meu-vazio">${vazio}</p>`; return; }
+  lugar.innerHTML = cartaoDePadroeiro(santo, 'padroeiro-meu-foto', '');
+  const cartao = lugar.querySelector('.padroeiro-cartao');
+  if (cartao) {
+    cartao.addEventListener('click', () => showDetail(santo.id));
+    cartao.addEventListener('keydown', (e) => { if (e.target === cartao && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); showDetail(santo.id); } });
+  }
+  if (typeof ligarBotoesDeRezarAoSanto === 'function') ligarBotoesDeRezarAoSanto(lugar);
+  buscarImagemSanto(santo).then((imgUrl) => {
+    const foto = document.getElementById(`padroeiro-meu-foto-${santo.id}`);
+    if (imgUrl && foto) foto.innerHTML = htmlDaFoto(imgUrl, santo.nome, 'padroeiro-img');
+  });
+}
+
+function ligarMeuSantoDoPadroeiro() {
+  const porNome = document.getElementById('padroeiro-por-nome');
+  if (porNome) porNome.addEventListener('submit', (evento) => {
+    evento.preventDefault();
+    const nome = document.getElementById('padroeiro-nome').value.trim();
+    if (!nome) return;
+    const santo = typeof santoDoNome === 'function' ? santoDoNome(nome) : null;
+    mostrarMeuSantoDoPadroeiro(santo, tr('Não achei um santo com o nome {nome} no catálogo.', { nome: escaparTextoDeOracao(nome.split(/\s+/)[0]) }));
+  });
+  const porData = document.getElementById('padroeiro-por-data');
+  if (porData) porData.addEventListener('submit', (evento) => {
+    evento.preventDefault();
+    const valor = document.getElementById('padroeiro-data').value;
+    const partes = /^\d{4}-(\d{2})-(\d{2})$/.exec(valor);
+    if (!partes) return;
+    const santo = typeof santoDaData === 'function' ? santoDaData(`${partes[1]}-${partes[2]}`) : null;
+    mostrarMeuSantoDoPadroeiro(santo, tr('Não achei um santo para essa data.'));
+  });
+}
+
 function iniciarPaginaDePadroeiro() {
+  ligarMeuSantoDoPadroeiro();
   const input = document.getElementById('padroeiro-input');
   if (!input) return;
 

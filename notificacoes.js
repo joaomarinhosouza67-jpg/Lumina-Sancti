@@ -2,7 +2,7 @@ const CHAVE_PERGUNTOU_MISERICORDIA = 'lumina-sancti-perguntou-misericordia';
 const CHAVE_PERGUNTOU_OFENSIVA = 'lumina-sancti-perguntou-ofensiva';
 const LEMBRETES = {
   misericordia: { nome: 'Hora da Misericórdia', texto: 'Todo dia às 15h, um convite para rezar o Terço da Misericórdia.', icone: 'misericordia' },
-  ofensiva: { nome: 'Não perca sua ofensiva', texto: 'Só nos dias em que você ainda não fez a missão.', icone: 'chama' },
+  ofensiva: { nome: 'Não perca sua ofensiva', texto: 'Ao meio-dia, às 18h e às 20h, nos dias em que você ainda não fez a missão.', icone: 'chama' },
   mensagens: { nome: 'Mensagens novas', texto: 'Quando alguém mandar mensagem numa conversa ou num Cenáculo.', icone: 'conversa' },
 };
 const CHAVE_PERGUNTOU_MENSAGENS = 'lumina-sancti-perguntou-mensagens';
@@ -17,17 +17,8 @@ function horarioDaOfensiva(dados) {
   return { modo, hora: valida ? hora : OFENSIVA_PADRAO.hora };
 }
 
-function explicacaoDaOfensiva(modo, hora) {
-  if (modo === 'hora') {
-    return hora >= ULTIMA_HORA_DA_OFENSIVA
-      ? tr('Dois avisos, às 22h e às 22h30, se você ainda não fez a missão do dia.')
-      : tr('Um aviso a cada meia hora, das {hora}h às {ultima}h30, até você fazer a missão do dia.', { hora, ultima: ULTIMA_HORA_DA_OFENSIVA });
-  }
-  return tr('Um aviso às {hora}h, se você ainda não fez a missão do dia.', { hora });
-}
-
-function resumoDaOfensiva(modo, hora) {
-  return modo === 'hora' ? tr('Ofensiva de meia em meia hora a partir das {hora}h', { hora }) : tr('Ofensiva às {hora}h', { hora });
+function resumoDaOfensiva() {
+  return tr('Ofensiva');
 }
 
 function notificacoesSuportadas() {
@@ -102,7 +93,7 @@ async function mudarLembretes(novos) {
     const resposta = await Notification.requestPermission();
     if (resposta !== 'granted') throw new Error('Sem a sua permissão este aparelho não mostra os avisos. Se mudar de ideia, libere as notificações nas configurações.');
   }
-  const horario = horarioDaOfensiva({ ofensiva_modo: novos.modo, ofensiva_hora: novos.hora });
+  const horario = Object.assign({}, OFENSIVA_PADRAO);
   const inscricao = await inscricaoDoAparelho(ligar);
   if (!inscricao) return Object.assign({ misericordia: false, ofensiva: false, mensagens: false }, horario);
   const dados = inscricao.toJSON();
@@ -239,7 +230,7 @@ async function abrirAjustesDosLembretes() {
   const problema = textoDoProblemaDeNotificacao();
   const atuais = await lembretesDoAparelho();
   corpo.innerHTML = `
-    <p class="cenaculo-explica">Os avisos chegam como notificação neste aparelho, no celular ou no computador. Ligue em cada aparelho que você usa. Você pode desligar quando quiser.</p>
+    <p class="cenaculo-explica">Ligue em cada aparelho que você usa.</p>
     ${problema ? `<p class="lembrete-problema">${problema}</p>` : ''}
     <div class="lembretes-lista">
       ${Object.keys(LEMBRETES).map((tipo) => `
@@ -248,30 +239,13 @@ async function abrirAjustesDosLembretes() {
           <span class="ajuste-textos"><strong>${LEMBRETES[tipo].nome}</strong><small>${LEMBRETES[tipo].texto}</small></span>
           <input type="checkbox" class="lembrete-chave" data-tipo="${tipo}" ${atuais[tipo] ? 'checked' : ''} ${problema ? 'disabled' : ''}>
           <span class="lembrete-interruptor" aria-hidden="true"></span>
-        </label>
-        ${tipo === 'ofensiva' ? htmlDoHorarioDaOfensiva(atuais, !!problema) : ''}`).join('')}
+        </label>`).join('')}
     </div>
     <p class="lembrete-aviso" id="lembretes-aviso" aria-live="polite"></p>`;
   const estado = Object.assign({}, atuais);
   const aviso = corpo.querySelector('#lembretes-aviso');
-  const opcoes = corpo.querySelector('#lembrete-ofensiva-opcoes');
   const travar = (sim) => {
-    corpo.querySelectorAll('.lembrete-chave, .lembrete-modo, #lembrete-hora').forEach((c) => { c.disabled = sim; });
-  };
-  const mostrarHorario = () => {
-    if (!opcoes) return;
-    opcoes.hidden = !estado.ofensiva;
-    opcoes.querySelectorAll('.lembrete-modo').forEach((botao) => {
-      const ativo = botao.dataset.modo === estado.modo;
-      botao.classList.toggle('ativo', ativo);
-      botao.setAttribute('aria-checked', ativo ? 'true' : 'false');
-    });
-    const seletor = opcoes.querySelector('#lembrete-hora');
-    if (seletor) seletor.value = String(estado.hora);
-    const rotulo = opcoes.querySelector('#lembrete-hora-rotulo');
-    if (rotulo) rotulo.textContent = estado.modo === 'hora' ? 'Começar às' : 'Horário do aviso';
-    const explica = opcoes.querySelector('#lembrete-ofensiva-explica');
-    if (explica) explica.textContent = explicacaoDaOfensiva(estado.modo, estado.hora);
+    corpo.querySelectorAll('.lembrete-chave').forEach((c) => { c.disabled = sim; });
   };
   const salvar = async (desejado, textoCerto, aoFalhar) => {
     travar(true);
@@ -287,7 +261,6 @@ async function abrirAjustesDosLembretes() {
       aviso.textContent = mensagemDosLembretes(erro);
     }
     travar(false);
-    mostrarHorario();
     atualizarResumoDosLembretes();
   };
   corpo.querySelectorAll('.lembrete-chave').forEach((caixa) => {
@@ -298,41 +271,6 @@ async function abrirAjustesDosLembretes() {
         () => { caixa.checked = !caixa.checked; });
     });
   });
-  if (opcoes) {
-    opcoes.querySelectorAll('.lembrete-modo').forEach((botao) => {
-      botao.addEventListener('click', () => {
-        if (botao.dataset.modo === estado.modo) return;
-        salvar(Object.assign({}, estado, { modo: botao.dataset.modo }), () => 'Horário salvo.');
-      });
-    });
-    const seletor = opcoes.querySelector('#lembrete-hora');
-    if (seletor) {
-      seletor.addEventListener('change', () => {
-        salvar(Object.assign({}, estado, { hora: Number(seletor.value) }), () => 'Horário salvo.');
-      });
-    }
-  }
-  mostrarHorario();
-}
-
-function htmlDoHorarioDaOfensiva(atuais, travado) {
-  const horas = [];
-  for (let h = PRIMEIRA_HORA_DA_OFENSIVA; h <= ULTIMA_HORA_DA_OFENSIVA; h++) horas.push(h);
-  return `
-    <div class="lembrete-horario" id="lembrete-ofensiva-opcoes" ${atuais.ofensiva ? '' : 'hidden'}>
-      <div class="lembrete-modos" role="radiogroup" aria-label="Quantas vezes avisar">
-        <button type="button" class="lembrete-modo" data-modo="uma" role="radio" ${travado ? 'disabled' : ''}>Uma vez por dia</button>
-        <button type="button" class="lembrete-modo" data-modo="hora" role="radio" ${travado ? 'disabled' : ''}>De meia em meia hora</button>
-      </div>
-      <label class="lembrete-hora-linha">
-        <span id="lembrete-hora-rotulo">Horário do aviso</span>
-        <select id="lembrete-hora" ${travado ? 'disabled' : ''}>
-          ${horas.map((h) => `<option value="${h}">${h}h</option>`).join('')}
-        </select>
-      </label>
-      <p class="lembrete-horario-explica" id="lembrete-ofensiva-explica"></p>
-      <p class="lembrete-horario-explica">Se a ofensiva acabar, chega um convite por dia, por alguns dias, para você voltar.</p>
-    </div>`;
 }
 
 async function atualizarResumoDosLembretes() {
@@ -342,7 +280,7 @@ async function atualizarResumoDosLembretes() {
   const ligados = Object.keys(LEMBRETES).filter((t) => atuais[t]).map((t) => {
     if (t === 'misericordia') return tr('Misericórdia às 15h');
     if (t === 'mensagens') return tr('Mensagens');
-    return resumoDaOfensiva(atuais.modo, atuais.hora);
+    return resumoDaOfensiva();
   });
   if (resumo.isConnected) resumo.textContent = ligados.length ? ligados.join(' e ') : 'Desligados';
 }

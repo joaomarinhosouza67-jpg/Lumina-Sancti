@@ -494,6 +494,7 @@ function abrirLeitorDeOracao(id, lista, gerada) {
   listaDoLeitor = Array.isArray(lista) && lista.length ? lista.slice() : [id];
   posicaoNoLeitor = Math.max(0, listaDoLeitor.indexOf(id));
   focoAntesDoLeitor = document.activeElement;
+  leitorAbertoEm = Date.now();
   desenharLeitorDeOracao();
   const leitor = garantirLeitorDeOracao();
   leitor.hidden = false;
@@ -505,9 +506,13 @@ function abrirLeitorDeOracao(id, lista, gerada) {
   });
 }
 
+let leitorAbertoEm = 0;
+
 function fecharLeitorDeOracao() {
   const leitor = document.getElementById('oracao-leitor');
   if (!leitor || leitor.hidden) return;
+  if (leitorAbertoEm && Date.now() - leitorAbertoEm >= 12000 && typeof registrarDesafio === 'function') registrarDesafio('oracao');
+  leitorAbertoEm = 0;
   leitor.classList.remove('aberto');
   leitor.hidden = true;
   document.body.classList.remove('leitor-de-oracao-aberto');

@@ -64,7 +64,7 @@ function desenharExame() {
       <p class="dev-selo">${escaparDaDevocao(trDaDevocao('Para se preparar para a confissão'))}</p>
       <h2 class="section-title">${escaparDaDevocao(trDaDevocao('Exame de consciência'))}</h2>
       <div class="title-divider"></div>
-      <p class="dev-privado"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-cadeado"></use></svg><span>${escaparDaDevocao(trDaDevocao('Nada do que você marcar é guardado nem enviado. Quando você sair desta página, tudo se apaga.'))}</span></p>
+      <p class="dev-privado"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-cadeado"></use></svg><span>${escaparDaDevocao(trDaDevocao('Nada do que você marcar é guardado. Ao sair desta página, tudo se apaga.'))}</span></p>
     </header>
     <div class="dev-abas" role="tablist">${Object.keys(EXAMES_DE_CONSCIENCIA).map((chave) => `<button type="button" role="tab" class="dev-aba${chave === exameEscolhido ? ' ativa' : ''}" aria-selected="${chave === exameEscolhido}" data-exame="${chave}"><strong>${escaparDaDevocao(textoDaDevocao(EXAMES_DE_CONSCIENCIA[chave].nome))}</strong><small>${escaparDaDevocao(textoDaDevocao(EXAMES_DE_CONSCIENCIA[chave].idade))}</small></button>`).join('')}</div>
     <section class="dev-cartao dev-oracao-inicial">
@@ -173,7 +173,6 @@ function desenharNovenas() {
       <p class="dev-selo">${escaparDaDevocao(trDaDevocao('Nove dias de oração'))}</p>
       <h2 class="section-title">${escaparDaDevocao(trDaDevocao('Novenas'))}</h2>
       <div class="title-divider"></div>
-      <p class="dev-intro">${escaparDaDevocao(trDaDevocao('Uma novena são nove dias seguidos de oração por uma intenção, como os apóstolos rezaram com Maria esperando o Espírito Santo. Reze um dia por vez e acompanhe o seu caminho.'))}</p>
     </header>
     <div class="dev-novenas">${NOVENAS.map((novena) => {
       const p = progressoDaNovena(novena.id);

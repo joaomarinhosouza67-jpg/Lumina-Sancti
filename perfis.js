@@ -24,8 +24,8 @@ let membrosDaConta = [];
 let perfisEmModoEdicao = false;
 let destinoAposEscolherPerfil = 'inicio';
 let slugPendenteDasTrilhas = null;
-let abaDoRanking = 'familia';
-let periodoDoRanking = 'week';
+let abaDoRanking = 'semana';
+const periodoDoRanking = 'week';
 let editorEstado = null;
 
 function obterMembroAtivo() {
@@ -1316,10 +1316,8 @@ function abrirRanking() {
     return;
   }
   const ehCrianca = membroAtivo.tipo === 'crianca';
-  const abaGlobal = document.getElementById('ranking-aba-global');
-  if (abaGlobal) abaGlobal.style.display = ehCrianca ? 'none' : '';
-  const abaDaLiga = document.getElementById('ranking-aba-liga');
-  if (abaDaLiga) abaDaLiga.style.display = ehCrianca || typeof indiceDaLiga !== 'function' ? 'none' : '';
+  const abaDaSemana = document.getElementById('ranking-aba-semana');
+  if (abaDaSemana) abaDaSemana.style.display = ehCrianca ? 'none' : '';
   if (ehCrianca) abaDoRanking = 'familia';
   mudarDeView('view-ranking');
   marcarAbaDoRanking();
@@ -1331,55 +1329,34 @@ function marcarAbaDoRanking() {
   const cobrando = typeof cobrancaLigadaNoSite === 'function' && cobrancaLigadaNoSite();
   if (aviso) aviso.hidden = abaDoRanking !== 'familia' || cobrando;
   document.querySelectorAll('.ranking-aba').forEach((b) => b.classList.toggle('active', b.dataset.aba === abaDoRanking));
-  document.querySelectorAll('.ranking-periodo').forEach((b) => b.classList.toggle('active', b.dataset.periodo === periodoDoRanking));
-  const periodos = document.querySelector('.ranking-periodos');
-  if (periodos) periodos.style.display = abaDoRanking === 'liga' ? 'none' : '';
-  const abas = document.getElementById('ranking-abas');
-  if (abas) abas.style.display = abaDoRanking === 'liga' ? 'none' : '';
 }
 
-let linhasDaMinhaLiga = [];
-let minhaLigaNoRanking = 0;
-let ligaEscolhidaNoRanking = null;
-
-async function desenharMinhaLiga(lista) {
-  const escolhida = ligaEscolhidaNoRanking === null ? minhaLigaNoRanking : ligaEscolhidaNoRanking;
-  const daLiga = linhasDaMinhaLiga.filter((l) => indiceDaLiga(l.faith) === escolhida).map((l, i) => Object.assign({}, l, { rank: i + 1 }));
+async function desenharLigaDaSemana(lista, dados) {
+  const indice = Number(dados.liga) || 0;
+  const linhas = Array.isArray(dados.lista) ? dados.lista : [];
   const podeAbrirPerfil = typeof abrirPerfilPublico === 'function';
   const fotos = typeof enderecosAssinados === 'function'
-    ? await enderecosAssinados('avatars', daLiga.filter((l) => !l.is_me).map((l) => l.avatar_path))
+    ? await enderecosAssinados('avatars', linhas.filter((l) => !l.eu).map((l) => l.avatar_path))
     : {};
-  const itens = daLiga.map((l) => ({
-    posicao: l.rank, nome: l.display_name, avatar: l.avatar_key, fe: l.faith, destaque: l.is_me,
-    fotoUrl: l.is_me ? membroAtivo.fotoUrl : (fotos[l.avatar_path] || ''),
-    publicoId: podeAbrirPerfil ? l.profile_id : null, perfilId: l.profile_id,
+  const itens = linhas.map((l) => ({
+    posicao: l.posicao, nome: l.nome, avatar: l.avatar_key, fe: l.fe, ofensiva: Number(l.ofensiva) || 0, destaque: !!l.eu,
+    fotoUrl: l.eu ? membroAtivo.fotoUrl : (fotos[l.avatar_path] || ''),
+    publicoId: podeAbrirPerfil && !l.eu ? l.perfil_id : null, perfilId: l.perfil_id,
   }));
-  lista.innerHTML = htmlDaVitrineDasLigas(minhaLigaNoRanking, escolhida, itens.length)
-    + htmlDoRanking(itens, tr('Ainda não há ninguém nesta liga.'))
-    + `<button type="button" class="ranking-voltar-geral" id="ranking-voltar-geral">${tr('Ver o ranking da família e o global')}</button>`;
+  const topo = typeof htmlDoTopoDaSemana === 'function' ? htmlDoTopoDaSemana(indice, dados.termina_em) : '';
+  let corpo;
+  if (dados.desenvolvedor) {
+    corpo = `<p class="ranking-dev">${tr('Perfil de desenvolvedor: você não aparece no ranking.')}</p>${htmlDoRanking(itens, tr('Ainda não há ninguém na liga desta semana.'))}`;
+  } else if (!dados.participando) {
+    corpo = `<div class="ranking-entrar">${icone('trofeu')}<p>${tr('Faça uma missão esta semana para entrar na liga.')}</p><button type="button" class="licao-botao" id="ranking-fazer-missao">${tr('Fazer uma missão')}</button></div>`;
+  } else {
+    corpo = htmlDoRanking(itens, tr('Ainda não há ninguém na liga desta semana.'));
+  }
+  lista.innerHTML = topo + corpo;
   ligarCliquesDoRanking(lista);
   if (typeof enfeitarLinhasDoRanking === 'function') enfeitarLinhasDoRanking(lista, false);
-  if (typeof enfeitarRankingComCargos === 'function') enfeitarRankingComCargos(lista);
-  requestAnimationFrame(() => centralizarVitrineDasLigas(lista));
-  lista.querySelectorAll('[data-vitrine-liga]').forEach((botao) => botao.addEventListener('click', () => {
-    if (botao.classList.contains('bloqueada')) {
-      botao.classList.remove('balanca');
-      void botao.offsetWidth;
-      botao.classList.add('balanca');
-      if (typeof somDaLiga === 'function') somDaLiga('encaixe', 0, undefined, 0.35, 0.7);
-      if (typeof mostrarAvisoTrilhas === 'function') mostrarAvisoTrilhas(tr('Essa liga ainda está bloqueada. Continue juntando Fé!'));
-      return;
-    }
-    ligaEscolhidaNoRanking = Number(botao.dataset.vitrineLiga) || 0;
-    if (typeof somDaLiga === 'function') somDaLiga('encaixe', 0, undefined, 0.5, 1.2);
-    desenharMinhaLiga(lista);
-  }));
-  const voltar = lista.querySelector('#ranking-voltar-geral');
-  if (voltar) voltar.addEventListener('click', () => { abaDoRanking = 'familia'; marcarAbaDoRanking(); renderizarRanking(); });
-}
-
-function seloDaLigaNaLinha(fe) {
-  return typeof seloDaLigaNoRanking === 'function' && (periodoDoRanking === 'all' || abaDoRanking === 'liga') ? seloDaLigaNoRanking(fe) : '';
+  const missao = document.getElementById('ranking-fazer-missao');
+  if (missao) missao.addEventListener('click', () => { if (typeof abrirTrilhas === 'function') abrirTrilhas(); });
 }
 
 function estrelaDaFeNoRanking() {
@@ -1401,7 +1378,6 @@ function linhaDoRanking(item, ordem) {
       ${desenharAvatar(item.avatar, item.fotoUrl, 'pequeno')}
       <span class="ranking-nome">${escaparTexto(item.nome)}${item.destaque ? ' <small>você</small>' : ''}</span>
       ${typeof item.ofensiva === 'number' ? `<span class="ranking-numero ranking-ofensiva">${icone('chama')}${item.ofensiva}</span>` : ''}
-      ${seloDaLigaNaLinha(item.fe)}
       <span class="ranking-numero ranking-fe">${estrelaDaFeNoRanking()}${item.fe}</span>
     </${tag}>`;
 }
@@ -1417,7 +1393,6 @@ function lugarNoPodio(item) {
       <strong class="podio-nome">${escaparTexto(item.nome)}</strong>
       ${item.destaque ? '<small class="podio-voce">você</small>' : ''}
       <span class="podio-fe">${estrelaDaFeNoRanking()}${item.fe}</span>
-      ${seloDaLigaNaLinha(item.fe)}
       <span class="podio-degrau"><b>${item.posicao}</b></span>
     </${tag}>`;
 }
@@ -1447,37 +1422,10 @@ async function renderizarRanking() {
   if (!lista) return;
   lista.innerHTML = '<p class="perfis-carregando">Carregando...</p>';
   try {
-    if ((abaDoRanking === 'global' || abaDoRanking === 'liga') && membroAtivo.tipo === 'adulto') {
-      const naLiga = abaDoRanking === 'liga' && typeof indiceDaLiga === 'function';
-      const resposta = await supabaseCliente.rpc('leaderboard_global', {
-        _pid: membroAtivo.id, _period: naLiga ? 'all' : periodoDoRanking, _limit: naLiga ? 100 : 50,
-      });
-      const { error } = resposta;
-      let data = resposta.data || [];
-      let topoDaLiga = '';
+    if (abaDoRanking === 'semana' && membroAtivo.tipo === 'adulto') {
+      const { data, error } = await supabaseCliente.rpc('ranking_da_semana', { _pid: membroAtivo.id });
       if (error) throw error;
-      if (naLiga) {
-        const eu = data.find((l) => l.is_me);
-        linhasDaMinhaLiga = data;
-        minhaLigaNoRanking = indiceDaLiga(eu ? eu.faith : 0);
-        if (ligaEscolhidaNoRanking === null || ligaEscolhidaNoRanking > minhaLigaNoRanking) ligaEscolhidaNoRanking = minhaLigaNoRanking;
-        if (typeof carregarPorcentagensDasLigas === 'function') await carregarPorcentagensDasLigas();
-        await desenharMinhaLiga(lista);
-        return;
-      }
-      const podeAbrirPerfil = typeof abrirPerfilPublico === 'function';
-      const fotos = typeof enderecosAssinados === 'function'
-        ? await enderecosAssinados('avatars', (data || []).filter((l) => !l.is_me).map((l) => l.avatar_path))
-        : {};
-      const itens = (data || []).map((l) => ({
-        posicao: l.rank, nome: l.display_name, avatar: l.avatar_key, fe: l.faith, destaque: l.is_me,
-        fotoUrl: l.is_me ? membroAtivo.fotoUrl : (fotos[l.avatar_path] || ''),
-        publicoId: podeAbrirPerfil ? l.profile_id : null, perfilId: l.profile_id,
-      }));
-      lista.innerHTML = topoDaLiga + htmlDoRanking(itens, naLiga ? 'Ainda não há mais ninguém na sua liga.' : 'Ainda não há ninguém no ranking global.');
-      ligarCliquesDoRanking(lista);
-      if (typeof enfeitarLinhasDoRanking === 'function') enfeitarLinhasDoRanking(lista, false);
-      if (typeof enfeitarRankingComCargos === 'function') enfeitarRankingComCargos(lista);
+      await desenharLigaDaSemana(lista, data || {});
     } else {
       const [{ data, error }] = await Promise.all([
         supabaseCliente.rpc('leaderboard_family', { _pid: membroAtivo.id, _period: periodoDoRanking }),
@@ -1586,13 +1534,6 @@ function iniciarPerfis() {
   document.querySelectorAll('.ranking-aba').forEach((aba) => {
     aba.addEventListener('click', () => {
       abaDoRanking = aba.dataset.aba;
-      marcarAbaDoRanking();
-      renderizarRanking();
-    });
-  });
-  document.querySelectorAll('.ranking-periodo').forEach((botao) => {
-    botao.addEventListener('click', () => {
-      periodoDoRanking = botao.dataset.periodo;
       marcarAbaDoRanking();
       renderizarRanking();
     });

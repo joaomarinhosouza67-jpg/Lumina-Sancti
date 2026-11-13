@@ -102,7 +102,7 @@ function tempoLiturgicoAtual() {
 }
 
 const PAGINAS_QUE_HERDAM = ['view-detail'];
-const PAGINAS_LITURGICAS = ['view-leitura'];
+const PAGINAS_LITURGICAS = [];
 const PAGINAS_COM_SELO = ['view-trilhas', 'view-terco', 'view-ia', 'view-oracoes', 'view-padroeiro', 'view-leitura'];
 
 let temaDoSite = 'dourado';
@@ -126,6 +126,7 @@ function atualizarSelosLiturgicos() {
   const nome = tempo.nome[idioma];
   const cor = NOMES_DAS_CORES[tempo.cor][idioma];
   document.querySelectorAll('.selo-liturgico').forEach((selo) => {
+    selo.dataset.cor = tempo.cor;
     selo.innerHTML = `<i aria-hidden="true"></i><span>${nome} · ${cor}</span>`;
     selo.setAttribute('title', `${rotulo}: ${nome}`);
     selo.setAttribute('aria-label', `${rotulo}: ${nome}, ${cor}`);

@@ -1640,6 +1640,7 @@ function exibirTrilhas(slugParaMostrar) {
   if (typeof closeSidebar === 'function') closeSidebar();
   mudarDeView('view-trilhas');
   renderizarTrilhas();
+  if (typeof atualizarCaixasDoDia === 'function') atualizarCaixasDoDia();
   if (slugParaMostrar) {
     abrirBlocoDaTrilha(slugParaMostrar);
     setTimeout(() => {
@@ -2857,6 +2858,8 @@ async function finalizarLicaoNoServidor() {
           <div class="licao-fim-dado licao-fim-fe">${estrelaDaFe('fe-grande')}<strong id="licao-fe-ganha">+${r.faith_awarded}</strong><span>${tt('de_fe')}</span></div>
           <div class="licao-fim-dado"><strong>${r.correct}/${r.total}</strong><span>${tt('acertos')}</span></div>
         </div>
+        ${r.fe_dobro && typeof svgDoFrasco === 'function' ? `<p class="licao-fim-bonus">${svgDoFrasco('fe_dobro', 22)}${tr('Fé em dobro!')}</p>` : ''}
+        ${Number(r.protecao_usada) > 0 && typeof svgDoFrasco === 'function' ? `<p class="licao-fim-bonus">${svgDoFrasco('protecao', 22)}${tr('Seu frasco guardou a ofensiva!')}</p>` : ''}
         ${ofensivaSubiu ? htmlDaOfensivaAcesa(r.streak) : ''}
         ${insigniaNova ? `
         <div class="insignia-conquistada">
@@ -2866,6 +2869,8 @@ async function finalizarLicaoNoServidor() {
       </div>`;
   }
   avisarMascote('concluiu', { medalha: insigniaNova });
+  if (typeof atualizarCaixasDoDia === 'function') atualizarCaixasDoDia();
+  if (r.bau_ofensiva && typeof mostrarAvisoTrilhas === 'function') setTimeout(() => mostrarAvisoTrilhas(tr('Você ganhou um baú pela ofensiva de {n} dias!', { n: r.streak })), 1800);
   prepararRodapeDaLicao(tt('continuar'), true);
   animarOfensivaAcesa(corpo);
   };

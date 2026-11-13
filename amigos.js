@@ -546,7 +546,7 @@ async function abrirPerfilPublico(idDoPerfil) {
           </div>
         </div>
         ${acoesDoPerfil(dados)}
-        ${typeof cartaoDaLigaNoPerfil === 'function' ? cartaoDaLigaNoPerfil(Number(dados.fe || 0), dados.eu ? '' : dados.nome) : ''}
+        ${dados.eu && typeof cartaoDaLigaNoPerfil === 'function' ? cartaoDaLigaNoPerfil(Number(dados.fe || 0), '') : ''}
         <section class="perfil-secao">
           <h4 class="perfil-secao-titulo">Estatísticas</h4>
           <div class="perfil-publico-numeros">
@@ -568,7 +568,7 @@ async function abrirPerfilPublico(idDoPerfil) {
         ${rodapeDoPerfil(dados)}
       </div>`;
     if (typeof aplicarEnfeitesNoCartao === 'function') aplicarEnfeitesNoCartao(corpo.querySelector('.perfil-publico'), dados.enfeites);
-    if (typeof atualizarLigaNoPerfil === 'function') atualizarLigaNoPerfil(corpo, dados.perfil_id, Number(dados.fe || 0), dados.eu ? '' : dados.nome, !!dados.eu);
+    if (dados.eu && typeof atualizarLigaNoPerfil === 'function') atualizarLigaNoPerfil(corpo, dados.perfil_id, Number(dados.fe || 0), '', true);
     if (typeof preencherResumoSocial === 'function') {
       preencherResumoSocial(corpo.querySelector('#perfil-publico-social'), dados.perfil_id).then((resumo) => {
         const lugarDoPedido = corpo.querySelector('#perfil-publico-pedido');

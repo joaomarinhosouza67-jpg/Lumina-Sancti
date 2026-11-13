@@ -284,6 +284,7 @@
       <button class="side-nav-link side-nav-destaque" id="nav-comunidade"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-comunidade"></use></svg><span>Comunidade</span></button>
       <button class="side-nav-link side-nav-destaque" id="nav-dormir"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lampada"></use></svg><span>Histórias para dormir</span></button>
       <button class="side-nav-link side-nav-destaque" id="nav-jogos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-estrela"></use></svg><span>Joguinhos</span></button>
+      <button class="side-nav-link side-nav-destaque" id="nav-quiz"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lampada"></use></svg><span>Quiz dos Santos</span></button>
       <button class="side-nav-link side-nav-destaque" id="nav-cursos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-capelo"></use></svg><span>Cursos de aprofundamento</span></button>
       <button class="side-nav-link" id="nav-leitura"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-biblia"></use></svg><span data-i18n="nav_leitura">Leitura do dia</span></button>
       <button class="side-nav-link" id="nav-oracoes"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-livro"></use></svg><span data-i18n="nav_oracoes">Orações do dia a dia</span></button>
@@ -358,11 +359,27 @@
 
       <section class="retrospectiva-inicio container" id="retrospectiva-inicio" aria-label="Retrospectiva" hidden></section>
 
-      <section class="frase-do-dia-inicio container" id="frase-do-dia" aria-label="Frase do dia"></section>
+      <div class="hoje-area">
+        <div class="hoje-faixa" id="hoje-faixa">
+          <section class="frase-do-dia-inicio container" id="frase-do-dia" aria-label="Frase do dia"></section>
 
-      <section class="oracao-do-dia-inicio container" id="oracao-do-dia-inicio" aria-label="Oração do dia"></section>
+          <section class="oracao-do-dia-inicio container" id="oracao-do-dia-inicio" aria-label="Oração do dia"></section>
 
-      <section class="santo-do-dia container" id="santo-do-dia">
+          <section class="santo-do-dia container" id="santo-do-dia">
+          </section>
+        </div>
+        <div class="hoje-pontos" id="hoje-pontos" aria-hidden="true"></div>
+      </div>
+
+      <section class="quiz-inicio container" id="quiz-inicio" aria-label="Quiz dos Santos">
+        <button type="button" class="quiz-inicio-cartao" id="quiz-inicio-cartao">
+          <span class="quiz-inicio-arte" id="quiz-inicio-arte" aria-hidden="true"></span>
+          <span class="quiz-inicio-textos">
+            <strong>Quiz dos Santos</strong>
+            <span>Santo surpresa, da lista ou qualquer um que você digitar.</span>
+          </span>
+          <span class="quiz-inicio-jogar">Jogar</span>
+        </button>
       </section>
 
       <section class="atalhos-app container" id="atalhos-app">
@@ -392,21 +409,8 @@
         </button>
         <button type="button" class="atalho-cartao" data-destino="cursos">
           <span class="atalho-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-capelo"></use></svg></span>
-          <span class="atalho-textos"><strong>Cursos de aprofundamento</strong><span>Em breve: estudos sobre casamento, Missa, Bíblia e muito mais.</span></span>
+          <span class="atalho-textos"><strong>Cursos</strong><span>Em breve: estudos sobre casamento, Missa, Bíblia e muito mais.</span></span>
         </button>
-      </section>
-
-      <section class="about container">
-        <h2 class="section-title" data-i18n="sobre_titulo">Sobre o Lumina Sancti</h2>
-        <div class="title-divider"></div>
-        <div class="about-pilares">
-          <div class="about-pilar"><span><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-livro"></use></svg></span><strong data-i18n="sobre_pilar_1_t">Conheça</strong><small data-i18n="sobre_pilar_1">A história completa de cada santo.</small></div>
-          <div class="about-pilar"><span><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-trilha"></use></svg></span><strong data-i18n="sobre_pilar_2_t">Aprenda</strong><small data-i18n="sobre_pilar_2">Trilhas com missões, medalhas e cartas.</small></div>
-          <div class="about-pilar"><span><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-cruz"></use></svg></span><strong data-i18n="sobre_pilar_3_t">Reze</strong><small data-i18n="sobre_pilar_3">Orações e terço, sozinho ou em família.</small></div>
-        </div>
-        <p class="about-text" data-i18n="sobre_texto">
-          O <strong>Lumina Sancti</strong> (Luz dos Santos) nasceu de uma certeza: os santos não são personagens distantes. Foram pessoas de verdade, com medos, quedas e recomeços, que deixaram Deus transformar a vida delas. Aqui você conhece a história de cada um, aprende como num jogo, reza com quem ama e descobre, um passo de cada vez, que a santidade também é para você.
-        </p>
       </section>
 
       <div class="catalogo-interno-topo container" id="catalogo-interno-topo">
@@ -423,6 +427,7 @@
           <label class="catalogo-busca">
             <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lupa"></use></svg>
             <input type="search" id="catalogo-busca" placeholder="Procurar um santo" autocomplete="off" enterkeyhint="search" aria-label="Procurar um santo">
+            <button type="button" class="catalogo-limpar" id="catalogo-limpar" aria-label="Limpar a busca" hidden><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
           </label>
           <span class="catalogo-conta" id="catalogo-conta" aria-live="polite"></span>
         </div>
@@ -439,6 +444,19 @@
 
         <div id="cards-grid" class="cards-grid">
         </div>
+      </section>
+
+      <section class="about container">
+        <h2 class="section-title" data-i18n="sobre_titulo">Sobre o Lumina Sancti</h2>
+        <div class="title-divider"></div>
+        <div class="about-pilares">
+          <div class="about-pilar"><span><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-livro"></use></svg></span><strong data-i18n="sobre_pilar_1_t">Conheça</strong><small data-i18n="sobre_pilar_1">A história completa de cada santo.</small></div>
+          <div class="about-pilar"><span><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-trilha"></use></svg></span><strong data-i18n="sobre_pilar_2_t">Aprenda</strong><small data-i18n="sobre_pilar_2">Trilhas com missões, medalhas e cartas.</small></div>
+          <div class="about-pilar"><span><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-cruz"></use></svg></span><strong data-i18n="sobre_pilar_3_t">Reze</strong><small data-i18n="sobre_pilar_3">Orações e terço, sozinho ou em família.</small></div>
+        </div>
+        <p class="about-text" data-i18n="sobre_texto">
+          O <strong>Lumina Sancti</strong> (Luz dos Santos) nasceu de uma certeza: os santos não são personagens distantes. Foram pessoas de verdade, com medos, quedas e recomeços, que deixaram Deus transformar a vida delas. Aqui você conhece a história de cada um, aprende como num jogo, reza com quem ama e descobre, um passo de cada vez, que a santidade também é para você.
+        </p>
       </section>
     </section>
 
@@ -777,8 +795,6 @@
           <p class="cursos-selo" id="cursos-selo">Em breve</p>
           <h2 class="section-title">Cursos de aprofundamento</h2>
           <div class="title-divider"></div>
-          <p class="cursos-intro">Para quem quer ir mais fundo na fé. Os cursos vão liberar páginas de aprofundamento sobre vários temas da vida cristã, com explicações simples, o que a Igreja ensina e como viver isso no dia a dia.</p>
-          <p class="cursos-intro">Cada curso vai liberando as páginas aos poucos, no seu ritmo, sempre com base na Bíblia, no Catecismo e no exemplo dos santos.</p>
         </header>
 
         <div id="cursos-catalogo-caixa">
@@ -909,11 +925,24 @@
         </button>
         <h2 class="section-title" style="text-align:left; margin: 10px 0 4px;">Padroeiro de...</h2>
         <div class="title-divider" style="margin: 0 0 16px;"></div>
-        <p class="terco-intro padroeiro-intro">Conte o que você está vivendo e veja a quais santos a Igreja costuma recorrer.</p>
         <div class="busca-oracao-campo padroeiro-campo">
           <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lupa"></use></svg>
           <input type="search" id="padroeiro-input" placeholder="Ex.: viagem, doença, trabalho, prova..." autocomplete="off" enterkeyhint="search" aria-label="Necessidade, profissão ou situação">
         </div>
+        <section class="padroeiro-meu" aria-label="Descubra o seu santo">
+          <h3 class="padroeiro-meu-titulo">Descubra o seu santo</h3>
+          <div class="padroeiro-meu-formas">
+            <form class="padroeiro-meu-forma" id="padroeiro-por-nome">
+              <label for="padroeiro-nome">Pelo seu nome</label>
+              <span class="padroeiro-meu-linha"><input id="padroeiro-nome" type="text" autocomplete="given-name" placeholder="Ex.: Maria" maxlength="40"><button type="submit">Ver</button></span>
+            </form>
+            <form class="padroeiro-meu-forma" id="padroeiro-por-data">
+              <label for="padroeiro-data">Pelo seu aniversário</label>
+              <span class="padroeiro-meu-linha"><input id="padroeiro-data" type="date"><button type="submit">Ver</button></span>
+            </form>
+          </div>
+          <div id="padroeiro-meu-resultado" class="padroeiro-meu-resultado" aria-live="polite"></div>
+        </section>
         <div id="padroeiro-temas" class="padroeiro-temas"></div>
         <div id="padroeiro-resultados" class="padroeiro-resultados" aria-live="polite"></div>
       </div>
@@ -928,9 +957,10 @@
         <div class="trilhas-layout">
           <aside class="trilhas-lateral">
             <h2 class="section-title trilhas-titulo" data-i18n="trilhas_titulo">Trilhas dos Santos</h2>
-            <p class="trilhas-intro" data-i18n="trilhas_intro">Uma trilha para cada santo. Complete as missões para ganhar Fé, manter sua ofensiva e conquistar a insígnia e a medalha da virtude de cada um.</p>
             <div class="trilhas-conta" id="trilhas-conta"></div>
             <div class="trilhas-stats" id="trilhas-stats"></div>
+            <div class="desafios-cartao" id="desafios-cartao" hidden></div>
+            <div class="mochila-cartao" id="mochila-cartao" hidden></div>
             <div class="trilhas-medalhas-cartao">
               <div class="trilhas-medalhas-topo">
                 <strong data-i18n="trilhas_insignias">Minhas medalhas</strong>
@@ -988,13 +1018,8 @@
         </button>
         <h2 class="section-title trilhas-titulo">Ranking</h2>
         <div class="ranking-abas" id="ranking-abas">
-          <button class="ranking-aba active" data-aba="familia">Família</button>
-          <button class="ranking-aba" data-aba="global" id="ranking-aba-global">Global</button>
-          <button class="ranking-aba" data-aba="liga" id="ranking-aba-liga">Minha liga</button>
-        </div>
-        <div class="ranking-periodos">
-          <button class="ranking-periodo active" data-periodo="week">Esta semana</button>
-          <button class="ranking-periodo" data-periodo="all">Desde sempre</button>
+          <button class="ranking-aba active" data-aba="semana" id="ranking-aba-semana">Liga da semana</button>
+          <button class="ranking-aba" data-aba="familia">Família</button>
         </div>
         <div id="ranking-lista" class="ranking-lista"></div>
         <p class="ranking-aviso-assinantes" id="ranking-aviso-assinantes">O ranking da família é um recurso para assinantes. Por enquanto, ele fica grátis por alguns dias para testes.</p>
@@ -1402,6 +1427,7 @@
   <script src="oracoes.js"></script>
   <script src="cursos.js"></script>
   <script src="jogos.js"></script>
+  <script src="baus.js"></script>
   <script src="ligas.js"></script>
   <script src="advento-dados.js"></script>
   <script src="advento.js"></script>
