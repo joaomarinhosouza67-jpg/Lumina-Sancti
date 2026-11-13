@@ -1338,12 +1338,17 @@ async function desenharLigaDaSemana(lista, dados) {
   const fotos = typeof enderecosAssinados === 'function'
     ? await enderecosAssinados('avatars', linhas.filter((l) => !l.eu).map((l) => l.avatar_path))
     : {};
+  const sobem = Number(dados.sobem) || 0;
+  const descem = Number(dados.descem) || 0;
   const itens = linhas.map((l) => ({
     posicao: l.posicao, nome: l.nome, avatar: l.avatar_key, fe: l.fe, ofensiva: Number(l.ofensiva) || 0, destaque: !!l.eu,
+    zona: l.posicao <= sobem ? 'sobe' : (descem > 0 && l.posicao > linhas.length - descem ? 'desce' : ''),
     fotoUrl: l.eu ? membroAtivo.fotoUrl : (fotos[l.avatar_path] || ''),
     publicoId: podeAbrirPerfil && !l.eu ? l.perfil_id : null, perfilId: l.perfil_id,
   }));
-  const topo = typeof htmlDoTopoDaSemana === 'function' ? htmlDoTopoDaSemana(indice, dados.termina_em) : '';
+  const topo = (typeof htmlDoTopoDaSemana === 'function' ? htmlDoTopoDaSemana(indice, dados.termina_em) : '')
+    + (typeof htmlDoResultadoDaSemana === 'function' ? htmlDoResultadoDaSemana(dados.resultado) : '')
+    + (typeof htmlDasZonasDaSemana === 'function' && linhas.length ? htmlDasZonasDaSemana(sobem, descem) : '');
   let corpo;
   if (dados.desenvolvedor) {
     corpo = `<p class="ranking-dev">${tr('Perfil de desenvolvedor: você não aparece no ranking.')}</p>${htmlDoRanking(itens, tr('Ainda não há ninguém na liga desta semana.'))}`;
@@ -1373,7 +1378,7 @@ function atributosDoRanking(item) {
 function linhaDoRanking(item, ordem) {
   const { tag, atributos } = atributosDoRanking(item);
   return `
-    <${tag} class="ranking-linha${item.destaque ? ' destaque' : ''}"${atributos} style="--i:${ordem || 0}">
+    <${tag} class="ranking-linha${item.destaque ? ' destaque' : ''}${item.zona ? ` zona-${item.zona}` : ''}"${atributos} style="--i:${ordem || 0}">
       <span class="ranking-posicao">${item.posicao}</span>
       ${desenharAvatar(item.avatar, item.fotoUrl, 'pequeno')}
       <span class="ranking-nome">${escaparTexto(item.nome)}${item.destaque ? ' <small>você</small>' : ''}</span>
@@ -1387,7 +1392,7 @@ function lugarNoPodio(item) {
   const lugar = item.lugar;
   const coroa = `<svg class="podio-coroa-svg" viewBox="0 0 48 32" aria-hidden="true"><path d="M4 28L2 8L14 17L24 3L34 17L46 8L44 28Z" fill="currentColor"/><circle cx="2" cy="8" r="3" fill="currentColor"/><circle cx="24" cy="3" r="3" fill="currentColor"/><circle cx="46" cy="8" r="3" fill="currentColor"/><rect x="4" y="25" width="40" height="5" rx="1.5" fill="currentColor" opacity=".8"/></svg>`;
   return `
-    <${tag} class="podio-lugar podio-${lugar}${item.destaque ? ' destaque' : ''}"${atributos}>
+    <${tag} class="podio-lugar podio-${lugar}${item.destaque ? ' destaque' : ''}${item.zona ? ` zona-${item.zona}` : ''}"${atributos}>
       <span class="podio-topo">${lugar === 1 ? coroa : `<span class="podio-medalha">${lugar}</span>`}</span>
       <span class="podio-foto">${desenharAvatar(item.avatar, item.fotoUrl, lugar === 1 ? 'grande' : 'medio')}</span>
       <strong class="podio-nome">${escaparTexto(item.nome)}</strong>

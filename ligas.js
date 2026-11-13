@@ -1400,6 +1400,23 @@ function htmlDoTopoDaSemana(atual, terminaEm) {
     </div>`;
 }
 
+function htmlDoResultadoDaSemana(resultado) {
+  if (!resultado || Number(resultado.depois) === Number(resultado.antes)) return '';
+  const liga = LIGAS_DA_FE[Number(resultado.depois)] || LIGAS_DA_FE[0];
+  const subiu = Number(resultado.depois) > Number(resultado.antes);
+  const texto = subiu
+    ? textoDaLiga('Você subiu para a Liga {nome}!', { nome: textoDaLiga(liga.nome) })
+    : textoDaLiga('Você desceu para a Liga {nome}.', { nome: textoDaLiga(liga.nome) });
+  return `<p class="semana-resultado ${subiu ? 'subiu' : 'desceu'}" style="--liga:${liga.cor};--liga-clara:${liga.claro}">${escaparDaLiga(texto)}</p>`;
+}
+
+function htmlDasZonasDaSemana(sobem, descem) {
+  const partes = [];
+  if (sobem > 0) partes.push(`<span class="semana-zona sobe">${escaparDaLiga(textoDaLiga(sobem === 1 ? 'O 1º sobe de liga' : 'Os {n} primeiros sobem', { n: sobem }))}</span>`);
+  if (descem > 0) partes.push(`<span class="semana-zona desce">${escaparDaLiga(textoDaLiga(descem === 1 ? 'O último desce' : 'Os {n} últimos descem', { n: descem }))}</span>`);
+  return partes.length ? `<div class="semana-zonas">${partes.join('')}</div>` : '';
+}
+
 function htmlDoTopoDaLiga(indice) {
   const liga = LIGAS_DA_FE[indice] || LIGAS_DA_FE[0];
   return `<div class="ranking-liga-topo" style="--liga:${liga.cor}">${seloDaLigaNoRanking(liga.minimo)}<span><strong>${textoDaLiga('Liga {nome}', { nome: textoDaLiga(liga.nome) })}</strong><small>${textoDaLiga('Quem está na mesma liga que você.')}</small></span></div>`;

@@ -2495,13 +2495,12 @@ async function jogoDoQuizDaLumina(area) {
   }
   if (jogoAtual !== partida) return;
   if (!pedido.ok) {
-    if (pedido.dados.precisaLogin) {
-      try { await supabaseCliente.auth.signOut({ scope: 'local' }); } catch (e) {
-      }
-    }
+    let semLogin = !!pedido.dados.precisaLogin;
+    if (semLogin && typeof loginAindaValeNoAparelho === 'function' && await loginAindaValeNoAparelho()) semLogin = false;
+    if (jogoAtual !== partida) return;
     mostrarEscolhaDoQuizDaLumina(partida.jogo, {
-      aviso: pedido.dados.erro || textoDoJogo('Não consegui falar com a Lumina agora. Tente de novo em instantes.'),
-      precisaLogin: !!pedido.dados.precisaLogin,
+      aviso: (semLogin && pedido.dados.erro) || (!pedido.dados.precisaLogin && pedido.dados.erro) || textoDoJogo('Não consegui falar com a Lumina agora. Tente de novo em instantes.'),
+      precisaLogin: semLogin,
       modo: santo.modo === 'surpresa' ? '' : santo.modo,
       digitado: santo.digitado || santo.nome,
     });

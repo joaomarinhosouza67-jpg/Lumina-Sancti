@@ -2530,6 +2530,24 @@ function esperarSessaoDoAparelho(limite) {
   });
 }
 
+async function loginAindaValeNoAparelho() {
+  if (!supabaseCliente) return false;
+  try {
+    const { data } = await supabaseCliente.auth.refreshSession();
+    if (data && data.session) {
+      sessaoAtual = data.session;
+      return true;
+    }
+  } catch (e) {
+  }
+  try {
+    const { data } = await supabaseCliente.auth.getSession();
+    return !!(data && data.session);
+  } catch (e) {
+    return true;
+  }
+}
+
 function sessaoConfirmadaDoAparelho() {
   if (!supabaseCliente) return Promise.resolve(null);
   if (!promessaDaSessaoDoAparelho) {
@@ -2549,7 +2567,8 @@ function guardarDadosDoSiteNoAparelho() {
     if (!navigator.storage || !navigator.storage.persist) return;
     const instalado = typeof appJaInstalado === 'function' && appJaInstalado();
     const comAvisos = typeof Notification !== 'undefined' && Notification.permission === 'granted';
-    if (!instalado && !comAvisos) return;
+    const pedeSemPerguntar = !/Firefox\//.test(navigator.userAgent || '');
+    if (!instalado && !comAvisos && !pedeSemPerguntar) return;
     navigator.storage.persisted().then((jaGuardado) => { if (!jaGuardado) navigator.storage.persist(); }).catch(() => {});
   } catch (e) {
   }
@@ -2685,6 +2704,8 @@ function atualizarInterfaceDeConta() {
   if (precisaLogin && chatArea) {
     precisaLogin.style.display = logado ? 'none' : 'block';
     chatArea.style.display = logado ? '' : 'none';
+    const botaoDasConversas = document.getElementById('lumina-conversas');
+    if (botaoDasConversas) botaoDasConversas.hidden = !logado;
   }
 }
 
@@ -3316,12 +3337,11 @@ async function enviarPerguntaLumina() {
     esconderIndicadorPensando();
 
     if (!resp.ok || !dados?.resposta) {
-      if (dados?.precisaLogin) {
-        await supabaseCliente.auth.signOut({ scope: 'local' });
+      if (dados?.precisaLogin && !(await loginAindaValeNoAparelho())) {
         irParaLogin();
         return;
       }
-      erroEl.textContent = dados?.erro || 'Não consegui falar com a Lumina agora. Tente de novo em instantes.';
+      erroEl.textContent = dados?.precisaLogin ? tr('Não consegui falar com a Lumina agora. Tente de novo em instantes.') : (dados?.erro || 'Não consegui falar com a Lumina agora. Tente de novo em instantes.');
       return;
     }
 
@@ -3331,6 +3351,7 @@ async function enviarPerguntaLumina() {
     await efeitoMaquinaDeEscrever(blocoResposta, dados.resposta);
     acrescentarAcoesDaLumina(areaResposta, dados.resposta);
     areaResposta.scrollTop = areaResposta.scrollHeight;
+    salvarConversaDaLumina();
 
     if (typeof dados.perguntasRestantes === 'number') {
       restantesEl.textContent = dados.periodo === 'semana'
@@ -3383,6 +3404,134 @@ async function responderComRespostaPronta(item) {
   acrescentarAcoesDaLumina(area, resposta);
   input.disabled = false;
   if (enviar) enviar.disabled = false;
+  salvarConversaDaLumina();
+}
+
+let conversaDaLuminaId = null;
+let salvandoConversaDaLumina = Promise.resolve();
+
+function perfilDasConversasDaLumina() {
+  if (typeof sessaoAtual !== 'undefined' && !sessaoAtual) return null;
+  const perfil = typeof perfilAdultoAtivo === 'function' ? perfilAdultoAtivo() : null;
+  return perfil && typeof supabaseCliente !== 'undefined' && supabaseCliente ? perfil : null;
+}
+
+function mensagensDaConversaDaLumina() {
+  const area = document.getElementById('lumina-resposta-area');
+  if (!area) return [];
+  return Array.from(area.querySelectorAll('.lumina-mensagem')).map((bloco) => ({
+    papel: bloco.classList.contains('lumina-mensagem-pergunta') ? 'pessoa' : 'lumina',
+    texto: bloco.textContent.trim(),
+  })).filter((m) => m.texto);
+}
+
+function salvarConversaDaLumina() {
+  const perfil = perfilDasConversasDaLumina();
+  const mensagens = mensagensDaConversaDaLumina();
+  if (!perfil || !mensagens.some((m) => m.papel === 'lumina')) return salvandoConversaDaLumina;
+  salvandoConversaDaLumina = salvandoConversaDaLumina.then(async () => {
+    try {
+      const { data, error } = await supabaseCliente.rpc('lumina_conversa_salvar', { _pid: perfil.id, _id: conversaDaLuminaId, _mensagens: mensagens });
+      if (!error && data) conversaDaLuminaId = data;
+    } catch (e) {
+      return;
+    }
+  });
+  return salvandoConversaDaLumina;
+}
+
+function dataDaConversaDaLumina(quando) {
+  const data = new Date(quando);
+  if (Number.isNaN(data.getTime())) return '';
+  const local = typeof localDoIdioma === 'function' ? localDoIdioma() : 'pt-BR';
+  const hoje = new Date();
+  if (data.toDateString() === hoje.toDateString()) return data.toLocaleTimeString(local, { hour: '2-digit', minute: '2-digit' });
+  return data.toLocaleDateString(local, { day: 'numeric', month: 'short' });
+}
+
+function fecharHistoricoDaLumina() {
+  const historico = document.getElementById('lumina-historico');
+  if (historico) historico.hidden = true;
+  document.body.classList.remove('lumina-historico-aberto');
+}
+
+async function abrirHistoricoDaLumina() {
+  const historico = document.getElementById('lumina-historico');
+  const lista = document.getElementById('lumina-historico-lista');
+  const perfil = perfilDasConversasDaLumina();
+  if (!historico || !lista) return;
+  historico.hidden = false;
+  document.body.classList.add('lumina-historico-aberto');
+  if (!perfil) { lista.innerHTML = `<p class="lumina-historico-vazio">${tr('Entre num perfil de adulto para ver as conversas.')}</p>`; return; }
+  lista.innerHTML = `<p class="lumina-historico-vazio">${tr('Carregando...')}</p>`;
+  await salvandoConversaDaLumina;
+  let conversas = [];
+  try {
+    const { data, error } = await supabaseCliente.rpc('lumina_conversas_lista', { _pid: perfil.id });
+    if (error) throw error;
+    conversas = Array.isArray(data) ? data : [];
+  } catch (e) {
+    lista.innerHTML = `<p class="lumina-historico-vazio">${tr('Não deu para carregar as conversas agora.')}</p>`;
+    return;
+  }
+  if (!conversas.length) { lista.innerHTML = `<p class="lumina-historico-vazio">${tr('Nenhuma conversa ainda.')}</p>`; return; }
+  lista.innerHTML = conversas.map((c) => `
+    <div class="lumina-historico-item${c.id === conversaDaLuminaId ? ' atual' : ''}">
+      <button type="button" class="lumina-historico-abrir" data-conversa="${escaparTextoDeOracao(c.id)}">
+        <strong>${escaparTextoDeOracao(c.titulo)}</strong>
+        <small>${escaparTextoDeOracao(dataDaConversaDaLumina(c.atualizada_em))}</small>
+      </button>
+      <button type="button" class="lumina-historico-apagar" data-apagar="${escaparTextoDeOracao(c.id)}" aria-label="${escaparTextoDeOracao(tr('Apagar conversa'))}"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lixeira"></use></svg></button>
+    </div>`).join('');
+  lista.querySelectorAll('[data-conversa]').forEach((botao) => botao.addEventListener('click', () => abrirConversaSalvaDaLumina(botao.dataset.conversa)));
+  lista.querySelectorAll('[data-apagar]').forEach((botao) => botao.addEventListener('click', async () => {
+    if (!window.confirm(tr('Apagar esta conversa?'))) return;
+    botao.disabled = true;
+    try {
+      await supabaseCliente.rpc('lumina_conversa_apagar', { _pid: perfil.id, _id: botao.dataset.apagar });
+      if (botao.dataset.apagar === conversaDaLuminaId) limparConversaDaLumina();
+    } catch (e) {
+      botao.disabled = false;
+    }
+    abrirHistoricoDaLumina();
+  }));
+}
+
+function limparConversaDaLumina() {
+  if (typeof pararVozDaLumina === 'function') pararVozDaLumina();
+  const area = document.getElementById('lumina-resposta-area');
+  if (area) area.innerHTML = '';
+  const erro = document.getElementById('lumina-erro');
+  if (erro) erro.textContent = '';
+  conversaDaLuminaId = null;
+  mostrarConversaDaLumina(false);
+}
+
+async function abrirConversaSalvaDaLumina(id) {
+  const perfil = perfilDasConversasDaLumina();
+  const area = document.getElementById('lumina-resposta-area');
+  if (!perfil || !area) return;
+  try {
+    const { data, error } = await supabaseCliente.rpc('lumina_conversa_abrir', { _pid: perfil.id, _id: id });
+    if (error || !data) throw error || new Error('sem_conversa');
+    limparConversaDaLumina();
+    const mensagens = Array.isArray(data.mensagens) ? data.mensagens : [];
+    mensagens.forEach((m) => {
+      const bloco = document.createElement('div');
+      bloco.className = m.papel === 'pessoa' ? 'lumina-mensagem lumina-mensagem-pergunta' : 'lumina-mensagem';
+      bloco.textContent = m.texto;
+      area.appendChild(bloco);
+    });
+    const ultima = mensagens.filter((m) => m.papel === 'lumina').pop();
+    if (ultima) acrescentarAcoesDaLumina(area, ultima.texto);
+    conversaDaLuminaId = data.id;
+    mostrarConversaDaLumina(true);
+    fecharHistoricoDaLumina();
+    area.scrollTop = area.scrollHeight;
+  } catch (e) {
+    const lista = document.getElementById('lumina-historico-lista');
+    if (lista) lista.insertAdjacentHTML('afterbegin', `<p class="lumina-historico-vazio">${tr('Não deu para abrir esta conversa.')}</p>`);
+  }
 }
 
 function mostrarConversaDaLumina(comConversa) {
@@ -3495,15 +3644,17 @@ function iniciarPaginaDaLumina() {
   const nova = document.getElementById('lumina-nova');
   if (nova) {
     nova.addEventListener('click', () => {
-      pararVozDaLumina();
-      const area = document.getElementById('lumina-resposta-area');
-      if (area) area.innerHTML = '';
-      const erro = document.getElementById('lumina-erro');
-      if (erro) erro.textContent = '';
-      mostrarConversaDaLumina(false);
+      limparConversaDaLumina();
       input.focus();
     });
   }
+  const conversas = document.getElementById('lumina-conversas');
+  if (conversas) conversas.addEventListener('click', abrirHistoricoDaLumina);
+  const fecharHistorico = document.getElementById('lumina-historico-fechar');
+  if (fecharHistorico) fecharHistorico.addEventListener('click', fecharHistoricoDaLumina);
+  const historico = document.getElementById('lumina-historico');
+  if (historico) historico.addEventListener('click', (evento) => { if (evento.target === historico) fecharHistoricoDaLumina(); });
+  document.addEventListener('keydown', (evento) => { if (evento.key === 'Escape' && historico && !historico.hidden) fecharHistoricoDaLumina(); });
 
   enviar.addEventListener('click', enviarPerguntaLumina);
   input.addEventListener('keydown', (e) => {
@@ -4152,8 +4303,7 @@ function renderGrid(filter = 'todos') {
 
   filtrados.forEach((santo, index) => {
     const card = document.createElement('div');
-    card.className = 'card animate-card';
-    card.style.animationDelay = `${index * 0.05}s`;
+    card.className = 'card';
     card.onclick = () => {
       if (typeof cortinaDeTroca === 'function') cortinaDeTroca('Abrindo a história...');
       showDetail(santo.id);
@@ -4161,6 +4311,7 @@ function renderGrid(filter = 'todos') {
 
     card.innerHTML = `
       <span class="card-colunas" aria-hidden="true"></span>
+      <span class="card-brilho" aria-hidden="true"></span>
       <div class="card-img-wrapper" id="img-wrapper-${santo.id}">
         <svg class="card-img-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <use href="#icon-aureola"></use>
@@ -4553,12 +4704,35 @@ if (botaoInicioDoMenu) {
 }
 
 function openSidebar() {
+  clearTimeout(fimDoFechamentoDoMenu);
+  sidebar.classList.remove('fechando');
+  menuBtn.classList.remove('menu-btn-pulso');
+  void menuBtn.offsetWidth;
+  menuBtn.classList.add('menu-btn-pulso');
+  overlay.classList.add('menu-luz');
+  let ordem = 0;
+  sidebar.querySelectorAll('.sidebar-header, .sidebar-nav > *, .sidebar-decoration').forEach((item) => {
+    if (item.hidden || getComputedStyle(item).display === 'none') return;
+    item.style.setProperty('--i', String(Math.min(ordem, 24)));
+    ordem += 1;
+  });
   sidebar.classList.add('open');
   overlay.classList.add('active');
   document.body.style.overflow = 'hidden';
 }
 
+let fimDoFechamentoDoMenu = null;
+
 function closeSidebar() {
+  if (sidebar.classList.contains('open')) {
+    sidebar.classList.add('fechando');
+    clearTimeout(fimDoFechamentoDoMenu);
+    fimDoFechamentoDoMenu = setTimeout(() => {
+      sidebar.classList.remove('fechando');
+      overlay.classList.remove('menu-luz');
+      menuBtn.classList.remove('menu-btn-pulso');
+    }, 480);
+  }
   sidebar.classList.remove('open');
   overlay.classList.remove('active');
   document.body.style.overflow = '';
@@ -4569,6 +4743,9 @@ closeMenuBtn.addEventListener('click', closeSidebar);
 overlay.addEventListener('click', () => {
   closeSidebar();
   closeSearch();
+});
+document.addEventListener('keydown', (evento) => {
+  if (evento.key === 'Escape' && sidebar.classList.contains('open')) closeSidebar();
 });
 
 function openSearch() {

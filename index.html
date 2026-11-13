@@ -60,7 +60,7 @@
 
   <div id="tela-carregando" class="tela-carregando" aria-hidden="true">
     <div class="tela-carregando-centro">
-      <div class="tela-carregando-sinal"></div>
+      <div class="tela-carregando-sinal"><span class="carregando-raios"></span><span class="carregando-luz"></span><span class="carregando-contas"><i style="--k:0"></i><i style="--k:1"></i><i style="--k:2"></i><i style="--k:3"></i><i style="--k:4"></i><i style="--k:5"></i><i style="--k:6"></i><i style="--k:7"></i><i style="--k:8"></i><i style="--k:9"></i><i style="--k:10"></i><i style="--k:11"></i></span><svg class="carregando-estrela" viewBox="0 0 100 100"><defs><radialGradient id="carregando-ouro" cx="50%" cy="50%" r="55%"><stop offset="0" stop-color="#fffbe8"/><stop offset=".35" stop-color="#f8e19a"/><stop offset=".75" stop-color="#dcae45"/><stop offset="1" stop-color="#9a6a1c"/></radialGradient></defs><g transform="rotate(45 50 50)" opacity=".5"><path d="M50 24 C52 41 59 48 76 50 C59 52 52 59 50 76 C48 59 41 52 24 50 C41 48 48 41 50 24 Z" fill="url(#carregando-ouro)"/></g><path d="M50 2 C52 36 64 48 98 50 C64 52 52 64 50 98 C48 64 36 52 2 50 C36 48 48 36 50 2 Z" fill="url(#carregando-ouro)"/><path d="M50 50 L50 2 C52 36 64 48 98 50 Z M50 50 L50 98 C48 64 36 52 2 50 Z" fill="#6e4710" opacity=".25"/><circle cx="50" cy="50" r="5" fill="#fffef5"/></svg></div>
       <p class="tela-carregando-texto" id="tela-carregando-texto">Preparando sua jornada...</p>
     </div>
   </div>
@@ -259,7 +259,7 @@
 
   <aside id="sidebar" class="sidebar">
     <div class="sidebar-header">
-      <h2 data-i18n="catalogo_titulo">Catálogo</h2>
+      <div class="sidebar-titulo"><svg class="sidebar-emblema" viewBox="0 0 100 100" aria-hidden="true"><defs><radialGradient id="menu-emblema-ouro" cx="50%" cy="50%" r="55%"><stop offset="0" stop-color="#fffbe8"/><stop offset=".35" stop-color="#f8e19a"/><stop offset=".75" stop-color="#dcae45"/><stop offset="1" stop-color="#9a6a1c"/></radialGradient></defs><g transform="rotate(45 50 50)" opacity=".55"><path d="M50 22 C52 40 60 48 78 50 C60 52 52 60 50 78 C48 60 40 52 22 50 C40 48 48 40 50 22 Z" fill="url(#menu-emblema-ouro)"/></g><path d="M50 2 C52 36 64 48 98 50 C64 52 52 64 50 98 C48 64 36 52 2 50 C36 48 48 36 50 2 Z" fill="url(#menu-emblema-ouro)"/><path d="M50 50 L50 2 C52 36 64 48 98 50 Z M50 50 L50 98 C48 64 36 52 2 50 Z" fill="#6e4710" opacity=".25"/></svg><h2 data-i18n="catalogo_titulo">Catálogo</h2></div>
       <button id="close-menu-btn" class="icon-btn" aria-label="Fechar Menu">
         <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>
@@ -267,6 +267,7 @@
 
     <nav class="sidebar-nav">
       <button class="side-filter side-inicio" id="nav-inicio"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-inicio"></use></svg><span data-i18n="nav_inicio">Início</span></button>
+      <p class="sidebar-secao">Santos</p>
       <button class="filter-btn side-filter active" data-filter="todos" data-i18n="filtro_todos">Todos os Santos</button>
       <button class="filter-btn side-filter" data-filter="favoritos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-coracao"></use></svg><span data-i18n="filtro_favoritos">Favoritos</span></button>
       <button class="filter-btn side-filter" data-filter="sagrada-familia" data-i18n="filtro_sagrada_familia">Sagrada Família</button>
@@ -276,7 +277,7 @@
       <button class="filter-btn side-filter" data-filter="santos-jovens" data-i18n="filtro_santos_jovens">Santos Jovens</button>
       <button class="filter-btn side-filter" data-filter="beatos" data-i18n="filtro_beatos">Beatos</button>
 
-      <div class="sidebar-divisor"></div>
+      <p class="sidebar-secao">Descobrir</p>
       <button class="side-nav-link side-nav-destaque side-nav-advento" id="nav-advento" hidden><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-vela"></use></svg><span>Calendário do Advento</span></button>
       <button class="side-nav-link side-nav-destaque side-nav-advento" id="nav-retrospectiva" hidden><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-estrela"></use></svg><span>Retrospectiva do ano</span></button>
       <button class="side-nav-link side-nav-destaque" id="nav-trilhas"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-trilha"></use></svg><span data-i18n="trilhas_titulo">Trilhas dos Santos</span></button>
@@ -286,16 +287,18 @@
       <button class="side-nav-link side-nav-destaque" id="nav-jogos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-estrela"></use></svg><span>Joguinhos</span></button>
       <button class="side-nav-link side-nav-destaque" id="nav-quiz"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lampada"></use></svg><span>Quiz dos Santos</span></button>
       <button class="side-nav-link side-nav-destaque" id="nav-cursos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-capelo"></use></svg><span>Cursos de aprofundamento</span></button>
+      <p class="sidebar-secao">Rezar</p>
       <button class="side-nav-link" id="nav-leitura"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-biblia"></use></svg><span data-i18n="nav_leitura">Leitura do dia</span></button>
       <button class="side-nav-link" id="nav-oracoes"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-livro"></use></svg><span data-i18n="nav_oracoes">Orações do dia a dia</span></button>
       <button class="side-nav-link" id="nav-terco"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-terco"></use></svg><span data-i18n="nav_terco">Terço guiado</span></button>
       <button class="side-nav-link" id="nav-novenas"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-vela"></use></svg><span>Novenas</span></button>
       <button class="side-nav-link" id="nav-exame"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-coracao"></use></svg><span>Exame de consciência</span></button>
       <button class="side-nav-link" id="nav-padroeiro"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lupa"></use></svg><span data-i18n="nav_padroeiro">Padroeiro de...</span></button>
+      <p class="sidebar-secao">Mais</p>
       <button class="side-nav-link" id="nav-planos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-estrela"></use></svg><span>Planos</span></button>
       <button class="side-nav-link" id="nav-suporte"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-ajuda"></use></svg><span>Fale com a equipe</span><span class="aviso-suporte" data-aviso-suporte hidden></span></button>
       <button class="side-nav-link" id="nav-instalar" hidden><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-baixar"></use></svg><span>Instalar o app</span></button>
-      <div class="sidebar-divisor"></div>
+      <p class="sidebar-secao">Idioma</p>
       <div class="side-idiomas" role="group" aria-label="Idioma / Language">
         <button type="button" class="side-idioma" data-lang="pt" translate="no"><svg class="bandeira" viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" fill="#009c3b"/><path d="M10 1.8 18.2 7 10 12.2 1.8 7z" fill="#ffdf00"/><circle cx="10" cy="7" r="2.9" fill="#002776"/></svg>PT</button>
         <button type="button" class="side-idioma" data-lang="en" translate="no"><svg class="bandeira" viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" fill="#ffffff"/><path d="M0 0h20v2H0zM0 4h20v2H0zM0 8h20v2H0zM0 12h20v2H0z" fill="#b22234"/><rect width="9" height="8" fill="#3c3b6e"/></svg>EN</button>
@@ -478,10 +481,26 @@
 
     <section id="view-ia" class="view">
       <div class="container lumina-container">
-        <button class="btn-back" id="btn-back-lumina">
+        <div class="lumina-cabeca">
+          <button class="btn-back" id="btn-back-lumina">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
           <span data-i18n="voltar_inicio">Voltar para o início</span>
         </button>
+          <div class="lumina-topo-acoes" id="lumina-topo-acoes">
+            <button type="button" class="lumina-topo-botao" id="lumina-conversas" aria-label="Conversas" hidden><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-conversa"></use></svg><span>Conversas</span></button>
+            <button type="button" class="lumina-topo-botao" id="lumina-nova" aria-label="Nova conversa" hidden><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-mais"></use></svg><span>Nova conversa</span></button>
+            <button type="button" class="lumina-topo-botao lumina-topo-quiz" id="lumina-quiz" aria-label="Quiz dos Santos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lampada"></use></svg><span>Quiz dos Santos</span></button>
+          </div>
+        </div>
+        <div class="lumina-historico" id="lumina-historico" hidden>
+          <div class="lumina-historico-caixa" role="dialog" aria-modal="true" aria-labelledby="lumina-historico-titulo">
+            <div class="lumina-historico-topo">
+              <strong id="lumina-historico-titulo">Conversas</strong>
+              <button type="button" class="lumina-historico-fechar" id="lumina-historico-fechar" aria-label="Fechar">&times;</button>
+            </div>
+            <div class="lumina-historico-lista" id="lumina-historico-lista"></div>
+          </div>
+        </div>
 
         <div id="lumina-precisa-login" class="lumina-aviso" style="display:none;">
           <p data-i18n="lumina_precisa_login">Para conversar com a Lumina, entre na sua conta (é rápido e gratuito).</p>
@@ -490,8 +509,6 @@
 
         <div id="lumina-chat-area" style="display:none;">
           <div class="lumina-topo-chat">
-            <button type="button" class="lumina-nova" id="lumina-nova" hidden><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-mais"></use></svg><span>Nova conversa</span></button>
-            <button type="button" class="lumina-nova lumina-quiz-atalho" id="lumina-quiz"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lampada"></use></svg><span>Quiz dos Santos</span></button>
             <p class="lumina-restantes" id="lumina-restantes"></p>
           </div>
           <div class="lumina-boas-vindas" id="lumina-boas-vindas">
@@ -640,7 +657,7 @@
           <li>Os perfis da família: nome, avatar ou foto escolhida e se o perfil é de adulto ou de criança.</li>
           <li>O progresso de cada perfil nas trilhas: Fé, ofensiva, medalhas e respostas das missões.</li>
           <li>Um código do aparelho, usado para permitir uma conta por aparelho.</li>
-          <li>Quantas perguntas você fez à Lumina, nossa assistente, para controlar o limite diário. O texto das perguntas não fica guardado conosco.</li>
+          <li>As conversas com a Lumina, nossa assistente, ficam guardadas no seu perfil para você poder voltar a elas. Só você vê as suas conversas e pode apagar cada uma quando quiser. Também contamos quantas perguntas foram feitas, para controlar o limite.</li>
           <li>Se você usar a Comunidade: quem você segue, quem segue você, os marcos que postou e as reações que deu.</li>
           <li>Os pedidos para conversar que você enviou ou recebeu, com a data e a resposta (aceito ou recusado).</li>
           <li>Se você ligar os lembretes: o endereço de notificação do seu aparelho, criado pelo navegador, e quais lembretes você quer receber.</li>
@@ -673,7 +690,7 @@
           <li>Supabase: banco de dados e login, com servidores em São Paulo.</li>
           <li>Vercel: hospedagem do site.</li>
           <li>Resend: envio dos e-mails.</li>
-          <li>Google (Gemini): gera as respostas da Lumina a partir da pergunta enviada.</li>
+          <li>Cloudflare (Workers AI): gera as respostas e os quizzes da Lumina a partir do que você escreve.</li>
           <li>Google Meet: reuniões por vídeo dos Cenáculos, abertas direto no Google.</li>
           <li>GIPHY: busca de GIFs e figurinhas nos Cenáculos. As palavras pesquisadas vão direto do seu navegador para o GIPHY, e só aparecem resultados de classificação livre.</li>
           <li>Stripe e Google Play: pagamentos dos planos. Os dados do cartão ficam só com eles; o Lumina Sancti nunca os recebe. Guardamos apenas o plano escolhido, a situação da assinatura, a data de renovação e o código de cliente que o Stripe nos devolve.</li>
