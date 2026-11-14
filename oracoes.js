@@ -102,11 +102,18 @@ function numeroDoDiaDasOracoes(data) {
 }
 
 function oracaoDoDia(data) {
+  if (!data && typeof agendaDoInicio !== 'undefined' && agendaDoInicio && agendaDoInicio.oracao) {
+    const daAgenda = BIBLIOTECA_DE_ORACOES.find((o) => o.id === agendaDoInicio.oracao);
+    if (daAgenda) return daAgenda;
+  }
   const candidatas = BIBLIOTECA_DE_ORACOES.filter((o) => !o.acao && o.cat !== 'falecidos');
   return candidatas[(numeroDoDiaDasOracoes(data) * 7) % candidatas.length];
 }
 
 function fraseDoDia(data) {
+  if (!data && typeof agendaDoInicio !== 'undefined' && agendaDoInicio && agendaDoInicio.frase) {
+    return { x: agendaDoInicio.frase, santo: agendaDoInicio.frase_santo || '', f: agendaDoInicio.frase_fonte || '' };
+  }
   return FRASES_DOS_SANTOS[(numeroDoDiaDasOracoes(data) * 11 + 3) % FRASES_DOS_SANTOS.length];
 }
 
@@ -161,7 +168,7 @@ function htmlDaFrase(f, comSelo) {
     ${comSelo ? `<span class="frase-selo">${iconeDaOracao('frases')}${escaparOracao(traduzirInterface('Frase do dia'))}</span>` : ''}
     <blockquote class="frase-texto">${escaparOracao(noIdioma(f.x))}</blockquote>
     <figcaption class="frase-autor">
-      <button type="button" class="frase-santo" data-santo="${f.santo}">${escaparOracao(nome)}</button>
+      ${f.santo ? `<button type="button" class="frase-santo" data-santo="${f.santo}">${escaparOracao(nome)}</button>` : ''}
       <span class="frase-fonte">${escaparOracao(noIdioma(f.f))}</span>
     </figcaption>
   </figure>`;

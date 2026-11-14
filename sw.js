@@ -1,10 +1,11 @@
-const CACHE_NOME = 'lumina-sancti-1.24.0';
+const CACHE_NOME = 'lumina-sancti-1.25.0';
 const CACHE_DO_WIDGET = 'lumina-widget';
 const ETIQUETA_DO_WIDGET = 'lumina-dia';
 const ARQUIVOS_ESSENCIAIS = [
   './',
   './index.html',
   './style.css',
+  './erros.js',
   './entrada.js',
   './busca.js',
   './busca-idiomas.js',
@@ -47,6 +48,7 @@ const ARQUIVOS_ESSENCIAIS = [
   './avisos.js',
   './presentes.js',
   './suporte.js',
+  './eventos.js',
   './santos/chiara-luce.svg',
   './santos/albertina-berkenbrock.svg',
   './favicon.svg',

@@ -1688,7 +1688,8 @@ function desenharLinhaDaTrilha(caminho) {
   const antiga = caminho.querySelector('.trilha-linha');
   if (antiga) antiga.remove();
   const base = caminho.getBoundingClientRect();
-  const pontos = Array.from(caminho.querySelectorAll('.no-circulo, .no-medalha')).map((el) => {
+  const alvos = Array.from(caminho.querySelectorAll('.no-circulo, .no-bau-figura, .no-medalha'));
+  const pontos = alvos.map((el) => {
     const caixa = el.getBoundingClientRect();
     return { x: caixa.left + caixa.width / 2 - base.left, y: caixa.top + caixa.height / 2 - base.top };
   });
@@ -1700,7 +1701,9 @@ function desenharLinhaDaTrilha(caminho) {
     return `${rota} C${anterior.x.toFixed(1)} ${meio.toFixed(1)}, ${ponto.x.toFixed(1)} ${meio.toFixed(1)}, ${ponto.x.toFixed(1)} ${ponto.y.toFixed(1)}`;
   }, '');
   const feitas = caminho.querySelectorAll('.no-licao.concluida').length;
-  const feito = pontos.slice(0, Math.min(pontos.length, feitas + 1));
+  let ultimoFeito = -1;
+  alvos.forEach((el, i) => { if (el.closest('.no-licao.concluida, .no-bau.pronto, .no-bau.aberto')) ultimoFeito = i; });
+  const feito = pontos.slice(0, Math.min(pontos.length, ultimoFeito + 2));
   caminho.insertAdjacentHTML('afterbegin', `<svg class="trilha-linha" width="${base.width}" height="${base.height}" aria-hidden="true"><path class="trilha-linha-falta" d="${trecho(pontos)}"/>${feitas > 0 ? `<path class="trilha-linha-feita" d="${trecho(feito)}"/>` : ''}</svg>`);
 }
 
@@ -1814,7 +1817,7 @@ function renderizarTrilhas() {
             ${estrelas ? `<span class="no-estrelas" aria-hidden="true">${'<i class="cheia"></i>'.repeat(estrelas)}${'<i></i>'.repeat(3 - estrelas)}</span>` : ''}
             <span class="no-rotulo">${licao.titulo}</span>
           </button>
-        </div>`;
+        </div>${typeof htmlDoNoDeBau === 'function' ? htmlDoNoDeBau(trilha, i, estado) : ''}`;
     }).join('');
 
     const posicaoInsignia = deslocamentos[trilha.licoes.length % deslocamentos.length];
@@ -1865,6 +1868,10 @@ function renderizarTrilhas() {
   lista.querySelectorAll('.trilha-ler').forEach((botao) => {
     botao.addEventListener('click', () => showDetail(botao.dataset.santo));
   });
+  lista.querySelectorAll('.no-bau[data-bau-licao]').forEach((botao) => {
+    botao.addEventListener('click', () => { if (typeof tocarNoBauDaTrilha === 'function') tocarNoBauDaTrilha(botao); });
+  });
+  if (typeof carregarBausDaTrilha === 'function') carregarBausDaTrilha();
   lista.querySelectorAll('.trilha-abrir').forEach((botao) => {
     botao.addEventListener('click', () => {
       abrirBlocoDaTrilha(botao.dataset.bloco, botao.getAttribute('aria-expanded') !== 'true');

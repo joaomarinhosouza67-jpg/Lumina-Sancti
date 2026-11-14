@@ -1,12 +1,12 @@
 const FRASCOS_DE_AZEITE = {
-  fe_dobro: { nome: 'Fé em dobro', texto: 'Por 15 minutos, as missões dão o dobro de Fé.', cor: '#f6c445', escura: '#a8650f', simbolo: 'dobro' },
-  santidade: { nome: 'Santidade cheia', texto: 'Enche a sua Santidade na hora.', cor: '#9fe0ff', escura: '#2f7fb8', simbolo: 'aureola' },
-  protecao: { nome: 'Protetor da ofensiva', texto: 'Se você passar um dia sem missão, a ofensiva continua.', cor: '#ff9a4d', escura: '#b8401a', simbolo: 'chama' },
+  fe_dobro: { nome: 'Fé em dobro', tempo: '15 min', cor: '#f6c445', escura: '#a8650f', simbolo: 'dobro' },
+  santidade: { nome: 'Santidade cheia', cor: '#9fe0ff', escura: '#2f7fb8', simbolo: 'aureola' },
+  protecao: { nome: 'Protetor da ofensiva', tempo: '1 dia', cor: '#ff9a4d', escura: '#b8401a', simbolo: 'chama' },
 };
 const CORES_DOS_BAUS = {
-  madeira: { corpo: ['#a8682f', '#6b3a17'], tampa: ['#c07a3a', '#7a4419'], faixa: ['#d9b77a', '#8f6c35'], luz: '#ffd08a' },
-  prata: { corpo: ['#5f6f93', '#323c58'], tampa: ['#73839f', '#3c4766'], faixa: ['#f2f6ff', '#9eabc6'], luz: '#dfe9ff' },
-  ouro: { corpo: ['#8a2f1d', '#521709'], tampa: ['#a13a24', '#5e1b0b'], faixa: ['#fff3c4', '#d4a43a'], luz: '#ffe28a' },
+  madeira: { corpo: ['#b57437', '#7c461c', '#4a250b'], tampa: ['#c98545', '#8d5022', '#5a2f10'], metal: ['#e6e9ef', '#7d8593', '#30353f'], veio: '#2e1606', cruz: '#2b2f38', luz: '#ffd08a', forro: ['#6a3a17', '#2e1606'] },
+  prata: { corpo: ['#3e4f86', '#25305a', '#121836'], tampa: ['#4c5f9c', '#2b3768', '#151c3e'], metal: ['#ffffff', '#c3ccdc', '#5b6880'], veio: '#0a0f24', cruz: '#3b4766', luz: '#e4ecff', forro: ['#2c3f86', '#101a44'] },
+  ouro: { corpo: ['#a3222a', '#6d1018', '#3a060b'], tampa: ['#b42b33', '#7a121b', '#40070c'], metal: ['#fff6d0', '#e5b444', '#7d4f0e'], veio: '#2a0306', cruz: '#7d4f0e', luz: '#ffe28a', joias: true, forro: ['#8e1b3a', '#4a0718'] },
 };
 const DESAFIOS_DO_DIA = {
   missoes1: { texto: 'Faça 1 missão', icone: 'trilha', ir: 'trilhas' },
@@ -67,34 +67,188 @@ function svgDoFrasco(tipo, tamanho) {
 function svgDoBau(tipo, tamanho) {
   const c = CORES_DOS_BAUS[tipo] || CORES_DOS_BAUS.madeira;
   const id = `bau-${tipo}-${(contadorDosDesenhosDeBau += 1)}`;
-  return `<svg class="bau-svg bau-${tipo}" viewBox="0 0 120 112" width="${tamanho || 64}" height="${Math.round((tamanho || 64) * 0.93)}" aria-hidden="true">
+  const rebite = (x, y) => `<circle cx="${x}" cy="${y}" r="2.3" fill="url(#${id}-r)"/><circle cx="${x - 0.7}" cy="${y - 0.8}" r="0.8" fill="#fff" opacity=".7"/>`;
+  const rebites = [78, 94, 110, 124].map((y) => rebite(37, y) + rebite(123, y)).join('');
+  const veios = [76, 84, 92, 100, 108, 116, 122].map((y, i) => `<path d="M${20 + (i % 3) * 4} ${y} q18 ${i % 2 ? -1.6 : 1.4} 36 0 t36 0 t36 0" fill="none" stroke="${c.veio}" stroke-width=".8" opacity=".35"/>`).join('');
+  const joias = c.joias ? `<circle cx="80" cy="91" r="3.4" fill="url(#${id}-j)" stroke="#5c0a0a" stroke-width=".6"/><circle cx="79" cy="90" r="1.1" fill="#fff" opacity=".8"/>` : '';
+  const joiasDaTampa = c.joias ? `<g class="bau-joias-tampa"><circle cx="80" cy="40" r="4" fill="url(#${id}-s)" stroke="#0b2a5c" stroke-width=".6"/><circle cx="79" cy="38.8" r="1.3" fill="#fff" opacity=".85"/><circle cx="58" cy="44" r="2.6" fill="url(#${id}-j)"/><circle cx="102" cy="44" r="2.6" fill="url(#${id}-j)"/></g>` : '';
+  return `<svg class="bau-svg bau-${tipo}" viewBox="0 0 160 150" width="${tamanho || 64}" height="${Math.round((tamanho || 64) * 0.94)}" aria-hidden="true">
     <defs>
-      <linearGradient id="${id}-c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c.corpo[0]}"/><stop offset="1" stop-color="${c.corpo[1]}"/></linearGradient>
-      <linearGradient id="${id}-t" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c.tampa[0]}"/><stop offset="1" stop-color="${c.tampa[1]}"/></linearGradient>
-      <linearGradient id="${id}-f" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c.faixa[0]}"/><stop offset=".55" stop-color="${c.faixa[1]}"/><stop offset="1" stop-color="${c.faixa[0]}"/></linearGradient>
-      <radialGradient id="${id}-l" cx=".5" cy="1" r=".9"><stop offset="0" stop-color="${c.luz}" stop-opacity=".95"/><stop offset="1" stop-color="${c.luz}" stop-opacity="0"/></radialGradient>
+      <linearGradient id="${id}-c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c.corpo[0]}"/><stop offset=".55" stop-color="${c.corpo[1]}"/><stop offset="1" stop-color="${c.corpo[2]}"/></linearGradient>
+      <linearGradient id="${id}-t" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c.tampa[0]}"/><stop offset=".6" stop-color="${c.tampa[1]}"/><stop offset="1" stop-color="${c.tampa[2]}"/></linearGradient>
+      <linearGradient id="${id}-lado" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".45"/><stop offset=".18" stop-color="#000" stop-opacity="0"/><stop offset=".82" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".5"/></linearGradient>
+      <linearGradient id="${id}-m" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${c.metal[2]}"/><stop offset=".35" stop-color="${c.metal[0]}"/><stop offset=".6" stop-color="${c.metal[1]}"/><stop offset="1" stop-color="${c.metal[2]}"/></linearGradient>
+      <linearGradient id="${id}-mh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c.metal[0]}"/><stop offset=".5" stop-color="${c.metal[1]}"/><stop offset="1" stop-color="${c.metal[2]}"/></linearGradient>
+      <radialGradient id="${id}-r" cx=".35" cy=".35" r=".7"><stop offset="0" stop-color="${c.metal[0]}"/><stop offset="1" stop-color="${c.metal[2]}"/></radialGradient>
+      <radialGradient id="${id}-l" cx=".5" cy="1" r="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".95"/><stop offset=".35" stop-color="${c.luz}" stop-opacity=".85"/><stop offset="1" stop-color="${c.luz}" stop-opacity="0"/></radialGradient>
+      <radialGradient id="${id}-j" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffd1d1"/><stop offset=".45" stop-color="#e11d48"/><stop offset="1" stop-color="#6b0a1e"/></radialGradient>
+      <radialGradient id="${id}-s" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#d6ecff"/><stop offset=".45" stop-color="#2f6fe0"/><stop offset="1" stop-color="#0b2a5c"/></radialGradient>
+      <linearGradient id="${id}-brilho" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
     </defs>
-    <ellipse cx="60" cy="106" rx="46" ry="5" fill="#000" opacity=".3"/>
-    <g class="bau-luz"><path d="M22 52 h76 l-8 -30 h-60z" fill="url(#${id}-l)"/></g>
+    <ellipse cx="80" cy="140" rx="62" ry="7" fill="#000" opacity=".35"/>
+    <g class="bau-luz" opacity="0"><path d="M26 70 L54 -10 H106 L134 70 Z" fill="url(#${id}-l)" opacity=".8"/><ellipse cx="80" cy="70" rx="56" ry="9" fill="#fff8dc" opacity=".9"/></g>
     <g class="bau-corpo">
-      <rect x="14" y="50" width="92" height="52" rx="7" fill="url(#${id}-c)"/>
-      <path d="M14 62 h92" stroke="#000" stroke-opacity=".18" stroke-width="2"/>
-      <path d="M14 80 h92" stroke="#000" stroke-opacity=".12" stroke-width="2"/>
-      <rect x="24" y="50" width="10" height="52" fill="url(#${id}-f)"/>
-      <rect x="86" y="50" width="10" height="52" fill="url(#${id}-f)"/>
-      <rect x="14" y="94" width="92" height="8" rx="3" fill="url(#${id}-f)"/>
-      <rect x="49" y="56" width="22" height="24" rx="4" fill="url(#${id}-f)"/>
-      <path d="M60 63 a4 4 0 0 1 4 4 c0 2 -1.5 3 -2.5 3.6 l1 6.4 h-5 l1 -6.4 c-1 -.6 -2.5 -1.6 -2.5 -3.6 a4 4 0 0 1 4 -4z" fill="#2a1606" opacity=".8"/>
+      <path d="M22 68 H138 L136 70 H24 Z" fill="#1a0d05" opacity=".6"/>
+      <path d="M18 70 H142 V128 a6 6 0 0 1 -6 6 H24 a6 6 0 0 1 -6 -6 Z" fill="url(#${id}-c)"/>
+      ${veios}
+      <path d="M18 86 H142 M18 102 H142 M18 118 H142" stroke="#000" stroke-opacity=".28" stroke-width="1.2"/>
+      <path d="M18 87 H142 M18 103 H142 M18 119 H142" stroke="#fff" stroke-opacity=".07" stroke-width="1"/>
+      <path d="M18 70 H142 V128 a6 6 0 0 1 -6 6 H24 a6 6 0 0 1 -6 -6 Z" fill="url(#${id}-lado)"/>
+      <rect x="31" y="70" width="12" height="64" fill="url(#${id}-m)"/>
+      <rect x="117" y="70" width="12" height="64" fill="url(#${id}-m)"/>
+      <rect x="16" y="68" width="128" height="7" rx="2" fill="url(#${id}-mh)"/>
+      <path d="M16 124 H144 V128 a8 8 0 0 1 -8 8 H24 a8 8 0 0 1 -8 -8 Z" fill="url(#${id}-mh)"/>
+      <path d="M16 112 V128 a8 8 0 0 0 8 8 H34 V128 H24 V112 Z" fill="url(#${id}-mh)" opacity=".95"/>
+      <path d="M144 112 V128 a8 8 0 0 1 -8 8 H126 V128 H136 V112 Z" fill="url(#${id}-mh)" opacity=".95"/>
+      ${rebites}
+      <path d="M66 76 H94 V96 C94 106 86 112 80 115 C74 112 66 106 66 96 Z" fill="url(#${id}-mh)" stroke="${c.metal[2]}" stroke-width="1"/>
+      <path d="M68.5 78.5 H91.5 V96 C91.5 104.5 85 109.5 80 112 C75 109.5 68.5 104.5 68.5 96 Z" fill="none" stroke="${c.metal[0]}" stroke-opacity=".6" stroke-width=".8"/>
+      <path d="M80 81 V103 M73 89 H87" stroke="${c.cruz}" stroke-width="3.2" stroke-linecap="round"/>
+      <path d="M80 81 V103 M73 89 H87" stroke="#fff" stroke-opacity=".25" stroke-width="1" stroke-linecap="round"/>
+      ${joias}
     </g>
     <g class="bau-tampa">
-      <path d="M14 52 v-12 c0 -16 20 -26 46 -26 s46 10 46 26 v12z" fill="url(#${id}-t)"/>
-      <path d="M20 40 c4 -10 20 -18 40 -18" stroke="#ffffff" stroke-opacity=".22" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <path d="M24 52 v-13 c0 -9 4 -15 10 -19 v32z" fill="url(#${id}-f)"/>
-      <path d="M96 52 v-13 c0 -9 -4 -15 -10 -19 v32z" fill="url(#${id}-f)"/>
-      <rect x="12" y="46" width="96" height="8" rx="3" fill="url(#${id}-f)"/>
-      <path d="M52 46 h16 v8 a8 8 0 0 1 -16 0z" fill="url(#${id}-f)"/>
+      <path d="M16 72 V58 C16 34 44 20 80 20 C116 20 144 34 144 58 V72 Z" fill="url(#${id}-t)"/>
+      <path d="M24 52 C30 38 52 30 80 30 C108 30 130 38 136 52 M18 64 C22 50 48 41 80 41 C112 41 138 50 142 64" fill="none" stroke="#000" stroke-opacity=".25" stroke-width="1.2"/>
+      <path d="M16 72 V58 C16 34 44 20 80 20 C116 20 144 34 144 58 V72 Z" fill="url(#${id}-lado)"/>
+      <path d="M31 72 V48 C33 38 37 33 43 29 V72 Z" fill="url(#${id}-m)"/>
+      <path d="M129 72 V48 C127 38 123 33 117 29 V72 Z" fill="url(#${id}-m)"/>
+      <path d="M34 34 C46 25 62 22 80 22 C98 22 114 25 126 34" fill="none" stroke="url(#${id}-brilho)" stroke-width="5" stroke-linecap="round"/>
+      <rect x="14" y="64" width="132" height="9" rx="3" fill="url(#${id}-mh)"/>
+      ${rebite(37, 50) + rebite(123, 50) + rebite(37, 68) + rebite(123, 68)}
+      <path d="M72 66 H88 V80 a8 8 0 0 1 -16 0 Z" fill="url(#${id}-mh)" stroke="${c.metal[2]}" stroke-width="1"/>
+      <circle cx="80" cy="79" r="2.6" fill="${c.metal[2]}"/>
+      ${joiasDaTampa}
     </g>
   </svg>`;
+}
+
+function forroDaTampa(tipo, largura) {
+  const c = CORES_DOS_BAUS[tipo] || CORES_DOS_BAUS.madeira;
+  const id = `forro-${tipo}-${(contadorDosDesenhosDeBau += 1)}`;
+  let losangos = '';
+  for (let x = 8; x <= 120; x += 14) for (let y = 6; y <= 44; y += 12) losangos += `<path d="M${x} ${y - 6} L${x + 7} ${y} L${x} ${y + 6} L${x - 7} ${y} Z" fill="none" stroke="#000" stroke-opacity=".25" stroke-width=".7"/><circle cx="${x}" cy="${y - 6}" r=".9" fill="${c.metal[0]}" opacity=".7"/>`;
+  return `<svg class="bau-forro" viewBox="0 0 128 46" width="${largura}" height="${Math.round(largura * 46 / 128)}" preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+      <radialGradient id="${id}-v" cx=".5" cy=".85" r=".95"><stop offset="0" stop-color="${c.forro[0]}"/><stop offset="1" stop-color="${c.forro[1]}"/></radialGradient>
+      <linearGradient id="${id}-m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c.metal[0]}"/><stop offset=".5" stop-color="${c.metal[1]}"/><stop offset="1" stop-color="${c.metal[2]}"/></linearGradient>
+      <linearGradient id="${id}-l" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="${c.luz}" stop-opacity=".55"/><stop offset="1" stop-color="${c.luz}" stop-opacity="0"/></linearGradient>
+    </defs>
+    <rect width="128" height="46" rx="2" fill="url(#${id}-m)"/>
+    <rect x="4" y="4" width="120" height="38" rx="1.5" fill="url(#${id}-v)"/>
+    ${losangos}
+    <rect x="4" y="4" width="120" height="38" fill="url(#${id}-l)"/>
+    <path d="M64 12 V34 M57 19 H71" stroke="${c.metal[1]}" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M64 12 V34 M57 19 H71" stroke="#fff" stroke-opacity=".3" stroke-width=".8" stroke-linecap="round"/>
+  </svg>`;
+}
+
+function bauEm3d(tipo, largura) {
+  const e = largura / 160;
+  const parte = (classe, caixa, altura) => svgDoBau(tipo, largura)
+    .replace('<svg class="bau-svg', `<svg class="bau-svg ${classe}`)
+    .replace('viewBox="0 0 160 150"', `viewBox="${caixa}"`)
+    .replace(/height="\d+"/, `height="${Math.round(altura)}"`);
+  const moedas = Array.from({ length: 12 }, (_, i) => {
+    const lado = i % 2 ? 1 : -1;
+    const x = lado * (18 + (i * 13) % 70);
+    const y = -(70 + (i * 17) % 60);
+    return `<i style="--x:${x}px;--y:${y}px;--t:${(0.9 + (i % 4) * 0.12).toFixed(2)}s;--d:${(0.05 * i).toFixed(2)}s"></i>`;
+  }).join('');
+  return `<div class="bau-3d bau-${tipo}" style="--l:${largura}px;--e:${e}">
+    <div class="bau-3d-corpo">${parte('bau-so-corpo', '0 64 160 86', 86 * e)}</div>
+    <div class="bau-3d-tampa">
+      <div class="bau-3d-fora">${parte('bau-so-tampa', '0 14 160 62', 62 * e)}</div>
+      <div class="bau-3d-dentro">${forroDaTampa(tipo, Math.round(largura * 0.8))}</div>
+    </div>
+    <div class="bau-3d-boca"><span></span></div>
+    <div class="bau-3d-luz"></div>
+    <div class="bau-moedas">${moedas}</div>
+  </div>`;
+}
+
+const POSICOES_DOS_BAUS_DA_TRILHA = [2, 6];
+let bausDaTrilha = {};
+let bausDaTrilhaDoPerfil = null;
+
+function htmlDoNoDeBau(trilha, indice, estado) {
+  if (!POSICOES_DOS_BAUS_DA_TRILHA.includes(indice) || !trilha || !Array.isArray(trilha.licoes) || trilha.licoes.length <= indice + 1) return '';
+  const licao = trilha.licoes[indice];
+  const feitas = estado && estado.licoes ? estado.licoes : {};
+  const pronto = trilha.licoes.slice(0, indice + 1).every((l) => !!feitas[l.slug]);
+  const info = bausDaTrilha[licao.slug];
+  const situacao = info && info.aberto ? 'aberto' : (pronto ? 'pronto' : 'bloqueado');
+  const tipo = (info && info.tipo) || (indice === 2 ? 'madeira' : 'prata');
+  const selo = situacao === 'aberto' ? iconeDoBau('check') : (situacao === 'bloqueado' ? iconeDoBau('cadeado') : '');
+  return `
+        <div class="no-wrapper desloc-0 no-wrapper-bau">
+          <button type="button" class="no-bau ${situacao}" data-bau-licao="${escaparDoBau(licao.slug)}" data-bau-tipo="${tipo}" aria-label="${escaparDoBau(nomeDoBau(tipo))}">
+            <span class="no-bau-figura">${svgDoBau(tipo, 78)}</span>
+            ${selo ? `<span class="no-bau-selo">${selo}</span>` : ''}
+          </button>
+        </div>`;
+}
+
+function marcarNosDeBau() {
+  document.querySelectorAll('.no-bau[data-bau-licao]').forEach((botao) => {
+    const info = bausDaTrilha[botao.dataset.bauLicao];
+    if (!info || !info.aberto || botao.classList.contains('aberto')) return;
+    botao.classList.remove('pronto', 'bloqueado');
+    botao.classList.add('aberto');
+    const antigo = botao.querySelector('.no-bau-selo');
+    if (antigo) antigo.remove();
+    botao.insertAdjacentHTML('beforeend', `<span class="no-bau-selo">${iconeDoBau('check')}</span>`);
+  });
+}
+
+async function carregarBausDaTrilha() {
+  const perfil = perfilDosBaus();
+  if (!perfil) {
+    bausDaTrilha = {};
+    bausDaTrilhaDoPerfil = null;
+    return;
+  }
+  if (bausDaTrilhaDoPerfil === perfil.id) {
+    marcarNosDeBau();
+    return;
+  }
+  try {
+    const lista = await chamarDosBaus('trilha_baus');
+    bausDaTrilha = {};
+    (Array.isArray(lista) ? lista : []).forEach((b) => { bausDaTrilha[b.licao] = b; });
+    bausDaTrilhaDoPerfil = perfil.id;
+    marcarNosDeBau();
+  } catch (e) {
+    return;
+  }
+}
+
+async function tocarNoBauDaTrilha(botao) {
+  if (!botao || botao.classList.contains('aberto') || botao.disabled) return;
+  if (botao.classList.contains('bloqueado')) {
+    botao.classList.remove('balanca');
+    void botao.offsetWidth;
+    botao.classList.add('balanca');
+    return;
+  }
+  if (!perfilDosBaus()) {
+    if (typeof irParaLogin === 'function') irParaLogin();
+    return;
+  }
+  botao.disabled = true;
+  const licao = botao.dataset.bauLicao;
+  try {
+    const dados = await chamarDosBaus('trilha_bau_pegar', { _licao: licao });
+    if (dados && dados.bau_id) {
+      bausDaTrilha[licao] = { licao, bau_id: dados.bau_id, tipo: dados.tipo, aberto: true };
+      if (!dados.aberto) abrirBau(Number(dados.bau_id), dados.tipo);
+      else marcarNosDeBau();
+    }
+  } catch (e) {
+    if (typeof mostrarAvisoTrilhas === 'function') mostrarAvisoTrilhas(trDoBau('Não deu para abrir agora. Tente de novo.'));
+  } finally {
+    botao.disabled = false;
+  }
 }
 
 function nomeDoBau(tipo) {
@@ -124,11 +278,11 @@ function desenharCaixaDeDesafios() {
     </div>
     <ul class="desafios-lista">
       ${dados.itens.map((item) => {
-        const info = DESAFIOS_DO_DIA[item.id] || { texto: item.id, icone: 'estrela' };
+        const info = TIPOS_DE_DESAFIO[item.tipo] || DESAFIOS_DO_DIA[item.id] || { icone: 'estrela', ir: 'trilhas' };
         const parte = Math.min(100, Math.round((Number(item.progresso) / Math.max(1, Number(item.meta))) * 100));
         return `<li><button type="button" class="desafio${item.feito ? ' feito' : ''}" data-ir="${info.ir}">
           <span class="desafio-icone">${iconeDoBau(item.feito ? 'check' : info.icone)}</span>
-          <span class="desafio-textos"><strong>${trDoBau(info.texto)}</strong><span class="desafio-barra"><i style="width:${parte}%"></i></span></span>
+          <span class="desafio-textos"><strong>${escaparDoBau(textoDoDesafio(item))}</strong><span class="desafio-barra"><i style="width:${parte}%"></i></span></span>
           <span class="desafio-numero">${Math.min(item.progresso, item.meta)}/${item.meta}</span>
         </button></li>`;
       }).join('')}
@@ -137,10 +291,37 @@ function desenharCaixaDeDesafios() {
       <span class="desafios-premio-bau">${svgDoBau(dados.bau_tipo || 'madeira', 52)}</span>
       ${dados.completo && bauFechado
         ? `<button type="button" class="desafios-abrir" data-abrir-bau="${dados.bau_id}" data-tipo="${dados.bau_tipo}">${trDoBau('Abrir baú')}</button>`
-        : `<span class="desafios-premio-texto">${dados.completo ? trDoBau('Baú aberto') : trDoBau('Complete os 3 para ganhar um baú')}</span>`}
+        : (dados.completo ? `<span class="desafios-premio-texto">${trDoBau('Baú aberto')}</span>` : `<span class="desafios-premio-conta">${feitos}/${dados.itens.length}</span>`)}
     </div>`;
   lugar.querySelectorAll('[data-ir]').forEach((botao) => botao.addEventListener('click', () => irParaDesafio(botao.dataset.ir)));
   lugar.querySelectorAll('[data-abrir-bau]').forEach((botao) => botao.addEventListener('click', () => abrirBau(Number(botao.dataset.abrirBau), botao.dataset.tipo)));
+}
+
+const TIPOS_DE_DESAFIO = {
+  missoes: { icone: 'trilha', ir: 'trilhas' },
+  fe: { icone: 'estrela', ir: 'trilhas' },
+  perfeitas: { icone: 'medalha', ir: 'trilhas' },
+  terco: { icone: 'terco', ir: 'terco' },
+  quiz: { icone: 'lampada', ir: 'quiz' },
+  oracao: { icone: 'cruz', ir: 'oracoes' },
+  jogo: { icone: 'estrela', ir: 'jogos' },
+};
+
+function textoDoDesafio(item) {
+  const n = Number(item.meta) || 1;
+  const textos = {
+    missoes: n === 1 ? ['Faça 1 missão'] : ['Faça {n} missões', { n }],
+    fe: ['Ganhe {n} de Fé', { n }],
+    perfeitas: n === 1 ? ['Faça uma missão sem errar'] : ['Faça {n} missões sem errar', { n }],
+    terco: n === 1 ? ['Reze o terço'] : ['Reze o terço {n} vezes', { n }],
+    quiz: n === 1 ? ['Jogue o Quiz dos Santos'] : ['Jogue o Quiz dos Santos {n} vezes', { n }],
+    oracao: n === 1 ? ['Reze uma oração'] : ['Reze {n} orações', { n }],
+    jogo: n === 1 ? ['Jogue um joguinho'] : ['Jogue {n} joguinhos', { n }],
+  };
+  const t = textos[item.tipo];
+  if (t) return trDoBau(t[0], t[1]);
+  const antigo = DESAFIOS_DO_DIA[item.id];
+  return antigo ? trDoBau(antigo.texto) : String(item.id || '');
 }
 
 function irParaDesafio(destino) {
@@ -274,16 +455,19 @@ function tocarSomDoBau(tipo) {
   }
 }
 
-async function abrirBau(id, tipo) {
+async function abrirBau(id, tipo, opcoes) {
   if (!id) return;
+  const extra = opcoes || {};
   const fundo = janelaDoBau(`
+    ${extra.rotulo ? `<span class="bau-rotulo">${escaparDoBau(extra.rotulo)}</span>` : ''}
+    <strong class="bau-titulo">${escaparDoBau(extra.titulo || nomeDoBau(tipo))}</strong>
     <div class="bau-palco bau-${escaparDoBau(tipo)}">
       <span class="bau-raios" aria-hidden="true"></span>
-      <div class="bau-desenho">${svgDoBau(tipo, 180)}</div>
+      <span class="bau-faiscas" aria-hidden="true">${Array.from({ length: 16 }, (_, i) => `<i style="--a:${Math.round(i * 22.5 + (i % 2) * 9)}deg;--d:${90 + (i % 4) * 22}px;--t:${(0.7 + (i % 3) * 0.18).toFixed(2)}s"></i>`).join('')}</span>
+      <div class="bau-desenho">${bauEm3d(tipo, 200)}</div>
       <div class="bau-premios" id="bau-premios"></div>
     </div>
-    <strong class="bau-titulo">${escaparDoBau(nomeDoBau(tipo))}</strong>
-    <button type="button" class="bau-botao" id="bau-botao" disabled>${trDoBau('Abrindo...')}</button>`, 'abrindo');
+    <button type="button" class="bau-botao" id="bau-botao" disabled>${trDoBau('Abrindo...')}</button>`, 'abrindo tela-cheia');
   fundo.dataset.travada = 'sim';
   const inicio = Date.now();
   let resultado = null;
@@ -311,7 +495,7 @@ async function abrirBau(id, tipo) {
     const itens = [`<span class="bau-premio bau-premio-fe" style="--i:0">${typeof estrelaDaFe === 'function' ? estrelaDaFe('fe-grande') : iconeDoBau('estrela')}<b>+${Number(resultado.fe) || 0}</b><small>${trDoBau('de Fé')}</small></span>`]
       .concat((resultado.frascos || []).map((t, i) => `<span class="bau-premio" style="--i:${i + 1}">${svgDoFrasco(t, 46)}<small>${escaparDoBau(trDoBau((FRASCOS_DE_AZEITE[t] || {}).nome || t))}</small></span>`));
     if (premios) premios.innerHTML = itens.join('');
-    if (botao) { botao.disabled = false; botao.textContent = trDoBau('Guardar'); botao.addEventListener('click', fecharJanelaDoBau); botao.focus({ preventScroll: true }); }
+    if (botao) { botao.disabled = false; botao.textContent = trDoBau('Continuar'); botao.addEventListener('click', fecharJanelaDoBau); botao.focus({ preventScroll: true }); }
     const membro = typeof obterMembroAtivo === 'function' ? obterMembroAtivo() : null;
     if (membro && typeof membro.fe === 'number') membro.fe += Number(resultado.fe) || 0;
     if (typeof estadoEmMemoriaDaConta !== 'undefined' && estadoEmMemoriaDaConta && typeof estadoEmMemoriaDaConta.fe === 'number') estadoEmMemoriaDaConta.fe += Number(resultado.fe) || 0;
@@ -325,10 +509,9 @@ function mostrarFrasco(tipo) {
   const qtd = Number(((caixasDoDia.mochila || {}).frascos || {})[tipo] || 0);
   const passivo = tipo === 'protecao';
   const fundo = janelaDoBau(`
-    <div class="frasco-detalhe">${svgDoFrasco(tipo, 96)}</div>
-    <strong class="bau-titulo">${escaparDoBau(trDoBau('Frasco de azeite'))}: ${escaparDoBau(trDoBau(f.nome))}</strong>
-    <p class="frasco-texto">${escaparDoBau(trDoBau(f.texto))}</p>
-    <p class="frasco-quantos">${escaparDoBau(trDoBau(qtd === 1 ? 'Você tem 1' : 'Você tem {n}', { n: qtd }))}</p>
+    <div class="frasco-detalhe">${svgDoFrasco(tipo, 96)}<b class="frasco-qtd${qtd ? '' : ' zero'}">×${qtd}</b></div>
+    <strong class="bau-titulo">${escaparDoBau(trDoBau(f.nome))}</strong>
+    ${f.tempo ? `<span class="frasco-tempo"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 9v4l3 2M9 2h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>${escaparDoBau(trDoBau(f.tempo))}</span>` : ''}
     <p class="frasco-aviso" id="frasco-aviso" aria-live="polite"></p>
     <div class="bau-botoes">
       ${!passivo && qtd > 0 ? `<button type="button" class="bau-botao" id="frasco-usar">${trDoBau('Usar agora')}</button>` : ''}

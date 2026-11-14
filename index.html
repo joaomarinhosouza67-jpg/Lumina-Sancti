@@ -358,6 +358,8 @@
 
       <section class="advento-inicio container" id="advento-inicio" aria-label="Calendário do Advento" hidden></section>
 
+      <section class="evento-inicio container" id="evento-inicio" aria-label="Eventos" hidden></section>
+
       <section class="novena-inicio container" id="novena-inicio" aria-label="Novena" hidden></section>
 
       <section class="retrospectiva-inicio container" id="retrospectiva-inicio" aria-label="Retrospectiva" hidden></section>
@@ -1179,6 +1181,11 @@
               <span class="ajuste-textos"><strong>Indicar o Lumina Sancti</strong><small>Mande o app para amigos e família</small></span>
               <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-seta-direita"></use></svg>
             </button>
+            <button type="button" class="ajuste" id="meu-perfil-codigo">
+              <span class="ajuste-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-chave"></use></svg></span>
+              <span class="ajuste-textos"><strong>Código de presente</strong></span>
+              <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-seta-direita"></use></svg>
+            </button>
           </div>
 
           <div class="ajustes-lista">
@@ -1430,6 +1437,7 @@
     </defs>
   </svg>
 
+  <script src="erros.js"></script>
   <script src="entrada.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
   <script src="busca.js"></script>
@@ -1470,5 +1478,6 @@
   <script src="avisos.js"></script>
   <script src="presentes.js"></script>
   <script src="suporte.js"></script>
+  <script src="eventos.js"></script>
 </body>
 </html>

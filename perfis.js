@@ -1141,7 +1141,7 @@ async function salvarPerfilDoEditor() {
     const texto = String((erro && erro.message) || '');
     const mensagem = texto.includes('profile_limit_reached')
       ? mensagemDoLimiteDePerfis()
-      : 'Não foi possível salvar agora. Tente de novo.';
+      : (texto.includes('palavra_bloqueada') ? tr('Esse nome não pode ser usado.') : 'Não foi possível salvar agora. Tente de novo.');
     feedback.textContent = mensagem;
     botao.disabled = false;
   }

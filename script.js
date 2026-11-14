@@ -2492,6 +2492,14 @@ const supabaseCliente = (SUPABASE_URL.includes('SEU-PROJETO') || SUPABASE_ANON_K
 let sessaoAtual = null;
 let promessaDaSessaoDoAparelho = null;
 
+if (supabaseCliente && supabaseCliente.auth && typeof supabaseCliente.auth.signOut === 'function') {
+  const sairDeVerdade = supabaseCliente.auth.signOut.bind(supabaseCliente.auth);
+  supabaseCliente.auth.signOut = (...opcoes) => {
+    window.__saidaPedida = true;
+    return sairDeVerdade(...opcoes);
+  };
+}
+
 function esperarSessaoDoAparelho(limite) {
   return new Promise((resolver) => {
     let terminou = false;
@@ -2583,6 +2591,8 @@ async function iniciarAutenticacao() {
   if (sessaoAtual) guardarDadosDoSiteNoAparelho();
 
   supabaseCliente.auth.onAuthStateChange((evento, sessao) => {
+    if (evento === 'SIGNED_OUT' && sessaoAtual && !window.__saidaPedida && typeof enviarErroDoSite === 'function') enviarErroDoSite('Saiu da conta sem pedir', 'sessao');
+    if (evento === 'SIGNED_IN') window.__saidaPedida = false;
     sessaoAtual = sessao;
     atualizarInterfaceDeConta();
     verificarCadastroCompleto();
@@ -3788,6 +3798,10 @@ function getSantoDeHoje() {
 }
 
 function getSantoEmDestaque(idParaEvitar) {
+  if (typeof agendaDoInicio !== 'undefined' && agendaDoInicio && agendaDoInicio.santo) {
+    const daAgenda = santosData.find((s) => s.id === agendaDoInicio.santo);
+    if (daAgenda && daAgenda.id !== idParaEvitar) return daAgenda;
+  }
   const hoje = new Date();
   const inicioDoAno = new Date(hoje.getFullYear(), 0, 0);
   const diaDoAno = Math.floor((hoje - inicioDoAno) / 86400000);
