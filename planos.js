@@ -27,10 +27,6 @@ function podeOferecerMaisPerfis(quantidade) {
   return cobrancaLigadaNoSite() && quantidade >= maximoDePerfisDoPlano(1) && maximoDePerfisDoPlano(1) < 6;
 }
 
-function assinaturaValendo() {
-  return !!(estadoDaAssinatura && estadoDaAssinatura.assinatura && estadoDaAssinatura.assinatura.vale);
-}
-
 function nomeDoPlanoAtual() {
   const id = estadoDaAssinatura && estadoDaAssinatura.plano ? estadoDaAssinatura.plano.id : 'free';
   return NOMES_DOS_PLANOS[id] || 'Gratuito';

@@ -2492,6 +2492,19 @@ const supabaseCliente = (SUPABASE_URL.includes('SEU-PROJETO') || SUPABASE_ANON_K
 let sessaoAtual = null;
 let promessaDaSessaoDoAparelho = null;
 
+function marcarVistaAtiva() {
+  const ativa = document.querySelector('.view.active');
+  const id = ativa ? ativa.id : '';
+  if (document.body.dataset.vista !== id) document.body.dataset.vista = id;
+}
+
+(() => {
+  if (typeof MutationObserver !== 'function') return;
+  const observador = new MutationObserver(marcarVistaAtiva);
+  document.querySelectorAll('.view').forEach((vista) => observador.observe(vista, { attributes: true, attributeFilter: ['class'] }));
+  marcarVistaAtiva();
+})();
+
 if (supabaseCliente && supabaseCliente.auth && typeof supabaseCliente.auth.signOut === 'function') {
   const sairDeVerdade = supabaseCliente.auth.signOut.bind(supabaseCliente.auth);
   supabaseCliente.auth.signOut = (...opcoes) => {
@@ -3720,14 +3733,15 @@ function iniciarChuvaDeMeteoros() {
 
   const INCLINACAO = 27;
   const VARIACAO = 2.5;
-  const MAXIMO_NA_TELA = 22;
+  const APARELHO_FRACO = window.innerWidth < 900 || (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4;
+  const MAXIMO_NA_TELA = APARELHO_FRACO ? 3 : 22;
   const COMECO = performance.now();
   let vivos = 0;
 
   function meteorosPorSegundo() {
     const t = (performance.now() - COMECO) / 1000;
     const onda = 0.5 + 0.5 * Math.sin(t / 7.5) * Math.sin(t / 19 + 1.1);
-    return 2 + onda * 3.5;
+    return APARELHO_FRACO ? 0.25 + onda * 0.35 : 2 + onda * 3.5;
   }
 
   function criarMeteoro() {

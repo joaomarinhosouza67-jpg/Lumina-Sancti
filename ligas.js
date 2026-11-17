@@ -1417,7 +1417,3 @@ function htmlDasZonasDaSemana(sobem, descem) {
   return partes.length ? `<div class="semana-zonas">${partes.join('')}</div>` : '';
 }
 
-function htmlDoTopoDaLiga(indice) {
-  const liga = LIGAS_DA_FE[indice] || LIGAS_DA_FE[0];
-  return `<div class="ranking-liga-topo" style="--liga:${liga.cor}">${seloDaLigaNoRanking(liga.minimo)}<span><strong>${textoDaLiga('Liga {nome}', { nome: textoDaLiga(liga.nome) })}</strong><small>${textoDaLiga('Quem está na mesma liga que você.')}</small></span></div>`;
-}
