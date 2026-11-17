@@ -1403,7 +1403,7 @@ function lugarNoPodio(item) {
 }
 
 function htmlDoRanking(itens, vazio) {
-  if (!itens.length) return `<p class="painel-vazio">${vazio}</p>`;
+  if (!itens.length) return `<div class="amigo-vazio">${typeof htmlDoAmigoDaTelaVazia === 'function' ? htmlDoAmigoDaTelaVazia('ranking') : ''}<p class="painel-vazio">${vazio}</p></div>`;
   itens.forEach((item, i) => { item.lugar = i + 1; });
   const podio = itens.slice(0, Math.min(3, itens.length));
   const resto = itens.slice(podio.length);
@@ -1461,7 +1461,7 @@ async function renderizarRanking() {
 function mostrarRankingDaFamiliaTrancado(lista) {
   marcarAbaDoRanking();
   if (membroAtivo && membroAtivo.tipo === 'crianca') {
-    lista.innerHTML = '<p class="painel-vazio">O ranking da família está descansando. Continue aprendendo nas trilhas!</p>';
+    lista.innerHTML = `<div class="amigo-vazio">${typeof htmlDoAmigoDaTelaVazia === 'function' ? htmlDoAmigoDaTelaVazia('familia', 'dorme') : ''}<p class="painel-vazio">O ranking da família está descansando. Continue aprendendo nas trilhas!</p></div>`;
     return;
   }
   lista.innerHTML = `

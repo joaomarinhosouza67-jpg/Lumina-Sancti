@@ -229,11 +229,17 @@ function desenhoDaLumi() {
   return `
     <svg class="lumi-svg" viewBox="0 0 120 140" aria-hidden="true" focusable="false">
       <defs>
-        <radialGradient id="${id}-corpo" cx="42%" cy="36%" r="72%">
-          <stop offset="0%" stop-color="#fff6d5"/>
-          <stop offset="45%" stop-color="#f5d77a"/>
-          <stop offset="100%" stop-color="#d4af37"/>
+        <radialGradient id="${id}-corpo" cx="42%" cy="34%" r="74%">
+          <stop offset="0%" stop-color="#fffbe6"/>
+          <stop offset="38%" stop-color="#f9e08c"/>
+          <stop offset="74%" stop-color="#e8bb42"/>
+          <stop offset="100%" stop-color="#b9891c"/>
         </radialGradient>
+        <radialGradient id="${id}-volume" cx="40%" cy="30%" r="70%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.85"/>
+          <stop offset="100%" stop-color="#fff3c4" stop-opacity="0"/>
+        </radialGradient>
+        <clipPath id="${id}-forma"><path d="M60 5 C71 34 89 52 115 64 C89 76 71 92 60 115 C49 92 31 76 5 64 C31 52 49 34 60 5 Z"/></clipPath>
         <radialGradient id="${id}-aura" cx="50%" cy="50%" r="50%">
           <stop offset="0%" stop-color="#f5d77a" stop-opacity="0.45"/>
           <stop offset="100%" stop-color="#f5d77a" stop-opacity="0"/>
@@ -247,30 +253,41 @@ function desenhoDaLumi() {
         <circle class="lumi-aura" cx="60" cy="64" r="58" fill="url(#${id}-aura)"/>
         <g class="lumi-giro">
         <g class="lumi-perna lumi-perna-esq">
-          <path d="M52 96 L47 118"/>
+          <path class="lumi-contorno" d="M52 96 L47 118"/>
+          <path class="lumi-membro" d="M52 96 L47 118"/>
           <ellipse cx="44" cy="120.5" rx="7" ry="4"/>
         </g>
         <g class="lumi-perna lumi-perna-dir">
-          <path d="M68 96 L73 118"/>
+          <path class="lumi-contorno" d="M68 96 L73 118"/>
+          <path class="lumi-membro" d="M68 96 L73 118"/>
           <ellipse cx="76" cy="120.5" rx="7" ry="4"/>
         </g>
         <g class="lumi-braco lumi-braco-esq">
-          <path d="M20 70 Q13 77 13 87"/>
+          <path class="lumi-contorno" d="M20 70 Q13 77 13 87"/>
+          <path class="lumi-membro" d="M20 70 Q13 77 13 87"/>
           <circle cx="13" cy="89.5" r="5"/>
         </g>
         <g class="lumi-braco lumi-braco-dir">
-          <path d="M100 70 Q107 77 107 87"/>
+          <path class="lumi-contorno" d="M100 70 Q107 77 107 87"/>
+          <path class="lumi-membro" d="M100 70 Q107 77 107 87"/>
           <circle cx="107" cy="89.5" r="5"/>
         </g>
         <g class="lumi-tronco">
-        <path class="lumi-corpo" fill="url(#${id}-corpo)" d="M60 6 C68 36 86 56 114 64 C86 72 68 88 60 114 C52 88 34 72 6 64 C34 56 52 36 60 6 Z"/>
-        <path class="lumi-reflexo" d="M58 16 C61 33 69 45 84 54" fill="none" stroke="#fffbe8" stroke-width="3" stroke-linecap="round" opacity=".55"/>
+        <path class="lumi-corpo-borda" d="M60 5 C71 34 89 52 115 64 C89 76 71 92 60 115 C49 92 31 76 5 64 C31 52 49 34 60 5 Z"/>
+        <path class="lumi-corpo" fill="url(#${id}-corpo)" d="M60 5 C71 34 89 52 115 64 C89 76 71 92 60 115 C49 92 31 76 5 64 C31 52 49 34 60 5 Z"/>
+        <path class="lumi-volume" fill="url(#${id}-volume)" transform="translate(60 60) scale(0.7) translate(-60 -60)" d="M60 5 C71 34 89 52 115 64 C89 76 71 92 60 115 C49 92 31 76 5 64 C31 52 49 34 60 5 Z"/>
+        <g clip-path="url(#${id}-forma)"><g transform="skewX(-22)"><rect class="lumi-passa-luz" x="0" y="-10" width="15" height="150"/></g></g>
+        <path class="lumi-reflexo" d="M58 16 C61 33 69 45 84 54" fill="none" stroke="#fffbe8" stroke-width="3" stroke-linecap="round" opacity=".6"/>
+        <ellipse class="lumi-reflexo" cx="41" cy="58" rx="2.4" ry="4.6" transform="rotate(-62 41 58)" fill="#fffbe8" opacity=".55"/>
+        <path class="lumi-cintilar" d="M60 -1 L61.6 4.4 L67 6 L61.6 7.6 L60 13 L58.4 7.6 L53 6 L58.4 4.4 Z"/>
         <g class="lumi-rosto">
           <ellipse class="lumi-bochecha" cx="41.5" cy="70" rx="5.5" ry="3.2"/>
           <ellipse class="lumi-bochecha" cx="78.5" cy="70" rx="5.5" ry="3.2"/>
           <g class="lumi-olhos lumi-olhos-abertos">
-            <ellipse cx="50" cy="59.5" rx="4.4" ry="5.9"/>
-            <ellipse cx="70" cy="59.5" rx="4.4" ry="5.9"/>
+            <ellipse cx="50" cy="59.5" rx="4.6" ry="6.1"/>
+            <ellipse cx="70" cy="59.5" rx="4.6" ry="6.1"/>
+            <ellipse class="lumi-iris" cx="50.4" cy="61.6" rx="2.8" ry="2.7"/>
+            <ellipse class="lumi-iris" cx="70.4" cy="61.6" rx="2.8" ry="2.7"/>
             <circle class="lumi-brilho-olho" cx="51.7" cy="57" r="1.7"/>
             <circle class="lumi-brilho-olho" cx="71.7" cy="57" r="1.7"/>
             <circle class="lumi-brilho-olho" cx="48.8" cy="62" r=".8"/>

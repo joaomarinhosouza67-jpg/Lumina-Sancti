@@ -131,27 +131,77 @@ function idDoPersonagem(prefixo) {
   return `${prefixo}-${contadorDePersonagens}`;
 }
 
+function rostoDaTurma(o) {
+  const { cx, cy, dx = 9.5, tam = 1, tom = '#241a10', bochecha = '#f4978e', bocaY = 12, sobrancelha = '#5a3b28' } = o;
+  const e = cx - dx;
+  const d = cx + dx;
+  const olho = (x) => `<ellipse cx="${x}" cy="${cy}" rx="${4.4 * tam}" ry="${5.6 * tam}" fill="${tom}"/><ellipse cx="${x + 0.4}" cy="${cy + 1.6 * tam}" rx="${2.6 * tam}" ry="${2.4 * tam}" fill="#4a3220" opacity=".7"/><circle cx="${x + 1.7 * tam}" cy="${cy - 2.2 * tam}" r="${1.9 * tam}" fill="#fff"/><circle cx="${x - 1.4 * tam}" cy="${cy + 2.4 * tam}" r="${0.9 * tam}" fill="#fff" opacity=".85"/>`;
+  const by = cy + bocaY * tam;
+  return `
+    <g class="personagem-sobrancelhas">
+      <path class="sobrancelha-esq" d="M${e - 4.5 * tam} ${cy - 9 * tam} Q${e} ${cy - 11.5 * tam} ${e + 4.5 * tam} ${cy - 9.5 * tam}" fill="none" stroke="${sobrancelha}" stroke-width="${1.7 * tam}" stroke-linecap="round"/>
+      <path class="sobrancelha-dir" d="M${d - 4.5 * tam} ${cy - 9.5 * tam} Q${d} ${cy - 11.5 * tam} ${d + 4.5 * tam} ${cy - 9 * tam}" fill="none" stroke="${sobrancelha}" stroke-width="${1.7 * tam}" stroke-linecap="round"/>
+    </g>
+    <g class="personagem-olhos">${olho(e)}${olho(d)}</g>
+    <g class="olhos-felizes" fill="none" stroke="${tom}" stroke-width="${2.4 * tam}" stroke-linecap="round"><path d="M${e - 4.4 * tam} ${cy + 1 * tam} Q${e} ${cy - 5 * tam} ${e + 4.4 * tam} ${cy + 1 * tam}"/><path d="M${d - 4.4 * tam} ${cy + 1 * tam} Q${d} ${cy - 5 * tam} ${d + 4.4 * tam} ${cy + 1 * tam}"/></g>
+    <g class="olhos-fechados" fill="none" stroke="${tom}" stroke-width="${2.2 * tam}" stroke-linecap="round"><path d="M${e - 4.4 * tam} ${cy} Q${e} ${cy + 3.6 * tam} ${e + 4.4 * tam} ${cy}"/><path d="M${d - 4.4 * tam} ${cy} Q${d} ${cy + 3.6 * tam} ${d + 4.4 * tam} ${cy}"/></g>
+    <ellipse class="bochecha" cx="${e - 6 * tam}" cy="${cy + 7.5 * tam}" rx="${4.6 * tam}" ry="${2.7 * tam}" fill="${bochecha}" opacity=".6"/>
+    <ellipse class="bochecha" cx="${d + 6 * tam}" cy="${cy + 7.5 * tam}" rx="${4.6 * tam}" ry="${2.7 * tam}" fill="${bochecha}" opacity=".6"/>
+    <path class="boca-sorriso" d="M${cx - 5 * tam} ${by} Q${cx} ${by + 5 * tam} ${cx + 5 * tam} ${by}" fill="none" stroke="#5a3b28" stroke-width="${1.9 * tam}" stroke-linecap="round"/>
+    <g class="boca-aberta"><path d="M${cx - 6 * tam} ${by - 1 * tam} Q${cx} ${by - 0.5 * tam} ${cx + 6 * tam} ${by - 1 * tam} Q${cx + 5 * tam} ${by + 8 * tam} ${cx} ${by + 8 * tam} Q${cx - 5 * tam} ${by + 8 * tam} ${cx - 6 * tam} ${by - 1 * tam} Z" fill="#7a2f22"/><path d="M${cx - 3.4 * tam} ${by + 5.4 * tam} Q${cx} ${by + 3 * tam} ${cx + 3.4 * tam} ${by + 5.4 * tam} Q${cx} ${by + 8 * tam} ${cx - 3.4 * tam} ${by + 5.4 * tam} Z" fill="#f08a7e"/></g>
+    <path class="boca-triste" d="M${cx - 4.5 * tam} ${by + 4 * tam} Q${cx} ${by - 0.5 * tam} ${cx + 4.5 * tam} ${by + 4 * tam}" fill="none" stroke="#5a3b28" stroke-width="${1.9 * tam}" stroke-linecap="round"/>
+    <ellipse class="boca-o" cx="${cx}" cy="${by + 2 * tam}" rx="${2.2 * tam}" ry="${2.6 * tam}" fill="#7a2f22"/>
+    <path class="boca-ops" d="M${cx - 5 * tam} ${by + 2.5 * tam} q${1.25 * tam} ${-2 * tam} ${2.5 * tam} 0 t${2.5 * tam} 0 t${2.5 * tam} 0 t${2.5 * tam} 0" fill="none" stroke="#5a3b28" stroke-width="${1.8 * tam}" stroke-linecap="round" stroke-linejoin="round"/>
+    <path class="personagem-suor" d="M${d + 11} ${cy - 9} C${d + 9} ${cy - 5.6} ${d + 8} ${cy - 3.8} ${d + 8} ${cy - 2.4} A3 3 0 0 0 ${d + 14} ${cy - 2.4} C${d + 14} ${cy - 3.8} ${d + 13} ${cy - 5.6} ${d + 11} ${cy - 9} Z" fill="#bfe6ff" stroke="#6fb5e8" stroke-width=".8"/>
+    <path class="personagem-lagrima" d="M${e - 3} ${cy + 5} C${e - 5} ${cy + 8.4} ${e - 6} ${cy + 10.2} ${e - 6} ${cy + 11.6} A3 3 0 0 0 ${e} ${cy + 11.6} C${e} ${cy + 10.2} ${e - 1} ${cy + 8.4} ${e - 3} ${cy + 5} Z" fill="#8fd0ff" stroke="#5aa6e0" stroke-width=".8"/>`;
+}
+
+function auraDaTurma(cy) {
+  const aura = idDoPersonagem('turma-aura');
+  return `<g class="personagem-graca"><defs><radialGradient id="${aura}"><stop offset="0" stop-color="#ffe7a0" stop-opacity=".55"/><stop offset=".6" stop-color="#ffd66b" stop-opacity=".18"/><stop offset="1" stop-color="#ffd66b" stop-opacity="0"/></radialGradient></defs><circle cx="60" cy="${cy}" r="60" fill="url(#${aura})"/></g>`;
+}
+
+function extrasDaTurma(x, y, maos) {
+  const [hx, hy, cor, borda] = maos;
+  const estrela = (px, py, r) => `M${px} ${py - r} L${px + r * 0.3} ${py - r * 0.3} L${px + r} ${py} L${px + r * 0.3} ${py + r * 0.3} L${px} ${py + r} L${px - r * 0.3} ${py + r * 0.3} L${px - r} ${py} L${px - r * 0.3} ${py - r * 0.3} Z`;
+  return `
+    <g class="personagem-maos"><path d="M${hx} ${hy - 10} C${hx + 5.5} ${hy - 5} ${hx + 7} ${hy + 3} ${hx + 5} ${hy + 8} Q${hx} ${hy + 10.5} ${hx - 5} ${hy + 8} C${hx - 7} ${hy + 3} ${hx - 5.5} ${hy - 5} ${hx} ${hy - 10} Z" fill="${cor}" stroke="${borda}" stroke-width="1.3" stroke-linejoin="round"/><path d="M${hx} ${hy - 8} V${hy + 8.5}" stroke="${borda}" stroke-width="1.1" stroke-linecap="round"/></g>
+    <g class="personagem-estrelinhas" fill="#ffe08a">${[[-38, -30, 5], [36, -36, 6], [-46, 6, 4], [46, 2, 4.5], [0, -50, 5]].map(([ex, ey, r], i) => `<path style="--dx:${ex}px;--dy:${ey}px;--i:${i}" d="${estrela(60, 60, r)}"/>`).join('')}</g>
+    <g class="personagem-zzz" fill="none" stroke="#dfe8ff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${[[x, y, 0.8], [x + 8, y - 10, 1], [x + 18, y - 22, 1.25]].map(([zx, zy, t], i) => `<path style="--i:${i}" d="M${zx} ${zy - 7 * t} h${6 * t} l${-6 * t} ${7 * t} h${6 * t}"/>`).join('')}</g>`;
+}
+
 function desenhoDaMel() {
   const la = idDoPersonagem('mel-la');
+  const sombraLa = idDoPersonagem('mel-sombra-la');
   const rosto = idDoPersonagem('mel-rosto');
-  const cachos = [[60, 64, 33], [32, 60, 18], [88, 60, 18], [41, 40, 17], [79, 40, 17], [60, 31, 18], [33, 82, 17], [87, 82, 17], [60, 92, 19], [47, 92, 15], [73, 92, 15]];
-  return `<svg class="personagem-svg" viewBox="0 0 120 132" aria-hidden="true">
-    <defs><radialGradient id="${la}" cx="40%" cy="32%" r="70%"><stop offset="0" stop-color="#ffffff"/><stop offset=".7" stop-color="#fbf4e6"/><stop offset="1" stop-color="#e7d8bc"/></radialGradient><radialGradient id="${rosto}" cx="45%" cy="35%" r="70%"><stop offset="0" stop-color="#fde8d4"/><stop offset="1" stop-color="#e9c09b"/></radialGradient></defs>
-    <ellipse class="personagem-sombra" cx="60" cy="125" rx="34" ry="5"/>
+  const cascos = idDoPersonagem('mel-cascos');
+  const corpo = [[60, 78, 29], [36, 74, 16], [84, 74, 16], [42, 57, 15], [78, 57, 15], [60, 51, 18], [39, 91, 14], [81, 91, 14], [60, 97, 16], [48, 96, 12], [72, 96, 12]];
+  const cachinhos = [[46, 70], [70, 66], [58, 90], [40, 86], [80, 88], [66, 104]];
+  return `<svg class="personagem-svg" viewBox="0 0 120 134" aria-hidden="true">
+    <defs>
+      <radialGradient id="${la}" cx="38%" cy="28%" r="75%"><stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#fbf5ea"/><stop offset="1" stop-color="#e3d3b5"/></radialGradient>
+      <radialGradient id="${sombraLa}" cx="50%" cy="20%" r="80%"><stop offset="0" stop-color="#efe3cc"/><stop offset="1" stop-color="#cdb791"/></radialGradient>
+      <radialGradient id="${rosto}" cx="45%" cy="32%" r="72%"><stop offset="0" stop-color="#fff0e2"/><stop offset=".7" stop-color="#f3cfae"/><stop offset="1" stop-color="#dfac85"/></radialGradient>
+      <linearGradient id="${cascos}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6e5947"/><stop offset="1" stop-color="#3d2e22"/></linearGradient>
+    </defs>
+    <ellipse class="personagem-sombra" cx="60" cy="127" rx="32" ry="5"/>
     <g class="personagem-corpo">
-      <g fill="#6b5543">${[40, 51, 63, 74].map((x) => `<rect x="${x}" y="96" width="7" height="24" rx="3.5"/><rect x="${x - 0.5}" y="115" width="8" height="6" rx="2" fill="#3e2f22"/>`).join('')}</g>
-      <circle class="mel-rabo" cx="18" cy="76" r="9" fill="url(#${la})" stroke="#e2d2b2" stroke-width="1.2"/>
-      <g fill="url(#${la})" stroke="#e2d2b2" stroke-width="1.2">${cachos.map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}"/>`).join('')}</g>
+      ${auraDaTurma(76)}
+      <g><rect x="44" y="100" width="10" height="22" rx="5" fill="url(#${rosto})" stroke="#c9946c" stroke-width="1"/><rect x="66" y="100" width="10" height="22" rx="5" fill="url(#${rosto})" stroke="#c9946c" stroke-width="1"/><path d="M42.5 117 h13 v4 a3.4 3.4 0 0 1 -3.4 3.4 h-6.2 a3.4 3.4 0 0 1 -3.4 -3.4 Z" fill="url(#${cascos})"/><path d="M64.5 117 h13 v4 a3.4 3.4 0 0 1 -3.4 3.4 h-6.2 a3.4 3.4 0 0 1 -3.4 -3.4 Z" fill="url(#${cascos})"/></g>
+      <g class="mel-rabo"><circle cx="88" cy="106" r="7.5" fill="url(#${la})" stroke="#e0cfae" stroke-width="1"/></g>
+      <g fill="url(#${sombraLa})">${corpo.map(([x, y, r]) => `<circle cx="${x}" cy="${y + 2}" r="${r}"/>`).join('')}</g>
+      <g fill="url(#${la})" stroke="#e6d6b8" stroke-width="1">${corpo.map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}"/>`).join('')}</g>
+      <g fill="none" stroke="#e8dcc4" stroke-width="1.4" stroke-linecap="round">${cachinhos.map(([x, y]) => `<path d="M${x - 4} ${y} q4 -5 8 0"/>`).join('')}</g>
+      <g class="personagem-braco personagem-braco-esq"><path d="M31 82 Q20 86 17 96" fill="none" stroke="#c9946c" stroke-width="9" stroke-linecap="round"/><path d="M31 82 Q20 86 17 96" fill="none" stroke="#f1cfae" stroke-width="7" stroke-linecap="round"/><path d="M12 96 h10 v3.4 a3.4 3.4 0 0 1 -3.4 3.4 h-3.2 a3.4 3.4 0 0 1 -3.4 -3.4 Z" fill="url(#${cascos})"/></g>
+      <g class="personagem-braco personagem-braco-dir"><path d="M89 82 Q100 86 103 96" fill="none" stroke="#c9946c" stroke-width="9" stroke-linecap="round"/><path d="M89 82 Q100 86 103 96" fill="none" stroke="#f1cfae" stroke-width="7" stroke-linecap="round"/><path d="M98 96 h10 v3.4 a3.4 3.4 0 0 1 -3.4 3.4 h-3.2 a3.4 3.4 0 0 1 -3.4 -3.4 Z" fill="url(#${cascos})"/></g>
       <g class="personagem-rosto">
-        <g class="mel-orelha mel-orelha-esq"><ellipse cx="36" cy="64" rx="12" ry="5.6" fill="url(#${rosto})" transform="rotate(-24 36 64)"/><ellipse cx="37" cy="64" rx="7" ry="2.6" fill="#f6a8a0" opacity=".7" transform="rotate(-24 37 64)"/></g>
-        <g class="mel-orelha mel-orelha-dir"><ellipse cx="84" cy="64" rx="12" ry="5.6" fill="url(#${rosto})" transform="rotate(24 84 64)"/><ellipse cx="83" cy="64" rx="7" ry="2.6" fill="#f6a8a0" opacity=".7" transform="rotate(24 83 64)"/></g>
-        <ellipse cx="60" cy="69" rx="19" ry="21" fill="url(#${rosto})" stroke="#dcae86" stroke-width="1"/>
-        <circle cx="60" cy="48" r="10" fill="url(#${la})"/><circle cx="51" cy="51" r="7" fill="url(#${la})"/><circle cx="69" cy="51" r="7" fill="url(#${la})"/>
-        <g class="personagem-olhos"><ellipse cx="52.5" cy="67" rx="4" ry="5" fill="#241a10"/><ellipse cx="67.5" cy="67" rx="4" ry="5" fill="#241a10"/><circle cx="54" cy="65" r="1.6" fill="#fff"/><circle cx="69" cy="65" r="1.6" fill="#fff"/><circle cx="51.6" cy="69.2" r=".8" fill="#fff"/><circle cx="66.6" cy="69.2" r=".8" fill="#fff"/></g>
-        <ellipse cx="47" cy="76" rx="4.2" ry="2.5" fill="#f4978e" opacity=".6"/><ellipse cx="73" cy="76" rx="4.2" ry="2.5" fill="#f4978e" opacity=".6"/>
-        <path d="M57.6 75.5 Q60 77.4 62.4 75.5" fill="#c97b6c"/>
-        <path d="M55.5 79 Q60 83.5 64.5 79" fill="none" stroke="#5a3b28" stroke-width="1.8" stroke-linecap="round"/>
+        <g class="mel-orelha mel-orelha-esq"><ellipse cx="34" cy="62" rx="13" ry="6" fill="url(#${rosto})" transform="rotate(-26 34 62)"/><ellipse cx="35" cy="62" rx="7.6" ry="2.8" fill="#f6a8a0" opacity=".75" transform="rotate(-26 35 62)"/></g>
+        <g class="mel-orelha mel-orelha-dir"><ellipse cx="86" cy="62" rx="13" ry="6" fill="url(#${rosto})" transform="rotate(26 86 62)"/><ellipse cx="85" cy="62" rx="7.6" ry="2.8" fill="#f6a8a0" opacity=".75" transform="rotate(26 85 62)"/></g>
+        <ellipse cx="60" cy="68" rx="21" ry="22" fill="url(#${rosto})" stroke="#d9a47c" stroke-width="1"/>
+        <g fill="url(#${la})" stroke="#e6d6b8" stroke-width="1"><circle cx="60" cy="46" r="11"/><circle cx="49" cy="50" r="8"/><circle cx="71" cy="50" r="8"/><circle cx="55" cy="40" r="6"/><circle cx="66" cy="40" r="6"/></g>
+        ${rostoDaTurma({ cx: 60, cy: 67 })}
       </g>
+      ${extrasDaTurma(84, 40, [60, 98, '#f1cfae', '#c9946c'])}
     </g>
   </svg>`;
 }
@@ -161,31 +211,32 @@ function desenhoDaClara() {
   const fogo = idDoPersonagem('clara-fogo');
   const brilho = idDoPersonagem('clara-brilho');
   const base = idDoPersonagem('clara-base');
+  const pingo = idDoPersonagem('clara-pingo');
   return `<svg class="personagem-svg" viewBox="0 0 120 140" aria-hidden="true">
     <defs>
-      <linearGradient id="${cera}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ead2a2"/><stop offset=".35" stop-color="#fffaf0"/><stop offset=".6" stop-color="#fff4dc"/><stop offset="1" stop-color="#dcc08c"/></linearGradient>
-      <radialGradient id="${fogo}" cx="50%" cy="72%" r="62%"><stop offset="0" stop-color="#ffffff"/><stop offset=".28" stop-color="#fff3b0"/><stop offset=".62" stop-color="#ffc44d"/><stop offset="1" stop-color="#f07a12"/></radialGradient>
-      <radialGradient id="${brilho}"><stop offset="0" stop-color="#ffe9a0" stop-opacity=".75"/><stop offset="1" stop-color="#ffd66b" stop-opacity="0"/></radialGradient>
-      <linearGradient id="${base}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#a8741f"/><stop offset=".5" stop-color="#f6dc8a"/><stop offset="1" stop-color="#8a5a14"/></linearGradient>
+      <linearGradient id="${cera}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e3c48e"/><stop offset=".3" stop-color="#fffaf0"/><stop offset=".55" stop-color="#fff3d8"/><stop offset="1" stop-color="#d4b37a"/></linearGradient>
+      <linearGradient id="${pingo}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffdf6"/><stop offset="1" stop-color="#f3e2bd"/></linearGradient>
+      <radialGradient id="${fogo}" cx="50%" cy="74%" r="64%"><stop offset="0" stop-color="#ffffff"/><stop offset=".25" stop-color="#fff6c2"/><stop offset=".6" stop-color="#ffc44d"/><stop offset="1" stop-color="#ee6a10"/></radialGradient>
+      <radialGradient id="${brilho}"><stop offset="0" stop-color="#ffe9a0" stop-opacity=".8"/><stop offset="1" stop-color="#ffd66b" stop-opacity="0"/></radialGradient>
+      <linearGradient id="${base}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9c6a1a"/><stop offset=".5" stop-color="#f8e19a"/><stop offset="1" stop-color="#83550f"/></linearGradient>
     </defs>
-    <ellipse class="personagem-sombra" cx="60" cy="134" rx="36" ry="5"/>
+    <ellipse class="personagem-sombra" cx="60" cy="134" rx="38" ry="5"/>
     <g class="personagem-corpo">
-      <g class="clara-luz"><circle cx="60" cy="24" r="26" fill="url(#${brilho})"/></g>
-      <g class="clara-chama"><path d="M60 3 C67 13 74 20 74 29 C74 38 67 44 60 44 C53 44 46 38 46 29 C46 20 53 13 60 3 Z" fill="url(#${fogo})"/><path d="M60 22 C63 27 65 30 65 34 C65 38 62.6 41 60 41 C57.4 41 55 38 55 34 C55 30 57 27 60 22 Z" fill="#cfe9ff" opacity=".55"/></g>
-      <g class="clara-faiscas">${[[36, 18], [84, 14], [30, 38], [90, 36]].map(([x, y], i) => `<path style="--i:${i}" d="M${x} ${y - 5} L${x + 1.4} ${y - 1.4} L${x + 5} ${y} L${x + 1.4} ${y + 1.4} L${x} ${y + 5} L${x - 1.4} ${y + 1.4} L${x - 5} ${y} L${x - 1.4} ${y - 1.4} Z" fill="#ffe9a8"/>`).join('')}</g>
-      <path d="M60 37 V46" stroke="#3a2a14" stroke-width="2.6" stroke-linecap="round"/>
-      <path class="clara-braco clara-braco-esq" d="M36 90 Q26 92 22 84" fill="none" stroke="#e2c38c" stroke-width="5.5" stroke-linecap="round"/>
-      <path class="clara-braco clara-braco-dir" d="M84 90 Q94 92 98 84" fill="none" stroke="#e2c38c" stroke-width="5.5" stroke-linecap="round"/>
-      <rect x="34" y="46" width="52" height="80" rx="17" fill="url(#${cera})" stroke="#d8bb85" stroke-width="1.4"/>
-      <path d="M34 60 C40 60 40 71 45 71 C50 71 50 58 56 58 C62 58 62 76 68 76 C74 76 74 60 80 60 C84 60 86 58 86 58 V52 C86 49 83 46 80 46 H40 C37 46 34 49 34 52 Z" fill="#fffdf6"/>
-      <path d="M42 64 V112" stroke="#ffffff" stroke-width="4" stroke-linecap="round" opacity=".55"/>
-      <g class="personagem-rosto">
-        <g class="personagem-olhos"><ellipse cx="51" cy="86" rx="4" ry="5" fill="#241a10"/><ellipse cx="69" cy="86" rx="4" ry="5" fill="#241a10"/><circle cx="52.5" cy="84" r="1.6" fill="#fff"/><circle cx="70.5" cy="84" r="1.6" fill="#fff"/><circle cx="50.2" cy="88.2" r=".8" fill="#fff"/><circle cx="68.2" cy="88.2" r=".8" fill="#fff"/></g>
-        <ellipse cx="45" cy="95" rx="4.2" ry="2.5" fill="#f4978e" opacity=".6"/><ellipse cx="75" cy="95" rx="4.2" ry="2.5" fill="#f4978e" opacity=".6"/>
-        <path d="M54 98 Q60 104 66 98" fill="none" stroke="#5a3b28" stroke-width="2" stroke-linecap="round"/>
-      </g>
-      <ellipse cx="60" cy="127" rx="35" ry="7.5" fill="url(#${base})" stroke="#7a5212" stroke-width="1.2"/>
-      <ellipse cx="60" cy="125" rx="27" ry="3" fill="#fff1c2" opacity=".45"/>
+      ${auraDaTurma(84)}
+      <g class="clara-luz"><circle cx="60" cy="24" r="28" fill="url(#${brilho})"/></g>
+      <g class="clara-chama"><path d="M60 2 C68 13 76 20 76 30 C76 39 68 46 60 46 C52 46 44 39 44 30 C44 20 52 13 60 2 Z" fill="url(#${fogo})"/><path d="M60 22 C63.6 27 66 31 66 35 C66 39.4 63.2 42.4 60 42.4 C56.8 42.4 54 39.4 54 35 C54 31 56.4 27 60 22 Z" fill="#cfe7ff" opacity=".6"/></g>
+      <g class="clara-faiscas">${[[34, 18], [86, 13], [28, 40], [92, 36]].map(([x, y], i) => `<path style="--i:${i}" d="M${x} ${y - 5} L${x + 1.4} ${y - 1.4} L${x + 5} ${y} L${x + 1.4} ${y + 1.4} L${x} ${y + 5} L${x - 1.4} ${y + 1.4} L${x - 5} ${y} L${x - 1.4} ${y - 1.4} Z" fill="#ffe9a8"/>`).join('')}</g>
+      <path d="M60 38 V48" stroke="#3a2a14" stroke-width="2.8" stroke-linecap="round"/>
+      <g class="personagem-braco personagem-braco-esq clara-braco clara-braco-esq"><path d="M35 88 Q25 90 21 81" fill="none" stroke="#e8cc98" stroke-width="6.5" stroke-linecap="round"/><circle cx="21" cy="80" r="4.4" fill="#fff6e4" stroke="#e2c38c" stroke-width="1"/></g>
+      <g class="personagem-braco personagem-braco-dir clara-braco clara-braco-dir"><path d="M85 88 Q95 90 99 81" fill="none" stroke="#e8cc98" stroke-width="6.5" stroke-linecap="round"/><circle cx="99" cy="80" r="4.4" fill="#fff6e4" stroke="#e2c38c" stroke-width="1"/></g>
+      <rect x="33" y="48" width="54" height="80" rx="18" fill="url(#${cera})" stroke="#d3b47c" stroke-width="1.4"/>
+      <path d="M33 62 C38 62 39 74 45 74 C51 74 50 59 56 59 C62 59 62 80 68 80 C74 80 74 62 80 62 C85 62 87 60 87 60 V54 C87 51 84 48 80 48 H40 C36 48 33 51 33 54 Z" fill="url(#${pingo})"/>
+      <path d="M40 66 V116" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" opacity=".5"/>
+      <g class="personagem-rosto">${rostoDaTurma({ cx: 60, cy: 88, sobrancelha: '#8a6a3a' })}</g>
+      <ellipse cx="60" cy="128" rx="37" ry="8" fill="url(#${base})" stroke="#74490c" stroke-width="1.2"/>
+      <ellipse cx="60" cy="126" rx="28" ry="3" fill="#fff1c2" opacity=".5"/>
+      <path d="M97 126 C106 126 106 134 98 134" fill="none" stroke="url(#${base})" stroke-width="3.4" stroke-linecap="round"/>
+      ${extrasDaTurma(86, 56, [60, 113, '#fff6e4', '#d3b47c'])}
     </g>
   </svg>`;
 }
@@ -193,27 +244,73 @@ function desenhoDaClara() {
 function desenhoDoDom() {
   const bronze = idDoPersonagem('dom-bronze');
   const aro = idDoPersonagem('dom-aro');
+  const fita = idDoPersonagem('dom-fita');
   return `<svg class="personagem-svg" viewBox="0 0 120 134" aria-hidden="true">
     <defs>
-      <linearGradient id="${bronze}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a5a14"/><stop offset=".28" stop-color="#e2b552"/><stop offset=".45" stop-color="#fff1c2"/><stop offset=".62" stop-color="#e2b552"/><stop offset="1" stop-color="#7a4f12"/></linearGradient>
-      <linearGradient id="${aro}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6dc8a"/><stop offset="1" stop-color="#9a6a1c"/></linearGradient>
+      <linearGradient id="${bronze}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#83550f"/><stop offset=".25" stop-color="#dcae45"/><stop offset=".42" stop-color="#fff4cc"/><stop offset=".6" stop-color="#e8bb52"/><stop offset="1" stop-color="#734a0e"/></linearGradient>
+      <linearGradient id="${aro}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbe39a"/><stop offset="1" stop-color="#966516"/></linearGradient>
+      <linearGradient id="${fita}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ef5a4a"/><stop offset="1" stop-color="#a8261c"/></linearGradient>
     </defs>
-    <ellipse class="personagem-sombra" cx="60" cy="128" rx="36" ry="5"/>
+    <ellipse class="personagem-sombra" cx="60" cy="128" rx="38" ry="5"/>
     <g class="personagem-corpo">
-      <g class="dom-notas">${[[22, 34], [96, 28], [100, 56]].map(([x, y], i) => `<path style="--i:${i}" d="M${x} ${y} v-12 l8 -2 v12" fill="none" stroke="#f6dc8a" stroke-width="2"/><circle style="--i:${i}" cx="${x - 2}" cy="${y}" r="3" fill="#f6dc8a"/>`).join('')}</g>
+      ${auraDaTurma(66)}
+      <g class="dom-notas">${[[20, 36], [97, 28], [101, 58]].map(([x, y], i) => `<path style="--i:${i}" d="M${x} ${y} v-12 l8 -2 v12" fill="none" stroke="#f6dc8a" stroke-width="2"/><circle style="--i:${i}" cx="${x - 2}" cy="${y}" r="3" fill="#f6dc8a"/>`).join('')}</g>
       <g class="dom-balanco">
-        <path d="M60 15 C50 4 39 8 43 17 C46 23 56 19 60 15 C64 19 74 23 77 17 C81 8 70 4 60 15 Z" fill="#c93a2c" stroke="#8e2a20" stroke-width="1.2"/>
-        <circle cx="60" cy="15" r="3.6" fill="#e0574a"/>
-        <circle class="personagem-badalo" cx="60" cy="113" r="8.5" fill="#8a5a14" stroke="#5e3d0d" stroke-width="1.5"/>
-        <path d="M60 19 C38 19 30 41 30 63 L28 90 C28 97 22 100 16 104 L104 104 C98 100 92 97 92 90 L90 63 C90 41 82 19 60 19 Z" fill="url(#${bronze})" stroke="#7a4f12" stroke-width="1.5"/>
-        <rect x="13" y="100" width="94" height="10" rx="5" fill="url(#${aro})" stroke="#7a4f12" stroke-width="1.2"/>
-        <path d="M44 34 C47 27 52 24 57 23" fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round" opacity=".7"/>
-        <g class="personagem-rosto">
-          <g class="personagem-olhos"><ellipse cx="51" cy="64" rx="4.2" ry="5.2" fill="#241a10"/><ellipse cx="69" cy="64" rx="4.2" ry="5.2" fill="#241a10"/><circle cx="52.6" cy="62" r="1.7" fill="#fff"/><circle cx="70.6" cy="62" r="1.7" fill="#fff"/><circle cx="50.2" cy="66.4" r=".8" fill="#fff"/><circle cx="68.2" cy="66.4" r=".8" fill="#fff"/></g>
-          <ellipse cx="44.5" cy="73" rx="4.2" ry="2.5" fill="#f4978e" opacity=".6"/><ellipse cx="75.5" cy="73" rx="4.2" ry="2.5" fill="#f4978e" opacity=".6"/>
-          <path d="M53 77 Q60 84 67 77" fill="none" stroke="#3a2608" stroke-width="2" stroke-linecap="round"/>
-        </g>
+        <path d="M60 16 C49 3 37 8 41 18 C44 25 55 20 60 16 C65 20 76 25 79 18 C83 8 71 3 60 16 Z" fill="url(#${fita})" stroke="#86211a" stroke-width="1.2"/>
+        <path d="M56 18 L50 30 L55 28 L57 33 Z M64 18 L70 30 L65 28 L63 33 Z" fill="url(#${fita})"/>
+        <circle cx="60" cy="16" r="4" fill="#f06a5a" stroke="#86211a" stroke-width="1"/>
+        <circle class="personagem-badalo" cx="60" cy="114" r="8.5" fill="#83550f" stroke="#573a0b" stroke-width="1.5"/>
+        <g class="personagem-braco personagem-braco-esq"><path d="M33 72 Q22 74 19 84" fill="none" stroke="url(#${aro})" stroke-width="6.4" stroke-linecap="round"/><circle cx="19" cy="85" r="4.5" fill="#f6dc8a" stroke="#966516" stroke-width="1"/></g>
+        <g class="personagem-braco personagem-braco-dir"><path d="M87 72 Q98 74 101 84" fill="none" stroke="url(#${aro})" stroke-width="6.4" stroke-linecap="round"/><circle cx="101" cy="85" r="4.5" fill="#f6dc8a" stroke="#966516" stroke-width="1"/></g>
+        <path d="M60 20 C38 20 30 42 30 64 L28 91 C28 98 22 101 16 105 L104 105 C98 101 92 98 92 91 L90 64 C90 42 82 20 60 20 Z" fill="url(#${bronze})" stroke="#6e460d" stroke-width="1.5"/>
+        <rect x="13" y="101" width="94" height="10" rx="5" fill="url(#${aro})" stroke="#6e460d" stroke-width="1.2"/>
+        <path d="M44 35 C47 28 52 25 57 24" fill="none" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round" opacity=".75"/>
+        <path d="M34 92 H86" stroke="#a8741f" stroke-width="1.4" opacity=".6"/>
+        <g class="personagem-rosto">${rostoDaTurma({ cx: 60, cy: 63, sobrancelha: '#6e460d' })}</g>
       </g>
+      ${extrasDaTurma(86, 30, [60, 89, '#f6dc8a', '#966516'])}
+    </g>
+  </svg>`;
+}
+
+function desenhoDoBurrinho() {
+  const pelo = idDoPersonagem('burrinho-pelo');
+  const corpo = idDoPersonagem('burrinho-corpo');
+  const focinho = idDoPersonagem('burrinho-focinho');
+  const barriga = idDoPersonagem('burrinho-barriga');
+  const ouro = idDoPersonagem('burrinho-ouro');
+  const estrela = (x, y, r) => `M${x} ${y - r} L${x + r * 0.3} ${y - r * 0.3} L${x + r} ${y} L${x + r * 0.3} ${y + r * 0.3} L${x} ${y + r} L${x - r * 0.3} ${y + r * 0.3} L${x - r} ${y} L${x - r * 0.3} ${y - r * 0.3} Z`;
+  return `<svg class="personagem-svg" viewBox="0 0 120 134" aria-hidden="true">
+    <defs>
+      <radialGradient id="${pelo}" cx="40%" cy="30%" r="78%"><stop offset="0" stop-color="#d9d5de"/><stop offset=".55" stop-color="#aaa3b1"/><stop offset="1" stop-color="#7d7586"/></radialGradient>
+      <radialGradient id="${corpo}" cx="42%" cy="25%" r="85%"><stop offset="0" stop-color="#c6c0cc"/><stop offset=".6" stop-color="#9e97a6"/><stop offset="1" stop-color="#736b7c"/></radialGradient>
+      <radialGradient id="${focinho}" cx="45%" cy="30%" r="72%"><stop offset="0" stop-color="#fdf8f1"/><stop offset="1" stop-color="#ddd0bd"/></radialGradient>
+      <radialGradient id="${barriga}" cx="50%" cy="35%" r="70%"><stop offset="0" stop-color="#f4f0f5"/><stop offset="1" stop-color="#d3ccd8"/></radialGradient>
+      <linearGradient id="${ouro}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3c8"/><stop offset=".5" stop-color="#e7b94f"/><stop offset="1" stop-color="#a8741f"/></linearGradient>
+    </defs>
+    <ellipse class="personagem-sombra" cx="60" cy="127" rx="30" ry="5"/>
+    <g class="personagem-corpo">
+      ${auraDaTurma(72)}
+      <g class="burrinho-rabo"><path d="M70 108 C78 112 84 114 89 112" fill="none" stroke="#857d8c" stroke-width="3" stroke-linecap="round"/><path d="M88 108 C93 107 97 111 95 117 C90 118 86 114 88 108 Z" fill="#4b4150"/></g>
+      <g class="burrinho-perna burrinho-perna-esq"><rect x="44" y="104" width="13" height="18" rx="6" fill="url(#${corpo})"/><path d="M42.5 117 h16 v4 a3.5 3.5 0 0 1 -3.5 3.5 h-9 a3.5 3.5 0 0 1 -3.5 -3.5 Z" fill="#3d3440"/></g>
+      <g class="burrinho-perna burrinho-perna-dir"><rect x="63" y="104" width="13" height="18" rx="6" fill="url(#${corpo})"/><path d="M61.5 117 h16 v4 a3.5 3.5 0 0 1 -3.5 3.5 h-9 a3.5 3.5 0 0 1 -3.5 -3.5 Z" fill="#3d3440"/></g>
+      <path d="M60 78 C76 78 82 90 82 101 C82 111 72 115 60 115 C48 115 38 111 38 101 C38 90 44 78 60 78 Z" fill="url(#${corpo})" stroke="#6d6576" stroke-width="1"/>
+      <ellipse cx="60" cy="102" rx="13.5" ry="11" fill="url(#${barriga})"/>
+      <g class="personagem-braco personagem-braco-esq"><path d="M42 86 Q34 92 32 103" fill="none" stroke="#6d6576" stroke-width="10.5" stroke-linecap="round"/><path d="M42 86 Q34 92 32 103" fill="none" stroke="url(#${corpo})" stroke-width="8.5" stroke-linecap="round"/><path d="M27.2 102 h9.6 v3.6 a3.4 3.4 0 0 1 -3.4 3.4 h-2.8 a3.4 3.4 0 0 1 -3.4 -3.4 Z" fill="#3d3440"/></g>
+      <g class="personagem-braco personagem-braco-dir"><path d="M78 86 Q86 92 88 103" fill="none" stroke="#6d6576" stroke-width="10.5" stroke-linecap="round"/><path d="M78 86 Q86 92 88 103" fill="none" stroke="url(#${corpo})" stroke-width="8.5" stroke-linecap="round"/><path d="M83.2 102 h9.6 v3.6 a3.4 3.4 0 0 1 -3.4 3.4 h-2.8 a3.4 3.4 0 0 1 -3.4 -3.4 Z" fill="#3d3440"/></g>
+      <path d="M47 80 Q60 90 73 80" fill="none" stroke="#8a5a2b" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="${estrela(60, 90.5, 5.6)}" fill="url(#${ouro})" stroke="#a8741f" stroke-width=".6"/>
+      <g class="personagem-rosto">
+        <g class="burrinho-orelha burrinho-orelha-esq"><ellipse cx="42" cy="24" rx="8.2" ry="18" fill="url(#${pelo})" stroke="#6d6576" stroke-width="1" transform="rotate(-24 42 24)"/><ellipse cx="42" cy="26" rx="4" ry="12" fill="#f3b3ba" opacity=".9" transform="rotate(-24 42 26)"/><ellipse cx="42" cy="9" rx="5.6" ry="4.4" fill="#4b4150" transform="rotate(-24 42 24)"/></g>
+        <g class="burrinho-orelha burrinho-orelha-dir"><ellipse cx="78" cy="24" rx="8.2" ry="18" fill="url(#${pelo})" stroke="#6d6576" stroke-width="1" transform="rotate(24 78 24)"/><ellipse cx="78" cy="26" rx="4" ry="12" fill="#f3b3ba" opacity=".9" transform="rotate(24 78 26)"/><ellipse cx="78" cy="9" rx="5.6" ry="4.4" fill="#4b4150" transform="rotate(24 78 24)"/></g>
+        <path d="M60 30 C82 30 88 44 87 56 C86 72 77 83 60 83 C43 83 34 72 33 56 C32 44 38 30 60 30 Z" fill="url(#${pelo})" stroke="#6d6576" stroke-width="1"/>
+        <path d="M50 34 C51 26 57 24 60 29 C63 23 70 26 70 33 C67 38 63 37 60 35 C57 38 53 38 50 34 Z" fill="#4b4150"/>
+        <path d="M55 31 C57 27 59 28 60 31 M62 30 C64 27 66 28 66 31" fill="none" stroke="#6b5f72" stroke-width="1.1" stroke-linecap="round"/>
+        <ellipse cx="60" cy="70" rx="19.5" ry="12.8" fill="url(#${focinho})" stroke="#c7b6a0" stroke-width="1"/>
+        <ellipse cx="53.4" cy="66.6" rx="2.5" ry="1.8" fill="#7a6a5c"/><ellipse cx="66.6" cy="66.6" rx="2.3" ry="1.6" fill="#7a6a5c"/>
+        ${rostoDaTurma({ cx: 60, cy: 49, dx: 10, bocaY: 24, sobrancelha: '#4b4150' })}
+      </g>
+      ${extrasDaTurma(86, 34, [60, 99, '#a59eab', '#5f5766'])}
     </g>
   </svg>`;
 }
@@ -223,7 +320,27 @@ const PERSONAGENS_DOS_JOGOS = {
   mel: { nome: 'Mel', desenho: desenhoDaMel },
   clara: { nome: 'Clara', desenho: desenhoDaClara },
   dom: { nome: 'Dom', desenho: desenhoDoDom },
+  burrinho: { nome: 'Bento', desenho: desenhoDoBurrinho },
 };
+
+const AMIGOS_DAS_MISSOES = ['mel', 'clara', 'dom', 'burrinho'];
+
+function htmlDoAmigoEm(id, estado, classeExtra) {
+  return htmlDoPersonagem(id, classeExtra).replace('data-estado="parada"', `data-estado="${estado}"`);
+}
+
+function amigoDaMissao(chave) {
+  const texto = String(chave || '');
+  let soma = 0;
+  for (let i = 0; i < texto.length; i += 1) soma = (soma * 31 + texto.charCodeAt(i)) % 9973;
+  return AMIGOS_DAS_MISSOES[soma % AMIGOS_DAS_MISSOES.length];
+}
+
+function htmlDoAmigoDaTelaVazia(chave, estado) {
+  const hora = new Date().getHours();
+  const jeito = estado || (hora >= 22 || hora < 6 ? 'dorme' : 'acena');
+  return `<div class="amigo-tela-vazia" aria-hidden="true">${htmlDoAmigoEm(amigoDaMissao(chave), jeito)}</div>`;
+}
 
 function htmlDoPersonagem(id, classeExtra) {
   const personagem = PERSONAGENS_DOS_JOGOS[id] || PERSONAGENS_DOS_JOGOS.lumi;
@@ -383,7 +500,7 @@ function mostrarListaDeJogos(opcoes) {
     <header class="jogos-topo">
       <span class="jogos-sol" aria-hidden="true"></span>
       <span class="jogos-nuvem n1" aria-hidden="true"></span><span class="jogos-nuvem n2" aria-hidden="true"></span>
-      <div class="jogos-turma">${['mel', 'lumi', 'clara', 'dom'].map((id, i) => `<button type="button" class="jogos-amigo" data-amigo="${id}" style="--i:${i}" aria-label="${PERSONAGENS_DOS_JOGOS[id].nome}">${htmlDoPersonagem(id)}<small>${PERSONAGENS_DOS_JOGOS[id].nome}</small></button>`).join('')}</div>
+      <div class="jogos-turma">${['mel', 'lumi', 'clara', 'dom', 'burrinho'].map((id, i) => `<button type="button" class="jogos-amigo" data-amigo="${id}" style="--i:${i}" aria-label="${PERSONAGENS_DOS_JOGOS[id].nome}">${htmlDoPersonagem(id)}<small>${PERSONAGENS_DOS_JOGOS[id].nome}</small></button>`).join('')}</div>
       <span class="jogos-morro" aria-hidden="true"></span>
       <h2 class="jogos-titulo">${textoDoJogo('Joguinhos')}</h2>
       <p class="jogos-sub">${textoDoJogo('Brinque e aprenda com a Lumi e os amigos dela.')}</p>

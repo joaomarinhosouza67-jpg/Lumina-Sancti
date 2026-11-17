@@ -565,6 +565,7 @@ function renderizarListaDeCenaculos(cenaculos, fotos) {
   if (todos.length === 0) {
     lista.innerHTML = `
       <div class="cenaculos-vazio">
+        ${typeof htmlDoAmigoDaTelaVazia === 'function' ? htmlDoAmigoDaTelaVazia('cenaculos') : ''}
         <p><strong>Você ainda não tem conversas nem cenáculos.</strong></p>
         <p>Toque em "Nova conversa" para colar o código de um amigo ou escanear o QR Code dele. No menu, você também pode criar um cenáculo para o seu grupo de oração ou entrar com um convite.</p>
       </div>`;

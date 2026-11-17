@@ -446,7 +446,7 @@ async function abrirListaSocial(alvoId, qual) {
     const pessoas = (await chamarComunidade('social_lista', { _pid: perfil.id, _alvo: alvoId, _qual: qual, _antes: null })) || [];
     await carregarFotosDosAutores(pessoas.map((autor) => ({ autor })));
     if (!pessoas.length) {
-      corpo.innerHTML = `<p class="painel-vazio">${qual === 'seguidores' ? 'Ninguém segue este perfil ainda.' : 'Este perfil ainda não segue ninguém.'}</p>`;
+      corpo.innerHTML = `<div class="amigo-vazio">${typeof htmlDoAmigoDaTelaVazia === 'function' ? htmlDoAmigoDaTelaVazia('seguidores') : ''}<p class="painel-vazio">${qual === 'seguidores' ? 'Ninguém segue este perfil ainda.' : 'Este perfil ainda não segue ninguém.'}</p></div>`;
       return;
     }
     corpo.innerHTML = `<div class="social-lista">${pessoas.map((p) => `
@@ -492,7 +492,7 @@ async function abrirMarcosDaPessoa(alvoId) {
     const desenhar = () => {
       corpo.innerHTML = postagens.length
         ? `<div class="comunidade-lista comunidade-lista-janela">${postagens.map(cartaoDaPostagem).join('')}</div>`
-        : '<p class="painel-vazio">Nenhum marco postado ainda.</p>';
+        : `<div class="amigo-vazio">${typeof htmlDoAmigoDaTelaVazia === 'function' ? htmlDoAmigoDaTelaVazia('marcos') : ''}<p class="painel-vazio">Nenhum marco postado ainda.</p></div>`;
       ligarCartoesDaComunidade(corpo, postagens, desenhar);
     };
     desenhar();

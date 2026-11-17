@@ -3497,7 +3497,7 @@ async function abrirHistoricoDaLumina() {
     lista.innerHTML = `<p class="lumina-historico-vazio">${tr('Não deu para carregar as conversas agora.')}</p>`;
     return;
   }
-  if (!conversas.length) { lista.innerHTML = `<p class="lumina-historico-vazio">${tr('Nenhuma conversa ainda.')}</p>`; return; }
+  if (!conversas.length) { lista.innerHTML = `<div class="amigo-vazio">${typeof htmlDoAmigoDaTelaVazia === 'function' ? htmlDoAmigoDaTelaVazia('lumina') : ''}<p class="lumina-historico-vazio">${tr('Nenhuma conversa ainda.')}</p></div>`; return; }
   lista.innerHTML = conversas.map((c) => `
     <div class="lumina-historico-item${c.id === conversaDaLuminaId ? ' atual' : ''}">
       <button type="button" class="lumina-historico-abrir" data-conversa="${escaparTextoDeOracao(c.id)}">

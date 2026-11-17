@@ -18,6 +18,10 @@ const ERROS_DO_SUPORTE = {
   somente_adultos: 'Escolha um perfil de adulto para falar com a equipe.',
 };
 const STATUS_DO_SUPORTE = { aberta: 'Esperando resposta', respondida: 'Respondida', resolvida: 'Resolvida' };
+const ATENDIMENTO_DO_SUPORTE_URL = 'https://lumina-ia.5dh6gl58df5c.workers.dev/atender';
+const TEMAS_SEM_ATENDIMENTO = ['denuncia', 'sugestao'];
+const RESPOSTAS_DO_ATENDIMENTO = 6;
+let atendimentoDoSuporte = null;
 
 let telaDoSuporte = 'lista';
 let conversaDoSuporte = null;
@@ -196,6 +200,8 @@ function mostrarNovaConversaDoSuporte() {
         b.setAttribute('aria-checked', escolhido ? 'true' : 'false');
       });
       atualizar();
+      const rotulo = enviar.querySelector('span');
+      if (rotulo) rotulo.textContent = tr(TEMAS_SEM_ATENDIMENTO.includes(temaEscolhidoNoSuporte) ? 'Enviar para a equipe' : 'Enviar');
       if (!texto.value) texto.focus();
     });
   });
@@ -204,6 +210,10 @@ function mostrarNovaConversaDoSuporte() {
     const perfil = perfilDoSuporte();
     const aviso = lugar.querySelector('#suporte-aviso');
     if (!perfil) { aviso.textContent = erroDoSuporte('somente_adultos'); return; }
+    if (!TEMAS_SEM_ATENDIMENTO.includes(temaEscolhidoNoSuporte)) {
+      mostrarAtendimentoDoSuporte({ tema: temaEscolhidoNoSuporte, assunto: lugar.querySelector('#suporte-assunto').value.trim() || null, texto: texto.value.trim() });
+      return;
+    }
     enviar.disabled = true;
     aviso.textContent = '';
     try {
@@ -224,9 +234,11 @@ function mostrarNovaConversaDoSuporte() {
 }
 
 function bolhaDoSuporte(m) {
+  const classe = m.da_ia ? 'da-equipe da-ia' : m.da_equipe ? 'da-equipe' : 'minha';
+  const autor = m.da_ia ? tr('Atendimento automático') : m.da_equipe ? tr('Equipe Lumina Sancti') : '';
   return `
-    <div class="suporte-msg ${m.da_equipe ? 'da-equipe' : 'minha'}">
-      ${m.da_equipe ? `<span class="suporte-msg-autor">${iconeDoSuporte('estrela')}${tr('Equipe Lumina Sancti')}</span>` : ''}
+    <div class="suporte-msg ${classe}">
+      ${autor ? `<span class="suporte-msg-autor">${iconeDoSuporte(m.da_ia ? 'ajuda' : 'estrela')}${escaparDoSuporte(autor)}</span>` : ''}
       <p translate="no">${escaparDoSuporte(m.texto)}</p>
       <small>${escaparDoSuporte(dataDoSuporte(m.criada_em, true))}</small>
     </div>`;
@@ -272,7 +284,7 @@ function desenharConversaDoSuporte(lugar, conversa) {
       </div>
       <div class="suporte-mensagens" id="suporte-mensagens">
         ${mensagens.map(bolhaDoSuporte).join('')}
-        ${conversa.status === 'aberta' && mensagens.length && !mensagens[mensagens.length - 1].da_equipe ? `<p class="suporte-espera">${tr('A equipe recebeu a sua mensagem e vai responder aqui. Se as notificações estiverem ligadas, você recebe um aviso no celular.')}</p>` : ''}
+        ${conversa.status === 'aberta' && mensagens.length && !mensagens[mensagens.length - 1].da_equipe ? `<p class="suporte-espera">${tr('A equipe recebeu a sua mensagem e responde aqui em até 2 dias. Se as notificações estiverem ligadas, você recebe um aviso no celular.')}</p>` : ''}
         ${conversa.status === 'resolvida' ? `<p class="suporte-espera">${tr('A equipe marcou esta conversa como resolvida. Se precisar de mais alguma coisa, é só escrever de novo.')}</p>` : ''}
       </div>
       <form class="suporte-responder" id="suporte-responder">
@@ -311,6 +323,132 @@ function desenharConversaDoSuporte(lugar, conversa) {
       aviso.textContent = erroDoSuporte(erro);
     }
   });
+}
+
+async function perguntarAoAtendimento(pergunta) {
+  const perfil = perfilDoSuporte();
+  const { data } = await supabaseCliente.auth.getSession();
+  const token = data && data.session ? data.session.access_token : '';
+  const historico = atendimentoDoSuporte.historico.slice(0, -1).map((m) => ({ papel: m.da_ia ? 'atendimento' : 'pessoa', texto: m.texto }));
+  const resposta = await fetch(ATENDIMENTO_DO_SUPORTE_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ pergunta, historico, tema: atendimentoDoSuporte.tema, idioma: idiomaDoSuporte(), perfil: perfil ? perfil.id : null }),
+  });
+  const corpo = await resposta.json().catch(() => ({}));
+  if (!resposta.ok || !corpo.resposta) return { texto: corpo.erro || tr('O atendimento automático não respondeu agora. Toque em "Falar com uma pessoa da equipe".'), precisaEquipe: true, falhou: true };
+  return { texto: corpo.resposta, precisaEquipe: !!corpo.precisaEquipe };
+}
+
+function desenharAtendimentoDoSuporte(lugar) {
+  const a = atendimentoDoSuporte;
+  const tema = temaDoSuporte(a.tema);
+  const respostas = a.historico.filter((m) => m.da_ia).length;
+  const podePerguntar = !a.esperando && respostas < RESPOSTAS_DO_ATENDIMENTO;
+  lugar.innerHTML = `
+    <div class="suporte-conversa suporte-atendimento">
+      <div class="suporte-conversa-topo">
+        <button type="button" class="suporte-voltar so-icone" id="suporte-voltar" aria-label="${escaparDoSuporte(tr('Minhas conversas'))}">${iconeDoSuporte('voltar-seta')}</button>
+        <span class="suporte-item-icone">${iconeDoSuporte(tema.icone)}</span>
+        <div class="suporte-conversa-titulo">
+          <strong>${escaparDoSuporte(tr(tema.nome))}</strong>
+          <small>${escaparDoSuporte(tr('Atendimento automático'))}</small>
+        </div>
+      </div>
+      <div class="suporte-mensagens" id="suporte-mensagens" aria-live="polite">
+        ${a.historico.map((m) => bolhaDoSuporte({ ...m, da_equipe: m.da_ia })).join('')}
+        ${a.esperando ? `<div class="suporte-msg da-equipe da-ia suporte-digitando" aria-label="${escaparDoSuporte(tr('Escrevendo...'))}"><span></span><span></span><span></span></div>` : ''}
+      </div>
+      ${podePerguntar ? `<form class="suporte-responder" id="suporte-responder">
+        <textarea id="suporte-resposta" class="suporte-campo" rows="2" maxlength="1000" placeholder="${escaparDoSuporte(tr('Escreva outra dúvida'))}"></textarea>
+        <button type="submit" class="suporte-enviar" aria-label="${escaparDoSuporte(tr('Enviar'))}">${iconeDoSuporte('enviar')}</button>
+      </form>` : ''}
+      <div class="suporte-atendimento-acoes">
+        <button type="button" class="suporte-pessoa${a.precisaEquipe ? ' destaque' : ''}" id="suporte-pessoa" ${a.esperando ? 'disabled' : ''}>${iconeDoSuporte('usuarios')}<span>${tr('Falar com uma pessoa da equipe')}</span></button>
+        ${a.precisaEquipe || a.esperando ? '' : `<button type="button" class="suporte-resolveu" id="suporte-resolveu">${iconeDoSuporte('check')}<span>${tr('Resolveu')}</span></button>`}
+      </div>
+      <p class="suporte-aviso" id="suporte-aviso" aria-live="polite"></p>
+    </div>`;
+  const caixa = lugar.querySelector('#suporte-mensagens');
+  caixa.scrollTop = caixa.scrollHeight;
+  lugar.querySelector('#suporte-voltar').addEventListener('click', mostrarListaDoSuporte);
+  const resolveu = lugar.querySelector('#suporte-resolveu');
+  if (resolveu) resolveu.addEventListener('click', () => {
+    atendimentoDoSuporte = null;
+    if (typeof mostrarAvisoTrilhas === 'function') mostrarAvisoTrilhas(tr('Que bom que ajudou!'));
+    mostrarListaDoSuporte();
+  });
+  lugar.querySelector('#suporte-pessoa').addEventListener('click', () => passarAtendimentoParaEquipe(lugar));
+  const form = lugar.querySelector('#suporte-responder');
+  if (form) {
+    const campo = form.querySelector('#suporte-resposta');
+    campo.addEventListener('keydown', (evento) => {
+      if (evento.key === 'Enter' && !evento.shiftKey && window.matchMedia && window.matchMedia('(min-width: 900px)').matches) {
+        evento.preventDefault();
+        form.requestSubmit();
+      }
+    });
+    form.addEventListener('submit', (evento) => {
+      evento.preventDefault();
+      const texto = campo.value.trim();
+      if (texto) continuarAtendimentoDoSuporte(lugar, texto);
+    });
+  }
+}
+
+async function continuarAtendimentoDoSuporte(lugar, texto) {
+  const a = atendimentoDoSuporte;
+  if (!a || a.esperando) return;
+  a.historico.push({ texto, da_ia: false, criada_em: new Date().toISOString() });
+  a.esperando = true;
+  desenharAtendimentoDoSuporte(lugar);
+  let resultado;
+  try {
+    resultado = await perguntarAoAtendimento(texto);
+  } catch (erro) {
+    resultado = { texto: tr('O atendimento automático não respondeu agora. Toque em "Falar com uma pessoa da equipe".'), precisaEquipe: true, falhou: true };
+  }
+  if (atendimentoDoSuporte !== a || telaDoSuporte !== 'atendimento') return;
+  a.esperando = false;
+  a.historico.push({ texto: resultado.texto, da_ia: true, criada_em: new Date().toISOString() });
+  if (resultado.precisaEquipe) a.precisaEquipe = true;
+  desenharAtendimentoDoSuporte(lugar);
+}
+
+function mostrarAtendimentoDoSuporte(pedido) {
+  telaDoSuporte = 'atendimento';
+  pararRelogioDoSuporte();
+  const lugar = lugarDoSuporte();
+  if (!lugar) return;
+  atendimentoDoSuporte = { tema: pedido.tema, assunto: pedido.assunto, historico: [], esperando: false, precisaEquipe: false };
+  continuarAtendimentoDoSuporte(lugar, pedido.texto);
+}
+
+async function passarAtendimentoParaEquipe(lugar) {
+  const a = atendimentoDoSuporte;
+  const perfil = perfilDoSuporte();
+  const aviso = lugar.querySelector('#suporte-aviso');
+  if (!a) return;
+  if (!perfil) { aviso.textContent = erroDoSuporte('somente_adultos'); return; }
+  const botao = lugar.querySelector('#suporte-pessoa');
+  botao.disabled = true;
+  aviso.textContent = '';
+  try {
+    const r = await chamarSuporte('suporte_criar', {
+      _perfil: perfil.id,
+      _tema: a.tema,
+      _assunto: a.assunto,
+      _texto: tr('Quero falar com uma pessoa da equipe.'),
+      _idioma: idiomaDoSuporte(),
+      _historico: a.historico.map((m) => ({ texto: m.texto, da_ia: !!m.da_ia })),
+    });
+    atendimentoDoSuporte = null;
+    if (typeof mostrarAvisoTrilhas === 'function') mostrarAvisoTrilhas(tr('Pronto! A equipe responde aqui em até 2 dias.'));
+    await abrirConversaDoSuporte(Number(r && r.id));
+  } catch (erro) {
+    botao.disabled = false;
+    aviso.textContent = erroDoSuporte(erro);
+  }
 }
 
 function pararRelogioDoSuporte() {

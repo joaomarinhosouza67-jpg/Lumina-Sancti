@@ -2166,6 +2166,32 @@ function prepararRodapeDaLicao(textoBotao, habilitado, classeExtra) {
   }
 }
 
+function cenaDaPergunta(enunciado) {
+  const amigo = typeof htmlDoAmigoEm === 'function' && licaoAtual && licaoAtual.licao ? htmlDoAmigoEm(amigoDaMissao(licaoAtual.licao.slug), 'fala') : '';
+  if (!amigo) return `<h2 class="licao-enunciado">${enunciado}</h2>`;
+  setTimeout(() => {
+    const falando = document.querySelector('#licao-corpo .licao-cena-amigo .personagem[data-estado="fala"]');
+    if (falando) falando.dataset.estado = 'parada';
+  }, 2000);
+  return `<div class="licao-cena"><div class="licao-cena-amigo" aria-hidden="true">${amigo}</div><h2 class="licao-enunciado">${enunciado}</h2></div>`;
+}
+
+function cenaDoFimDaMissao(chave, perfeita) {
+  if (typeof htmlDoAmigoEm !== 'function') return `<div class="licao-fim-icone">${icone('estrela')}</div>`;
+  const lumi = typeof desenhoDaLumi === 'function' ? `<div class="licao-fim-amigo licao-fim-lumi"><span class="lumi personagem personagem-lumi" data-estado="concluiu" data-rosto="feliz" data-bracos="cima">${desenhoDaLumi()}</span></div>` : '';
+  return `<div class="licao-fim-cena" aria-hidden="true"><div class="licao-fim-amigo">${htmlDoAmigoEm(amigoDaMissao(chave), perfeita ? 'vitoria' : 'feliz')}</div>${lumi}</div>`;
+}
+
+function amigoDaCenaReage(estado, depois, espera) {
+  const amigo = document.querySelector('#licao-corpo .licao-cena-amigo .personagem');
+  if (!amigo) return;
+  clearTimeout(amigo.temporizador);
+  amigo.dataset.estado = 'parada';
+  void amigo.getBoundingClientRect();
+  amigo.dataset.estado = estado;
+  if (depois) amigo.temporizador = setTimeout(() => { if (amigo.isConnected) amigo.dataset.estado = depois; }, espera);
+}
+
 function renderizarPerguntaAtual() {
   const corpo = document.getElementById('licao-corpo');
   if (!corpo || !licaoAtual) return;
@@ -2183,7 +2209,7 @@ function renderizarPerguntaAtual() {
     licaoAtual.montagem = { opcoes };
     corpo.innerHTML = `
       <p class="licao-tipo">${tt('escolha_certa')}</p>
-      <h2 class="licao-enunciado">${p.enunciado}</h2>
+      ${cenaDaPergunta(p.enunciado)}
       <div class="licao-opcoes">
         ${opcoes.map((o, i) => `<button class="licao-opcao" data-opcao="${i}">${o.texto}</button>`).join('')}
       </div>`;
@@ -2192,7 +2218,7 @@ function renderizarPerguntaAtual() {
     licaoAtual.montagem = {};
     corpo.innerHTML = `
       <p class="licao-tipo">${tt('vf_titulo')}</p>
-      <h2 class="licao-enunciado">${p.enunciado}</h2>
+      ${cenaDaPergunta(p.enunciado)}
       <div class="licao-opcoes licao-vf">
         <button class="licao-opcao" data-vf="true">${tt('verdadeiro')}</button>
         <button class="licao-opcao" data-vf="false">${tt('falso')}</button>
@@ -2205,7 +2231,7 @@ function renderizarPerguntaAtual() {
     licaoAtual.selecao = [];
     corpo.innerHTML = `
       <p class="licao-tipo">${tt('monte_frase')}</p>
-      <h2 class="licao-enunciado">${p.enunciado}</h2>
+      ${cenaDaPergunta(p.enunciado)}
       <div class="ordenar-resposta" id="ordenar-resposta"></div>
       <div class="ordenar-banco" id="ordenar-banco"></div>`;
     renderizarOrdenar();
@@ -2356,6 +2382,7 @@ function mostrarResultadoDaResposta(certo) {
     feedback.innerHTML = certo
       ? `<strong>${fraseDaLumi || elogios[Math.floor(Math.random() * elogios.length)]}</strong><p>${p.explicacao}</p>`
       : `<strong>${fraseDaLumi || tt('quase')}</strong><p><b>${tt('resposta_certa')}</b> ${textoDaRespostaCerta(p)}</p><p>${p.explicacao}</p>`;
+    amigoDaCenaReage(certo ? 'feliz' : 'ops', certo ? null : 'triste', 1100);
   }
   if (botao) {
     botao.className = `licao-botao ${certo ? 'certo' : 'errado'}`;
@@ -2432,7 +2459,7 @@ function finalizarLicao() {
   if (corpo) {
     corpo.innerHTML = `
       <div class="licao-fim">
-        ${insigniaNova ? medalhaGrandeAnimada(trilha) : `<div class="licao-fim-icone">${icone('estrela')}</div>`}
+        ${insigniaNova ? medalhaGrandeAnimada(trilha) : (typeof cenaDoFimDaMissao === 'function' ? cenaDoFimDaMissao(licao.slug, perfeita) : `<div class="licao-fim-icone">${icone('estrela')}</div>`)}
         <h2>${tt('missao_concluida')}</h2>
         <p class="licao-fim-sub">${licao.titulo} · ${trilha.titulo}</p>
         <div class="licao-fim-dados">
@@ -2857,7 +2884,7 @@ async function finalizarLicaoNoServidor() {
   if (corpo) {
     corpo.innerHTML = `
       <div class="licao-fim">
-        ${insigniaNova ? medalhaGrandeAnimada(trilha) : `<div class="licao-fim-icone">${icone('estrela')}</div>`}
+        ${insigniaNova ? medalhaGrandeAnimada(trilha) : (typeof cenaDoFimDaMissao === 'function' ? cenaDoFimDaMissao(licao.slug, Number(r.stars) >= 3) : `<div class="licao-fim-icone">${icone('estrela')}</div>`)}
         <h2>${tt('missao_concluida')}</h2>
         <p class="licao-fim-sub">${licao.titulo} · ${trilha.titulo}</p>
         <div class="licao-estrelas" aria-label="${tt('estrelas', { n: r.stars })}">${estrelasDaMissao(r.stars)}</div>
