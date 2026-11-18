@@ -20,15 +20,19 @@ const JOGOS = [
   { id: 'girar', nome: 'Gire as pecinhas', texto: 'Gire cada pedaço até o desenho ficar certinho.', idades: ['pequeninos', 'ate7', '8a12', '13a17'], personagem: 'lumi', icone: 'escanear', cor: '#9fd9ff' },
   { id: 'memoria', nome: 'Jogo da memória', texto: 'Vire as cartas e encontre os pares iguais.', idades: ['pequeninos', 'ate7', '8a12'], personagem: 'clara', icone: 'figurinha', cor: '#f0cf7a' },
   { id: 'simon', nome: 'Siga a luz', texto: 'Veja a ordem em que os amigos brilham e repita.', idades: ['ate7', '8a12', '13a17'], personagem: 'lumi', icone: 'lampada', cor: '#ffe28a' },
-  { id: 'velha', nome: 'Jogo da velha da fé', texto: 'Cruz contra estrela. Ganhe da Lumi!', idades: ['ate7', '8a12', '13a17', 'adultos'], personagem: 'lumi', icone: 'cruz', cor: '#f0cf7a', contraIa: true },
+  { id: 'velha', nome: 'Jogo da velha da fé', texto: 'Cruz contra estrela. Ganhe da Lumina!', idades: ['ate7', '8a12', '13a17', 'adultos'], personagem: 'lumi', icone: 'cruz', cor: '#f0cf7a', contraIa: true },
   { id: 'simbolos', nome: 'Símbolos dos santos', texto: 'Descubra o que aparece nas imagens de cada santo.', idades: ['8a12', '13a17'], personagem: 'dom', icone: 'coroa', cor: '#ffcf87' },
   { id: 'historia', nome: 'Ordene a história', texto: 'Coloque a vida do santo na ordem certa.', idades: ['8a12', '13a17', 'adultos'], personagem: 'lumi', icone: 'livro', cor: '#cfe6ff' },
   { id: 'palavras', nome: 'Caça-palavras da fé', texto: 'Encontre as palavras escondidas no quadro.', idades: ['8a12', '13a17', 'adultos'], personagem: 'clara', icone: 'lupa', cor: '#d6c4ff' },
   { id: 'quemsou', nome: 'Quem sou eu?', texto: 'Leia a pista e descubra qual é o santo.', idades: ['8a12', '13a17', 'adultos'], personagem: 'dom', icone: 'pessoa', cor: '#ffd6a0' },
   { id: 'oracao', nome: 'Complete a oração', texto: 'Escolha a palavra que falta na oração.', idades: ['8a12', '13a17', 'adultos'], personagem: 'clara', icone: 'livro', cor: '#f7e3a1' },
   { id: 'anagrama', nome: 'Letras embaralhadas', texto: 'Monte a palavra da fé com as letras certas.', idades: ['8a12', '13a17', 'adultos'], personagem: 'dom', icone: 'lapis', cor: '#bfe3c6' },
-  { id: 'quiz', nome: 'Desafio contra a Lumi', texto: 'Responda mais rápido e melhor que a Lumi.', idades: ['8a12', '13a17', 'adultos'], personagem: 'lumi', icone: 'trofeu', cor: '#ffd36b', contraIa: true },
-  { id: 'duelo', nome: 'Memória contra a Lumi', texto: 'Cada um na sua vez. Quem achar mais pares vence.', idades: ['13a17', 'adultos'], personagem: 'lumi', icone: 'figurinha', cor: '#e8c6ff', contraIa: true },
+  { id: 'xadrez', nome: 'Xadrez', texto: 'Jogue contra a Lumina ou com outra pessoa.', idades: ['8a12', '13a17', 'adultos'], personagem: 'lumi', icone: 'coroa', cor: '#e8d3a2' },
+  { id: 'damas', nome: 'Damas', texto: 'Jogue damas contra a Lumina ou com outra pessoa.', idades: ['8a12', '13a17', 'adultos'], personagem: 'dom', icone: 'medalha', cor: '#d8c6f0' },
+  { id: 'palavra', nome: 'Palavra secreta', texto: 'Descubra a palavra da fé antes que a vela apague.', idades: ['8a12', '13a17', 'adultos'], personagem: 'clara', icone: 'vela', cor: '#ffd9a0' },
+  { id: 'quebra', nome: 'Quebra-cabeça do vitral', texto: 'Deslize as peças e monte o vitral.', idades: ['8a12', '13a17', 'adultos'], personagem: 'mel', icone: 'igreja', cor: '#bfe0ff' },
+  { id: 'quiz', nome: 'Desafio contra a Lumina', texto: 'Responda mais rápido e melhor que a Lumina.', idades: ['8a12', '13a17', 'adultos'], personagem: 'lumi', icone: 'trofeu', cor: '#ffd36b', contraIa: true },
+  { id: 'duelo', nome: 'Memória contra a Lumina', texto: 'Cada um na sua vez. Quem achar mais pares vence.', idades: ['13a17', 'adultos'], personagem: 'lumi', icone: 'figurinha', cor: '#e8c6ff', contraIa: true },
 ];
 const NIVEIS_DA_IA = [
   { id: 0, rotulo: 'Fácil' },
@@ -60,6 +64,10 @@ let idadeDosJogos = null;
 let jogoAtual = null;
 let contadorDePersonagens = 0;
 let contextoDeSomDosJogos = null;
+
+function nomeDaIaDoJogo() {
+  return ['pequeninos', 'ate7'].includes(idadeDosJogos) ? 'Lumi' : 'Lumina';
+}
 
 function textoDoJogo(texto, valores) {
   return typeof tr === 'function' ? tr(texto, valores) : String(texto).replace(/\{(\w+)\}/g, (_, chave) => (valores && valores[chave] !== undefined ? valores[chave] : ''));
@@ -516,7 +524,7 @@ function mostrarListaDeJogos(opcoes) {
           <small>${textoDoJogo(jogo.texto)}</small>
           <span class="jogo-cartao-rodape">
             <span class="jogo-cartao-estrelas" aria-label="${textoDoJogo('{n} de 3 estrelas', { n: recordes[jogo.id] || 0 })}">${[1, 2, 3].map((n) => `<i class="${(recordes[jogo.id] || 0) >= n ? 'ganha' : ''}"></i>`).join('')}</span>
-            ${jogo.contraIa ? `<span class="jogo-cartao-ia">${textoDoJogo('Contra a Lumi')}</span>` : ''}
+            ${jogo.contraIa ? `<span class="jogo-cartao-ia">${textoDoJogo('Contra a {nome}', { nome: nomeDaIaDoJogo() })}</span>` : ''}
             ${jogo.comIa ? `<span class="jogo-cartao-ia">${textoDoJogo('Com a Lumina')}</span>` : ''}
           </span>
         </span>
@@ -603,7 +611,7 @@ function comecarJogo(id, opcoes) {
     estrelas: jogoDasEstrelas, bolhas: jogoDasBolhas, sombras: jogoDasSombras, contar: jogoDeContar, ovelhas: jogoDasOvelhas, vitral: jogoDoVitral,
     diferente: jogoDoDiferente, sinos: jogoDosSinos, girar: jogoDeGirar, memoria: jogoDaMemoria, simon: jogoSigaALuz, velha: jogoDaVelha,
     simbolos: jogoDosSimbolos, historia: jogoDaHistoria, palavras: jogoDasPalavras, quemsou: jogoQuemSouEu, oracao: jogoDaOracao,
-    anagrama: jogoDoAnagrama, quiz: jogoDoQuiz, duelo: jogoDoDuelo, quizia: jogoDoQuizDaLumina,
+    anagrama: jogoDoAnagrama, quiz: jogoDoQuiz, duelo: jogoDoDuelo, quizia: jogoDoQuizDaLumina, xadrez: jogoDeXadrez, damas: jogoDeDamas, palavra: jogoDaPalavraSecreta, quebra: jogoDoQuebraCabeca,
   }[id];
   comecar(document.getElementById('jogo-area'));
 }
@@ -616,7 +624,7 @@ function mostrarEscolhaDeNivel(jogo) {
       <div class="jogo-niveis">
         <span class="jogo-niveis-arte">${htmlDoPersonagem('lumi')}</span>
         <strong>${textoDoJogo('Escolha o nível')}</strong>
-        <small>${textoDoJogo('A Lumi joga contra você. Quanto mais difícil, mais esperta ela fica.')}</small>
+        <small>${textoDoJogo('A {nome} joga contra você. Quanto mais difícil, mais esperta ela fica.', { nome: nomeDaIaDoJogo() })}</small>
         ${NIVEIS_DA_IA.map((nivel) => `<button type="button" class="jogo-nivel nivel-${nivel.id}" data-nivel="${nivel.id}"><span>${'<i></i>'.repeat(nivel.id + 1)}</span>${textoDoJogo(nivel.rotulo)}</button>`).join('')}
       </div>
     </div>`;
@@ -1896,7 +1904,7 @@ function jogoDaVelha(area) {
     let vez = rodada % 2 === 0 ? 'eu' : 'ia';
     area.innerHTML = `
       <div class="jogo-velha">
-        <div class="jogo-duelo-placar"><span class="eu"><b>${textoDoJogo('Você')}</b><strong>${placar.eu}</strong></span><span class="ia"><b>Lumi</b><strong>${placar.ia}</strong></span></div>
+        <div class="jogo-duelo-placar"><span class="eu"><b>${textoDoJogo('Você')}</b><strong>${placar.eu}</strong></span><span class="ia"><b>${nomeDaIaDoJogo()}</b><strong>${placar.ia}</strong></span></div>
         <div class="jogo-velha-tabuleiro">${casas.map((_, i) => `<button type="button" class="jogo-velha-casa" data-casa="${i}" aria-label="${textoDoJogo('Casa {n}', { n: i + 1 })}"></button>`).join('')}</div>
       </div>`;
     placarDoJogo(`${rodada + 1}/${rodadas}`);
@@ -1912,13 +1920,13 @@ function jogoDaVelha(area) {
       if (!resultado) return false;
       if (resultado.linha) resultado.linha.forEach((i) => botoes[i].classList.add('vitoria'));
       if (resultado.quem === 'eu') { placar.eu += 1; acertouNoJogo(textoDoJogo('Você ganhou esta!'), area.querySelector('.jogo-velha-tabuleiro')); }
-      else if (resultado.quem === 'ia') { placar.ia += 1; falarNoJogo(textoDoJogo('A Lumi ganhou esta!'), 'feliz'); }
+      else if (resultado.quem === 'ia') { placar.ia += 1; falarNoJogo(textoDoJogo('A {nome} ganhou esta!', { nome: nomeDaIaDoJogo() }), 'feliz'); }
       else falarNoJogo(textoDoJogo('Deu velha! Empate.'));
       rodada += 1;
       agendarNoJogo(() => {
         if (rodada >= rodadas) {
           const estrelas = placar.eu > placar.ia ? 3 : placar.eu === placar.ia ? 2 : 1;
-          terminarJogo(estrelas, textoDoJogo('Você {eu} x {ia} Lumi', { eu: placar.eu, ia: placar.ia }));
+          terminarJogo(estrelas, textoDoJogo('Você {eu} x {ia} {nome}', { eu: placar.eu, ia: placar.ia, nome: nomeDaIaDoJogo() }));
         } else novaRodada();
       }, 1500);
       return true;
@@ -2241,7 +2249,7 @@ function jogoDoQuiz(area) {
   const mostrar = () => {
     if (indice >= perguntas.length) {
       const estrelas = placar.eu > placar.ia ? 3 : placar.eu === placar.ia ? 2 : 1;
-      terminarJogo(estrelas, textoDoJogo('Você {eu} x {ia} Lumi', { eu: placar.eu, ia: placar.ia }));
+      terminarJogo(estrelas, textoDoJogo('Você {eu} x {ia} {nome}', { eu: placar.eu, ia: placar.ia, nome: nomeDaIaDoJogo() }));
       return;
     }
     const pergunta = perguntas[indice];
@@ -2249,20 +2257,20 @@ function jogoDoQuiz(area) {
     placarDoJogo(`${indice + 1}/${perguntas.length}`);
     area.innerHTML = `
       <div class="jogo-quiz">
-        <div class="jogo-duelo-placar"><span class="eu"><b>${textoDoJogo('Você')}</b><strong>${placar.eu}</strong></span><span class="ia"><b>Lumi</b><strong>${placar.ia}</strong></span></div>
+        <div class="jogo-duelo-placar"><span class="eu"><b>${textoDoJogo('Você')}</b><strong>${placar.eu}</strong></span><span class="ia"><b>${nomeDaIaDoJogo()}</b><strong>${placar.ia}</strong></span></div>
         <div class="jogo-quiz-tempo"><span style="animation-duration:${tempoDaIa}ms"></span></div>
         <p class="jogo-quiz-pergunta">${pergunta.texto}${pergunta.pergunta ? `<b>${pergunta.pergunta}</b>` : ''}</p>
         <div class="jogo-opcoes">${pergunta.opcoes.map((opcao) => `<button type="button" class="jogo-opcao" data-opcao="${opcao}">${opcao}</button>`).join('')}</div>
       </div>`;
-    falarNoJogo(textoDoJogo('Rápido! A Lumi também está pensando.'));
+    falarNoJogo(textoDoJogo('Rápido! A {nome} também está pensando.', { nome: nomeDaIaDoJogo() }));
     const encerrar = (quem, acertou) => {
       if (respondeu) return;
       respondeu = true;
       area.querySelectorAll('.jogo-opcao').forEach((b) => { b.disabled = true; if (b.dataset.opcao === pergunta.certa) b.classList.add('certa'); });
       if (quem === 'eu' && acertou) { placar.eu += 1; acertouNoJogo(textoDoJogo('Ponto seu!'), area.querySelector('.jogo-duelo-placar .eu')); }
-      else if (quem === 'eu') { placar.ia += 1; errouNoJogo(textoDoJogo('Errou! Ponto da Lumi.')); }
-      else if (acertou) { placar.ia += 1; falarNoJogo(textoDoJogo('A Lumi respondeu primeiro!'), 'feliz'); }
-      else { placar.eu += 1; falarNoJogo(textoDoJogo('A Lumi errou! Ponto seu.'), 'ops'); }
+      else if (quem === 'eu') { placar.ia += 1; errouNoJogo(textoDoJogo('Errou! Ponto da {nome}.', { nome: nomeDaIaDoJogo() })); }
+      else if (acertou) { placar.ia += 1; falarNoJogo(textoDoJogo('A {nome} respondeu primeiro!', { nome: nomeDaIaDoJogo() }), 'feliz'); }
+      else { placar.eu += 1; falarNoJogo(textoDoJogo('A {nome} errou! Ponto seu.', { nome: nomeDaIaDoJogo() }), 'ops'); }
       indice += 1;
       agendarNoJogo(mostrar, 1500);
     };
@@ -2285,7 +2293,7 @@ function jogoDoDuelo(area) {
   let vez = 'eu';
   let viradas = [];
   area.innerHTML = `
-    <div class="jogo-duelo-placar"><span class="eu ativo"><b>${textoDoJogo('Você')}</b><strong>0</strong></span><span class="ia"><b>Lumi</b><strong>0</strong></span></div>
+    <div class="jogo-duelo-placar"><span class="eu ativo"><b>${textoDoJogo('Você')}</b><strong>0</strong></span><span class="ia"><b>${nomeDaIaDoJogo()}</b><strong>0</strong></span></div>
     <div class="jogo-memoria" style="--colunas:${pares > 8 ? 5 : 4}">${cartas.map((figura, i) => `
       <button type="button" class="jogo-carta" data-figura="${figura}" data-i="${i}" aria-label="${textoDoJogo('Carta')}">
         <span class="jogo-carta-dentro"><span class="jogo-carta-costas"></span><span class="jogo-carta-frente">${iconeDoJogo(figura)}</span></span>
@@ -2302,7 +2310,7 @@ function jogoDoDuelo(area) {
   const acabou = () => placar.eu + placar.ia >= pares;
   const finalizar = () => {
     const estrelas = placar.eu > placar.ia ? 3 : placar.eu === placar.ia ? 2 : 1;
-    terminarJogo(estrelas, textoDoJogo('Você {eu} x {ia} Lumi', { eu: placar.eu, ia: placar.ia }));
+    terminarJogo(estrelas, textoDoJogo('Você {eu} x {ia} {nome}', { eu: placar.eu, ia: placar.ia, nome: nomeDaIaDoJogo() }));
   };
   const virar = (i) => { botoes[i].classList.add('virada'); viradas.push(i); };
   const conferir = (quem) => {
@@ -2315,7 +2323,7 @@ function jogoDoDuelo(area) {
       vistas.delete(b);
       placar[quem] += 1;
       if (quem === 'eu') acertouNoJogo(textoDoJogo('Par seu! Jogue de novo.'), botoes[b]);
-      else falarNoJogo(textoDoJogo('A Lumi achou um par!'), 'feliz');
+      else falarNoJogo(textoDoJogo('A {nome} achou um par!', { nome: nomeDaIaDoJogo() }), 'feliz');
       atualizar();
       if (acabou()) { agendarNoJogo(finalizar, 800); return; }
       if (quem === 'ia') agendarNoJogo(jogadaDaIa, 900);
@@ -2335,7 +2343,7 @@ function jogoDoDuelo(area) {
   const livres = () => botoes.map((b, i) => (b.classList.contains('par') ? null : i)).filter((i) => i !== null);
   const jogadaDaIa = () => {
     if (!jogoAtual || jogoAtual.fim) return;
-    falarNoJogo(textoDoJogo('Vez da Lumi...'));
+    falarNoJogo(textoDoJogo('Vez da {nome}...', { nome: nomeDaIaDoJogo() }));
     const conhecidas = [...vistas.entries()].filter(([i]) => !botoes[i].classList.contains('par'));
     let primeira = null;
     let segunda = null;

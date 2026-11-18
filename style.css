@@ -6012,3 +6012,75 @@ body.modo-kids .licao-cena .licao-enunciado::before { display: none; }
 .suporte-resolveu { border: 1.5px solid var(--secondary-color); background: rgba(255, 255, 255, 0.04); color: var(--text-main); }
 .suporte-pessoa .icone, .suporte-resolveu .icone { width: 18px; height: 18px; }
 @media (prefers-reduced-motion: reduce) { .suporte-digitando span { animation: none; } }
+.xadrez-modos { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; padding: 10px 0 18px; }
+.xadrez-modo { flex: 1 1 220px; max-width: 300px; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 18px 16px; border-radius: 20px; border: 1.5px solid rgba(var(--primary-rgb), 0.45); background: linear-gradient(170deg, rgba(30, 36, 84, 0.95), rgba(12, 15, 40, 0.95)); color: var(--text-main); font-family: var(--font-text); cursor: pointer; transition: transform 0.2s ease, border-color 0.2s ease; }
+.xadrez-modo:hover { transform: translateY(-3px); border-color: var(--primary-color); }
+.xadrez-modo strong { font-size: 1.15rem; color: #f6e2a0; }
+.xadrez-modo small { color: var(--text-muted); font-size: 0.86rem; }
+.xadrez-modo-arte { display: flex; gap: 2px; }
+.xadrez-modo-arte .xadrez-peca-svg { width: 64px; height: 64px; }
+.xadrez { position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; padding-bottom: 10px; }
+.xadrez-lado { width: min(92vw, 440px); display: flex; align-items: center; gap: 8px; min-height: 30px; padding: 4px 10px; border-radius: 10px; color: var(--text-muted); font-size: 0.9rem; transition: background 0.25s ease, color 0.25s ease; }
+.xadrez-lado b { flex-shrink: 0; }
+.xadrez-lado.vez { background: rgba(var(--primary-rgb), 0.14); color: #f6e2a0; }
+.xadrez-tira { display: flex; flex-wrap: wrap; gap: 0; }
+.xadrez-capturada .xadrez-peca-svg { width: 20px; height: 20px; }
+.xadrez-tabuleiro { width: min(92vw, 440px); aspect-ratio: 1 / 1; display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); grid-template-rows: repeat(8, minmax(0, 1fr)); border-radius: 10px; overflow: hidden; border: 4px solid #5b3f1c; box-shadow: 0 16px 34px rgba(0, 0, 0, 0.45); touch-action: manipulation; }
+.xadrez-casa { position: relative; display: flex; align-items: center; justify-content: center; padding: 0; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.xadrez-casa.clara { background: #eedcb4; }
+.xadrez-casa.escura { background: #a57c4c; }
+.xadrez-casa.ultima::before { content: ''; position: absolute; inset: 0; background: rgba(255, 214, 90, 0.38); }
+.xadrez-casa.selecionada::before { content: ''; position: absolute; inset: 0; background: rgba(255, 214, 90, 0.55); box-shadow: inset 0 0 0 3px #f6c94a; }
+.xadrez-casa.alvo::after { content: ''; position: absolute; width: 28%; height: 28%; border-radius: 50%; background: rgba(40, 26, 10, 0.32); }
+.xadrez-casa.alvo-captura::after { content: ''; position: absolute; inset: 6%; border-radius: 50%; box-shadow: inset 0 0 0 5px rgba(40, 26, 10, 0.32); }
+.xadrez-casa.xeque { background: radial-gradient(circle, #ff6b5a 0, #e0442f 40%, rgba(224, 68, 47, 0) 75%), #a57c4c; }
+.xadrez-casa.clara.xeque { background: radial-gradient(circle, #ff6b5a 0, #e0442f 40%, rgba(224, 68, 47, 0) 75%), #eedcb4; }
+.xadrez-peca { position: relative; z-index: 1; width: 90%; height: 90%; pointer-events: none; }
+.xadrez-peca-svg { display: block; width: 100%; height: 100%; filter: drop-shadow(0 2px 1px rgba(0, 0, 0, 0.35)); }
+.xadrez-coord { position: absolute; z-index: 2; font-style: normal; font-size: clamp(8px, 2.2vw, 11px); font-weight: 800; line-height: 1; pointer-events: none; }
+.xadrez-coord.linha { top: 3px; left: 3px; }
+.xadrez-coord.coluna { right: 3px; bottom: 2px; }
+.xadrez-casa.clara .xadrez-coord { color: #a57c4c; }
+.xadrez-casa.escura .xadrez-coord { color: #eedcb4; }
+.xadrez-acoes { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.xadrez-acoes .jogo-botao:disabled { opacity: 0.5; cursor: default; }
+.xadrez-promocao { position: absolute; z-index: 5; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 16px 18px; border-radius: 18px; border: 1.5px solid var(--primary-color); background: rgba(12, 15, 40, 0.97); box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6); text-align: center; color: var(--text-main); }
+.xadrez-promocao div { display: flex; gap: 8px; }
+.xadrez-promocao button { width: 58px; height: 58px; padding: 4px; border-radius: 12px; border: 1.5px solid rgba(var(--primary-rgb), 0.5); background: #eedcb4; cursor: pointer; }
+@media (prefers-reduced-motion: no-preference) {
+  .xadrez-peca.chegou { animation: xadrezChegou 0.28s cubic-bezier(0.2, 1.4, 0.4, 1) both; }
+  .xadrez-promocao { animation: xadrezPromocao 0.25s ease both; }
+}
+@keyframes xadrezChegou { from { transform: scale(0.8); } to { transform: none; } }
+@keyframes xadrezPromocao { from { opacity: 0; transform: translate(-50%, -46%) scale(0.92); } to { opacity: 1; transform: translate(-50%, -50%); } }
+.xadrez-casa.obrigatoria .xadrez-peca { filter: drop-shadow(0 0 7px rgba(255, 214, 90, 0.95)); }
+@media (prefers-reduced-motion: no-preference) {
+  .xadrez-casa.obrigatoria .xadrez-peca { animation: damasBrilha 0.9s ease-in-out infinite alternate; }
+}
+@keyframes damasBrilha { from { transform: scale(1); } to { transform: scale(1.07); } }
+.palavra-secreta { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 4px 0 14px; }
+.palavra-topo { display: flex; align-items: center; gap: 14px; width: min(94vw, 520px); }
+.palavra-vela { flex: 0 0 74px; width: 74px; height: 114px; }
+.palavra-dica { margin: 0; flex: 1; padding: 12px 14px; border-radius: 16px; border: 1.5px solid rgba(var(--primary-rgb), 0.35); background: rgba(255, 255, 255, 0.04); color: var(--text-main); line-height: 1.45; }
+.palavra-dica b { color: var(--primary-color); }
+.palavra-vagas { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.palavra-vaga { width: clamp(24px, 7vw, 36px); height: clamp(34px, 9vw, 44px); display: grid; place-items: center; border-bottom: 3px solid rgba(var(--primary-rgb), 0.6); font-family: var(--font-title); font-size: clamp(1.1rem, 4.6vw, 1.6rem); font-weight: 700; color: #f6e2a0; }
+.palavra-vaga.cheia { border-color: var(--primary-color); }
+.palavra-teclado { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; width: min(94vw, 460px); }
+.palavra-tecla { min-height: 44px; border-radius: 10px; border: 1.5px solid rgba(var(--primary-rgb), 0.4); background: rgba(30, 36, 84, 0.9); color: var(--text-main); font-family: var(--font-text); font-size: 1.05rem; font-weight: 800; cursor: pointer; transition: transform 0.15s ease, background 0.2s ease; }
+.palavra-tecla:not(:disabled):active { transform: scale(0.94); }
+.palavra-tecla.certa { background: rgba(74, 222, 128, 0.25); border-color: rgba(74, 222, 128, 0.6); color: #bbf7d0; }
+.palavra-tecla.errada { background: rgba(0, 0, 0, 0.25); border-color: transparent; color: rgba(255, 255, 255, 0.3); }
+@media (prefers-reduced-motion: no-preference) {
+  .palavra-chama { animation: palavraChama 0.8s ease-in-out infinite alternate; }
+  .palavra-vaga.cheia { animation: palavraVaga 0.3s ease both; }
+}
+@keyframes palavraChama { from { transform: scale(1, 1) rotate(-3deg); } to { transform: scale(0.92, 1.08) rotate(3deg); } }
+@keyframes palavraVaga { from { transform: scale(0.6); } to { transform: none; } }
+.quebra { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 16px; padding: 4px 0 14px; }
+.quebra-tabuleiro { width: min(88vw, 380px); aspect-ratio: 1 / 1; display: grid; grid-template-columns: repeat(var(--lado), minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 14px; background: #120e24; border: 3px solid #d4af37; box-shadow: 0 16px 34px rgba(0, 0, 0, 0.45); }
+.quebra-peca { border: 0; border-radius: 6px; cursor: pointer; background-repeat: no-repeat; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15); transition: transform 0.12s ease, filter 0.2s ease; }
+.quebra-peca.pode { filter: brightness(1.08); }
+.quebra-peca:active { transform: scale(0.96); }
+.quebra-vazia { border-radius: 6px; background: rgba(255, 255, 255, 0.04); }
+.quebra-modelo { width: 110px; height: 110px; border-radius: 10px; background-size: cover; border: 2px solid rgba(var(--primary-rgb), 0.6); opacity: 0.9; }

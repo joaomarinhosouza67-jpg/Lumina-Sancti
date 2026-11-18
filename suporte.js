@@ -235,7 +235,7 @@ function mostrarNovaConversaDoSuporte() {
 
 function bolhaDoSuporte(m) {
   const classe = m.da_ia ? 'da-equipe da-ia' : m.da_equipe ? 'da-equipe' : 'minha';
-  const autor = m.da_ia ? tr('Atendimento automático') : m.da_equipe ? tr('Equipe Lumina Sancti') : '';
+  const autor = m.da_ia ? 'Lumina' : m.da_equipe ? tr('Equipe Lumina Sancti') : '';
   return `
     <div class="suporte-msg ${classe}">
       ${autor ? `<span class="suporte-msg-autor">${iconeDoSuporte(m.da_ia ? 'ajuda' : 'estrela')}${escaparDoSuporte(autor)}</span>` : ''}
@@ -336,7 +336,7 @@ async function perguntarAoAtendimento(pergunta) {
     body: JSON.stringify({ pergunta, historico, tema: atendimentoDoSuporte.tema, idioma: idiomaDoSuporte(), perfil: perfil ? perfil.id : null }),
   });
   const corpo = await resposta.json().catch(() => ({}));
-  if (!resposta.ok || !corpo.resposta) return { texto: corpo.erro || tr('O atendimento automático não respondeu agora. Toque em "Falar com uma pessoa da equipe".'), precisaEquipe: true, falhou: true };
+  if (!resposta.ok || !corpo.resposta) return { texto: corpo.erro || tr('A Lumina não conseguiu responder agora. Toque em "Falar com uma pessoa da equipe".'), precisaEquipe: true, falhou: true };
   return { texto: corpo.resposta, precisaEquipe: !!corpo.precisaEquipe };
 }
 
@@ -352,7 +352,7 @@ function desenharAtendimentoDoSuporte(lugar) {
         <span class="suporte-item-icone">${iconeDoSuporte(tema.icone)}</span>
         <div class="suporte-conversa-titulo">
           <strong>${escaparDoSuporte(tr(tema.nome))}</strong>
-          <small>${escaparDoSuporte(tr('Atendimento automático'))}</small>
+          <small>${escaparDoSuporte('Lumina')}</small>
         </div>
       </div>
       <div class="suporte-mensagens" id="suporte-mensagens" aria-live="polite">
@@ -406,7 +406,7 @@ async function continuarAtendimentoDoSuporte(lugar, texto) {
   try {
     resultado = await perguntarAoAtendimento(texto);
   } catch (erro) {
-    resultado = { texto: tr('O atendimento automático não respondeu agora. Toque em "Falar com uma pessoa da equipe".'), precisaEquipe: true, falhou: true };
+    resultado = { texto: tr('A Lumina não conseguiu responder agora. Toque em "Falar com uma pessoa da equipe".'), precisaEquipe: true, falhou: true };
   }
   if (atendimentoDoSuporte !== a || telaDoSuporte !== 'atendimento') return;
   a.esperando = false;
