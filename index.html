@@ -293,6 +293,8 @@
       <button class="side-nav-link" id="nav-terco"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-terco"></use></svg><span data-i18n="nav_terco">Terço guiado</span></button>
       <button class="side-nav-link" id="nav-novenas"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-vela"></use></svg><span>Novenas</span></button>
       <button class="side-nav-link" id="nav-exame"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-coracao"></use></svg><span>Exame de consciência</span></button>
+      <button class="side-nav-link so-adultos-pedidos" id="nav-pedidos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-pomba"></use></svg><span>Pedidos de oração</span></button>
+      <button class="side-nav-link so-adultos-pedidos" id="nav-intencoes"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lapis"></use></svg><span>Diário de intenções</span></button>
       <button class="side-nav-link" id="nav-padroeiro"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lupa"></use></svg><span data-i18n="nav_padroeiro">Padroeiro de...</span></button>
       <p class="sidebar-secao">Mais</p>
       <button class="side-nav-link" id="nav-planos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-estrela"></use></svg><span>Planos</span></button>
@@ -730,6 +732,8 @@
           <div class="oracoes-devocoes">
             <button type="button" class="oracoes-devocao" data-abrir-devocao="novenas"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-vela"></use></svg><span>Novenas</span></button>
             <button type="button" class="oracoes-devocao" data-abrir-devocao="exame"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-coracao"></use></svg><span>Exame de consciência</span></button>
+            <button type="button" class="oracoes-devocao so-adultos-pedidos" data-abrir-pedidos="pedidos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-pomba"></use></svg><span>Pedidos de oração</span></button>
+            <button type="button" class="oracoes-devocao so-adultos-pedidos" data-abrir-pedidos="intencoes"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lapis"></use></svg><span>Diário de intenções</span></button>
           </div>
         </header>
 
@@ -794,6 +798,14 @@
 
     <section id="view-novenas" class="view">
       <div class="container devocao-container" id="novenas-conteudo"></div>
+    </section>
+
+    <section id="view-pedidos" class="view">
+      <div class="container devocao-container" id="pedidos-conteudo"></div>
+    </section>
+
+    <section id="view-intencoes" class="view">
+      <div class="container devocao-container" id="intencoes-conteudo"></div>
     </section>
 
     <section id="view-advento" class="view">
@@ -1462,6 +1474,7 @@
   <script src="layout-computador.js"></script>
   <script src="rive-site.js"></script>
   <script src="fim-da-missao.js"></script>
+  <script src="pedidos.js"></script>
   <script src="baus.js"></script>
   <script src="ligas.js"></script>
   <script src="advento-dados.js"></script>

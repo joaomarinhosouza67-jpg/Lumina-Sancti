@@ -710,6 +710,11 @@ function escolherPerfil(membro) {
     if (membro.tipo === 'adulto') abrirComunidade();
     else mudarDeView('view-home');
   }
+  else if ((destinoAposEscolherPerfil === 'pedidos' || destinoAposEscolherPerfil === 'intencoes') && typeof abrirPedidosDeOracao === 'function') {
+    if (membro.tipo !== 'adulto') mudarDeView('view-home');
+    else if (destinoAposEscolherPerfil === 'pedidos') abrirPedidosDeOracao();
+    else abrirDiarioDeIntencoes();
+  }
   else if (destinoAposEscolherPerfil === 'suporte' && typeof abrirSuporte === 'function') {
     if (membro.tipo === 'adulto') abrirSuporte();
     else mudarDeView('view-home');
