@@ -154,16 +154,18 @@ function damasMelhorJogada(est, nivel) {
 }
 
 function damasPecaSvg(p) {
+  if (typeof garantirGradientesDoTabuleiro === 'function') garantirGradientesDoTabuleiro();
   const branca = damasCor(p) === 'w';
-  const corpo = branca ? '#fff6e2' : '#2b2340';
-  const borda = branca ? '#b08a3e' : '#0c0915';
-  const anel = branca ? '#d8b56a' : '#6e5a9e';
-  const coroa = damasEhDama(p) ? `<path d="M34 56 L37 40 L44 48 L50 34 L56 48 L63 40 L66 56 Z" fill="#f2c94c" stroke="#8a6414" stroke-width="2" stroke-linejoin="round"/>` : '';
-  return `<svg class="xadrez-peca-svg" viewBox="0 0 100 100" aria-hidden="true"><ellipse cx="50" cy="56" rx="38" ry="34" fill="${borda}"/><ellipse cx="50" cy="50" rx="38" ry="34" fill="${corpo}" stroke="${borda}" stroke-width="3"/><ellipse cx="50" cy="50" rx="26" ry="23" fill="none" stroke="${anel}" stroke-width="3"/>${coroa}</svg>`;
+  const corpo = branca ? 'url(#dm-branca)' : 'url(#dm-preta)';
+  const lado = branca ? '#a8823a' : '#0e0a1a';
+  const borda = branca ? '#8f6d2c' : '#07050e';
+  const anel = branca ? 'rgba(168, 130, 58, 0.55)' : 'rgba(150, 128, 210, 0.45)';
+  const coroa = damasEhDama(p) ? `<path d="M32 58 L35 39 L44 48 L50 31 L56 48 L65 39 L68 58 Z" fill="url(#dm-ouro)" stroke="#7a560e" stroke-width="2" stroke-linejoin="round"/><circle cx="50" cy="47" r="3.2" fill="#e8455a" stroke="#7a1020" stroke-width="1"/><circle cx="35" cy="38" r="2.4" fill="url(#dm-ouro)"/><circle cx="50" cy="30" r="2.6" fill="url(#dm-ouro)"/><circle cx="65" cy="38" r="2.4" fill="url(#dm-ouro)"/>` : '';
+  return `<svg class="xadrez-peca-svg" viewBox="0 0 100 100" aria-hidden="true"><ellipse cx="50" cy="58" rx="38" ry="33" fill="${lado}"/><ellipse cx="50" cy="50" rx="38" ry="33" fill="${corpo}" stroke="${borda}" stroke-width="2.5"/><ellipse cx="50" cy="50" rx="27" ry="23" fill="none" stroke="${anel}" stroke-width="3"/><ellipse cx="50" cy="50" rx="19" ry="16" fill="none" stroke="${anel}" stroke-width="1.5"/><ellipse cx="40" cy="36" rx="12" ry="5" fill="#fff" opacity="${branca ? 0.55 : 0.18}"/>${coroa}</svg>`;
 }
 
 function jogoDeDamas(area) {
-  const partida = { modo: null, nivel: 1, est: damasInicial(), historico: [], selecionada: -1, ultima: null, pensando: false };
+  const partida = { modo: null, nivel: 1, est: damasInicial(), historico: [], selecionada: -1, ultima: null, pensando: false, animar: null };
   const nomeDaVez = (vez) => (partida.modo === 'lumina' ? (vez === 'w' ? textoDoJogo('Você') : 'Lumina') : textoDoJogo(vez === 'w' ? 'Claras' : 'Escuras'));
   const contar = (cor) => partida.est.tab.filter((p) => damasCor(p) === cor).length;
 
@@ -207,9 +209,9 @@ function jogoDeDamas(area) {
     }).join('');
     area.innerHTML = `
       <div class="xadrez">
-        <div class="xadrez-lado ${est.vez === 'b' ? 'vez' : ''}"><b>${nomeDaVez('b')}</b><span>${contar('b')}</span></div>
+        <div class="xadrez-lado ${est.vez === 'b' ? 'vez' : ''}${partida.pensando ? ' pensando' : ''}"><b>${nomeDaVez('b')}</b><span class="xadrez-pensando" aria-hidden="true"><i></i><i></i><i></i></span><span class="damas-conta">${damasPecaSvg('b')}${contar('b')}</span></div>
         <div class="xadrez-tabuleiro damas-tabuleiro" role="grid" aria-label="${textoDoJogo('Tabuleiro de damas')}">${casas}</div>
-        <div class="xadrez-lado ${est.vez === 'w' ? 'vez' : ''}"><b>${nomeDaVez('w')}</b><span>${contar('w')}</span></div>
+        <div class="xadrez-lado ${est.vez === 'w' ? 'vez' : ''}"><b>${nomeDaVez('w')}</b><span class="damas-conta">${damasPecaSvg('w')}${contar('w')}</span></div>
         <div class="xadrez-acoes">
           <button type="button" class="jogo-botao jogo-botao-claro" id="damas-desfazer" ${partida.historico.length && !partida.pensando ? '' : 'disabled'}>${textoDoJogo('Desfazer')}</button>
           <button type="button" class="jogo-botao jogo-botao-claro" id="damas-novo">${textoDoJogo('Nova partida')}</button>
@@ -218,6 +220,10 @@ function jogoDeDamas(area) {
     area.querySelectorAll('.xadrez-casa').forEach((b) => b.addEventListener('click', () => tocar(Number(b.dataset.casa))));
     area.querySelector('#damas-desfazer').addEventListener('click', desfazer);
     area.querySelector('#damas-novo').addEventListener('click', () => { if (!partida.historico.length || window.confirm(textoDoJogo('Começar uma nova partida?'))) escolherModo(); });
+    if (partida.animar && typeof animarJogadaNoTabuleiro === 'function') {
+      animarJogadaNoTabuleiro(area.querySelector('.xadrez-tabuleiro'), partida.animar.caminho, partida.animar.fantasmas);
+      partida.animar = null;
+    }
   };
 
   const vezDoJogador = () => !partida.pensando && !(partida.modo === 'lumina' && partida.est.vez === 'b');
@@ -250,7 +256,10 @@ function jogoDeDamas(area) {
     partida.est = damasAplicar(antes, m);
     partida.selecionada = -1;
     partida.ultima = [m.de].concat(m.caminho);
-    tocarNotaDoJogo(m.capturadas.length ? 392 : 659);
+    partida.animar = { caminho: partida.ultima.slice(), fantasmas: m.capturadas.map((c, i) => ({ casa: c, svg: damasPecaSvg(antes.tab[c]), quando: 260 * i + 130 })) };
+    if (typeof tocarBatidaDePeca === 'function') {
+      for (let i = 0; i < Math.max(1, m.capturadas.length); i += 1) tocarBatidaDePeca(m.capturadas.length > 0, 0.24 + i * 0.26);
+    } else tocarNotaDoJogo(m.capturadas.length ? 392 : 659);
     desenhar();
     const proximas = damasJogadas(partida.est);
     if (!proximas.length) { fimDaPartida(antes.vez); return; }

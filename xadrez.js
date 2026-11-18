@@ -249,10 +249,117 @@ function xadrezMelhorJogada(est, nivel) {
 
 const XADREZ_NOMES = { p: 'peão', n: 'cavalo', b: 'bispo', r: 'torre', q: 'dama', k: 'rei' };
 
+const ID_DOS_GRADIENTES_DO_TABULEIRO = 'gradientes-do-tabuleiro';
+let contextoDaBatidaDePeca = null;
+
+function garantirGradientesDoTabuleiro() {
+  if (typeof document === 'undefined' || !document.body || document.getElementById(ID_DOS_GRADIENTES_DO_TABULEIRO)) return;
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('id', ID_DOS_GRADIENTES_DO_TABULEIRO);
+  svg.setAttribute('width', '0');
+  svg.setAttribute('height', '0');
+  svg.setAttribute('aria-hidden', 'true');
+  svg.style.position = 'absolute';
+  svg.style.overflow = 'hidden';
+  svg.innerHTML = `<defs>
+    <linearGradient id="xz-branca" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#f6eacf"/><stop offset="1" stop-color="#d6ba82"/></linearGradient>
+    <linearGradient id="xz-preta" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#76649e"/><stop offset=".45" stop-color="#3a2e5a"/><stop offset="1" stop-color="#140f24"/></linearGradient>
+    <radialGradient id="dm-branca" cx=".38" cy=".32" r=".78"><stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#f5e6c2"/><stop offset="1" stop-color="#c9a660"/></radialGradient>
+    <radialGradient id="dm-preta" cx=".38" cy=".32" r=".78"><stop offset="0" stop-color="#8573b3"/><stop offset=".55" stop-color="#3c2f60"/><stop offset="1" stop-color="#150f27"/></radialGradient>
+    <linearGradient id="dm-ouro" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3b8"/><stop offset=".5" stop-color="#f2c94c"/><stop offset="1" stop-color="#a87714"/></linearGradient>
+  </defs>`;
+  document.body.appendChild(svg);
+}
+
+function animarJogadaNoTabuleiro(tabuleiro, caminho, fantasmas) {
+  if (!tabuleiro || !Array.isArray(caminho) || caminho.length < 2) return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const fim = caminho[caminho.length - 1];
+  const casaDoFim = tabuleiro.querySelector(`[data-casa="${fim}"]`);
+  const peca = casaDoFim ? casaDoFim.querySelector('.xadrez-peca') : null;
+  const porCasa = 260;
+  const total = porCasa * (caminho.length - 1);
+  (fantasmas || []).forEach(({ casa, svg, quando }) => {
+    const alvo = tabuleiro.querySelector(`[data-casa="${casa}"]`);
+    if (!alvo || !svg) return;
+    const fantasma = document.createElement('span');
+    fantasma.className = 'xadrez-peca xadrez-fantasma';
+    fantasma.innerHTML = svg;
+    alvo.appendChild(fantasma);
+    if (!fantasma.animate) { fantasma.remove(); return; }
+    const sumir = fantasma.animate([{ opacity: 1, transform: 'scale(1)' }, { opacity: 0, transform: 'scale(0.35) rotate(-25deg)' }], { duration: 240, delay: typeof quando === 'number' ? quando : total - 40, easing: 'ease-in', fill: 'forwards' });
+    sumir.onfinish = () => fantasma.remove();
+  });
+  if (!peca || !peca.animate) return;
+  peca.classList.remove('chegou');
+  peca.classList.add('voando');
+  const linha = (c) => Math.floor(c / 8);
+  const coluna = (c) => c % 8;
+  const passo = 100 / 0.9;
+  const quadros = [];
+  caminho.forEach((c, i) => {
+    const dx = (coluna(c) - coluna(fim)) * passo;
+    const dy = (linha(c) - linha(fim)) * passo;
+    if (i > 0) {
+      const anterior = caminho[i - 1];
+      const mx = ((coluna(anterior) + coluna(c)) / 2 - coluna(fim)) * passo;
+      const my = ((linha(anterior) + linha(c)) / 2 - linha(fim)) * passo;
+      quadros.push({ transform: `translate(${mx}%, ${my}%) scale(1.14)`, offset: (i - 0.5) / (caminho.length - 1) });
+    }
+    quadros.push({ transform: i === caminho.length - 1 ? 'translate(0%, 0%) scale(1)' : `translate(${dx}%, ${dy}%) scale(1)`, offset: i / (caminho.length - 1) });
+  });
+  const voo = peca.animate(quadros, { duration: total, easing: 'ease-in-out' });
+  voo.onfinish = () => {
+    peca.classList.remove('voando');
+    peca.animate([{ transform: 'scale(1.08, 0.92)' }, { transform: 'scale(1)' }], { duration: 160, easing: 'ease-out' });
+  };
+}
+
+function tocarBatidaDePeca(captura, atraso) {
+  try {
+    const Classe = window.AudioContext || window.webkitAudioContext;
+    if (!Classe) return;
+    if (typeof contextoDeSomDosJogos !== 'undefined' && contextoDeSomDosJogos) contextoDaBatidaDePeca = contextoDeSomDosJogos;
+    if (!contextoDaBatidaDePeca) contextoDaBatidaDePeca = new Classe();
+    const ctx = contextoDaBatidaDePeca;
+    const quando = ctx.currentTime + (atraso || 0);
+    const tamanho = Math.floor(ctx.sampleRate * 0.12);
+    const buffer = ctx.createBuffer(1, tamanho, ctx.sampleRate);
+    const dados = buffer.getChannelData(0);
+    for (let i = 0; i < tamanho; i += 1) dados[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / tamanho, 3);
+    const ruido = ctx.createBufferSource();
+    ruido.buffer = buffer;
+    const filtro = ctx.createBiquadFilter();
+    filtro.type = 'bandpass';
+    filtro.frequency.value = captura ? 700 : 1100;
+    filtro.Q.value = 1.4;
+    const volume = ctx.createGain();
+    volume.gain.setValueAtTime(captura ? 0.9 : 0.6, quando);
+    volume.gain.exponentialRampToValueAtTime(0.001, quando + 0.12);
+    ruido.connect(filtro);
+    filtro.connect(volume);
+    volume.connect(ctx.destination);
+    ruido.start(quando);
+    const grave = ctx.createOscillator();
+    const ganho = ctx.createGain();
+    grave.type = 'sine';
+    grave.frequency.setValueAtTime(captura ? 150 : 210, quando);
+    grave.frequency.exponentialRampToValueAtTime(70, quando + 0.1);
+    ganho.gain.setValueAtTime(captura ? 0.35 : 0.22, quando);
+    ganho.gain.exponentialRampToValueAtTime(0.001, quando + 0.12);
+    grave.connect(ganho);
+    ganho.connect(ctx.destination);
+    grave.start(quando);
+    grave.stop(quando + 0.14);
+  } catch (e) {
+  }
+}
+
 function xadrezPecaSvg(peca) {
+  garantirGradientesDoTabuleiro();
   const branca = peca === peca.toUpperCase();
   const t = peca.toLowerCase();
-  const corpo = branca ? '#fffaf0' : '#2b2340';
+  const corpo = branca ? 'url(#xz-branca)' : 'url(#xz-preta)';
   const linha = branca ? '#2b1d0e' : '#0c0915';
   const detalhe = branca ? '#2b1d0e' : '#e9d6a8';
   const base = '<path d="M24 84 H76 A4 4 0 0 1 80 88 V92 H20 V88 A4 4 0 0 1 24 84 Z"/>';
@@ -272,7 +379,7 @@ function xadrezDescreverPeca(peca) {
 }
 
 function jogoDeXadrez(area) {
-  const partida = { modo: null, nivel: 1, est: xadrezInicial(), historico: [], selecionada: -1, ultima: null, pensando: false, capturadas: { w: [], b: [] } };
+  const partida = { modo: null, nivel: 1, est: xadrezInicial(), historico: [], selecionada: -1, ultima: null, pensando: false, capturadas: { w: [], b: [] }, animar: null };
   const nomeDaVez = (vez) => (partida.modo === 'lumina' ? (vez === 'w' ? textoDoJogo('Você') : 'Lumina') : textoDoJogo(vez === 'w' ? 'Brancas' : 'Pretas'));
 
   const escolherModo = () => {
@@ -326,12 +433,14 @@ function jogoDeXadrez(area) {
       const linhaDeBaixo = i >= 56 ? `<i class="xadrez-coord coluna">${'abcdefgh'[i % 8]}</i>` : '';
       return `<button type="button" class="${classes.join(' ')}" data-casa="${i}" aria-label="${rotulo}">${coluna}${linhaDeBaixo}${p ? `<span class="xadrez-peca${partida.ultima && partida.ultima.para === i ? ' chegou' : ''}">${xadrezPecaSvg(p)}</span>` : ''}</button>`;
     }).join('');
+    const pontos = (cor) => partida.capturadas[cor].reduce((s, p) => s + (XADREZ_VALORES[p.toLowerCase()] || 0), 0);
+    const vantagem = (cor) => { const d = pontos(cor) - pontos(cor === 'w' ? 'b' : 'w'); return d > 0 ? `<em class="xadrez-vantagem">+${d >= 100 ? Math.round(d / 100) : d}</em>` : ''; };
     const tiras = (cor) => partida.capturadas[cor].slice().sort((a, b) => XADREZ_VALORES[b.toLowerCase()] - XADREZ_VALORES[a.toLowerCase()]).map((p) => `<span class="xadrez-capturada">${xadrezPecaSvg(p)}</span>`).join('');
     area.innerHTML = `
       <div class="xadrez">
-        <div class="xadrez-lado ${est.vez === 'b' ? 'vez' : ''}"><b>${nomeDaVez('b')}</b><span class="xadrez-tira">${tiras('w')}</span></div>
+        <div class="xadrez-lado ${est.vez === 'b' ? 'vez' : ''}${partida.pensando ? ' pensando' : ''}"><b>${nomeDaVez('b')}</b><span class="xadrez-pensando" aria-hidden="true"><i></i><i></i><i></i></span><span class="xadrez-tira">${tiras('w')}</span>${vantagem('w')}</div>
         <div class="xadrez-tabuleiro" role="grid" aria-label="${textoDoJogo('Tabuleiro de xadrez')}">${casas}</div>
-        <div class="xadrez-lado ${est.vez === 'w' ? 'vez' : ''}"><b>${nomeDaVez('w')}</b><span class="xadrez-tira">${tiras('b')}</span></div>
+        <div class="xadrez-lado ${est.vez === 'w' ? 'vez' : ''}"><b>${nomeDaVez('w')}</b><span class="xadrez-tira">${tiras('b')}</span>${vantagem('b')}</div>
         <div class="xadrez-acoes">
           <button type="button" class="jogo-botao jogo-botao-claro" id="xadrez-desfazer" ${partida.historico.length && !partida.pensando ? '' : 'disabled'}>${textoDoJogo('Desfazer')}</button>
           <button type="button" class="jogo-botao jogo-botao-claro" id="xadrez-novo">${textoDoJogo('Nova partida')}</button>
@@ -341,6 +450,10 @@ function jogoDeXadrez(area) {
     area.querySelectorAll('.xadrez-casa').forEach((b) => b.addEventListener('click', () => tocar(Number(b.dataset.casa))));
     area.querySelector('#xadrez-desfazer').addEventListener('click', desfazer);
     area.querySelector('#xadrez-novo').addEventListener('click', () => { if (!partida.historico.length || window.confirm(textoDoJogo('Começar uma nova partida?'))) escolherModo(); });
+    if (partida.animar) {
+      animarJogadaNoTabuleiro(area.querySelector('.xadrez-tabuleiro'), partida.animar.caminho, partida.animar.fantasmas);
+      partida.animar = null;
+    }
   };
 
   const vezDoJogador = () => !partida.pensando && !(partida.modo === 'lumina' && partida.est.vez === 'b');
@@ -388,7 +501,9 @@ function jogoDeXadrez(area) {
     novo.posicoes[chave] = (novo.posicoes[chave] || 0) + 1;
     if (m.captura) partida.capturadas[antes.vez].push(m.captura);
     partida.est = novo; partida.selecionada = -1; partida.ultima = { de: m.de, para: m.para };
-    tocarNotaDoJogo(m.captura ? 392 : 659);
+    const casaDaCaptura = m.captura ? (antes.tab[m.para] ? m.para : m.para + (antes.vez === 'w' ? 8 : -8)) : -1;
+    partida.animar = { caminho: [m.de, m.para], fantasmas: m.captura ? [{ casa: casaDaCaptura, svg: xadrezPecaSvg(m.captura) }] : [] };
+    tocarBatidaDePeca(!!m.captura, 0.24);
     desenhar();
     const sit = situacao();
     if (sit.fim) { fimDaPartida(sit); return; }

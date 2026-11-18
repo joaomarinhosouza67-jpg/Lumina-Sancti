@@ -284,6 +284,7 @@ function desenharCaixaDeDesafios() {
           <span class="desafio-icone">${iconeDoBau(item.feito ? 'check' : info.icone)}</span>
           <span class="desafio-textos"><strong>${escaparDoBau(textoDoDesafio(item))}</strong><span class="desafio-barra"><i style="width:${parte}%"></i></span></span>
           <span class="desafio-numero">${Math.min(item.progresso, item.meta)}/${item.meta}</span>
+          <span class="desafio-fe">${iconeDoBau('estrela')}+${Number(item.fe) || 10}</span>
         </button></li>`;
       }).join('')}
     </ul>
@@ -383,6 +384,7 @@ async function atualizarCaixasDoDia() {
   try {
     const [desafios, mochila] = await Promise.all([chamarDosBaus('desafios_hoje'), chamarDosBaus('baus_meus')]);
     caixasDoDia = { desafios, mochila };
+    somarFeDosDesafios(desafios);
     if (desafios && desafios.bau_novo) {
       const atualizada = await chamarDosBaus('baus_meus');
       if (atualizada) caixasDoDia.mochila = atualizada;
@@ -393,6 +395,16 @@ async function atualizarCaixasDoDia() {
   }
   desenharCaixaDeDesafios();
   desenharMochila();
+}
+
+function somarFeDosDesafios(dados, semAviso) {
+  const fe = dados ? Number(dados.fe_ganha) || 0 : 0;
+  if (fe <= 0) return;
+  const membro = typeof obterMembroAtivo === 'function' ? obterMembroAtivo() : null;
+  if (membro && typeof membro.fe === 'number') membro.fe += fe;
+  if (typeof estadoEmMemoriaDaConta !== 'undefined' && estadoEmMemoriaDaConta && typeof estadoEmMemoriaDaConta.fe === 'number') estadoEmMemoriaDaConta.fe += fe;
+  if (!semAviso && !dados.bau_novo && typeof mostrarAvisoTrilhas === 'function') mostrarAvisoTrilhas(trDoBau('Desafio do dia completo: +{n} de Fé', { n: fe }));
+  if (typeof desenharColunaDireita === 'function') desenharColunaDireita();
 }
 
 function avisarDesafiosCompletos(dados) {
@@ -408,6 +420,7 @@ async function registrarDesafio(tipo) {
     const desafios = await chamarDosBaus('desafio_registrar', { _tipo: tipo });
     if (!desafios) return;
     caixasDoDia.desafios = desafios;
+    somarFeDosDesafios(desafios);
     if (desafios.bau_novo) {
       caixasDoDia.mochila = await chamarDosBaus('baus_meus');
       avisarDesafiosCompletos(desafios);

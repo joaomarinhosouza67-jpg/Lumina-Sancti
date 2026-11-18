@@ -1400,6 +1400,17 @@ function htmlDoTopoDaSemana(atual, terminaEm) {
     </div>`;
 }
 
+function htmlDoTopoDoFundador(terminaEm) {
+  const celestial = RANKS_ESPECIAIS[INDICE_CELESTIAL];
+  const fundador = RANKS_ESPECIAIS[INDICE_FUNDADOR];
+  return `
+    <div class="semana-topo semana-topo-fundador" style="--liga:${celestial.cor};--liga-clara:${celestial.claro}">
+      <div class="semana-emblemas" aria-hidden="true"><span class="semana-emblema atual" style="--liga:${fundador.cor}">${emblemaDaLiga(INDICE_FUNDADOR, { pedestal: false })}</span><span class="semana-emblema atual" style="--liga:${celestial.cor}">${emblemaDaLiga(INDICE_CELESTIAL, { pedestal: false })}</span></div>
+      <strong class="semana-nome">${escaparDaLiga(textoDaLiga('Fundador · Celestial'))}</strong>
+      <span class="semana-tempo">${RELOGIO_DA_SEMANA}${escaparDaLiga(diasQueFaltamNaSemana(terminaEm))}</span>
+    </div>`;
+}
+
 function htmlDoResultadoDaSemana(resultado) {
   if (!resultado || Number(resultado.depois) === Number(resultado.antes)) return '';
   const liga = LIGAS_DA_FE[Number(resultado.depois)] || LIGAS_DA_FE[0];

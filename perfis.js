@@ -1351,7 +1351,8 @@ async function desenharLigaDaSemana(lista, dados) {
     fotoUrl: l.eu ? membroAtivo.fotoUrl : (fotos[l.avatar_path] || ''),
     publicoId: podeAbrirPerfil && !l.eu ? l.perfil_id : null, perfilId: l.perfil_id,
   }));
-  const topo = (typeof htmlDoTopoDaSemana === 'function' ? htmlDoTopoDaSemana(indice, dados.termina_em) : '')
+  const souFundador = typeof meuCargoNaLiga === 'function' && meuCargoNaLiga() === 'fundador' && typeof htmlDoTopoDoFundador === 'function';
+  const topo = (souFundador ? htmlDoTopoDoFundador(dados.termina_em) : (typeof htmlDoTopoDaSemana === 'function' ? htmlDoTopoDaSemana(indice, dados.termina_em) : ''))
     + (typeof htmlDoResultadoDaSemana === 'function' ? htmlDoResultadoDaSemana(dados.resultado) : '')
     + (typeof htmlDasZonasDaSemana === 'function' && linhas.length ? htmlDasZonasDaSemana(sobem, descem) : '');
   let corpo;

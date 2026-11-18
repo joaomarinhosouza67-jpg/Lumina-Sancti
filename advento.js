@@ -132,14 +132,28 @@ function ruidoDoAdvento(i, semente) {
 
 function velaDoAdvento(g, x, base, altura, cores, acesa, numero) {
   const topo = base - altura;
+  const chama = acesa ? `<g class="adv-chama">
+      <ellipse class="adv-chama-luz" cx="${x}" cy="${topo - 13}" rx="9" ry="15" fill="url(#${g}-luz)"/>
+      <path class="adv-chama-fora" d="M${x} ${topo - 31} C${x + 4} ${topo - 24} ${x + 8.5} ${topo - 17} ${x + 7.5} ${topo - 10} C${x + 6.5} ${topo - 4} ${x + 3} ${topo - 2} ${x} ${topo - 2} C${x - 3} ${topo - 2} ${x - 6.5} ${topo - 4} ${x - 7.5} ${topo - 10} C${x - 8.5} ${topo - 17} ${x - 4} ${topo - 24} ${x} ${topo - 31}Z" fill="url(#${g}-chama)"/>
+      <path class="adv-chama-meio" d="M${x} ${topo - 23} C${x + 3} ${topo - 18} ${x + 5} ${topo - 13} ${x + 4.5} ${topo - 9} C${x + 4} ${topo - 5} ${x + 2} ${topo - 3.5} ${x} ${topo - 3.5} C${x - 2} ${topo - 3.5} ${x - 4} ${topo - 5} ${x - 4.5} ${topo - 9} C${x - 5} ${topo - 13} ${x - 3} ${topo - 18} ${x} ${topo - 23}Z" fill="#ffe680"/>
+      <path class="adv-chama-nucleo" d="M${x} ${topo - 15} C${x + 2} ${topo - 11} ${x + 2.6} ${topo - 8} ${x + 2.2} ${topo - 6} C${x + 1.8} ${topo - 4.4} ${x + 1} ${topo - 4} ${x} ${topo - 4} C${x - 1} ${topo - 4} ${x - 1.8} ${topo - 4.4} ${x - 2.2} ${topo - 6} C${x - 2.6} ${topo - 8} ${x - 2} ${topo - 11} ${x} ${topo - 15}Z" fill="#fffdf2"/>
+      <ellipse cx="${x}" cy="${topo - 4.5}" rx="2.2" ry="1.6" fill="#7fb4ff" opacity=".75"/>
+    </g>` : '';
   return `<g class="adv-vela${acesa ? ' acesa' : ''}" data-vela="${numero}">
-    ${acesa ? `<circle class="adv-vela-halo" cx="${x}" cy="${topo - 12}" r="34" fill="url(#${g}-halo)"/>` : ''}
-    <rect x="${x - 9}" y="${topo}" width="18" height="${altura}" rx="2.5" fill="url(#${g}-vela-${numero})"/>
-    <ellipse cx="${x}" cy="${topo}" rx="9" ry="3" fill="${cores[0]}"/>
-    <path d="M${x - 9} ${topo + 1} q3 9 6 2 q2 13 5 4 q3 6 7 -4 v-2z" fill="${cores[0]}" opacity=".9"/>
-    <rect x="${x - 6.5}" y="${topo + 6}" width="3" height="${altura - 12}" rx="1.5" fill="#fff" opacity=".22"/>
-    <path d="M${x} ${topo - 1} v-6" stroke="#2b1d12" stroke-width="1.6" stroke-linecap="round"/>
-    ${acesa ? `<g class="adv-chama"><path d="M${x} ${topo - 26} C${x + 7} ${topo - 15} ${x + 6} ${topo - 6} ${x} ${topo - 4} C${x - 6} ${topo - 6} ${x - 7} ${topo - 15} ${x} ${topo - 26}Z" fill="url(#${g}-chama)"/><path d="M${x} ${topo - 16} C${x + 3} ${topo - 11} ${x + 2.5} ${topo - 7} ${x} ${topo - 6} C${x - 2.5} ${topo - 7} ${x - 3} ${topo - 11} ${x} ${topo - 16}Z" fill="#fffbe8"/></g>` : ''}
+    ${acesa ? `<circle class="adv-vela-halo" cx="${x}" cy="${topo - 14}" r="40" fill="url(#${g}-halo)"/><circle class="adv-vela-halo adv-vela-halo-perto" cx="${x}" cy="${topo - 12}" r="18" fill="url(#${g}-halo)"/>` : ''}
+    <ellipse cx="${x}" cy="${base + 1}" rx="14" ry="4.5" fill="#6b4a12"/>
+    <path d="M${x - 13} ${base - 3} h26 v4 a13 4.2 0 0 1 -26 0z" fill="url(#${g}-ouro)"/>
+    <ellipse cx="${x}" cy="${base - 3}" rx="13" ry="3.6" fill="#fbe3a0"/>
+    <rect x="${x - 9}" y="${topo}" width="18" height="${altura - 2}" rx="2.5" fill="url(#${g}-vela-${numero})"/>
+    ${acesa ? `<rect x="${x - 9}" y="${topo}" width="18" height="${Math.min(22, altura / 2)}" rx="2.5" fill="url(#${g}-cera)"/>` : ''}
+    <ellipse cx="${x}" cy="${topo}" rx="9" ry="3" fill="${acesa ? '#fff0c8' : cores[0]}"/>
+    <ellipse cx="${x}" cy="${topo + 0.6}" rx="5.5" ry="1.6" fill="${cores[2]}" opacity=".35"/>
+    <path d="M${x - 9} ${topo + 1} q2.5 9 5 2 q2 14 4.5 4 q3 7 7 -3 q1.5 4 2.5 0 v-3z" fill="${cores[0]}" opacity=".92"/>
+    <rect x="${x - 6.5}" y="${topo + 6}" width="3" height="${altura - 14}" rx="1.5" fill="#fff" opacity=".24"/>
+    <rect x="${x + 4}" y="${topo + 10}" width="1.6" height="${altura - 22}" rx=".8" fill="#000" opacity=".12"/>
+    <path d="M${x} ${topo - 0.5} q-1.2 -3 .4 -6.5" stroke="${acesa ? '#3a2410' : '#1f140a'}" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+    ${acesa ? '' : `<circle cx="${x + 0.4}" cy="${topo - 7}" r="1" fill="#5a3a20"/>`}
+    ${chama}
   </g>`;
 }
 
@@ -188,7 +202,10 @@ function coroaDoAdvento(acesas) {
   return `<svg class="adv-coroa" viewBox="0 0 260 190" role="img" aria-label="${escaparDoAdvento(trDoAdvento('Coroa do Advento'))}">
     <defs>${gradientes}
       <radialGradient id="${g}-halo"><stop offset="0" stop-color="#ffe7a0" stop-opacity=".75"/><stop offset="1" stop-color="#ffe7a0" stop-opacity="0"/></radialGradient>
-      <radialGradient id="${g}-chama" cx="50%" cy="70%" r="60%"><stop offset="0" stop-color="#fff6c2"/><stop offset=".5" stop-color="#ffc23d"/><stop offset="1" stop-color="#ff6a1a"/></radialGradient>
+      <radialGradient id="${g}-chama" cx="50%" cy="78%" r="72%"><stop offset="0" stop-color="#fff2a8"/><stop offset=".45" stop-color="#ffb12e"/><stop offset=".8" stop-color="#ff6418"/><stop offset="1" stop-color="#e2380e" stop-opacity=".85"/></radialGradient>
+      <radialGradient id="${g}-luz"><stop offset="0" stop-color="#ffd27a" stop-opacity=".7"/><stop offset="1" stop-color="#ff9a2e" stop-opacity="0"/></radialGradient>
+      <linearGradient id="${g}-cera" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe7a8" stop-opacity=".75"/><stop offset="1" stop-color="#ffe7a8" stop-opacity="0"/></linearGradient>
+      <linearGradient id="${g}-ouro" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a5f17"/><stop offset=".35" stop-color="#f6d37a"/><stop offset=".6" stop-color="#d6a945"/><stop offset="1" stop-color="#7a520f"/></linearGradient>
       <radialGradient id="${g}-base" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#000" stop-opacity=".35"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
     </defs>
     <ellipse cx="130" cy="140" rx="118" ry="40" fill="url(#${g}-base)"/>

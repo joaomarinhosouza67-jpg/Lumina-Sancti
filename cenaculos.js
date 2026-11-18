@@ -2464,6 +2464,7 @@ function atualizarBarraDoApp(idDaPagina) {
   const barra = document.getElementById('barra-app');
   if (!barra) return;
   const destino = DESTINOS_DA_BARRA[idDaPagina] || '';
+  if (typeof VISTAS_COM_MENU_LATERAL !== 'undefined') document.body.classList.toggle('com-menu-lateral', VISTAS_COM_MENU_LATERAL.includes(idDaPagina));
   const botoes = Array.from(barra.querySelectorAll('.barra-app-botao'));
   botoes.forEach((botao) => {
     botao.classList.toggle('ativo', botao.dataset.destino === destino);

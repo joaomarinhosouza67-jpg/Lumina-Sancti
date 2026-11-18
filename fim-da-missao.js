@@ -19,6 +19,8 @@ function guardarComoEstavaAntesDaMissao() {
   }).catch(() => {});
 }
 
+const FAISCAS_DA_CHAMA = [[-78, -62, 0], [76, -70, 0.03], [-52, -116, 0.05], [54, -112, 0.02], [-18, -148, 0.06], [20, -140, 0.04], [-96, -22, 0.01], [94, -30, 0.05], [-36, -84, 0.03], [38, -90, 0.02], [0, -120, 0.04], [-64, -8, 0.06]];
+
 function htmlDaChamaGrande() {
   return `<svg class="fim-chama-svg" viewBox="0 0 120 150" aria-hidden="true">
     <defs>
@@ -32,6 +34,27 @@ function htmlDaChamaGrande() {
   </svg>`;
 }
 
+function htmlDaEstrelaDaChama() {
+  return `<svg viewBox="0 0 100 100" aria-hidden="true">
+    <defs>
+      <radialGradient id="fim-estrela-cor" cx="50%" cy="45%" r="60%"><stop offset="0" stop-color="#fffdf0"/><stop offset=".35" stop-color="#ffe98a"/><stop offset="1" stop-color="#f5b32a"/></radialGradient>
+    </defs>
+    <path d="M50 6 L62.93 34.2 L93.75 37.79 L70.92 58.8 L77.04 89.21 L50 74 L22.96 89.21 L29.08 58.8 L6.25 37.79 L37.07 34.2 Z" fill="url(#fim-estrela-cor)" stroke="#f7c548" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M50 30 L55 43 L68 45 L58 54 L61 67 L50 60 L39 67 L42 54 L32 45 L45 43 Z" fill="#fffef6" opacity=".75"/>
+  </svg>`;
+}
+
+function htmlDoPalcoDaChama() {
+  const faiscas = FAISCAS_DA_CHAMA.map(([x, y, d]) => `<i style="--x:${x}px;--y:${y}px;--d:${d}s"></i>`).join('');
+  return `<div class="fim-ofensiva-chama" aria-hidden="true">
+    <span class="fim-chama-anel"></span>
+    <div class="fim-chama-voo"><span class="fim-chama-brilho"></span>${htmlDaChamaGrande()}<span class="fim-chama-brasas"><i></i><i></i><i></i><i></i></span></div>
+    <span class="fim-chama-estrela">${htmlDaEstrelaDaChama()}</span>
+    <span class="fim-chama-clarao"></span>
+    <span class="fim-ofensiva-faiscas">${faiscas}</span>
+  </div>`;
+}
+
 function mostrarPassoDaOfensiva(antes, depois) {
   const corpo = document.getElementById('licao-corpo');
   if (!corpo) return false;
@@ -40,20 +63,19 @@ function mostrarPassoDaOfensiva(antes, depois) {
   for (let i = 0; i < Math.min(depois, 7); i += 1) acesos.add((hoje - i + 7) % 7);
   corpo.innerHTML = `
     <div class="fim-passo fim-ofensiva">
-      <div class="fim-ofensiva-chama"><canvas class="fim-chama-rive" width="320" height="400" aria-hidden="true"></canvas>${htmlDaChamaGrande()}<span class="fim-ofensiva-faiscas" aria-hidden="true">${'<i></i>'.repeat(8)}</span></div>
+      ${htmlDoPalcoDaChama()}
       <strong class="fim-ofensiva-numero" id="fim-ofensiva-numero">${antes}</strong>
       <h2>${escaparDoFim(tr(depois === 1 ? 'dia de ofensiva' : 'dias de ofensiva'))}</h2>
       <div class="fim-semana">${(DIAS_DA_SEMANA_DO_FIM[typeof idiomaAtual !== 'undefined' ? idiomaAtual : 'pt'] || DIAS_DA_SEMANA_DO_FIM.pt).map((d, i) => `<span class="fim-dia${acesos.has(i) ? ' aceso' : ''}${i === hoje ? ' hoje' : ''}" style="--i:${(i - hoje + 7) % 7}"><small>${escaparDoFim(d)}</small><i>${typeof icone === 'function' ? icone(acesos.has(i) ? 'check' : 'chama') : ''}</i></span>`).join('')}</div>
     </div>`;
   const numero = corpo.querySelector('#fim-ofensiva-numero');
-  const tela = corpo.querySelector('.fim-chama-rive');
-  if (typeof tocarAnimacaoRive === 'function') tocarAnimacaoRive(tela, 'rive/chama.riv', 'Chama').then((animacao) => { if (animacao && tela.isConnected) tela.parentElement.classList.add('com-rive'); });
+  const semMovimento = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   setTimeout(() => {
     if (!numero.isConnected) return;
     numero.textContent = String(depois);
     numero.classList.add('subiu');
     if (typeof somDaLicao === 'function') somDaLicao('certo');
-  }, 650);
+  }, semMovimento ? 400 : 3000);
   prepararRodapeDaLicao(tr('Continuar'), true);
   return true;
 }
@@ -63,6 +85,7 @@ async function mostrarPassoDosDesafios() {
   if (!antes || typeof chamarDosBaus !== 'function') return false;
   let dados = null;
   try { dados = await chamarDosBaus('desafios_hoje'); } catch (e) { dados = null; }
+  if (dados && typeof somarFeDosDesafios === 'function') somarFeDosDesafios(dados, true);
   if (!dados || !Array.isArray(dados.itens) || !licaoAtual) return false;
   const mudou = dados.itens.filter((item) => {
     const velho = antes.find((a) => a.id === item.id && a.tipo === item.tipo);
@@ -83,7 +106,7 @@ async function mostrarPassoDosDesafios() {
         const de = Math.min(100, Math.round((velho.progresso / meta) * 100));
         const para = Math.min(100, Math.round((Number(item.progresso) / meta) * 100));
         const info = tipos[item.tipo] || { icone: 'estrela' };
-        return `<li class="${item.feito ? 'feito' : ''}" style="--i:${n}"><span class="fim-desafio-icone">${typeof icone === 'function' ? icone(info.icone) : ''}</span><span class="fim-desafio-textos"><b>${escaparDoFim(typeof textoDoDesafio === 'function' ? textoDoDesafio(item) : '')}</b><span class="fim-barra"><i data-de="${de}" data-para="${para}" style="width:${de}%"></i><em>${Math.min(item.progresso, meta)} / ${meta}</em></span></span><span class="fim-desafio-bau">${typeof svgDoBau === 'function' ? svgDoBau(dados.bau_tipo || 'madeira', 34) : ''}</span></li>`;
+        return `<li class="${item.feito ? 'feito' : ''}" style="--i:${n}"><span class="fim-desafio-icone">${typeof icone === 'function' ? icone(info.icone) : ''}</span><span class="fim-desafio-textos"><b>${escaparDoFim(typeof textoDoDesafio === 'function' ? textoDoDesafio(item) : '')}</b><span class="fim-barra"><i data-de="${de}" data-para="${para}" style="width:${de}%"></i><em>${Math.min(item.progresso, meta)} / ${meta}</em></span></span><span class="fim-desafio-fe">${typeof icone === 'function' ? icone('estrela') : ''}+${Number(item.fe) || 10}</span></li>`;
       }).join('')}</ul>
       ${dados.completo && dados.bau_id ? `<button type="button" class="fim-abrir-bau" id="fim-abrir-bau">${typeof svgDoBau === 'function' ? svgDoBau(dados.bau_tipo || 'madeira', 64) : ''}<span>${escaparDoFim(tr('Abrir baú'))}</span></button>` : `<p class="fim-desafios-conta">${completos}/${dados.itens.length}</p>`}
     </div>`;
