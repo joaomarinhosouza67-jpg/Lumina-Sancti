@@ -2452,7 +2452,7 @@ function aposEscolherPerfil() {
 
 const DESTINOS_DA_BARRA = {
   'view-home': 'inicio', 'view-detail': 'inicio',
-  'view-trilhas': 'trilhas', 'view-licao': 'trilhas', 'view-ranking': 'trilhas',
+  'view-trilhas': 'trilhas', 'view-licao': 'trilhas', 'view-ranking': 'ranking', 'view-jogos': 'jogos',
   'view-cenaculos': 'cenaculos', 'view-cenaculo': 'cenaculos',
   'view-comunidade': 'comunidade',
   'view-oracoes': 'oracoes', 'view-terco': 'oracoes', 'view-padroeiro': 'oracoes', 'view-leitura': 'oracoes',
@@ -2464,9 +2464,12 @@ function atualizarBarraDoApp(idDaPagina) {
   const barra = document.getElementById('barra-app');
   if (!barra) return;
   const destino = DESTINOS_DA_BARRA[idDaPagina] || '';
-  barra.querySelectorAll('.barra-app-botao').forEach((botao) => {
+  const botoes = Array.from(barra.querySelectorAll('.barra-app-botao'));
+  botoes.forEach((botao) => {
     botao.classList.toggle('ativo', botao.dataset.destino === destino);
   });
+  const ativoVisivel = botoes.some((b) => b.classList.contains('ativo') && b.offsetParent !== null);
+  if (!ativoVisivel && destino === 'ranking') botoes.forEach((b) => { if (b.dataset.destino === 'trilhas') b.classList.add('ativo'); });
   document.body.classList.toggle('sem-barra-app', PAGINAS_SEM_BARRA.includes(idDaPagina));
   if (idDaPagina !== 'view-cenaculo') pararConversa();
 }
@@ -2479,6 +2482,8 @@ function irPelaBarra(destino) {
   else if (destino === 'comunidade' && typeof abrirComunidade === 'function') abrirComunidade();
   else if (destino === 'oracoes') mudarDeView('view-oracoes');
   else if (destino === 'jogos' && typeof abrirJogos === 'function') abrirJogos();
+  else if (destino === 'ranking' && typeof abrirRanking === 'function') abrirRanking();
+  else if (destino === 'mais' && typeof openSidebar === 'function') openSidebar();
   else if (destino === 'cursos') { if (typeof abrirCursos === 'function') abrirCursos(); else mudarDeView('view-cursos'); }
   else if (destino === 'conta') {
     if (typeof contaLogada !== 'function' || !contaLogada()) { if (typeof irParaLogin === 'function') irParaLogin(); }

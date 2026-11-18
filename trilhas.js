@@ -2098,6 +2098,7 @@ function iniciarLicao(trilha, indice) {
     santidadeAcabou: false,
     finalizada: false,
   };
+  if (typeof guardarComoEstavaAntesDaMissao === 'function') guardarComoEstavaAntesDaMissao();
   mudarDeView('view-licao');
   renderizarCabecalhoDaMissao(trilha, indice, licao);
   avisarMascote('licao');
@@ -2466,7 +2467,6 @@ function finalizarLicao() {
           <div class="licao-fim-dado licao-fim-fe">${estrelaDaFe('fe-grande')}<strong id="licao-fe-ganha">+${feGanha}</strong><span>${tt('de_fe')}</span></div>
           <div class="licao-fim-dado"><strong>${acertosDePrimeira}/${total}</strong><span>${tt('de_primeira')}</span></div>
         </div>
-        ${ofensivaSubiu ? htmlDaOfensivaAcesa(estado.ofensiva) : ''}
         ${insigniaNova ? `
         <div class="insignia-conquistada">
           <h3>${tt('insignia_de', { santo: trilha.santo })}</h3>
@@ -2476,7 +2476,7 @@ function finalizarLicao() {
   }
   avisarMascote('concluiu', { medalha: insigniaNova });
   prepararRodapeDaLicao(tt('continuar'), true);
-  animarOfensivaAcesa(corpo);
+  if (licaoAtual) licaoAtual.passosDoFim = typeof montarPassosDoFim === 'function' ? montarPassosDoFim({ ofensivaSubiu, ofensivaAntes: Math.max(0, (Number(estado.ofensiva) || 0) - 1), ofensivaDepois: Number(estado.ofensiva) || 0 }) : [];
   };
   if (vaiVoar) {
     tocarVooDaLumi({
@@ -2594,7 +2594,10 @@ function aoClicarBotaoDaLicao() {
     renderizarPerguntaAtual();
     return;
   }
-  if (licaoAtual.finalizada) sairDaLicao(false);
+  if (licaoAtual.finalizada) {
+    if (typeof avancarFimDaMissao !== 'function') { sairDaLicao(false); return; }
+    avancarFimDaMissao().then((mostrou) => { if (!mostrou && licaoAtual) sairDaLicao(false); });
+  }
   else if (!licaoAtual.verificada) verificarRespostaAtual();
   else continuarLicao();
 }
@@ -2752,6 +2755,7 @@ async function iniciarLicaoDoServidor(trilha, indice) {
     lendoHistoria: false,
     servidor: { tentativa: dados.attempt_id, respondidas: 0, enviando: false },
   };
+  if (typeof guardarComoEstavaAntesDaMissao === 'function') guardarComoEstavaAntesDaMissao();
   if (typeof dados.santidade === 'number' && estadoEmMemoriaDaConta) estadoEmMemoriaDaConta.santidade = dados.santidade;
 
   mudarDeView('view-licao');
@@ -2894,7 +2898,6 @@ async function finalizarLicaoNoServidor() {
         </div>
         ${r.fe_dobro && typeof svgDoFrasco === 'function' ? `<p class="licao-fim-bonus">${svgDoFrasco('fe_dobro', 22)}${tr('Fé em dobro!')}</p>` : ''}
         ${Number(r.protecao_usada) > 0 && typeof svgDoFrasco === 'function' ? `<p class="licao-fim-bonus">${svgDoFrasco('protecao', 22)}${tr('Seu frasco guardou a ofensiva!')}</p>` : ''}
-        ${ofensivaSubiu ? htmlDaOfensivaAcesa(r.streak) : ''}
         ${insigniaNova ? `
         <div class="insignia-conquistada">
           <h3>${tt('insignia_de', { santo: trilha.santo })}</h3>
@@ -2903,10 +2906,9 @@ async function finalizarLicaoNoServidor() {
       </div>`;
   }
   avisarMascote('concluiu', { medalha: insigniaNova });
-  if (typeof atualizarCaixasDoDia === 'function') atualizarCaixasDoDia();
   if (r.bau_ofensiva && typeof mostrarAvisoTrilhas === 'function') setTimeout(() => mostrarAvisoTrilhas(tr('Você ganhou um baú pela ofensiva de {n} dias!', { n: r.streak })), 1800);
   prepararRodapeDaLicao(tt('continuar'), true);
-  animarOfensivaAcesa(corpo);
+  if (licaoAtual) licaoAtual.passosDoFim = typeof montarPassosDoFim === 'function' ? montarPassosDoFim({ ofensivaSubiu, ofensivaAntes: Number(antesDaMissao.ofensiva) || 0, ofensivaDepois: Number(r.streak) || 0 }) : [];
   };
   if (vaiVoar) {
     tocarVooDaLumi({

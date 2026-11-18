@@ -6084,3 +6084,130 @@ body.modo-kids .licao-cena .licao-enunciado::before { display: none; }
 .quebra-peca:active { transform: scale(0.96); }
 .quebra-vazia { border-radius: 6px; background: rgba(255, 255, 255, 0.04); }
 .quebra-modelo { width: 110px; height: 110px; border-radius: 10px; background-size: cover; border: 2px solid rgba(var(--primary-rgb), 0.6); opacity: 0.9; }
+.barra-app .so-computador, .barra-app-marca { display: none; }
+@media (min-width: 1024px) {
+  .barra-app { display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; width: 232px; z-index: 1050; gap: 4px; padding: 20px 14px 24px; background: linear-gradient(180deg, #0d1230 0%, #090c22 100%); border-right: 1px solid rgba(240, 207, 122, 0.2); overflow-y: auto; scrollbar-width: thin; }
+  .barra-app .so-computador { display: flex; }
+  .barra-app-marca { display: block; padding: 4px 14px 22px; font-family: var(--font-title); font-size: 1.05rem; letter-spacing: 4px; text-transform: uppercase; color: var(--primary-color); white-space: nowrap; }
+  .barra-app-botao { flex: none; flex-direction: row; justify-content: flex-start; align-items: center; gap: 14px; padding: 11px 14px; border-radius: 14px; border: 2px solid transparent; font-size: 0.86rem; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase; color: rgba(236, 228, 205, 0.78); transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
+  .barra-app-botao .icone { flex-shrink: 0; width: 26px; height: 26px; color: var(--primary-color); }
+  .barra-app-botao span { overflow: visible; }
+  .barra-app-botao:hover { background: rgba(255, 255, 255, 0.05); color: #f6e2a0; }
+  .barra-app-botao.ativo { border-color: rgba(240, 207, 122, 0.6); background: rgba(240, 207, 122, 0.12); color: #f6e2a0; }
+  .barra-app-botao[data-destino="mais"] { margin-top: auto; }
+  body:not(.sem-barra-app):not([data-vista="view-perfis"]) { padding-left: 232px; }
+  body:not(.sem-barra-app):not([data-vista="view-perfis"]) .navbar { left: 232px; width: calc(100% - 232px); }
+  body:not(.sem-barra-app):not([data-vista="view-perfis"]) #menu-btn { visibility: hidden; }
+  body.sem-barra-app .barra-app, body[data-vista="view-perfis"] .barra-app { display: none; }
+}
+.coluna-direita[hidden] { display: none !important; }
+.coluna-direita { position: fixed; z-index: 900; top: calc(var(--altura-do-topo, 70px) + 18px); right: 24px; width: 340px; max-height: calc(100vh - var(--altura-do-topo, 70px) - 36px); overflow-y: auto; display: flex; flex-direction: column; gap: 14px; padding-bottom: 8px; scrollbar-width: thin; }
+body.com-coluna-direita .view.active { padding-right: 372px; }
+.cd-numeros { display: flex; justify-content: space-between; gap: 8px; padding: 2px 6px; }
+.cd-numero { display: inline-flex; align-items: center; gap: 6px; font-weight: 900; font-size: 1.02rem; color: var(--text-main); }
+.cd-numero .icone { width: 22px; height: 22px; }
+.cd-fe .icone { color: #f6c94a; }
+.cd-chama .icone { color: #ff9a3c; }
+.cd-santidade .icone { color: #8fd0ff; }
+.cd-cartao { padding: 16px; border-radius: 18px; border: 1.5px solid rgba(240, 207, 122, 0.22); background: linear-gradient(170deg, rgba(24, 30, 72, 0.96), rgba(12, 15, 40, 0.96)); box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3); }
+.cd-cartao-topo { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+.cd-cartao-topo strong { font-size: 1.02rem; color: #f6e2a0; }
+.cd-link { padding: 0; border: 0; background: none; color: var(--primary-color); font-family: var(--font-text); font-size: 0.78rem; font-weight: 900; letter-spacing: 0.6px; text-transform: uppercase; cursor: pointer; }
+.cd-ofensiva { display: flex; align-items: center; gap: 14px; background: radial-gradient(120% 140% at 0% 0%, rgba(255, 140, 40, 0.28), transparent 60%), linear-gradient(170deg, rgba(60, 28, 12, 0.95), rgba(24, 14, 30, 0.96)); border-color: rgba(255, 154, 60, 0.45); }
+.cd-ofensiva-chama .icone { width: 48px; height: 48px; color: #ff9a3c; fill: rgba(255, 154, 60, 0.35); filter: drop-shadow(0 0 10px rgba(255, 140, 40, 0.6)); }
+.cd-ofensiva-textos { display: flex; flex-direction: column; }
+.cd-ofensiva-textos b { font-family: var(--font-title); font-size: 2rem; line-height: 1; color: #ffd08a; }
+.cd-ofensiva-textos small { color: rgba(255, 228, 200, 0.85); font-weight: 700; }
+.cd-liga-corpo { display: flex; align-items: center; gap: 12px; }
+.cd-liga-emblema { flex-shrink: 0; width: 56px; height: 56px; display: grid; place-items: center; }
+.cd-liga-emblema svg { width: 56px; height: 56px; }
+.cd-liga-textos { display: flex; flex-direction: column; gap: 3px; color: var(--text-main); }
+.cd-liga-textos b { font-size: 0.95rem; }
+.cd-sobe { color: #4ade80; font-weight: 800; }
+.cd-desce { color: #f87171; font-weight: 800; }
+.cd-desafios ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.cd-desafios li { display: flex; align-items: center; gap: 10px; }
+.cd-desafio-icone { flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: rgba(240, 207, 122, 0.14); color: #f6c94a; }
+.cd-desafio-icone .icone { width: 18px; height: 18px; }
+.cd-desafios li.feito .cd-desafio-icone { background: rgba(74, 222, 128, 0.2); color: #4ade80; }
+.cd-desafio-textos { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.cd-desafio-textos b { font-size: 0.86rem; color: var(--text-main); line-height: 1.25; }
+.cd-barra { position: relative; display: block; height: 16px; border-radius: 999px; background: rgba(255, 255, 255, 0.1); overflow: hidden; }
+.cd-barra i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 999px; background: linear-gradient(180deg, #ffd66b, #f0a92e); }
+.cd-desafios li.feito .cd-barra i { background: linear-gradient(180deg, #86efac, #22c55e); }
+.cd-barra em { position: relative; display: block; text-align: center; font-style: normal; font-size: 0.68rem; font-weight: 900; line-height: 16px; color: rgba(255, 255, 255, 0.85); }
+.cd-desafio-bau svg { width: 30px; height: 30px; }
+.cd-xadrez-arte { display: flex; justify-content: center; gap: 4px; margin-bottom: 12px; }
+.cd-xadrez-arte .xadrez-peca-svg { width: 56px; height: 56px; }
+.cd-xadrez .licao-botao, .cd-entrar .licao-botao { width: 100%; }
+.cd-entrar strong { display: block; margin-bottom: 12px; color: #f6e2a0; }
+body.com-coluna-direita #view-trilhas #trilhas-stats, body.com-coluna-direita #view-trilhas #desafios-cartao { display: none !important; }
+.cd-liga-nome { font-style: normal; font-family: var(--font-title); font-size: 1.15rem; color: #f6e2a0; }
+.fim-passo { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 24px 6px 10px; text-align: center; }
+.fim-passo h2 { margin: 0; font-family: var(--font-title); font-size: 1.7rem; color: #f6e2a0; }
+.fim-ofensiva-chama { position: relative; width: 150px; height: 180px; }
+.fim-chama-svg { width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 0 26px rgba(255, 150, 40, 0.65)); }
+.fim-chama-corpo { transform-box: fill-box; transform-origin: 50% 100%; }
+.fim-ofensiva-faiscas i { position: absolute; left: 50%; top: 52%; width: 8px; height: 8px; border-radius: 50%; background: #ffd66b; opacity: 0; box-shadow: 0 0 8px #ffb02e; }
+.fim-ofensiva-numero { font-family: var(--font-title); font-size: 4.2rem; line-height: 1; color: #ffb547; text-shadow: 0 4px 0 #9a4a10, 0 0 26px rgba(255, 160, 50, 0.55); }
+.fim-semana { display: flex; gap: 10px; padding: 14px 16px; border-radius: 18px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 180, 70, 0.3); }
+.fim-dia { display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--text-muted); font-weight: 800; }
+.fim-dia small { font-size: 0.8rem; }
+.fim-dia i { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: rgba(255, 255, 255, 0.08); color: rgba(255, 255, 255, 0.35); }
+.fim-dia i .icone { width: 16px; height: 16px; }
+.fim-dia.aceso i { background: linear-gradient(180deg, #ffc35a, #ff8a1f); color: #3a1a02; box-shadow: 0 0 12px rgba(255, 150, 40, 0.55); }
+.fim-dia.hoje small { color: #ffb547; }
+.fim-desafios-lista { list-style: none; margin: 4px 0 0; padding: 0; width: min(100%, 460px); display: flex; flex-direction: column; gap: 12px; }
+.fim-desafios-lista li { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 16px; border: 1.5px solid rgba(240, 207, 122, 0.22); background: rgba(255, 255, 255, 0.04); text-align: left; }
+.fim-desafio-icone { flex-shrink: 0; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: rgba(240, 207, 122, 0.15); color: #f6c94a; }
+.fim-desafio-icone .icone { width: 20px; height: 20px; }
+.fim-desafio-textos { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 7px; }
+.fim-desafio-textos b { color: var(--text-main); font-size: 0.95rem; }
+.fim-barra { position: relative; height: 18px; border-radius: 999px; background: rgba(255, 255, 255, 0.1); overflow: hidden; }
+.fim-barra i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 999px; background: linear-gradient(180deg, #ffd66b, #f0a92e); transition: width 0.9s cubic-bezier(0.3, 0.8, 0.3, 1); }
+.fim-desafios-lista li.feito .fim-barra i { background: linear-gradient(180deg, #86efac, #22c55e); }
+.fim-barra em { position: relative; display: block; text-align: center; font-style: normal; font-size: 0.72rem; font-weight: 900; line-height: 18px; color: #fff; }
+.fim-desafio-bau svg { width: 34px; height: 34px; }
+.fim-abrir-bau { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 22px; border-radius: 18px; border: 2px solid rgba(240, 207, 122, 0.6); background: rgba(240, 207, 122, 0.1); color: #f6e2a0; font-family: var(--font-text); font-weight: 900; cursor: pointer; }
+.fim-desafios-conta { margin: 0; color: var(--text-muted); font-weight: 800; }
+.fim-liga-emblema { width: 84px; height: 84px; display: grid; place-items: center; }
+.fim-liga-emblema svg { width: 84px; height: 84px; }
+.fim-liga-lista { list-style: none; margin: 0; padding: 6px; width: min(100%, 420px); border-radius: 18px; border: 1.5px solid rgba(240, 207, 122, 0.22); background: rgba(255, 255, 255, 0.03); }
+.fim-liga-lista li { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 12px; color: var(--text-main); }
+.fim-liga-lista li b { width: 26px; color: var(--text-muted); }
+.fim-liga-lista li span { flex: 1; text-align: left; font-weight: 700; }
+.fim-liga-lista li em { font-style: normal; color: var(--text-muted); font-size: 0.86rem; }
+.fim-liga-lista li.eu { position: relative; z-index: 1; background: rgba(240, 207, 122, 0.16); box-shadow: inset 0 0 0 1.5px rgba(240, 207, 122, 0.55); }
+.fim-liga-lista li.eu b, .fim-liga-lista li.eu span { color: #f6e2a0; }
+.licao-fim-dados { gap: 14px; }
+.licao-fim-dado { position: relative; min-width: 132px; padding: 30px 16px 14px; border-width: 2.5px; border-radius: 16px; overflow: hidden; }
+.licao-fim-dado::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 22px; background: var(--primary-color); }
+.licao-fim-dado:not(.licao-fim-fe) { border-color: #4ade80; }
+.licao-fim-dado:not(.licao-fim-fe)::before { background: #4ade80; }
+@media (prefers-reduced-motion: no-preference) {
+  .fim-chama-corpo { animation: fimChamaEntra 0.7s cubic-bezier(0.2, 1.5, 0.4, 1) both, fimChamaViva 1.4s ease-in-out 0.7s infinite alternate; }
+  .fim-chama-dentro { transform-box: fill-box; transform-origin: 50% 100%; animation: fimChamaDentro 0.9s ease-in-out 0.7s infinite alternate; }
+  .fim-ofensiva-faiscas i { animation: fimFaisca 1.1s ease-out 0.55s both; }
+  .fim-ofensiva-faiscas i:nth-child(1) { --dx: -70px; --dy: -60px; } .fim-ofensiva-faiscas i:nth-child(2) { --dx: 70px; --dy: -64px; animation-delay: 0.6s; }
+  .fim-ofensiva-faiscas i:nth-child(3) { --dx: -88px; --dy: 4px; animation-delay: 0.65s; } .fim-ofensiva-faiscas i:nth-child(4) { --dx: 88px; --dy: 0; animation-delay: 0.7s; }
+  .fim-ofensiva-faiscas i:nth-child(5) { --dx: -50px; --dy: -96px; animation-delay: 0.62s; } .fim-ofensiva-faiscas i:nth-child(6) { --dx: 52px; --dy: -98px; animation-delay: 0.68s; }
+  .fim-ofensiva-faiscas i:nth-child(7) { --dx: -24px; --dy: -116px; animation-delay: 0.72s; } .fim-ofensiva-faiscas i:nth-child(8) { --dx: 26px; --dy: -112px; animation-delay: 0.58s; }
+  .fim-ofensiva-numero.subiu { animation: fimNumero 0.55s cubic-bezier(0.2, 1.6, 0.4, 1) both; }
+  .fim-dia { animation: fimDia 0.4s cubic-bezier(0.2, 1.4, 0.4, 1) both; animation-delay: calc(0.9s + (6 - var(--i)) * 0.06s); }
+  .fim-dia.hoje.aceso i { animation: fimDiaHoje 0.6s cubic-bezier(0.2, 1.6, 0.4, 1) 1.4s both; }
+  .fim-desafios-lista li { animation: fimEntra 0.4s ease both; animation-delay: calc(var(--i) * 0.1s); }
+  .fim-liga-lista li.eu { animation: fimLigaSobe 1s cubic-bezier(0.3, 0.8, 0.3, 1) 0.4s both; }
+  .fim-passo h2 { animation: fimEntra 0.45s ease both; }
+}
+@keyframes fimChamaEntra { from { transform: scale(0.2); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes fimChamaViva { from { transform: scale(1, 1) rotate(-2deg); } to { transform: scale(0.96, 1.05) rotate(2deg); } }
+@keyframes fimChamaDentro { from { transform: scale(1, 1); } to { transform: scale(0.88, 1.1); } }
+@keyframes fimFaisca { 0% { opacity: 0; transform: translate(-50%, -50%) scale(0.4); } 25% { opacity: 1; } 100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1); } }
+@keyframes fimNumero { 0% { transform: scale(0.6); } 60% { transform: scale(1.25); } 100% { transform: none; } }
+@keyframes fimDia { from { opacity: 0; transform: translateY(10px) scale(0.8); } to { opacity: 1; transform: none; } }
+@keyframes fimDiaHoje { 0% { transform: scale(0.4); } 70% { transform: scale(1.3); } 100% { transform: none; } }
+@keyframes fimEntra { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fimLigaSobe { from { transform: translateY(calc(var(--subiu, 0) * 100%)); } to { transform: none; } }
+.fim-chama-rive { position: absolute; inset: -20px; width: calc(100% + 40px); height: calc(100% + 40px); opacity: 0; transition: opacity 0.25s ease; pointer-events: none; }
+.fim-ofensiva-chama.com-rive .fim-chama-rive { opacity: 1; }
+.fim-ofensiva-chama.com-rive .fim-chama-svg { opacity: 0; }
