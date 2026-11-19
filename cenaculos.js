@@ -817,6 +817,7 @@ function membroDoCenaculo(idDoPerfil) {
 }
 
 async function abrirConversa(idDoCenaculo) {
+  cancelarResposta();
   const perfil = perfilAdultoAtivo();
   if (!perfil) return;
   if (paginaBloqueadaPelaSuspensao('view-cenaculo')) return;
@@ -875,6 +876,9 @@ function normalizarMensagem(m) {
     audio_segundos: m.audio_segundos || 0,
     criada_em: m.criada_em,
     apagada: m.apagada === true || !!m.apagada_em,
+    resposta_a: m.resposta_a || null,
+    resposta: m.resposta || undefined,
+    reacoes: Array.isArray(m.reacoes) ? m.reacoes : undefined,
   };
 }
 
@@ -970,6 +974,7 @@ function renderizarCabecalhoDaConversa() {
   const fotoDoTopo = document.getElementById('cenaculo-topo-foto');
   if (fotoDoTopo) fotoDoTopo.innerHTML = fotoDoTopoDaConversa();
   aplicarFundo(cenaculoAberto.fundo);
+  renderizarFixada();
   atualizarFaixaDoTercoAoVivo();
   const encontro = document.getElementById('cenaculo-encontro');
   if (cenaculoAberto.encontro) {
@@ -1207,12 +1212,14 @@ function htmlDaMensagem(m, comecoDoGrupo) {
   const avatar = minha || ehConversaADois() ? '' : (comecoDoGrupo
     ? `<button type="button" class="cenaculo-msg-avatar" data-perfil="${escaparTexto(m.perfil_id || '')}" data-nome="${escaparTexto((membro && membro.nome) || m.autor_nome)}" aria-label="Ver quem mandou">${avatarDoCenaculo((membro && membro.avatar) || m.autor_avatar, fotosDosMembros[m.perfil_id], 'pequeno')}</button>`
     : '<span class="cenaculo-msg-avatar-vazio"></span>');
+  const reacoes = htmlDasReacoes(m);
   return `
-    <div class="cenaculo-msg${minha ? ' minha' : ''}${comecoDoGrupo ? ' comeco' : ''}${semBalao ? ' sem-balao' : ''}${m.tipo === 'gif' && !m.apagada ? ' com-gif' : ''}" data-id="${m.id}">
+    <div class="cenaculo-msg${minha ? ' minha' : ''}${comecoDoGrupo ? ' comeco' : ''}${semBalao ? ' sem-balao' : ''}${m.tipo === 'gif' && !m.apagada ? ' com-gif' : ''}${reacoes ? ' tem-reacoes' : ''}${mensagensQueEntram.has(m.id) ? ' entrando' : ''}" data-id="${m.id}">
       ${avatar}
       <div class="cenaculo-balao${m.apagada ? ' apagada' : ''}"${m.apagada ? '' : ' role="button" tabindex="0"'}>
-        ${corpoDaMensagem(m)}
+        ${m.apagada ? '' : citacaoDaMensagem(m)}${corpoDaMensagem(m)}
         <span class="cenaculo-hora">${formatarHora(m.criada_em)}${minha && !m.apagada ? htmlDoVisto(m) : ''}</span>
+        ${reacoes}
       </div>
     </div>`;
 }
@@ -1222,6 +1229,7 @@ function renderizarMensagens(rolarParaOFim) {
   if (!lugar) return;
   const pertoDoFim = lugar.scrollHeight - lugar.scrollTop - lugar.clientHeight < 120;
   const visiveis = mensagensDoCenaculo.filter(mensagemVisivel);
+  marcarMensagensQueEntram(visiveis);
   let diaAnterior = '';
   let anterior = null;
   let html = haMensagensMaisAntigas ? '<button type="button" class="perfil-link cenaculo-mais-antigas" id="cenaculo-mais-antigas">Ver mensagens anteriores</button>' : '';
@@ -1246,7 +1254,7 @@ function renderizarMensagens(rolarParaOFim) {
     const balao = linha.querySelector('.cenaculo-balao');
     if (balao && !balao.classList.contains('apagada')) {
       balao.addEventListener('click', (evento) => {
-        if (evento.target.closest('.cenaculo-audio')) return;
+        if (evento.target.closest('.cenaculo-audio') || evento.target.closest('.cenaculo-citacao') || evento.target.closest('.cenaculo-reacao') || linha.dataset.deslizou) return;
         abrirAcoesDaMensagem(linha.dataset.id);
       });
       balao.addEventListener('keydown', (evento) => {
@@ -1257,6 +1265,7 @@ function renderizarMensagens(rolarParaOFim) {
     if (avatar) avatar.addEventListener('click', () => mostrarNomeDoAutor(avatar));
   });
   ligarPlayersDeAudio(lugar);
+  ligarExtrasDasMensagens(lugar);
   const antigas = document.getElementById('cenaculo-mais-antigas');
   if (antigas) antigas.addEventListener('click', carregarMensagensAntigas);
   if (rolarParaOFim || pertoDoFim) lugar.scrollTop = lugar.scrollHeight;
@@ -1592,6 +1601,7 @@ async function carregarMensagensAntigas() {
 
 function juntarMensagem(bruta) {
   const m = normalizarMensagem(bruta);
+  Object.keys(m).forEach((chave) => { if (m[chave] === undefined) delete m[chave]; });
   const indice = mensagensDoCenaculo.findIndex((x) => x.id === m.id);
   if (indice >= 0) mensagensDoCenaculo[indice] = Object.assign(mensagensDoCenaculo[indice], m);
   else {
@@ -1625,6 +1635,12 @@ function ouvirMensagensNovas() {
         })
         .on('broadcast', { event: 'digitando' }, (aviso) => {
           if (cenaculoAberto && cenaculoAberto.id === idDoCenaculo) receberDigitando(aviso && aviso.payload);
+        })
+        .on('broadcast', { event: 'reacao' }, (aviso) => {
+          if (cenaculoAberto && cenaculoAberto.id === idDoCenaculo) receberReacao(aviso && aviso.payload);
+        })
+        .on('broadcast', { event: 'fixada' }, (aviso) => {
+          if (cenaculoAberto && cenaculoAberto.id === idDoCenaculo) receberFixada(aviso && aviso.payload);
         })
         .on('broadcast', { event: 'lido' }, (aviso) => {
           if (cenaculoAberto && cenaculoAberto.id === idDoCenaculo) receberLido(aviso && aviso.payload);
@@ -1689,6 +1705,12 @@ async function enviarAoCenaculo(tipo, conteudo) {
   if (!perfil || !cenaculoAberto) return false;
   const argumentos = { _pid: perfil.id, _cid: cenaculoAberto.id, _tipo: tipo };
   const local = { perfil_id: perfil.id, autor_nome: perfil.nome, autor_avatar: perfil.avatar, tipo, apagada: false };
+  const resposta = respostaDoCenaculo && respostaDoCenaculo.cenaculo === cenaculoAberto.id ? respostaDoCenaculo : null;
+  if (resposta) {
+    argumentos._resposta_a = resposta.id;
+    local.resposta_a = resposta.id;
+    local.resposta = resposta.resumo;
+  }
   if (tipo === 'texto') {
     argumentos._texto = conteudo;
     local.texto = conteudo;
@@ -1705,7 +1727,8 @@ async function enviarAoCenaculo(tipo, conteudo) {
   }
   try {
     const enviada = await chamarCenaculo('cenaculo_enviar', argumentos);
-    juntarMensagem(Object.assign(local, { id: enviada.id, criada_em: enviada.criada_em }));
+    juntarMensagem(Object.assign(local, { id: enviada.id, criada_em: enviada.criada_em }, enviada.resposta ? { resposta: enviada.resposta } : {}));
+    if (resposta) cancelarResposta();
     renderizarMensagens(true);
     agendarAtualizacaoDaLista();
     return true;
@@ -2143,30 +2166,6 @@ function ligarMicrofone() {
   microfone.addEventListener('click', (evento) => {
     if (ultimoFoiDedo) { ultimoFoiDedo = false; evento.preventDefault(); return; }
     comecarGravacao('travado');
-  });
-}
-
-function abrirAcoesDaMensagem(idDaMensagem) {
-  const perfil = perfilAdultoAtivo();
-  const m = mensagensDoCenaculo.find((x) => x.id === idDaMensagem);
-  if (!perfil || !m || m.apagada) return;
-  const minha = m.perfil_id === perfil.id;
-  const organizador = cenaculoAberto && cenaculoAberto.papel === 'organizador';
-  const opcoes = [];
-  if (minha || organizador) opcoes.push('<button type="button" class="cenaculo-opcao" data-acao="apagar">Apagar mensagem</button>');
-  if (!minha) {
-    opcoes.push('<button type="button" class="cenaculo-opcao" data-acao="denunciar">Denunciar mensagem</button>');
-    opcoes.push(`<button type="button" class="cenaculo-opcao" data-acao="bloquear">${tr('Bloquear {nome}', { nome: escaparTexto(m.autor_nome) })}</button>`);
-  }
-  if (opcoes.length === 0) return;
-  const corpo = janelaDoCenaculo(minha ? 'Sua mensagem' : tr('Mensagem de {nome}', { nome: m.autor_nome }), `<div class="cenaculo-opcoes">${opcoes.join('')}</div>`);
-  corpo.querySelectorAll('.cenaculo-opcao').forEach((botao) => {
-    botao.addEventListener('click', () => {
-      const acao = botao.dataset.acao;
-      if (acao === 'apagar') apagarMensagem(m);
-      else if (acao === 'denunciar') abrirDenuncia(m);
-      else if (acao === 'bloquear') confirmarBloqueio(m.perfil_id, m.autor_nome);
-    });
   });
 }
 
@@ -2853,4 +2852,312 @@ function mostrarTercoAoVivo(cid, estadoInicial) {
     if (voltas % 3 === 0 && !document.hidden) buscar();
   }, 2000);
   desenhar();
+}
+
+const EMOJIS_DE_REACAO = ['🙏', '❤️', '😇', '👍', '😂', '😮', '😢', '🔥'];
+const ALFINETE_DO_CENACULO = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3l6 6-3 1-4 4 1 5-2 2-4-4-5 5M9 9l4-4 1-3"/><path d="M9 9l-4 1-2 2 9 9"/></svg>';
+let respostaDoCenaculo = null;
+let idsDeMensagensVistas = new Set();
+let conversaDasMensagensVistas = null;
+let maiorDataVista = '';
+let mensagensQueEntram = new Set();
+let ultimaReacaoTocada = null;
+
+function resumoDaMensagemParaResposta(m) {
+  return { id: m.id, perfil_id: m.perfil_id, autor_nome: m.autor_nome, tipo: m.tipo, texto: m.tipo === 'texto' ? String(m.texto || '').slice(0, 160) : null, apagada: !!m.apagada, criada_em: m.criada_em };
+}
+
+function nomeNaResposta(r) {
+  const perfil = perfilAdultoAtivo();
+  if (perfil && r.perfil_id === perfil.id) return tr('Você');
+  const membro = membroDoCenaculo(r.perfil_id);
+  return (membro && membro.nome) || r.autor_nome || '';
+}
+
+function textoNaResposta(r) {
+  if (r.apagada) return tr('Mensagem apagada');
+  if (r.tipo === 'audio') return tr('Mensagem de voz');
+  if (r.tipo === 'gif') return tr('Figurinha');
+  return r.texto || '';
+}
+
+function citacaoDaMensagem(m) {
+  if (!m.resposta_a) return '';
+  const local = mensagensDoCenaculo.find((x) => x.id === m.resposta_a);
+  const r = local ? resumoDaMensagemParaResposta(local) : m.resposta;
+  if (!r) return '';
+  return `<button type="button" class="cenaculo-citacao" data-ir="${escaparTexto(r.id)}"><b translate="no">${escaparTexto(nomeNaResposta(r))}</b><span translate="no">${escaparTexto(textoNaResposta(r))}</span></button>`;
+}
+
+function htmlDasReacoes(m) {
+  const lista = !m.apagada && Array.isArray(m.reacoes) ? m.reacoes.filter((r) => Number(r.total) > 0) : [];
+  if (!lista.length) return '';
+  const tocada = ultimaReacaoTocada && ultimaReacaoTocada.id === m.id ? ultimaReacaoTocada : null;
+  return `<span class="cenaculo-reacoes">${lista.map((r) => `<button type="button" class="cenaculo-reacao${r.eu ? ' minha' : ''}${tocada && (!tocada.emoji || tocada.emoji === r.emoji) ? ' pulou' : ''}" data-emoji="${escaparTexto(r.emoji)}" aria-label="${escaparTexto(tr('{emoji}: {n}', { emoji: r.emoji, n: r.total }))}">${r.emoji}${Number(r.total) > 1 ? `<b>${r.total}</b>` : ''}</button>`).join('')}</span>`;
+}
+
+function marcarMensagensQueEntram(visiveis) {
+  const conversa = cenaculoAberto ? cenaculoAberto.id : null;
+  if (conversaDasMensagensVistas !== conversa) {
+    conversaDasMensagensVistas = conversa;
+    idsDeMensagensVistas = new Set(visiveis.map((m) => m.id));
+    maiorDataVista = visiveis.reduce((maior, m) => (String(m.criada_em) > maior ? String(m.criada_em) : maior), '');
+    mensagensQueEntram = new Set();
+    return;
+  }
+  mensagensQueEntram = new Set(visiveis.filter((m) => !idsDeMensagensVistas.has(m.id) && String(m.criada_em) >= maiorDataVista).map((m) => m.id));
+  visiveis.forEach((m) => {
+    idsDeMensagensVistas.add(m.id);
+    if (String(m.criada_em) > maiorDataVista) maiorDataVista = String(m.criada_em);
+  });
+}
+
+function irParaMensagem(id) {
+  const lugar = document.getElementById('cenaculo-mensagens');
+  const linha = lugar ? Array.from(lugar.querySelectorAll('.cenaculo-msg')).find((x) => x.dataset.id === id) : null;
+  if (!linha) {
+    avisoDoCenaculo(tr('Essa mensagem é mais antiga. Toque em "Ver mensagens anteriores".'));
+    return;
+  }
+  linha.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  linha.classList.remove('destacada');
+  void linha.offsetWidth;
+  linha.classList.add('destacada');
+  setTimeout(() => linha.classList.remove('destacada'), 1800);
+}
+
+function ligarExtrasDasMensagens(lugar) {
+  lugar.querySelectorAll('.cenaculo-citacao').forEach((botao) => botao.addEventListener('click', (evento) => {
+    evento.stopPropagation();
+    irParaMensagem(botao.dataset.ir);
+  }));
+  lugar.querySelectorAll('.cenaculo-reacao').forEach((botao) => botao.addEventListener('click', (evento) => {
+    evento.stopPropagation();
+    const linha = botao.closest('.cenaculo-msg');
+    if (linha) reagirAMensagem(linha.dataset.id, botao.dataset.emoji);
+  }));
+  lugar.querySelectorAll('.cenaculo-msg').forEach((linha) => ligarDeslizarParaResponder(linha));
+  ultimaReacaoTocada = null;
+}
+
+function ligarDeslizarParaResponder(linha) {
+  const balao = linha.querySelector('.cenaculo-balao');
+  if (!balao || balao.classList.contains('apagada')) return;
+  let inicio = null;
+  let dx = 0;
+  balao.addEventListener('pointerdown', (evento) => {
+    if (evento.pointerType !== 'touch' || evento.target.closest('.cenaculo-audio')) return;
+    inicio = { x: evento.clientX, y: evento.clientY };
+    dx = 0;
+  });
+  balao.addEventListener('pointermove', (evento) => {
+    if (!inicio) return;
+    const mx = evento.clientX - inicio.x;
+    const my = evento.clientY - inicio.y;
+    if (Math.abs(my) > 24 && Math.abs(my) > Math.abs(mx)) {
+      inicio = null;
+      balao.style.transform = '';
+      linha.classList.remove('vai-responder');
+      return;
+    }
+    dx = Math.max(0, Math.min(80, mx));
+    balao.style.transform = dx ? `translateX(${dx}px)` : '';
+    linha.classList.toggle('vai-responder', dx > 55);
+  });
+  const soltar = () => {
+    if (!inicio) return;
+    inicio = null;
+    const fazer = dx > 55;
+    if (dx > 8) {
+      linha.dataset.deslizou = '1';
+      setTimeout(() => { delete linha.dataset.deslizou; }, 400);
+    }
+    balao.style.transition = 'transform 0.2s ease';
+    balao.style.transform = '';
+    setTimeout(() => { balao.style.transition = ''; }, 220);
+    linha.classList.remove('vai-responder');
+    dx = 0;
+    if (fazer) {
+      const m = mensagensDoCenaculo.find((x) => x.id === linha.dataset.id);
+      if (m) responderMensagem(m);
+    }
+  };
+  balao.addEventListener('pointerup', soltar);
+  balao.addEventListener('pointercancel', soltar);
+}
+
+function barraDeResposta() {
+  let barra = document.getElementById('cenaculo-respondendo');
+  if (!barra) {
+    const formulario = document.getElementById('cenaculo-escrever');
+    if (!formulario || !formulario.parentElement) return null;
+    barra = document.createElement('div');
+    barra.id = 'cenaculo-respondendo';
+    barra.className = 'cenaculo-respondendo';
+    barra.hidden = true;
+    formulario.parentElement.insertBefore(barra, formulario);
+  }
+  return barra;
+}
+
+function responderMensagem(m) {
+  if (!m || m.apagada || !cenaculoAberto) return;
+  const perfil = perfilAdultoAtivo();
+  respostaDoCenaculo = { id: m.id, cenaculo: cenaculoAberto.id, resumo: resumoDaMensagemParaResposta(m) };
+  const barra = barraDeResposta();
+  if (barra) {
+    const r = respostaDoCenaculo.resumo;
+    const titulo = perfil && r.perfil_id === perfil.id ? tr('Respondendo à sua mensagem') : tr('Respondendo a {nome}', { nome: nomeNaResposta(r) });
+    barra.innerHTML = `<span class="cenaculo-respondendo-textos"><b translate="no">${escaparTexto(titulo)}</b><span translate="no">${escaparTexto(textoNaResposta(r))}</span></span><button type="button" class="icon-btn" id="cenaculo-respondendo-fechar" aria-label="${escaparTexto(tr('Cancelar resposta'))}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>`;
+    barra.hidden = false;
+    barra.querySelector('#cenaculo-respondendo-fechar').addEventListener('click', cancelarResposta);
+  }
+  const campo = document.getElementById('cenaculo-texto');
+  if (campo) campo.focus();
+}
+
+function cancelarResposta() {
+  respostaDoCenaculo = null;
+  const barra = document.getElementById('cenaculo-respondendo');
+  if (barra) {
+    barra.hidden = true;
+    barra.innerHTML = '';
+  }
+}
+
+function reacoesDepoisDeTocar(lista, emoji) {
+  const nova = lista.map((r) => Object.assign({}, r));
+  const minha = nova.find((r) => r.eu);
+  if (minha) {
+    minha.total = Number(minha.total) - 1;
+    minha.eu = false;
+  }
+  if (!minha || minha.emoji !== emoji) {
+    const existente = nova.find((r) => r.emoji === emoji);
+    if (existente) {
+      existente.total = Number(existente.total) + 1;
+      existente.eu = true;
+    } else nova.push({ emoji, total: 1, eu: true });
+  }
+  return nova.filter((r) => Number(r.total) > 0);
+}
+
+async function reagirAMensagem(id, emoji) {
+  const perfil = perfilAdultoAtivo();
+  const m = mensagensDoCenaculo.find((x) => x.id === id);
+  if (!perfil || !m || m.apagada || !cenaculoAberto) return;
+  const antes = Array.isArray(m.reacoes) ? m.reacoes.map((r) => Object.assign({}, r)) : [];
+  m.reacoes = reacoesDepoisDeTocar(antes, emoji);
+  ultimaReacaoTocada = { id, emoji };
+  renderizarMensagens(false);
+  try {
+    const resposta = await chamarCenaculo('cenaculo_reagir', { _pid: perfil.id, _mid: id, _emoji: emoji });
+    if (resposta && Array.isArray(resposta.reacoes)) {
+      m.reacoes = resposta.reacoes;
+      renderizarMensagens(false);
+    }
+    avisarPeloCanal('reacao', { mensagem_id: id, perfil_id: perfil.id }, cenaculoAberto.id);
+  } catch (erro) {
+    m.reacoes = antes;
+    renderizarMensagens(false);
+    avisoDoCenaculo(mensagemDoCenaculo(erro));
+  }
+}
+
+async function receberReacao(dados) {
+  const perfil = perfilAdultoAtivo();
+  if (!perfil || !dados || !dados.mensagem_id || dados.perfil_id === perfil.id) return;
+  const m = mensagensDoCenaculo.find((x) => x.id === dados.mensagem_id);
+  if (!m) return;
+  try {
+    const resposta = await chamarCenaculo('cenaculo_reacoes_de', { _pid: perfil.id, _mid: m.id });
+    if (resposta && Array.isArray(resposta.reacoes)) {
+      m.reacoes = resposta.reacoes;
+      ultimaReacaoTocada = { id: m.id };
+      renderizarMensagens(false);
+    }
+  } catch (e) {
+  }
+}
+
+function renderizarFixada() {
+  let faixa = document.getElementById('cenaculo-fixada');
+  if (!faixa) {
+    const topo = document.querySelector('#cenaculo-conversa .cenaculo-topo');
+    if (!topo) return;
+    faixa = document.createElement('div');
+    faixa.id = 'cenaculo-fixada';
+    faixa.className = 'cenaculo-fixada';
+    faixa.hidden = true;
+    topo.after(faixa);
+  }
+  const fixada = cenaculoAberto && cenaculoAberto.fixada;
+  if (!fixada) {
+    faixa.hidden = true;
+    faixa.innerHTML = '';
+    return;
+  }
+  faixa.hidden = false;
+  faixa.innerHTML = `<button type="button" class="cenaculo-fixada-ir"><span class="cenaculo-fixada-icone">${ALFINETE_DO_CENACULO}</span><span class="cenaculo-fixada-textos"><b>${escaparTexto(tr('Mensagem fixada'))}</b><span translate="no">${escaparTexto(nomeNaResposta(fixada))}: ${escaparTexto(textoNaResposta(fixada))}</span></span></button>${cenaculoAberto.pode_fixar ? `<button type="button" class="icon-btn cenaculo-fixada-tirar" aria-label="${escaparTexto(tr('Desafixar mensagem'))}"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>` : ''}`;
+  faixa.querySelector('.cenaculo-fixada-ir').addEventListener('click', () => irParaMensagem(fixada.id));
+  const tirar = faixa.querySelector('.cenaculo-fixada-tirar');
+  if (tirar) tirar.addEventListener('click', () => fixarMensagem(null));
+}
+
+async function fixarMensagem(m) {
+  const perfil = perfilAdultoAtivo();
+  if (!perfil || !cenaculoAberto) return;
+  try {
+    const resposta = await chamarCenaculo('cenaculo_fixar', { _pid: perfil.id, _cid: cenaculoAberto.id, _mid: m ? m.id : null });
+    cenaculoAberto.fixada = resposta ? resposta.fixada : null;
+    renderizarFixada();
+    fecharJanelaDoCenaculo();
+    avisarPeloCanal('fixada', { perfil_id: perfil.id }, cenaculoAberto.id);
+    avisoDoCenaculo(m ? tr('Mensagem fixada.') : tr('Mensagem desafixada.'));
+  } catch (erro) {
+    avisoDoCenaculo(mensagemDoCenaculo(erro));
+  }
+}
+
+function receberFixada(dados) {
+  const perfil = perfilAdultoAtivo();
+  if (!perfil || !dados || dados.perfil_id === perfil.id) return;
+  recarregarMembros();
+}
+
+function abrirAcoesDaMensagem(idDaMensagem) {
+  const perfil = perfilAdultoAtivo();
+  const m = mensagensDoCenaculo.find((x) => x.id === idDaMensagem);
+  if (!perfil || !m || m.apagada) return;
+  const minha = m.perfil_id === perfil.id;
+  const organizador = cenaculoAberto && cenaculoAberto.papel === 'organizador';
+  const fixada = !!(cenaculoAberto && cenaculoAberto.fixada && cenaculoAberto.fixada.id === m.id);
+  const minhaReacao = (m.reacoes || []).find((r) => r.eu);
+  const opcoes = [`<button type="button" class="cenaculo-opcao" data-acao="responder">${escaparTexto(tr('Responder'))}</button>`];
+  if (m.tipo === 'texto' && m.texto && navigator.clipboard) opcoes.push(`<button type="button" class="cenaculo-opcao" data-acao="copiar">${escaparTexto(tr('Copiar texto'))}</button>`);
+  if (cenaculoAberto && cenaculoAberto.pode_fixar) opcoes.push(`<button type="button" class="cenaculo-opcao" data-acao="fixar">${escaparTexto(fixada ? tr('Desafixar mensagem') : tr('Fixar mensagem'))}</button>`);
+  if (minha || organizador) opcoes.push('<button type="button" class="cenaculo-opcao" data-acao="apagar">Apagar mensagem</button>');
+  if (!minha) {
+    opcoes.push('<button type="button" class="cenaculo-opcao" data-acao="denunciar">Denunciar mensagem</button>');
+    opcoes.push(`<button type="button" class="cenaculo-opcao" data-acao="bloquear">${tr('Bloquear {nome}', { nome: escaparTexto(m.autor_nome) })}</button>`);
+  }
+  const barra = `<div class="cenaculo-reagir-barra" role="group" aria-label="${escaparTexto(tr('Reagir'))}">${EMOJIS_DE_REACAO.map((emoji, i) => `<button type="button" class="cenaculo-reagir${minhaReacao && minhaReacao.emoji === emoji ? ' escolhida' : ''}" data-emoji="${emoji}" style="--i:${i}" aria-label="${escaparTexto(tr('Reagir com {emoji}', { emoji }))}">${emoji}</button>`).join('')}</div>`;
+  const corpo = janelaDoCenaculo(minha ? 'Sua mensagem' : tr('Mensagem de {nome}', { nome: m.autor_nome }), `${barra}<div class="cenaculo-opcoes">${opcoes.join('')}</div>`);
+  corpo.querySelectorAll('.cenaculo-reagir').forEach((botao) => botao.addEventListener('click', () => {
+    fecharJanelaDoCenaculo();
+    reagirAMensagem(m.id, botao.dataset.emoji);
+  }));
+  corpo.querySelectorAll('.cenaculo-opcao').forEach((botao) => {
+    botao.addEventListener('click', () => {
+      const acao = botao.dataset.acao;
+      if (acao === 'responder') { fecharJanelaDoCenaculo(); responderMensagem(m); }
+      else if (acao === 'copiar') {
+        fecharJanelaDoCenaculo();
+        navigator.clipboard.writeText(m.texto).then(() => avisoDoCenaculo(tr('Texto copiado.'))).catch(() => {});
+      } else if (acao === 'fixar') fixarMensagem(fixada ? null : m);
+      else if (acao === 'apagar') apagarMensagem(m);
+      else if (acao === 'denunciar') abrirDenuncia(m);
+      else if (acao === 'bloquear') confirmarBloqueio(m.perfil_id, m.autor_nome);
+    });
+  });
 }
