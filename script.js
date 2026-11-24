@@ -2138,8 +2138,12 @@ const TRADUCOES = {
     conta_ou_email: 'ou com e-mail',
     conta_esqueci: 'Esqueci minha senha',
     conta_senha_dica: 'Pelo menos 8 caracteres, com letras e números.',
-    conta_aceito: 'Li e aceito a',
+    conta_aceito: 'Li e aceito os',
     conta_politica: 'Política de Privacidade',
+    conta_termos: 'Termos de Uso',
+    conta_e_a: 'e a',
+    conta_maioridade: 'Declaro que tenho 18 anos ou mais',
+    conta_google_aviso: 'Ao continuar com o Google, você declara ter 18 anos ou mais e aceita os Termos de Uso e a Política de Privacidade.',
     conta_recuperar_desc: 'Digite o e-mail da sua conta. Vamos mandar um código para você criar uma senha nova.',
     conta_recuperar_botao: 'Enviar código',
     conta_voltar_entrar: 'Voltar para Entrar',
@@ -2230,6 +2234,10 @@ const TRADUCOES = {
     conta_senha_dica: 'At least 8 characters, with letters and numbers.',
     conta_aceito: 'I have read and accept the',
     conta_politica: 'Privacy Policy',
+    conta_termos: 'Terms of Use',
+    conta_e_a: 'and the',
+    conta_maioridade: 'I declare that I am 18 or older',
+    conta_google_aviso: 'By continuing with Google, you declare that you are 18 or older and accept the Terms of Use and the Privacy Policy.',
     conta_recuperar_desc: 'Type the email of your account. We will send you a code to create a new password.',
     conta_recuperar_botao: 'Send code',
     conta_voltar_entrar: 'Back to Sign in',
@@ -2318,8 +2326,12 @@ const TRADUCOES = {
     conta_ou_email: 'o con correo',
     conta_esqueci: 'Olvidé mi contraseña',
     conta_senha_dica: 'Al menos 8 caracteres, con letras y números.',
-    conta_aceito: 'He leído y acepto la',
+    conta_aceito: 'He leído y acepto los',
     conta_politica: 'Política de Privacidad',
+    conta_termos: 'Términos de Uso',
+    conta_e_a: 'y la',
+    conta_maioridade: 'Declaro que tengo 18 años o más',
+    conta_google_aviso: 'Al continuar con Google, declaras que tienes 18 años o más y aceptas los Términos de Uso y la Política de Privacidad.',
     conta_recuperar_desc: 'Escribe el correo de tu cuenta. Te enviaremos un código para crear una contraseña nueva.',
     conta_recuperar_botao: 'Enviar código',
     conta_voltar_entrar: 'Volver a Entrar',
@@ -2415,6 +2427,13 @@ function aplicarIdioma(codigo) {
   document.querySelectorAll('#idioma-menu .idioma-opcao, .side-idioma').forEach(btn => {
     btn.classList.toggle('idioma-ativa', btn.dataset.lang === codigo);
   });
+  const botaoDoIdioma = document.getElementById('idioma-btn');
+  const bandeiraAtual = document.querySelector(`#idioma-menu .idioma-opcao[data-lang="${codigo}"] .bandeira`);
+  const htmlDaBandeira = bandeiraAtual && typeof bandeiraAtual.outerHTML === 'string' ? bandeiraAtual.outerHTML : '';
+  if (botaoDoIdioma && htmlDaBandeira) {
+    botaoDoIdioma.innerHTML = htmlDaBandeira.replace(/bandeira-(luz|recorte)-/g, 'bandeira-$1-topo-');
+    botaoDoIdioma.classList.add('com-bandeira');
+  }
   document.querySelectorAll('[data-idioma]').forEach(btn => {
     const ativa = btn.dataset.idioma === codigo;
     btn.classList.toggle('ativa', ativa);
@@ -2741,7 +2760,7 @@ function mudarDeView(idNovaView, opcoes) {
   if (idNovaView === 'view-home' && typeof desenharRetrospectivaNoInicio === 'function') desenharRetrospectivaNoInicio();
   if (idNovaView !== 'view-dormir' && typeof pararHistoriaParaDormir === 'function') pararHistoriaParaDormir();
   if (idNovaView !== 'view-exame' && typeof marcasDoExame !== 'undefined') { marcasDoExame = new Set(); const exame = document.getElementById('exame-conteudo'); if (exame) setTimeout(() => { if (!document.getElementById('view-exame').classList.contains('active')) exame.innerHTML = ''; }, 400); }
-  const todasAsViews = ['view-home', 'view-detail', 'view-ia', 'view-auth', 'view-perfil', 'view-privacidade', 'view-oracoes', 'view-leitura', 'view-terco', 'view-padroeiro', 'view-trilhas', 'view-licao', 'view-perfis', 'view-ranking', 'view-planos', 'view-termos', 'view-completar', 'view-cenaculos', 'view-cenaculo', 'view-comunidade', 'view-cursos', 'view-jogos', 'view-suporte', 'view-advento', 'view-exame', 'view-novenas', 'view-dormir'];
+  const todasAsViews = Array.from(document.querySelectorAll('.view[id]')).map((v) => v.id);
   const viewAtual = todasAsViews.map(id => document.getElementById(id)).find(v => v && v.classList.contains('active'));
   if (idNovaView !== 'view-licao' && typeof pararVozInfantil === 'function') pararVozInfantil(false);
   if (idNovaView !== 'view-cursos' && typeof pararVideoDoCurso === 'function') pararVideoDoCurso();
@@ -2825,6 +2844,14 @@ function irParaLogin() {
 }
 
 let voltarDaPrivacidadePara = 'view-home';
+
+const DOMINIOS_DE_EMAIL_DESCARTAVEL = ['mailinator.com', 'guerrillamail.com', 'guerrillamail.net', 'guerrillamail.org', 'sharklasers.com', 'grr.la', '10minutemail.com', '10minutemail.net', 'temp-mail.org', 'tempmail.com', 'tempmail.net', 'tempmailo.com', 'temp-mail.io', 'tempmail.dev', 'yopmail.com', 'yopmail.fr', 'yopmail.net', 'getnada.com', 'nada.email', 'dispostable.com', 'trashmail.com', 'trashmail.de', 'trashmail.net', 'maildrop.cc', 'mailnesia.com', 'mintemail.com', 'mohmal.com', 'emailondeck.com', 'fakeinbox.com', 'throwawaymail.com', 'mytemp.email', 'tempinbox.com', 'mailcatch.com', 'spamgourmet.com', 'mailpoof.com', 'burnermail.io', 'moakt.com', 'tmail.ws', 'tmpmail.org', 'tmpmail.net', 'emailfake.com', 'fakemail.net', 'luxusmail.org', 'inboxkitten.com', 'mail.tm', 'mail.gw', 'tempm.com', 'linshiyouxiang.net', 'disposablemail.com', 'byom.de', 'mailforspam.com', 'spambox.us', 'jetable.org', 'tempr.email', 'discard.email', 'cs.email', 'email-temp.com', 'correotemporal.org', 'emailtemporal.org', 'tempail.com', 'minuteinbox.com'];
+
+function emailDescartavel(email) {
+  const dominio = String(email || '').split('@')[1] || '';
+  const d = dominio.trim().toLowerCase();
+  return !!d && DOMINIOS_DE_EMAIL_DESCARTAVEL.some((x) => d === x || d.endsWith(`.${x}`));
+}
 
 function abrirPrivacidade() {
   const atual = typeof idDaPaginaVisivel === 'function' ? idDaPaginaVisivel() : null;
@@ -3002,6 +3029,8 @@ function iniciarPaginaDeAutenticacao() {
 
   const verPrivacidade = document.getElementById('auth-ver-privacidade');
   if (verPrivacidade) verPrivacidade.addEventListener('click', abrirPrivacidade);
+  const verTermos = document.getElementById('auth-ver-termos');
+  if (verTermos) verTermos.addEventListener('click', abrirTermosDaAssinatura);
 
   formEntrar.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -3035,10 +3064,13 @@ function iniciarPaginaDeAutenticacao() {
     const email = document.getElementById('cadastrar-email').value.trim();
     const senha = document.getElementById('cadastrar-senha').value;
     const aceitou = document.getElementById('cadastrar-aceite').checked;
+    const maior = document.getElementById('cadastrar-maioridade') ? document.getElementById('cadastrar-maioridade').checked : true;
     if (nome.length < 2) { avisoDeLogin('Digite o seu nome.', 'erro'); return; }
     if (senha.length < 8) { avisoDeLogin('A senha precisa ter pelo menos 8 caracteres.', 'erro'); return; }
     if (!/[A-Za-zÀ-ÿ]/.test(senha) || !/[0-9]/.test(senha)) { avisoDeLogin('A senha precisa ter pelo menos uma letra e um número.', 'erro'); return; }
-    if (!aceitou) { avisoDeLogin('Para criar a conta, marque que leu e aceita a Política de Privacidade.', 'erro'); return; }
+    if (emailDescartavel(email)) { avisoDeLogin('Use um e-mail permanente. E-mails temporários não são aceitos.', 'erro'); return; }
+    if (!aceitou) { avisoDeLogin('Para criar a conta, marque que leu e aceita os Termos de Uso e a Política de Privacidade.', 'erro'); return; }
+    if (!maior) { avisoDeLogin('A conta só pode ser criada por quem tem 18 anos ou mais. As crianças usam os perfis infantis criados pelos pais.', 'erro'); return; }
     const captchaToken = tokenDoCaptcha('cadastrar');
     if (captchaToken === null) { avisoDeLogin('Confirme que você não é um robô.', 'erro'); return; }
     avisoDeLogin('Criando sua conta...');
@@ -3055,7 +3087,7 @@ function iniciarPaginaDeAutenticacao() {
       email,
       password: senha,
       options: {
-        data: { nome, cadastro_completo: true, install_id: instalacao, locale: 'pt-BR', privacidade_aceita_em: new Date().toISOString() },
+        data: { nome, cadastro_completo: true, install_id: instalacao, locale: 'pt-BR', privacidade_aceita_em: new Date().toISOString(), termos_aceitos_em: new Date().toISOString(), maioridade_declarada_em: new Date().toISOString() },
         captchaToken,
       },
     });
@@ -4732,6 +4764,7 @@ if (botaoInicioDoMenu) {
 }
 
 function openSidebar() {
+  desenharPerfilNoMenu();
   clearTimeout(fimDoFechamentoDoMenu);
   sidebar.classList.remove('fechando');
   menuBtn.classList.remove('menu-btn-pulso');
@@ -6147,4 +6180,33 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
   });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const sobre = document.getElementById('nav-sobre');
+  if (sobre) sobre.addEventListener('click', () => { if (typeof closeSidebar === 'function') closeSidebar(); mudarDeView('view-sobre'); });
+  const voltar = document.getElementById('btn-back-sobre');
+  if (voltar) voltar.addEventListener('click', () => mudarDeView('view-home'));
+});
+
+function desenharPerfilNoMenu() {
+  const nav = document.querySelector('#sidebar .sidebar-nav');
+  if (!nav) return;
+  let lugar = document.getElementById('sidebar-perfil');
+  if (!lugar) {
+    lugar = document.createElement('div');
+    lugar.id = 'sidebar-perfil';
+    lugar.className = 'sidebar-perfil';
+    nav.insertBefore(lugar, nav.firstChild);
+  }
+  const membro = typeof membroAtivo !== 'undefined' ? membroAtivo : null;
+  const logado = typeof contaLogada === 'function' && contaLogada();
+  const infantil = document.body.classList.contains('modo-kids');
+  if (!logado || !membro || infantil) { lugar.hidden = true; lugar.innerHTML = ''; return; }
+  lugar.hidden = false;
+  const avatar = typeof avatarDoCenaculo === 'function' ? avatarDoCenaculo(membro.avatar, membro.fotoUrl, 'pequeno') : '';
+  const nome = String(membro.nome || '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  lugar.innerHTML = `<button type="button" class="sidebar-perfil-eu" id="sidebar-perfil-eu">${avatar}<span class="sidebar-perfil-textos"><b translate="no">${nome}</b><small>${tr('Meu perfil')}</small></span></button><button type="button" class="sidebar-perfil-trocar" id="sidebar-perfil-trocar">${tr('Trocar perfil')}</button>`;
+  lugar.querySelector('#sidebar-perfil-eu').addEventListener('click', () => { if (typeof closeSidebar === 'function') closeSidebar(); const botao = document.getElementById('conta-menu-perfil'); if (botao) botao.click(); });
+  lugar.querySelector('#sidebar-perfil-trocar').addEventListener('click', () => { if (typeof closeSidebar === 'function') closeSidebar(); if (typeof abrirSelecaoDePerfis === 'function') abrirSelecaoDePerfis('inicio'); });
 }

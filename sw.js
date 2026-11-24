@@ -1,4 +1,4 @@
-const CACHE_NOME = 'lumina-sancti-1.32.0';
+const CACHE_NOME = 'lumina-sancti-1.33.0';
 const CACHE_DO_WIDGET = 'lumina-widget';
 const ETIQUETA_DO_WIDGET = 'lumina-dia';
 const ARQUIVOS_ESSENCIAIS = [
@@ -21,6 +21,7 @@ const ARQUIVOS_ESSENCIAIS = [
   './jogos.js',
   './xadrez.js',
   './damas.js',
+  './itens.js',
   './jogos-mais.js',
   './layout-computador.js',
   './rive-site.js',

@@ -6451,3 +6451,166 @@ body.modo-kids .so-adultos-pedidos { display: none !important; }
 .leitura-santo { margin-top: 4px; padding: 0; border: 0; background: none; color: #f6e2a0; font: inherit; font-weight: 700; cursor: pointer; text-decoration: underline; text-decoration-color: rgba(246, 226, 160, 0.4); text-underline-offset: 4px; }
 .leitura-ler { display: inline-flex; justify-content: center; width: auto; min-width: 240px; margin-top: 12px; text-decoration: none; }
 .leitura-fonte { color: var(--text-muted); font-size: 0.8rem; }
+.xadrez-tabuleiro.tema-jardim .xadrez-casa.clara { background: linear-gradient(135deg, #f3f6dc, #e3ebc4); }
+.xadrez-tabuleiro.tema-jardim .xadrez-casa.escura { background: linear-gradient(135deg, #7fa65e, #5d8742); }
+.xadrez-tabuleiro.tema-jardim .xadrez-casa.clara .xadrez-coord { color: #5d8742; }
+.xadrez-tabuleiro.tema-jardim .xadrez-casa.escura .xadrez-coord { color: #f3f6dc; }
+.xadrez-tabuleiro.tema-marmore .xadrez-casa.clara { background: linear-gradient(125deg, #fbfaf6 0%, #ebe6db 40%, #fbfaf6 55%, #e2dccf 100%); }
+.xadrez-tabuleiro.tema-marmore .xadrez-casa.escura { background: linear-gradient(125deg, #8b909b 0%, #6a6f7a 45%, #969ba5 60%, #5d626c 100%); }
+.xadrez-tabuleiro.tema-marmore .xadrez-casa.clara .xadrez-coord { color: #6a6f7a; }
+.xadrez-tabuleiro.tema-marmore .xadrez-casa.escura .xadrez-coord { color: #f2efe8; }
+.xadrez-tabuleiro.tema-noite .xadrez-casa.clara { background: linear-gradient(135deg, #3a4683, #2c366b); }
+.xadrez-tabuleiro.tema-noite .xadrez-casa.escura { background: radial-gradient(circle at 30% 30%, rgba(255, 236, 170, 0.9) 0 1px, transparent 1.5px), radial-gradient(circle at 72% 64%, rgba(255, 255, 255, 0.75) 0 1px, transparent 1.4px), linear-gradient(135deg, #161c42, #0c1030); }
+.xadrez-tabuleiro.tema-noite .xadrez-casa .xadrez-coord { color: #c9d2ff; }
+.xadrez-tabuleiro.tema-vitral .xadrez-casa.clara { background: linear-gradient(135deg, #fbe7a6, #e8c264); }
+.xadrez-tabuleiro.tema-vitral .xadrez-casa.escura { background: radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.18), transparent 60%), linear-gradient(135deg, #6a35a3, #3f1a6e); box-shadow: inset 0 0 0 1px rgba(255, 214, 120, 0.35); }
+.xadrez-tabuleiro.tema-vitral .xadrez-casa.clara .xadrez-coord { color: #5b2a86; }
+.xadrez-tabuleiro.tema-vitral .xadrez-casa.escura .xadrez-coord { color: #fbe7a6; }
+.xadrez-tabuleiro.tema-diamante .xadrez-casa.clara { background: linear-gradient(135deg, #ffffff 0%, #e4f4ff 45%, #ffffff 60%, #cfe9ff 100%); }
+.xadrez-tabuleiro.tema-diamante .xadrez-casa.escura { background: linear-gradient(135deg, #9cc9f2 0%, #5f93d0 45%, #a8d2f6 60%, #4b7fbe 100%); }
+.xadrez-tabuleiro.tema-diamante .xadrez-casa.clara .xadrez-coord { color: #4b7fbe; }
+.xadrez-tabuleiro.tema-diamante .xadrez-casa.escura .xadrez-coord { color: #ffffff; }
+.xadrez-tabuleiro.tema-diamante::after { content: ''; position: absolute; inset: 9px; z-index: 4; pointer-events: none; border-radius: 4px; background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.35) 50%, transparent 65%); background-size: 250% 100%; animation: tabuleiroBrilha 5s ease-in-out infinite; }
+.xadrez-tabuleiro.moldura-prata { background: linear-gradient(145deg, #ffffff 0%, #c9d1dc 22%, #6f7a88 50%, #dde3ea 78%, #7c8693 100%); }
+.xadrez-tabuleiro.moldura-bronze { background: linear-gradient(145deg, #ffd9b0 0%, #c77d3f 22%, #6b3410 50%, #d99a5e 78%, #7a3f15 100%); }
+.xadrez-tabuleiro.moldura-esmeralda { background: linear-gradient(145deg, #b9f5d0 0%, #2fbf71 22%, #0b5e34 50%, #48d189 78%, #0f6e3c 100%); }
+.xadrez-tabuleiro.moldura-rubi { background: linear-gradient(145deg, #ffc2cc 0%, #e0324e 22%, #7a0a1e 50%, #f0506a 78%, #8c0f26 100%); }
+.xadrez-tabuleiro.moldura-ametista { background: linear-gradient(145deg, #ecd2ff 0%, #9b59d9 22%, #4a1882 50%, #b47ae8 78%, #55209a 100%); }
+.xadrez-tabuleiro.moldura-diamante { background: linear-gradient(145deg, #ffffff 0%, #cfe9ff 18%, #7fb6ec 38%, #ffffff 52%, #a6d4ff 70%, #5f93d0 100%); background-size: 200% 200%; animation: molduraBrilha 4s ease-in-out infinite; box-shadow: 0 22px 44px rgba(0, 0, 0, 0.55), 0 0 22px rgba(160, 210, 255, 0.55), inset 0 0 0 1px rgba(40, 70, 120, 0.5); }
+.conjunto-diamante .xadrez-brilho { transform-box: fill-box; transform-origin: center; }
+@media (prefers-reduced-motion: no-preference) {
+  .xadrez-casa .conjunto-diamante .xadrez-brilho { animation: pecaBrilha 2.6s ease-in-out infinite; }
+}
+@keyframes pecaBrilha { 0%, 70%, 100% { opacity: 0; transform: scale(0.3); } 80% { opacity: 1; transform: scale(1); } }
+@keyframes tabuleiroBrilha { 0%, 100% { background-position: 120% 0; } 50% { background-position: -20% 0; } }
+@keyframes molduraBrilha { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+.xadrez-personalizar { display: inline-flex; align-items: center; gap: 8px; margin: 2px auto 0; padding: 9px 18px; border-radius: 999px; border: 1.5px solid rgba(var(--primary-rgb), 0.45); background: rgba(var(--primary-rgb), 0.1); color: #f6e2a0; font-family: var(--font-text); font-weight: 800; cursor: pointer; }
+.xadrez-personalizar:hover { background: rgba(var(--primary-rgb), 0.18); }
+.colecao-janela .bau-janela-caixa { width: min(560px, 100%); max-height: calc(100vh - 40px); overflow-y: auto; }
+.colecao-conta { color: var(--text-muted); font-size: 0.86rem; font-weight: 700; }
+.colecao-abas { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.colecao-aba { padding: 7px 14px; border-radius: 999px; border: 1px solid rgba(240, 207, 122, 0.25); background: rgba(255, 255, 255, 0.04); color: var(--text-muted); font-family: var(--font-text); font-weight: 800; font-size: 0.84rem; cursor: pointer; }
+.colecao-aba.ativa { color: #f6e2a0; border-color: rgba(240, 207, 122, 0.7); background: rgba(240, 207, 122, 0.14); }
+.colecao-grade { width: 100%; display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+.colecao-item { --raridade: 212, 175, 55; position: relative; display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 12px 8px 10px; border-radius: 16px; border: 1.5px solid rgba(var(--raridade), 0.5); background: radial-gradient(100% 80% at 50% 0%, rgba(var(--raridade), 0.18), transparent 70%), rgba(10, 13, 36, 0.8); color: var(--text-main); font-family: var(--font-text); cursor: pointer; transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.colecao-item:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(var(--raridade), 0.25); }
+.colecao-item b { font-size: 0.9rem; }
+.colecao-item small { color: var(--text-muted); font-size: 0.74rem; font-weight: 700; }
+.colecao-item.usando { box-shadow: 0 0 0 2px rgb(var(--raridade)), 0 0 18px rgba(var(--raridade), 0.45); }
+.colecao-item.usando small { color: #86efac; }
+.colecao-item.bloqueado { cursor: default; }
+.colecao-item.bloqueado .item-previa { filter: saturate(0.8) brightness(0.8); }
+.colecao-item.bloqueado::after { content: ''; position: absolute; top: 10px; right: 10px; width: 18px; height: 18px; background: no-repeat center / contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d4af37' stroke-width='2'%3E%3Crect x='4' y='11' width='16' height='10' rx='2'/%3E%3Cpath d='M8 11V7a4 4 0 0 1 8 0v4'/%3E%3C/svg%3E"); }
+.colecao-aviso { margin: 0; color: var(--text-muted); text-align: center; font-size: 0.88rem; }
+.raridade-padrao { --raridade: 212, 175, 55; }
+.raridade-comum { --raridade: 185, 194, 207; }
+.raridade-raro { --raridade: 78, 163, 255; }
+.raridade-epico { --raridade: 181, 123, 255; }
+.raridade-lendario { --raridade: 255, 204, 77; }
+.item-raridade { font-style: normal; font-size: 0.7rem; font-weight: 900; letter-spacing: 0.6px; text-transform: uppercase; color: rgb(var(--raridade, 212, 175, 55)); }
+.item-previa { display: inline-flex; align-items: center; justify-content: center; gap: 2px; min-height: 64px; }
+.item-previa-pecas .xadrez-peca-svg { width: 50px; height: 50px; }
+.item-previa-tabuleiro.xadrez-tabuleiro { display: grid; gap: 0; align-items: stretch; justify-items: stretch; width: 70px; height: 70px; padding: 5px; border-radius: 10px; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); box-shadow: 0 6px 14px rgba(0, 0, 0, 0.45); }
+.item-previa-tabuleiro.xadrez-tabuleiro::before { inset: 5px; box-shadow: inset 0 0 0 1px rgba(50, 30, 6, 0.6); }
+.item-previa-tabuleiro.xadrez-tabuleiro::after { inset: 5px; }
+.item-previa-tabuleiro .xadrez-casa { cursor: default; }
+.bau-premio-item { pointer-events: auto; border-color: rgba(var(--raridade), 0.8); box-shadow: 0 0 22px rgba(var(--raridade), 0.45); background: radial-gradient(100% 80% at 50% 0%, rgba(var(--raridade), 0.25), transparent 70%), rgba(10, 13, 36, 0.92); }
+.bau-premio-item b { font-size: 0.9rem; }
+.bau-premio-item .item-previa { min-height: 54px; }
+.bau-premio-item .item-previa-pecas .xadrez-peca-svg { width: 40px; height: 40px; }
+.bau-premio-item .item-previa-tabuleiro.xadrez-tabuleiro { width: 56px; height: 56px; }
+.bau-usar-item { margin-top: 4px; padding: 5px 12px; border-radius: 999px; border: 0; background: linear-gradient(180deg, #f6d987, #e0b54a); color: #24180a; font-family: var(--font-text); font-weight: 900; font-size: 0.78rem; cursor: pointer; }
+.bau-usar-item:disabled { opacity: 0.75; cursor: default; }
+.bau-premio-repetido small { max-width: 150px; color: #f6e2a0; }
+.bau-premio-item.raridade-lendario { animation: itemLendario 1.8s ease-in-out infinite; }
+@keyframes itemLendario { 0%, 100% { box-shadow: 0 0 18px rgba(255, 204, 77, 0.45); } 50% { box-shadow: 0 0 34px rgba(255, 204, 77, 0.85); } }
+.mochila-itens { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(240, 207, 122, 0.35); background: rgba(240, 207, 122, 0.08); color: #f6e2a0; font-family: var(--font-text); font-weight: 800; font-size: 0.8rem; cursor: pointer; }
+html, body, * { scrollbar-width: none !important; }
+html::-webkit-scrollbar, body::-webkit-scrollbar, *::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
+.bandeira { width: 26px; height: 17px; border-radius: 3px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.22); }
+.idioma-opcao .bandeira { width: 30px; height: 20px; }
+.side-idioma .bandeira { width: 24px; height: 16px; border-radius: 3px; }
+#idioma-btn.com-bandeira { padding: 0; overflow: hidden; }
+#idioma-btn.com-bandeira .bandeira { width: 26px; height: 17px; transition: transform 0.2s ease; }
+#idioma-btn.com-bandeira:hover .bandeira { transform: scale(1.08); }
+.idioma-opcao { gap: 12px; }
+.idioma-opcao.idioma-ativa::after { content: ''; margin-left: auto; width: 8px; height: 8px; border-radius: 50%; background: var(--primary-color); box-shadow: 0 0 8px rgba(var(--primary-rgb), 0.8); }
+.xadrez-casa.pode-arrastar { touch-action: none; cursor: grab; }
+.xadrez-tabuleiro.arrastando, .xadrez-tabuleiro.arrastando .xadrez-casa { cursor: grabbing; }
+.xadrez-peca.sendo-arrastada { opacity: 0.25; }
+.xadrez-peca.xadrez-peca-arrastada { position: fixed; z-index: 9000; pointer-events: none; transform: scale(1.18); filter: drop-shadow(0 14px 10px rgba(0, 0, 0, 0.5)); }
+.xadrez-casa.destino-do-arraste::after { content: ''; position: absolute; width: 30%; height: 30%; border-radius: 50%; background: radial-gradient(circle, rgba(255, 236, 160, 0.95), rgba(214, 160, 40, 0.75)); box-shadow: 0 0 10px rgba(255, 214, 90, 0.8); }
+.xadrez-casa.arraste-sobre::before { content: ''; position: absolute; inset: 0; background: rgba(255, 214, 90, 0.28); box-shadow: inset 0 0 0 4px rgba(255, 214, 90, 0.95); }
+.damas-regra { display: inline-flex; align-items: center; gap: 10px; margin: 4px auto 0; color: var(--text-muted); font-weight: 700; font-size: 0.9rem; cursor: pointer; }
+.damas-regra input { width: 20px; height: 20px; accent-color: var(--primary-color); }
+#view-home #atalhos-app, #view-home #advento-inicio, #view-home #retrospectiva-inicio { display: none !important; }
+#view-home .hero { padding: 26px 20px 8px; }
+#view-home .hero-quote { display: none; }
+#view-home .hero-icon { width: 54px; height: 54px; }
+#view-home .hero-title { font-size: clamp(2.1rem, 7vw, 3rem); }
+.sobre-container { max-width: 820px; }
+.sobre-container .about { padding-top: 6px; }
+.auth-google-aviso { margin: 8px 2px 0; color: var(--text-muted); font-size: 0.78rem; line-height: 1.45; text-align: center; }
+.sidebar-perfil { display: flex; align-items: center; gap: 8px; margin: 2px 0 10px; padding: 10px; border-radius: 16px; border: 1px solid rgba(240, 207, 122, 0.3); background: linear-gradient(135deg, rgba(240, 207, 122, 0.12), rgba(255, 255, 255, 0.02)); }
+.sidebar-perfil[hidden] { display: none; }
+.sidebar-perfil-eu { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; padding: 0; border: 0; background: none; color: var(--text-main); font-family: var(--font-text); text-align: left; cursor: pointer; }
+.sidebar-perfil-eu .avatar { width: 40px; height: 40px; flex-shrink: 0; box-shadow: 0 0 0 2px rgba(240, 207, 122, 0.55); }
+.sidebar-perfil-textos { min-width: 0; display: flex; flex-direction: column; }
+.sidebar-perfil-textos b { font-size: 0.95rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sidebar-perfil-textos small { color: var(--text-muted); font-size: 0.76rem; }
+.sidebar-perfil-trocar { flex-shrink: 0; padding: 7px 12px; border-radius: 999px; border: 1px solid rgba(240, 207, 122, 0.55); background: rgba(240, 207, 122, 0.12); color: #f6e2a0; font-family: var(--font-text); font-weight: 800; font-size: 0.78rem; cursor: pointer; }
+.sidebar-perfil-trocar:hover { background: rgba(240, 207, 122, 0.22); }
+.xadrez-tabuleiro.tema-vidro .xadrez-casa.clara { background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(226, 242, 253, 0.78) 50%, rgba(255, 255, 255, 0.9) 62%, rgba(206, 230, 246, 0.82) 100%); }
+.xadrez-tabuleiro.tema-vidro .xadrez-casa.escura { background: linear-gradient(135deg, rgba(150, 190, 220, 0.75) 0%, rgba(96, 140, 178, 0.68) 50%, rgba(160, 200, 228, 0.75) 62%, rgba(84, 126, 164, 0.72) 100%); }
+.xadrez-tabuleiro.tema-vidro .xadrez-casa.clara .xadrez-coord { color: #5d86a6; }
+.xadrez-tabuleiro.tema-vidro .xadrez-casa.escura .xadrez-coord { color: #ffffff; }
+.xadrez-tabuleiro.tema-esmeralda .xadrez-casa.clara { background: linear-gradient(135deg, #eafff3 0%, #c4f3da 48%, #f2fff8 60%, #b2ecce 100%); }
+.xadrez-tabuleiro.tema-esmeralda .xadrez-casa.escura { background: linear-gradient(135deg, #2fbf78 0%, #0f7d4c 48%, #3fcf88 60%, #0b6a40 100%); }
+.xadrez-tabuleiro.tema-esmeralda .xadrez-casa.clara .xadrez-coord { color: #0f7d4c; }
+.xadrez-tabuleiro.tema-esmeralda .xadrez-casa.escura .xadrez-coord { color: #eafff3; }
+.xadrez-tabuleiro.tema-ouro .xadrez-casa.clara { background: linear-gradient(135deg, #fff8dc 0%, #f6e3a4 48%, #fffbe9 60%, #f0d68a 100%); }
+.xadrez-tabuleiro.tema-ouro .xadrez-casa.escura { background: linear-gradient(135deg, #e0b24a 0%, #a8741a 48%, #edc565 60%, #946210 100%); }
+.xadrez-tabuleiro.tema-ouro .xadrez-casa.clara .xadrez-coord { color: #946210; }
+.xadrez-tabuleiro.tema-ouro .xadrez-casa.escura .xadrez-coord { color: #fff8dc; }
+.xadrez-tabuleiro.tema-rubi .xadrez-casa.clara { background: linear-gradient(135deg, #fff0f3 0%, #ffd0da 48%, #fff6f8 60%, #ffc0ce 100%); }
+.xadrez-tabuleiro.tema-rubi .xadrez-casa.escura { background: linear-gradient(135deg, #e0325a 0%, #9c1534 48%, #ef4a6e 60%, #85102b 100%); }
+.xadrez-tabuleiro.tema-rubi .xadrez-casa.clara .xadrez-coord { color: #9c1534; }
+.xadrez-tabuleiro.tema-rubi .xadrez-casa.escura .xadrez-coord { color: #fff0f3; }
+.xadrez-tabuleiro.tema-obsidiana .xadrez-casa.clara { background: linear-gradient(135deg, #ffffff 0%, #efe9f5 45%, #f9fbfa 58%, #e2dbe9 100%); }
+.xadrez-tabuleiro.tema-obsidiana .xadrez-casa.escura { background: linear-gradient(135deg, #3a3848 0%, #121118 48%, #474458 60%, #08070c 100%); }
+.xadrez-tabuleiro.tema-obsidiana .xadrez-casa.clara .xadrez-coord { color: #3a3848; }
+.xadrez-tabuleiro.tema-obsidiana .xadrez-casa.escura .xadrez-coord { color: #e2dbe9; }
+.xadrez-tabuleiro.tema-celestial .xadrez-casa.clara { background: linear-gradient(135deg, #fff0f8 0%, #def3ff 30%, #e8ffe6 55%, #fff6d6 78%, #f1e0ff 100%); }
+.xadrez-tabuleiro.tema-celestial .xadrez-casa.escura { background: radial-gradient(circle at 28% 30%, rgba(255, 255, 255, 0.9) 0 1px, transparent 1.6px), radial-gradient(circle at 70% 68%, rgba(255, 240, 190, 0.85) 0 1px, transparent 1.5px), linear-gradient(135deg, #7d5cff 0%, #2b1b72 35%, #0c6390 65%, #c43cff 100%); }
+.xadrez-tabuleiro.tema-celestial .xadrez-casa.clara .xadrez-coord { color: #6a4bc9; }
+.xadrez-tabuleiro.tema-celestial .xadrez-casa.escura .xadrez-coord { color: #fff6d6; }
+.xadrez-tabuleiro.tema-vidro::after, .xadrez-tabuleiro.tema-esmeralda::after, .xadrez-tabuleiro.tema-ouro::after, .xadrez-tabuleiro.tema-rubi::after, .xadrez-tabuleiro.tema-obsidiana::after, .xadrez-tabuleiro.tema-celestial::after { content: ''; position: absolute; inset: 9px; z-index: 4; pointer-events: none; border-radius: 4px; background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.3) 50%, transparent 65%); background-size: 250% 100%; animation: tabuleiroBrilha 6s ease-in-out infinite; }
+.xadrez-tabuleiro.item-previa-tabuleiro.tema-vidro::after, .xadrez-tabuleiro.item-previa-tabuleiro.tema-esmeralda::after, .xadrez-tabuleiro.item-previa-tabuleiro.tema-ouro::after, .xadrez-tabuleiro.item-previa-tabuleiro.tema-rubi::after, .xadrez-tabuleiro.item-previa-tabuleiro.tema-obsidiana::after, .xadrez-tabuleiro.item-previa-tabuleiro.tema-celestial::after { inset: 5px; }
+.xadrez-tabuleiro.tema-celestial .xadrez-casa.escura { animation: casaCelestial 8s linear infinite; }
+.xadrez-tabuleiro.moldura-vidro { background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(200, 228, 246, 0.75) 22%, rgba(120, 166, 200, 0.7) 50%, rgba(235, 246, 255, 0.9) 78%, rgba(140, 180, 210, 0.8) 100%); box-shadow: 0 22px 44px rgba(0, 0, 0, 0.5), 0 0 18px rgba(200, 230, 255, 0.35), inset 0 0 0 1px rgba(255, 255, 255, 0.6); }
+.xadrez-tabuleiro.moldura-ouro-real { background: linear-gradient(145deg, #fffbe2 0%, #f5cf55 18%, #a8741a 38%, #fff3b8 52%, #e0b24a 70%, #7a560e 100%); background-size: 200% 200%; animation: molduraBrilha 5s ease-in-out infinite; box-shadow: 0 22px 44px rgba(0, 0, 0, 0.55), 0 0 22px rgba(255, 210, 90, 0.45), inset 0 0 0 1px rgba(90, 60, 8, 0.55); }
+.xadrez-tabuleiro.moldura-obsidiana { background: linear-gradient(145deg, #8a879c 0%, #26242f 22%, #050407 50%, #5b5870 78%, #0d0c12 100%); box-shadow: 0 22px 44px rgba(0, 0, 0, 0.6), 0 0 18px rgba(201, 184, 255, 0.3), inset 0 0 0 1px rgba(201, 184, 255, 0.35); }
+.xadrez-tabuleiro.moldura-celestial { background: linear-gradient(135deg, #ffd6ec, #b9e6ff, #c9ffd0, #fff1b8, #e2c7ff, #ffd6ec); background-size: 300% 300%; animation: molduraBrilha 6s ease-in-out infinite; box-shadow: 0 22px 44px rgba(0, 0, 0, 0.55), 0 0 26px rgba(220, 180, 255, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.6); }
+.raridade-secreto { --raridade: 255, 140, 220; }
+.colecao-item.raridade-secreto { border: 1.5px solid rgba(255, 140, 220, 0.75); background: radial-gradient(100% 80% at 50% 0%, rgba(255, 140, 220, 0.22), transparent 70%), linear-gradient(180deg, rgba(30, 14, 56, 0.92), rgba(10, 13, 36, 0.92)); }
+.raridade-secreto .item-raridade, .item-raridade.raridade-secreto { background: linear-gradient(90deg, #ff9ad5, #9ad8ff, #b4ffb0, #ffe89a, #d2a6ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.bau-premio-item.raridade-secreto { animation: itemSecreto 2.4s ease-in-out infinite; }
+@keyframes itemSecreto { 0%, 100% { box-shadow: 0 0 18px rgba(255, 140, 220, 0.5); } 50% { box-shadow: 0 0 36px rgba(154, 216, 255, 0.85); } }
+.conjunto-celestial { animation: pecaCelestial 7s linear infinite; }
+.conjunto-celestial .xadrez-brilho { transform-box: fill-box; transform-origin: center; }
+@media (prefers-reduced-motion: no-preference) {
+  .xadrez-casa .conjunto-celestial .xadrez-brilho { animation: pecaBrilha 2.2s ease-in-out infinite; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .conjunto-celestial, .xadrez-tabuleiro.tema-celestial .xadrez-casa.escura, .xadrez-tabuleiro.moldura-celestial, .xadrez-tabuleiro.moldura-ouro-real, .pacote-misterio { animation: none; }
+}
+@keyframes pecaCelestial { 0% { filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.45)) hue-rotate(0deg); } 100% { filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.45)) hue-rotate(360deg); } }
+@keyframes casaCelestial { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
+.pacote-previa { position: relative; width: 96px; height: 70px; }
+.pacote-previa .item-previa-tabuleiro.xadrez-tabuleiro { width: 70px; height: 70px; }
+.pacote-pecas { position: absolute; left: 0; right: 0; bottom: -4px; display: flex; justify-content: center; pointer-events: none; }
+.pacote-pecas .xadrez-peca-svg { width: 42px; height: 42px; }
+.pacote-misterio { width: 70px; height: 70px; border-radius: 14px; font-family: var(--font-title); font-size: 2.4rem; font-weight: 900; color: #ffffff; background: linear-gradient(135deg, #ff9ad5, #9ad8ff, #b4ffb0, #ffe89a, #d2a6ff); background-size: 300% 300%; animation: molduraBrilha 5s ease-in-out infinite; box-shadow: 0 0 20px rgba(255, 140, 220, 0.45); text-shadow: 0 2px 6px rgba(60, 20, 90, 0.55); }
+.colecao-item.misterio .item-previa { filter: none; }
+.colecao-item.misterio::after { display: none; }
+.colecao-pacotes { grid-template-columns: repeat(auto-fill, minmax(128px, 1fr)); }

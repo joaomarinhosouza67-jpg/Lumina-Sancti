@@ -267,8 +267,129 @@ function garantirGradientesDoTabuleiro() {
     <radialGradient id="dm-branca" cx=".38" cy=".32" r=".78"><stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#f5e6c2"/><stop offset="1" stop-color="#c9a660"/></radialGradient>
     <radialGradient id="dm-preta" cx=".38" cy=".32" r=".78"><stop offset="0" stop-color="#8573b3"/><stop offset=".55" stop-color="#3c2f60"/><stop offset="1" stop-color="#150f27"/></radialGradient>
     <linearGradient id="dm-ouro" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3b8"/><stop offset=".5" stop-color="#f2c94c"/><stop offset="1" stop-color="#a87714"/></linearGradient>
+    <linearGradient id="xz-madeira-clara" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#f6dcb0"/><stop offset=".55" stop-color="#dcae72"/><stop offset="1" stop-color="#b07a3f"/></linearGradient>
+    <linearGradient id="xz-madeira-escura" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#9a6a3a"/><stop offset=".5" stop-color="#5e3a1a"/><stop offset="1" stop-color="#2e190a"/></linearGradient>
+    <linearGradient id="xz-marmore" x1=".1" y1="0" x2=".9" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#f1ebdf"/><stop offset=".7" stop-color="#ffffff"/><stop offset="1" stop-color="#d8cdb6"/></linearGradient>
+    <linearGradient id="xz-vinho" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#b8344c"/><stop offset=".5" stop-color="#6b1325"/><stop offset="1" stop-color="#2a0710"/></linearGradient>
+    <linearGradient id="xz-ouro" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#fff6c8"/><stop offset=".45" stop-color="#f2c94c"/><stop offset="1" stop-color="#a8741a"/></linearGradient>
+    <linearGradient id="xz-prata" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#d6dde6"/><stop offset=".45" stop-color="#7d8896"/><stop offset="1" stop-color="#2c333d"/></linearGradient>
+    <linearGradient id="xz-diamante" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".3" stop-color="#dff4ff"/><stop offset=".55" stop-color="#a9d8ff"/><stop offset=".75" stop-color="#f3fbff"/><stop offset="1" stop-color="#8cc4f2"/></linearGradient>
+    <linearGradient id="xz-onix" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#5b5b6a"/><stop offset=".35" stop-color="#1c1c25"/><stop offset=".7" stop-color="#3a3a48"/><stop offset="1" stop-color="#050507"/></linearGradient>
+    <radialGradient id="dm-madeira-clara" cx=".38" cy=".32" r=".78"><stop offset="0" stop-color="#fbe5c0"/><stop offset=".6" stop-color="#d9a76a"/><stop offset="1" stop-color="#a46d33"/></radialGradient>
+    <radialGradient id="dm-madeira-escura" cx=".38" cy=".32" r=".78"><stop offset="0" stop-color="#a87442"/><stop offset=".6" stop-color="#5e3a1a"/><stop offset="1" stop-color="#2a1608"/></radialGradient>
+    <radialGradient id="dm-prata" cx=".38" cy=".32" r=".78"><stop offset="0" stop-color="#eef2f7"/><stop offset=".55" stop-color="#8f9aa8"/><stop offset="1" stop-color="#3a424d"/></radialGradient>
+    <radialGradient id="dm-ouro-claro" cx=".38" cy=".32" r=".78"><stop offset="0" stop-color="#fffbe0"/><stop offset=".55" stop-color="#f2c94c"/><stop offset="1" stop-color="#9c6a12"/></radialGradient>
+    <radialGradient id="dm-bronze" cx=".38" cy=".32" r=".78"><stop offset="0" stop-color="#f4c8a0"/><stop offset=".55" stop-color="#b06a35"/><stop offset="1" stop-color="#5a2c0e"/></radialGradient>
+    <radialGradient id="dm-diamante" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#ffffff"/><stop offset=".4" stop-color="#dff4ff"/><stop offset=".75" stop-color="#9fd2ff"/><stop offset="1" stop-color="#6aa6e0"/></radialGradient>
+    <radialGradient id="dm-onix" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#6a6a78"/><stop offset=".5" stop-color="#1c1c25"/><stop offset="1" stop-color="#050507"/></radialGradient>
+    <linearGradient id="xz-vidro-b" x1=".1" y1="0" x2=".9" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.85"/><stop offset="0.4" stop-color="#eaf6ff" stop-opacity="0.35"/><stop offset="0.75" stop-color="#d4ecfb" stop-opacity="0.5"/><stop offset="1" stop-color="#b9dcf2" stop-opacity="0.75"/></linearGradient>
+    <linearGradient id="xz-vidro-p" x1=".1" y1="0" x2=".9" y2="1"><stop offset="0" stop-color="#a3adbf" stop-opacity="0.8"/><stop offset="0.45" stop-color="#4a5366" stop-opacity="0.5"/><stop offset="1" stop-color="#1b2030" stop-opacity="0.8"/></linearGradient>
+    <linearGradient id="xz-esmeralda-b" x1=".1" y1="0" x2=".9" y2="1"><stop offset="0" stop-color="#ecfff5" stop-opacity="0.9"/><stop offset="0.45" stop-color="#86e8b8" stop-opacity="0.6"/><stop offset="1" stop-color="#2a9e68" stop-opacity="0.85"/></linearGradient>
+    <linearGradient id="xz-esmeralda-p" x1=".1" y1="0" x2=".9" y2="1"><stop offset="0" stop-color="#5ee0a0" stop-opacity="0.9"/><stop offset="0.45" stop-color="#0f7d4c" stop-opacity="0.72"/><stop offset="1" stop-color="#022e1a" stop-opacity="0.92"/></linearGradient>
+    <linearGradient id="xz-ouro-b" x1=".1" y1="0" x2=".9" y2="1"><stop offset="0" stop-color="#fff8d2" stop-opacity="0.95"/><stop offset="0.45" stop-color="#f5cf55" stop-opacity="0.72"/><stop offset="1" stop-color="#b8860b" stop-opacity="0.9"/></linearGradient>
+    <linearGradient id="xz-ouro-p" x1=".1" y1="0" x2=".9" y2="1"><stop offset="0" stop-color="#e6b04a" stop-opacity="0.92"/><stop offset="0.45" stop-color="#8f5e0e" stop-opacity="0.78"/><stop offset="1" stop-color="#3a2505" stop-opacity="0.94"/></linearGradient>
+    <linearGradient id="xz-rubi-b" x1=".1" y1="0" x2=".9" y2="1"><stop offset="0" stop-color="#ffe4ea" stop-opacity="0.92"/><stop offset="0.45" stop-color="#ff859f" stop-opacity="0.62"/><stop offset="1" stop-color="#d3214a" stop-opacity="0.86"/></linearGradient>
+    <linearGradient id="xz-rubi-p" x1=".1" y1="0" x2=".9" y2="1"><stop offset="0" stop-color="#ff5675" stop-opacity="0.9"/><stop offset="0.45" stop-color="#a50e2d" stop-opacity="0.76"/><stop offset="1" stop-color="#3a020f" stop-opacity="0.94"/></linearGradient>
+    <linearGradient id="xz-perola" x1=".1" y1="0" x2=".9" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="0.35" stop-color="#f6f0fa"/><stop offset="0.65" stop-color="#eaf5f3"/><stop offset="1" stop-color="#d6cbe0"/></linearGradient>
+    <linearGradient id="xz-obsidiana" x1=".1" y1="0" x2=".9" y2="1"><stop offset="0" stop-color="#77778f" stop-opacity="0.92"/><stop offset="0.35" stop-color="#16151d" stop-opacity="0.82"/><stop offset="0.7" stop-color="#2e2b3d" stop-opacity="0.86"/><stop offset="1" stop-color="#000000" stop-opacity="0.96"/></linearGradient>
+    <linearGradient id="xz-celestial-b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0f8" stop-opacity="0.92"/><stop offset="0.25" stop-color="#d9f2ff" stop-opacity="0.75"/><stop offset="0.5" stop-color="#e6ffe4" stop-opacity="0.7"/><stop offset="0.75" stop-color="#fff6d4" stop-opacity="0.75"/><stop offset="1" stop-color="#efdcff" stop-opacity="0.92"/></linearGradient>
+    <linearGradient id="xz-celestial-p" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8f6bff" stop-opacity="0.92"/><stop offset="0.35" stop-color="#2b1b72" stop-opacity="0.82"/><stop offset="0.65" stop-color="#0c6390" stop-opacity="0.82"/><stop offset="1" stop-color="#c43cff" stop-opacity="0.92"/></linearGradient>
+    <linearGradient id="xz-reflexo" x1="0" y1="0" x2=".8" y2=".8"><stop offset="0" stop-color="#ffffff" stop-opacity="0.7"/><stop offset="0.3" stop-color="#ffffff" stop-opacity="0.18"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+    <radialGradient id="dm-vidro-b" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#ffffff" stop-opacity="0.9"/><stop offset="0.55" stop-color="#e2f2fd" stop-opacity="0.4"/><stop offset="1" stop-color="#a9d2ee" stop-opacity="0.8"/></radialGradient>
+    <radialGradient id="dm-vidro-p" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#b3bccb" stop-opacity="0.85"/><stop offset="0.55" stop-color="#4a5366" stop-opacity="0.55"/><stop offset="1" stop-color="#141824" stop-opacity="0.85"/></radialGradient>
+    <radialGradient id="dm-esmeralda-b" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#f0fff7" stop-opacity="0.92"/><stop offset="0.55" stop-color="#7fe3b2" stop-opacity="0.62"/><stop offset="1" stop-color="#23925f" stop-opacity="0.88"/></radialGradient>
+    <radialGradient id="dm-esmeralda-p" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#6fe8ab" stop-opacity="0.9"/><stop offset="0.55" stop-color="#0f7d4c" stop-opacity="0.75"/><stop offset="1" stop-color="#012614" stop-opacity="0.94"/></radialGradient>
+    <radialGradient id="dm-ouro-b" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#fffbe2" stop-opacity="0.96"/><stop offset="0.55" stop-color="#f5cf55" stop-opacity="0.75"/><stop offset="1" stop-color="#a87a0a" stop-opacity="0.92"/></radialGradient>
+    <radialGradient id="dm-ouro-p" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#efbb55" stop-opacity="0.94"/><stop offset="0.55" stop-color="#8f5e0e" stop-opacity="0.8"/><stop offset="1" stop-color="#2e1d03" stop-opacity="0.95"/></radialGradient>
+    <radialGradient id="dm-rubi-b" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#ffeef2" stop-opacity="0.94"/><stop offset="0.55" stop-color="#ff859f" stop-opacity="0.65"/><stop offset="1" stop-color="#c81c43" stop-opacity="0.9"/></radialGradient>
+    <radialGradient id="dm-rubi-p" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#ff6a86" stop-opacity="0.92"/><stop offset="0.55" stop-color="#a50e2d" stop-opacity="0.8"/><stop offset="1" stop-color="#2e010b" stop-opacity="0.95"/></radialGradient>
+    <radialGradient id="dm-perola" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#ffffff"/><stop offset="0.5" stop-color="#f4eef9"/><stop offset="0.8" stop-color="#e3f1ee"/><stop offset="1" stop-color="#cbbfd8"/></radialGradient>
+    <radialGradient id="dm-obsidiana" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#80809a" stop-opacity="0.94"/><stop offset="0.5" stop-color="#17161f" stop-opacity="0.86"/><stop offset="1" stop-color="#000000" stop-opacity="0.97"/></radialGradient>
+    <radialGradient id="dm-celestial-b" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#ffffff" stop-opacity="0.95"/><stop offset="0.3" stop-color="#ffe3f3" stop-opacity="0.8"/><stop offset="0.55" stop-color="#d6f1ff" stop-opacity="0.72"/><stop offset="0.8" stop-color="#e4ffe0" stop-opacity="0.78"/><stop offset="1" stop-color="#e8d4ff" stop-opacity="0.92"/></radialGradient>
+    <radialGradient id="dm-celestial-p" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#a98bff" stop-opacity="0.94"/><stop offset="0.45" stop-color="#3a1f8c" stop-opacity="0.84"/><stop offset="0.75" stop-color="#0d5d88" stop-opacity="0.84"/><stop offset="1" stop-color="#b02ef0" stop-opacity="0.94"/></radialGradient>
   </defs>`;
   document.body.appendChild(svg);
+}
+
+let tabuleiroArrastadoEm = 0;
+
+function ligarArrasteNoTabuleiro(tabuleiro, opcoes) {
+  if (!tabuleiro || !opcoes) return;
+  tabuleiro.querySelectorAll('.xadrez-casa').forEach((casa) => {
+    const indice = Number(casa.dataset.casa);
+    if (!casa.querySelector('.xadrez-peca') || !opcoes.podeArrastar(indice)) return;
+    casa.classList.add('pode-arrastar');
+    casa.addEventListener('pointerdown', (evento) => comecarArraste(evento, casa, indice, tabuleiro, opcoes));
+  });
+}
+
+function comecarArraste(evento, casa, indice, tabuleiro, opcoes) {
+  if (evento.button !== undefined && evento.button !== 0) return;
+  const peca = casa.querySelector('.xadrez-peca');
+  if (!peca) return;
+  const inicio = { x: evento.clientX, y: evento.clientY };
+  const destinos = new Set(opcoes.destinos(indice));
+  let fantasma = null;
+  let alvo = null;
+  const limpar = () => {
+    casa.removeEventListener('pointermove', mover);
+    casa.removeEventListener('pointerup', soltar);
+    casa.removeEventListener('pointercancel', cancelar);
+    if (alvo) alvo.classList.remove('arraste-sobre');
+    if (fantasma) fantasma.remove();
+    tabuleiro.classList.remove('arrastando');
+  };
+  const mover = (e) => {
+    if (!fantasma) {
+      if (Math.hypot(e.clientX - inicio.x, e.clientY - inicio.y) < 6) return;
+      const caixa = peca.getBoundingClientRect();
+      fantasma = peca.cloneNode(true);
+      fantasma.classList.add('xadrez-peca-arrastada');
+      fantasma.style.width = `${caixa.width}px`;
+      fantasma.style.height = `${caixa.height}px`;
+      document.body.appendChild(fantasma);
+      peca.classList.add('sendo-arrastada');
+      tabuleiro.classList.add('arrastando');
+      tabuleiro.querySelectorAll('.xadrez-casa').forEach((c) => { if (destinos.has(Number(c.dataset.casa))) c.classList.add('destino-do-arraste'); });
+      try { casa.setPointerCapture(e.pointerId); } catch (erro) {
+      }
+    }
+    e.preventDefault();
+    fantasma.style.left = `${e.clientX - fantasma.offsetWidth / 2}px`;
+    fantasma.style.top = `${e.clientY - fantasma.offsetHeight / 2}px`;
+    const debaixo = document.elementFromPoint(e.clientX, e.clientY);
+    const nova = debaixo && debaixo.closest ? debaixo.closest('.xadrez-casa') : null;
+    const valida = nova && tabuleiro.contains(nova) ? nova : null;
+    if (valida !== alvo) {
+      if (alvo) alvo.classList.remove('arraste-sobre');
+      alvo = valida;
+      if (alvo) alvo.classList.add('arraste-sobre');
+    }
+  };
+  const soltar = () => {
+    const arrastou = !!fantasma;
+    const para = alvo ? Number(alvo.dataset.casa) : -1;
+    limpar();
+    if (!arrastou) return;
+    tabuleiroArrastadoEm = Date.now();
+    if (para >= 0 && para !== indice && destinos.has(para)) opcoes.soltar(indice, para);
+    else opcoes.cancelar();
+  };
+  const cancelar = () => {
+    const arrastou = !!fantasma;
+    limpar();
+    if (arrastou) {
+      tabuleiroArrastadoEm = Date.now();
+      opcoes.cancelar();
+    }
+  };
+  casa.addEventListener('pointermove', mover);
+  casa.addEventListener('pointerup', soltar);
+  casa.addEventListener('pointercancel', cancelar);
+}
+
+function cliqueLogoDepoisDoArraste() {
+  return Date.now() - tabuleiroArrastadoEm < 350;
 }
 
 function animarJogadaNoTabuleiro(tabuleiro, caminho, fantasmas) {
@@ -290,7 +411,7 @@ function animarJogadaNoTabuleiro(tabuleiro, caminho, fantasmas) {
     const sumir = fantasma.animate([{ opacity: 1, transform: 'scale(1)' }, { opacity: 0, transform: 'scale(0.35) rotate(-25deg)' }], { duration: 240, delay: typeof quando === 'number' ? quando : total - 40, easing: 'ease-in', fill: 'forwards' });
     sumir.onfinish = () => fantasma.remove();
   });
-  if (!peca || !peca.animate) return;
+  if (!peca || !peca.animate || cliqueLogoDepoisDoArraste()) return;
   peca.classList.remove('chegou');
   peca.classList.add('voando');
   const linha = (c) => Math.floor(c / 8);
@@ -355,23 +476,51 @@ function tocarBatidaDePeca(captura, atraso) {
   }
 }
 
-function xadrezPecaSvg(peca) {
-  garantirGradientesDoTabuleiro();
-  const branca = peca === peca.toUpperCase();
-  const t = peca.toLowerCase();
-  const corpo = branca ? 'url(#xz-branca)' : 'url(#xz-preta)';
-  const linha = branca ? '#2b1d0e' : '#0c0915';
-  const detalhe = branca ? '#2b1d0e' : '#e9d6a8';
+const CONJUNTOS_DO_XADREZ = {
+  classico: { b: { corpo: 'url(#xz-branca)', linha: '#2b1d0e', detalhe: '#2b1d0e' }, p: { corpo: 'url(#xz-preta)', linha: '#0c0915', detalhe: '#e9d6a8' } },
+  madeira: { b: { corpo: 'url(#xz-madeira-clara)', linha: '#5a3a17', detalhe: '#5a3a17' }, p: { corpo: 'url(#xz-madeira-escura)', linha: '#1f1108', detalhe: '#e8c79a' } },
+  catedral: { formas: 'catedral', b: { corpo: 'url(#xz-marmore)', linha: '#7a5a14', detalhe: '#b8892b' }, p: { corpo: 'url(#xz-vinho)', linha: '#2a0710', detalhe: '#f2c94c' } },
+  'ouro-prata': { b: { corpo: 'url(#xz-ouro)', linha: '#6b4a0a', detalhe: '#6b4a0a' }, p: { corpo: 'url(#xz-prata)', linha: '#1e252e', detalhe: '#f1f4f8' } },
+  diamante: { brilho: true, reflexo: true, b: { corpo: 'url(#xz-diamante)', linha: '#3f6ea8', detalhe: '#2a5a96' }, p: { corpo: 'url(#xz-onix)', linha: '#000000', detalhe: '#8fd0ff' } },
+  vidro: { reflexo: true, b: { corpo: 'url(#xz-vidro-b)', linha: '#7fa6c4', detalhe: '#5d86a6' }, p: { corpo: 'url(#xz-vidro-p)', linha: '#141824', detalhe: '#d9e6f2' } },
+  esmeralda: { reflexo: true, b: { corpo: 'url(#xz-esmeralda-b)', linha: '#1f7a4f', detalhe: '#167044' }, p: { corpo: 'url(#xz-esmeralda-p)', linha: '#012012', detalhe: '#b8ffd9' } },
+  ouro: { reflexo: true, b: { corpo: 'url(#xz-ouro-b)', linha: '#7a560e', detalhe: '#7a560e' }, p: { corpo: 'url(#xz-ouro-p)', linha: '#241603', detalhe: '#ffe7a3' } },
+  rubi: { reflexo: true, b: { corpo: 'url(#xz-rubi-b)', linha: '#9c1534', detalhe: '#9c1534' }, p: { corpo: 'url(#xz-rubi-p)', linha: '#2a010a', detalhe: '#ffc2cf' } },
+  obsidiana: { reflexo: true, b: { corpo: 'url(#xz-perola)', linha: '#8f8199', detalhe: '#7a6a86' }, p: { corpo: 'url(#xz-obsidiana)', linha: '#000000', detalhe: '#c9b8ff' } },
+  celestial: { brilho: true, reflexo: true, b: { corpo: 'url(#xz-celestial-b)', linha: '#a07ad6', detalhe: '#8a5cc9' }, p: { corpo: 'url(#xz-celestial-p)', linha: '#12083a', detalhe: '#ffe9a8' } },
+};
+
+function formasDoXadrez(estilo, detalhe, linha) {
   const base = '<path d="M24 84 H76 A4 4 0 0 1 80 88 V92 H20 V88 A4 4 0 0 1 24 84 Z"/>';
-  const formas = {
+  const cavalo = `<path d="M66 84 H30 C29 73 35 64 45 58 C40 56 34 58 30 61 C26 63 21 60 23 55 C27 47 34 39 40 33 C40 27 44 21 50 19 L53 12 L57 20 C68 25 73 40 73 56 C73 68 70 76 66 84 Z"/><circle cx="47" cy="31" r="2.6" fill="${detalhe}" stroke="none"/><path d="M57 22 C63 30 66 40 66 50" fill="none" stroke="${detalhe}" stroke-width="2.5" stroke-linecap="round"/><path d="M27 56 L31 55" stroke="${detalhe}" stroke-width="2.5" stroke-linecap="round"/>${base}`;
+  if (estilo === 'catedral') {
+    return {
+      p: `<rect x="40" y="34" width="20" height="44" rx="3"/><path d="M50 32 v-5" fill="none" stroke="${linha}" stroke-width="2"/><path d="M50 10 C56 18 58 24 50 29 C42 24 44 18 50 10 Z" fill="#ffb02e" stroke="#c2570c" stroke-width="1.6"/><path d="M50 17 C53 21 53 24 50 26 C47 24 47 21 50 17 Z" fill="#fff3b0" stroke="none"/><path d="M44 42 v28" fill="none" stroke="${detalhe}" stroke-width="2" opacity=".6"/><path d="M34 78 H66 L70 84 H30 Z"/>${base}`,
+      r: `<path d="M32 84 V42 L50 22 L68 42 V84 Z"/><path d="M50 22 V8 M44 13 H56" fill="none" stroke="${linha}" stroke-width="3.2" stroke-linecap="round"/><path d="M42 84 V64 a8 8 0 0 1 16 0 V84" fill="none" stroke="${detalhe}" stroke-width="2.5"/><path d="M45 54 a5 6 0 0 1 10 0 v4 h-10 z" fill="${detalhe}" stroke="none"/><circle cx="50" cy="60" r="1.6" fill="${detalhe}" stroke="none"/>${base}`,
+      n: cavalo,
+      b: `<path d="M50 8 C62 18 68 30 66 52 L60 58 H40 L34 52 C32 30 38 18 50 8 Z"/><path d="M50 8 L50 56" fill="none" stroke="${linha}" stroke-width="1.6" opacity=".5"/><path d="M50 22 V46 M42 31 H58" fill="none" stroke="${detalhe}" stroke-width="3.2" stroke-linecap="round"/><path d="M36 58 H64 L60 66 H40 Z"/><path d="M40 66 C42 74 36 80 30 84 H70 C64 80 58 74 60 66 Z"/>${base}`,
+      q: `<path d="M27 50 L31 22 L42 35 L50 15 L58 35 L69 22 L73 50 Z"/><circle cx="31" cy="20" r="3.6"/><circle cx="50" cy="12" r="4.2"/><circle cx="69" cy="20" r="3.6"/><path d="M29 50 H71 V57 H29 Z"/><path d="M34 57 C36 68 32 77 28 84 H72 C68 77 64 68 66 57 Z"/><path d="M50 60 V76 M43 66 H57" fill="none" stroke="${detalhe}" stroke-width="2.6" stroke-linecap="round"/>${base}`,
+      k: `<path d="M46.5 3 H53.5 V11 H60 V17 H53.5 V24 H46.5 V17 H40 V11 H46.5 Z"/><circle cx="50" cy="38" r="14"/><path d="M36 38 H64 M50 24 V52" fill="none" stroke="${detalhe}" stroke-width="2.2"/><path d="M35 52 H65 V58 H35 Z"/><path d="M38 58 C40 70 34 78 29 84 H71 C66 78 60 70 62 58 Z"/>${base}`,
+    };
+  }
+  return {
     p: `<circle cx="50" cy="31" r="12"/><ellipse cx="50" cy="47" rx="15" ry="4.5"/><path d="M39 50 C41 62 35 75 29 84 H71 C65 75 59 62 61 50 Z"/>${base}`,
     r: `<path d="M28 16 H38 V25 H45 V16 H55 V25 H62 V16 H72 V38 H28 Z"/><path d="M33 38 H67 L64 74 L70 84 H30 L36 74 Z"/><path d="M34 74 H66" fill="none" stroke="${detalhe}" stroke-width="2.5"/>${base}`,
     b: `<circle cx="50" cy="11" r="4.5"/><path d="M50 16 C64 27 66 43 58 53 H42 C34 43 36 27 50 16 Z"/><path d="M55 27 L46 39" fill="none" stroke="${detalhe}" stroke-width="3" stroke-linecap="round"/><ellipse cx="50" cy="56" rx="14" ry="4"/><path d="M40 59 C42 69 36 78 30 84 H70 C64 78 58 69 60 59 Z"/>${base}`,
     q: `<path d="M27 31 L34 56 H66 L73 31 L62 45 L60 23 L54 41 L50 18 L46 41 L40 23 L38 45 Z"/><circle cx="27" cy="29" r="4"/><circle cx="40" cy="21" r="4"/><circle cx="50" cy="15" r="4.5"/><circle cx="60" cy="21" r="4"/><circle cx="73" cy="29" r="4"/><path d="M32 56 H68 V61 H32 Z"/><path d="M35 61 C37 70 33 78 28 84 H72 C67 78 63 70 65 61 Z"/>${base}`,
     k: `<path d="M46.5 6 H53.5 V13 H60 V20 H53.5 V29 H46.5 V20 H40 V13 H46.5 Z"/><path d="M30 42 C29 32 40 28 50 35 C60 28 71 32 70 42 C69 49 64 54 64 54 H36 C36 54 31 49 30 42 Z"/><path d="M33 54 H67 V60 H33 Z"/><path d="M36 60 C38 70 33 78 28 84 H72 C67 78 62 70 64 60 Z"/>${base}`,
-    n: `<path d="M66 84 H30 C29 73 35 64 45 58 C40 56 34 58 30 61 C26 63 21 60 23 55 C27 47 34 39 40 33 C40 27 44 21 50 19 L53 12 L57 20 C68 25 73 40 73 56 C73 68 70 76 66 84 Z"/><circle cx="47" cy="31" r="2.6" fill="${detalhe}" stroke="none"/><path d="M57 22 C63 30 66 40 66 50" fill="none" stroke="${detalhe}" stroke-width="2.5" stroke-linecap="round"/><path d="M27 56 L31 55" stroke="${detalhe}" stroke-width="2.5" stroke-linecap="round"/>${base}`,
+    n: cavalo,
   };
-  return `<svg class="xadrez-peca-svg" viewBox="0 0 100 100" aria-hidden="true"><g fill="${corpo}" stroke="${linha}" stroke-width="3" stroke-linejoin="round">${formas[t]}</g></svg>`;
+}
+
+function xadrezPecaSvg(peca, conjunto) {
+  garantirGradientesDoTabuleiro();
+  const nomeDoConjunto = conjunto || (typeof conjuntoDoXadrez === 'function' ? conjuntoDoXadrez() : 'classico');
+  const estilo = CONJUNTOS_DO_XADREZ[nomeDoConjunto] || CONJUNTOS_DO_XADREZ.classico;
+  const branca = peca === peca.toUpperCase();
+  const cores = branca ? estilo.b : estilo.p;
+  const formas = formasDoXadrez(estilo.formas, cores.detalhe, cores.linha);
+  return `<svg class="xadrez-peca-svg conjunto-${nomeDoConjunto}" viewBox="0 0 100 100" aria-hidden="true"><g fill="${cores.corpo}" stroke="${cores.linha}" stroke-width="3" stroke-linejoin="round">${formas[peca.toLowerCase()]}</g>${estilo.reflexo ? `<g fill="url(#xz-reflexo)" stroke="none" pointer-events="none">${formas[peca.toLowerCase()].replace(/<path d="M50 10 C56[^>]*>|<path d="M50 17 C53[^>]*>/g, '')}</g>` : ''}${estilo.brilho ? '<path class="xadrez-brilho" d="M40 20 l3 6 l6 3 l-6 3 l-3 6 l-3 -6 l-6 -3 l6 -3 z" fill="#ffffff" opacity=".85"/>' : ''}</svg>`;
 }
 
 function xadrezDescreverPeca(peca) {
@@ -389,7 +538,10 @@ function jogoDeXadrez(area) {
       <div class="xadrez-modos">
         <button type="button" class="xadrez-modo" data-modo="lumina"><span class="xadrez-modo-arte">${xadrezPecaSvg('q')}</span><strong>${textoDoJogo('Contra a Lumina')}</strong><small>${textoDoJogo('Você joga com as brancas.')}</small></button>
         <button type="button" class="xadrez-modo" data-modo="dois"><span class="xadrez-modo-arte">${xadrezPecaSvg('N')}${xadrezPecaSvg('n')}</span><strong>${textoDoJogo('Duas pessoas')}</strong><small>${textoDoJogo('No mesmo aparelho, cada um na sua vez.')}</small></button>
-      </div>`;
+      </div>
+      <button type="button" class="xadrez-personalizar" id="xadrez-personalizar">${textoDoJogo('Personalizar peças e tabuleiro')}</button>`;
+    const personalizar = area.querySelector('#xadrez-personalizar');
+    if (personalizar) personalizar.addEventListener('click', () => { if (typeof abrirColecaoDeItens === 'function') abrirColecaoDeItens('xadrez', escolherModo); });
     area.querySelectorAll('.xadrez-modo').forEach((b) => b.addEventListener('click', () => {
       if (b.dataset.modo === 'dois') { partida.modo = 'dois'; comecar(); return; }
       escolherNivel();
@@ -439,16 +591,24 @@ function jogoDeXadrez(area) {
     area.innerHTML = `
       <div class="xadrez">
         <div class="xadrez-lado ${est.vez === 'b' ? 'vez' : ''}${partida.pensando ? ' pensando' : ''}"><b>${nomeDaVez('b')}</b><span class="xadrez-pensando" aria-hidden="true"><i></i><i></i><i></i></span><span class="xadrez-tira">${tiras('w')}</span>${vantagem('w')}</div>
-        <div class="xadrez-tabuleiro" role="grid" aria-label="${textoDoJogo('Tabuleiro de xadrez')}">${casas}</div>
+        <div class="xadrez-tabuleiro ${typeof classesDoTabuleiro === 'function' ? classesDoTabuleiro() : ''}" role="grid" aria-label="${textoDoJogo('Tabuleiro de xadrez')}">${casas}</div>
         <div class="xadrez-lado ${est.vez === 'w' ? 'vez' : ''}"><b>${nomeDaVez('w')}</b><span class="xadrez-tira">${tiras('b')}</span>${vantagem('b')}</div>
         <div class="xadrez-acoes">
           <button type="button" class="jogo-botao jogo-botao-claro" id="xadrez-desfazer" ${partida.historico.length && !partida.pensando ? '' : 'disabled'}>${textoDoJogo('Desfazer')}</button>
           <button type="button" class="jogo-botao jogo-botao-claro" id="xadrez-novo">${textoDoJogo('Nova partida')}</button>
+          <button type="button" class="jogo-botao jogo-botao-claro" id="xadrez-visual">${textoDoJogo('Personalizar')}</button>
         </div>
       </div>`;
     placarDoJogo(`${textoDoJogo('Jogada')} ${est.jogada}`);
-    area.querySelectorAll('.xadrez-casa').forEach((b) => b.addEventListener('click', () => tocar(Number(b.dataset.casa))));
+    area.querySelectorAll('.xadrez-casa').forEach((b) => b.addEventListener('click', () => { if (!cliqueLogoDepoisDoArraste()) tocar(Number(b.dataset.casa)); }));
+    ligarArrasteNoTabuleiro(area.querySelector('.xadrez-tabuleiro'), {
+      podeArrastar: (casa) => vezDoJogador() && !!jogoAtual && !jogoAtual.fim && xadrezCorDe(est.tab[casa]) === est.vez && sit.legais.some((m) => m.de === casa),
+      destinos: (casa) => sit.legais.filter((m) => m.de === casa).map((m) => m.para),
+      soltar: (de, para) => { partida.selecionada = de; tocar(para); },
+      cancelar: () => desenhar(),
+    });
     area.querySelector('#xadrez-desfazer').addEventListener('click', desfazer);
+    area.querySelector('#xadrez-visual').addEventListener('click', () => { if (typeof abrirColecaoDeItens === 'function') abrirColecaoDeItens('xadrez', desenhar); });
     area.querySelector('#xadrez-novo').addEventListener('click', () => { if (!partida.historico.length || window.confirm(textoDoJogo('Começar uma nova partida?'))) escolherModo(); });
     if (partida.animar) {
       animarJogadaNoTabuleiro(area.querySelector('.xadrez-tabuleiro'), partida.animar.caminho, partida.animar.fantasmas);
@@ -543,4 +703,5 @@ function jogoDeXadrez(area) {
   };
 
   escolherModo();
+  if (typeof carregarItensDoPerfil === 'function') carregarItensDoPerfil().then(() => { if (!jogoAtual || jogoAtual.fim || !area.isConnected) return; if (partida.modo) desenhar(); else if (area.querySelector('.xadrez-modos .xadrez-modo')) escolherModo(); }).catch(() => {});
 }

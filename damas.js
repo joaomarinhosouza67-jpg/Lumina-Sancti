@@ -53,13 +53,14 @@ function damasCapturas(tab, de, peca, cor) {
 
 function damasJogadas(est) {
   const { tab, vez } = est;
+  const livre = !!est.capturaLivre;
   let capturas = [];
   const simples = [];
   for (let i = 0; i < 64; i += 1) {
     const p = tab[i];
     if (damasCor(p) !== vez) continue;
     capturas = capturas.concat(damasCapturas(tab, i, p, vez));
-    if (capturas.length) continue;
+    if (capturas.length && !livre) continue;
     const l = Math.floor(i / 8); const c = i % 8;
     if (damasEhDama(p)) {
       for (const [dl, dc] of DAMAS_DIRECOES) {
@@ -74,6 +75,7 @@ function damasJogadas(est) {
       }
     }
   }
+  if (capturas.length && livre) return capturas.concat(simples);
   if (capturas.length) {
     const maior = Math.max(...capturas.map((m) => m.capturadas.length));
     return capturas.filter((m) => m.capturadas.length === maior);
@@ -90,7 +92,7 @@ function damasAplicar(est, m) {
   if (!damasEhDama(p) && ((p === 'w' && linha === 0) || (p === 'b' && linha === 7))) p = p.toUpperCase();
   tab[m.para] = p;
   const virouDama = p !== est.tab[m.de];
-  return { tab, vez: est.vez === 'w' ? 'b' : 'w', semCaptura: m.capturadas.length || !damasEhDama(est.tab[m.de]) || virouDama ? 0 : est.semCaptura + 1 };
+  return { tab, vez: est.vez === 'w' ? 'b' : 'w', semCaptura: m.capturadas.length || !damasEhDama(est.tab[m.de]) || virouDama ? 0 : est.semCaptura + 1, capturaLivre: !!est.capturaLivre };
 }
 
 function damasAvaliar(est) {
@@ -153,15 +155,37 @@ function damasMelhorJogada(est, nivel) {
   return melhor;
 }
 
-function damasPecaSvg(p) {
+const CONJUNTOS_DAS_DAMAS = {
+  classico: { b: { corpo: 'url(#dm-branca)', lado: '#a8823a', borda: '#8f6d2c', anel: 'rgba(168, 130, 58, 0.55)', luz: 0.55 }, p: { corpo: 'url(#dm-preta)', lado: '#0e0a1a', borda: '#07050e', anel: 'rgba(150, 128, 210, 0.45)', luz: 0.18 } },
+  madeira: { b: { corpo: 'url(#dm-madeira-clara)', lado: '#8a5a26', borda: '#6e4318', anel: 'rgba(110, 67, 24, 0.5)', luz: 0.35 }, p: { corpo: 'url(#dm-madeira-escura)', lado: '#1e1006', borda: '#120903', anel: 'rgba(232, 199, 154, 0.35)', luz: 0.15 } },
+  medalha: { cruz: true, b: { corpo: 'url(#dm-ouro-claro)', lado: '#8a5f0e', borda: '#6b4a0a', anel: 'rgba(107, 74, 10, 0.6)', luz: 0.5, cruz: '#7a520f' }, p: { corpo: 'url(#dm-bronze)', lado: '#3e1d08', borda: '#2a1205', anel: 'rgba(255, 220, 180, 0.4)', luz: 0.25, cruz: '#3e1d08' } },
+  'ouro-prata': { b: { corpo: 'url(#dm-ouro-claro)', lado: '#8a5f0e', borda: '#6b4a0a', anel: 'rgba(107, 74, 10, 0.55)', luz: 0.5 }, p: { corpo: 'url(#dm-prata)', lado: '#262d36', borda: '#161b21', anel: 'rgba(240, 244, 248, 0.45)', luz: 0.3 } },
+  diamante: { brilho: true, b: { corpo: 'url(#dm-diamante)', lado: '#4f86c4', borda: '#3f6ea8', anel: 'rgba(63, 110, 168, 0.5)', luz: 0.7 }, p: { corpo: 'url(#dm-onix)', lado: '#000000', borda: '#000000', anel: 'rgba(143, 208, 255, 0.45)', luz: 0.3 } },
+  vidro: { b: { corpo: 'url(#dm-vidro-b)', lado: 'rgba(120, 160, 190, 0.55)', borda: '#7fa6c4', anel: 'rgba(255, 255, 255, 0.7)', luz: 0.75 }, p: { corpo: 'url(#dm-vidro-p)', lado: 'rgba(20, 24, 36, 0.7)', borda: '#141824', anel: 'rgba(217, 230, 242, 0.5)', luz: 0.45 } },
+  esmeralda: { b: { corpo: 'url(#dm-esmeralda-b)', lado: 'rgba(22, 112, 68, 0.75)', borda: '#1f7a4f', anel: 'rgba(255, 255, 255, 0.6)', luz: 0.7 }, p: { corpo: 'url(#dm-esmeralda-p)', lado: 'rgba(1, 32, 18, 0.85)', borda: '#012012', anel: 'rgba(184, 255, 217, 0.5)', luz: 0.45 } },
+  ouro: { b: { corpo: 'url(#dm-ouro-b)', lado: 'rgba(122, 86, 14, 0.8)', borda: '#7a560e', anel: 'rgba(255, 248, 210, 0.7)', luz: 0.7 }, p: { corpo: 'url(#dm-ouro-p)', lado: 'rgba(36, 22, 3, 0.88)', borda: '#241603', anel: 'rgba(255, 231, 163, 0.55)', luz: 0.4 } },
+  rubi: { b: { corpo: 'url(#dm-rubi-b)', lado: 'rgba(156, 21, 52, 0.75)', borda: '#9c1534', anel: 'rgba(255, 255, 255, 0.6)', luz: 0.7 }, p: { corpo: 'url(#dm-rubi-p)', lado: 'rgba(42, 1, 10, 0.88)', borda: '#2a010a', anel: 'rgba(255, 194, 207, 0.5)', luz: 0.42 } },
+  obsidiana: { b: { corpo: 'url(#dm-perola)', lado: '#9a8ca6', borda: '#8f8199', anel: 'rgba(160, 140, 190, 0.5)', luz: 0.8 }, p: { corpo: 'url(#dm-obsidiana)', lado: 'rgba(0, 0, 0, 0.92)', borda: '#000000', anel: 'rgba(201, 184, 255, 0.45)', luz: 0.4 } },
+  celestial: { brilho: true, b: { corpo: 'url(#dm-celestial-b)', lado: 'rgba(160, 122, 214, 0.7)', borda: '#a07ad6', anel: 'rgba(255, 255, 255, 0.75)', luz: 0.8 }, p: { corpo: 'url(#dm-celestial-p)', lado: 'rgba(18, 8, 58, 0.88)', borda: '#12083a', anel: 'rgba(255, 233, 168, 0.55)', luz: 0.45 } },
+};
+
+function damasPecaSvg(p, conjunto) {
   if (typeof garantirGradientesDoTabuleiro === 'function') garantirGradientesDoTabuleiro();
+  const nome = conjunto || (typeof conjuntoDasDamas === 'function' ? conjuntoDasDamas() : 'classico');
+  const estilo = CONJUNTOS_DAS_DAMAS[nome] || CONJUNTOS_DAS_DAMAS.classico;
   const branca = damasCor(p) === 'w';
-  const corpo = branca ? 'url(#dm-branca)' : 'url(#dm-preta)';
-  const lado = branca ? '#a8823a' : '#0e0a1a';
-  const borda = branca ? '#8f6d2c' : '#07050e';
-  const anel = branca ? 'rgba(168, 130, 58, 0.55)' : 'rgba(150, 128, 210, 0.45)';
-  const coroa = damasEhDama(p) ? `<path d="M32 58 L35 39 L44 48 L50 31 L56 48 L65 39 L68 58 Z" fill="url(#dm-ouro)" stroke="#7a560e" stroke-width="2" stroke-linejoin="round"/><circle cx="50" cy="47" r="3.2" fill="#e8455a" stroke="#7a1020" stroke-width="1"/><circle cx="35" cy="38" r="2.4" fill="url(#dm-ouro)"/><circle cx="50" cy="30" r="2.6" fill="url(#dm-ouro)"/><circle cx="65" cy="38" r="2.4" fill="url(#dm-ouro)"/>` : '';
-  return `<svg class="xadrez-peca-svg" viewBox="0 0 100 100" aria-hidden="true"><ellipse cx="50" cy="58" rx="38" ry="33" fill="${lado}"/><ellipse cx="50" cy="50" rx="38" ry="33" fill="${corpo}" stroke="${borda}" stroke-width="2.5"/><ellipse cx="50" cy="50" rx="27" ry="23" fill="none" stroke="${anel}" stroke-width="3"/><ellipse cx="50" cy="50" rx="19" ry="16" fill="none" stroke="${anel}" stroke-width="1.5"/><ellipse cx="40" cy="36" rx="12" ry="5" fill="#fff" opacity="${branca ? 0.55 : 0.18}"/>${coroa}</svg>`;
+  const c = branca ? estilo.b : estilo.p;
+  const dama = damasEhDama(p);
+  const coroa = dama ? `<path d="M32 58 L35 39 L44 48 L50 31 L56 48 L65 39 L68 58 Z" fill="url(#dm-ouro)" stroke="#7a560e" stroke-width="2" stroke-linejoin="round"/><circle cx="50" cy="47" r="3.2" fill="#e8455a" stroke="#7a1020" stroke-width="1"/><circle cx="35" cy="38" r="2.4" fill="url(#dm-ouro)"/><circle cx="50" cy="30" r="2.6" fill="url(#dm-ouro)"/><circle cx="65" cy="38" r="2.4" fill="url(#dm-ouro)"/>` : '';
+  const cruz = !dama && estilo.cruz ? `<path d="M50 37 V63 M40 46 H60" stroke="${c.cruz}" stroke-width="4.5" stroke-linecap="round" fill="none"/>` : '';
+  const faisca = estilo.brilho ? '<path class="xadrez-brilho" d="M64 30 l2.4 5 l5 2.4 l-5 2.4 l-2.4 5 l-2.4 -5 l-5 -2.4 l5 -2.4 z" fill="#ffffff" opacity=".9"/>' : '';
+  return `<svg class="xadrez-peca-svg conjunto-${nome}" viewBox="0 0 100 100" aria-hidden="true"><ellipse cx="50" cy="58" rx="38" ry="33" fill="${c.lado}"/><ellipse cx="50" cy="50" rx="38" ry="33" fill="${c.corpo}" stroke="${c.borda}" stroke-width="2.5"/><ellipse cx="50" cy="50" rx="27" ry="23" fill="none" stroke="${c.anel}" stroke-width="3"/><ellipse cx="50" cy="50" rx="19" ry="16" fill="none" stroke="${c.anel}" stroke-width="1.5"/><ellipse cx="40" cy="36" rx="12" ry="5" fill="#ffffff" opacity="${c.luz}"/>${cruz}${coroa}${faisca}</svg>`;
+}
+
+const CHAVE_DA_CAPTURA_DAS_DAMAS = 'lumina-sancti-damas-captura-obrigatoria';
+
+function capturaObrigatoriaNasDamas() {
+  try { return localStorage.getItem(CHAVE_DA_CAPTURA_DAS_DAMAS) === '1'; } catch (e) { return false; }
 }
 
 function jogoDeDamas(area) {
@@ -176,7 +200,13 @@ function jogoDeDamas(area) {
       <div class="xadrez-modos">
         <button type="button" class="xadrez-modo" data-modo="lumina"><span class="xadrez-modo-arte">${damasPecaSvg('W')}</span><strong>${textoDoJogo('Contra a Lumina')}</strong><small>${textoDoJogo('Você joga com as claras.')}</small></button>
         <button type="button" class="xadrez-modo" data-modo="dois"><span class="xadrez-modo-arte">${damasPecaSvg('w')}${damasPecaSvg('b')}</span><strong>${textoDoJogo('Duas pessoas')}</strong><small>${textoDoJogo('No mesmo aparelho, cada um na sua vez.')}</small></button>
-      </div>`;
+      </div>
+      <label class="damas-regra"><input type="checkbox" id="damas-obrigatoria"${capturaObrigatoriaNasDamas() ? ' checked' : ''}><span>${textoDoJogo('Comer é obrigatório (regra oficial)')}</span></label>
+      <button type="button" class="xadrez-personalizar" id="damas-personalizar">${textoDoJogo('Personalizar peças e tabuleiro')}</button>`;
+    const regra = area.querySelector('#damas-obrigatoria');
+    if (regra) regra.addEventListener('change', () => { try { localStorage.setItem(CHAVE_DA_CAPTURA_DAS_DAMAS, regra.checked ? '1' : '0'); } catch (e) { } });
+    const personalizar = area.querySelector('#damas-personalizar');
+    if (personalizar) personalizar.addEventListener('click', () => { if (typeof abrirColecaoDeItens === 'function') abrirColecaoDeItens('damas', escolherModo); });
     area.querySelectorAll('.xadrez-modo').forEach((b) => b.addEventListener('click', () => {
       if (b.dataset.modo === 'dois') { partida.modo = 'dois'; comecar(); return; }
       falarNoJogo(textoDoJogo('Escolha o nível. Quanto mais difícil, mais a Lumina pensa.'));
@@ -186,7 +216,7 @@ function jogoDeDamas(area) {
   };
 
   const comecar = () => {
-    partida.est = damasInicial(); partida.historico = []; partida.selecionada = -1; partida.ultima = null;
+    partida.est = damasInicial(); partida.est.capturaLivre = !capturaObrigatoriaNasDamas(); partida.historico = []; partida.selecionada = -1; partida.ultima = null;
     desenhar();
     falarNoJogo(textoDoJogo(partida.modo === 'lumina' ? 'Boa partida! Você começa.' : 'As claras começam.'));
   };
@@ -194,7 +224,7 @@ function jogoDeDamas(area) {
   const desenhar = () => {
     const est = partida.est;
     const jogadas = damasJogadas(est);
-    const obrigatoria = jogadas.length && jogadas[0].capturadas.length;
+    const obrigatoria = !est.capturaLivre && jogadas.length && jogadas[0].capturadas.length;
     const podemMexer = new Set(jogadas.map((m) => m.de));
     const destinos = partida.selecionada >= 0 ? jogadas.filter((m) => m.de === partida.selecionada) : [];
     const casas = est.tab.map((p, i) => {
@@ -210,15 +240,23 @@ function jogoDeDamas(area) {
     area.innerHTML = `
       <div class="xadrez">
         <div class="xadrez-lado ${est.vez === 'b' ? 'vez' : ''}${partida.pensando ? ' pensando' : ''}"><b>${nomeDaVez('b')}</b><span class="xadrez-pensando" aria-hidden="true"><i></i><i></i><i></i></span><span class="damas-conta">${damasPecaSvg('b')}${contar('b')}</span></div>
-        <div class="xadrez-tabuleiro damas-tabuleiro" role="grid" aria-label="${textoDoJogo('Tabuleiro de damas')}">${casas}</div>
+        <div class="xadrez-tabuleiro damas-tabuleiro ${typeof classesDoTabuleiro === 'function' ? classesDoTabuleiro() : ''}" role="grid" aria-label="${textoDoJogo('Tabuleiro de damas')}">${casas}</div>
         <div class="xadrez-lado ${est.vez === 'w' ? 'vez' : ''}"><b>${nomeDaVez('w')}</b><span class="damas-conta">${damasPecaSvg('w')}${contar('w')}</span></div>
         <div class="xadrez-acoes">
           <button type="button" class="jogo-botao jogo-botao-claro" id="damas-desfazer" ${partida.historico.length && !partida.pensando ? '' : 'disabled'}>${textoDoJogo('Desfazer')}</button>
           <button type="button" class="jogo-botao jogo-botao-claro" id="damas-novo">${textoDoJogo('Nova partida')}</button>
+          <button type="button" class="jogo-botao jogo-botao-claro" id="damas-visual">${textoDoJogo('Personalizar')}</button>
         </div>
       </div>`;
-    area.querySelectorAll('.xadrez-casa').forEach((b) => b.addEventListener('click', () => tocar(Number(b.dataset.casa))));
+    area.querySelectorAll('.xadrez-casa').forEach((b) => b.addEventListener('click', () => { if (typeof cliqueLogoDepoisDoArraste === 'function' && cliqueLogoDepoisDoArraste()) return; tocar(Number(b.dataset.casa)); }));
+    if (typeof ligarArrasteNoTabuleiro === 'function') ligarArrasteNoTabuleiro(area.querySelector('.xadrez-tabuleiro'), {
+      podeArrastar: (casa) => vezDoJogador() && !!jogoAtual && !jogoAtual.fim && damasCor(est.tab[casa]) === est.vez && jogadas.some((m) => m.de === casa),
+      destinos: (casa) => jogadas.filter((m) => m.de === casa).map((m) => m.para),
+      soltar: (de, para) => { partida.selecionada = de; tocar(para); },
+      cancelar: () => desenhar(),
+    });
     area.querySelector('#damas-desfazer').addEventListener('click', desfazer);
+    area.querySelector('#damas-visual').addEventListener('click', () => { if (typeof abrirColecaoDeItens === 'function') abrirColecaoDeItens('damas', desenhar); });
     area.querySelector('#damas-novo').addEventListener('click', () => { if (!partida.historico.length || window.confirm(textoDoJogo('Começar uma nova partida?'))) escolherModo(); });
     if (partida.animar && typeof animarJogadaNoTabuleiro === 'function') {
       animarJogadaNoTabuleiro(area.querySelector('.xadrez-tabuleiro'), partida.animar.caminho, partida.animar.fantasmas);
@@ -239,7 +277,7 @@ function jogoDeDamas(area) {
     if (damasCor(p) === partida.est.vez) {
       if (!jogadas.some((j) => j.de === casa)) {
         partida.selecionada = -1;
-        falarNoJogo(textoDoJogo(jogadas.length && jogadas[0].capturadas.length ? 'Capturar é obrigatório! Use a peça que brilha.' : 'Essa peça não tem para onde ir agora.'), 'ops');
+        falarNoJogo(textoDoJogo(!partida.est.capturaLivre && jogadas.length && jogadas[0].capturadas.length ? 'Capturar é obrigatório! Use a peça que brilha.' : 'Essa peça não tem para onde ir agora.'), 'ops');
       } else {
         partida.selecionada = partida.selecionada === casa ? -1 : casa;
         tocarNotaDoJogo(523);
@@ -268,7 +306,7 @@ function jogoDeDamas(area) {
     if (virou) falarNoJogo(textoDoJogo('Virou dama!'), 'feliz');
     else if (m.capturadas.length > 1) falarNoJogo(textoDoJogo('Que captura!'), 'feliz');
     else if (partida.modo === 'dois') falarNoJogo(textoDoJogo('Vez das {cor}.', { cor: textoDoJogo(partida.est.vez === 'w' ? 'claras' : 'escuras') }));
-    else if (partida.est.vez === 'w') falarNoJogo(textoDoJogo(proximas[0].capturadas.length ? 'Você tem captura obrigatória!' : 'Sua vez.'));
+    else if (partida.est.vez === 'w') falarNoJogo(textoDoJogo(!partida.est.capturaLivre && proximas[0].capturadas.length ? 'Você tem captura obrigatória!' : 'Sua vez.'));
     if (partida.modo === 'lumina' && partida.est.vez === 'b') vezDaLumina();
   };
 
@@ -300,4 +338,5 @@ function jogoDeDamas(area) {
   };
 
   escolherModo();
+  if (typeof carregarItensDoPerfil === 'function') carregarItensDoPerfil().then(() => { if (!jogoAtual || jogoAtual.fim || !area.isConnected) return; if (partida.modo) desenhar(); else if (area.querySelector('.xadrez-modos .xadrez-modo')) escolherModo(); }).catch(() => {});
 }

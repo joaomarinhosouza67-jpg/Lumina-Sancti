@@ -7,6 +7,8 @@ const CORES_DOS_BAUS = {
   madeira: { corpo: ['#b57437', '#7c461c', '#4a250b'], tampa: ['#c98545', '#8d5022', '#5a2f10'], metal: ['#e6e9ef', '#7d8593', '#30353f'], veio: '#2e1606', cruz: '#2b2f38', luz: '#ffd08a', forro: ['#6a3a17', '#2e1606'] },
   prata: { corpo: ['#3e4f86', '#25305a', '#121836'], tampa: ['#4c5f9c', '#2b3768', '#151c3e'], metal: ['#ffffff', '#c3ccdc', '#5b6880'], veio: '#0a0f24', cruz: '#3b4766', luz: '#e4ecff', forro: ['#2c3f86', '#101a44'] },
   ouro: { corpo: ['#a3222a', '#6d1018', '#3a060b'], tampa: ['#b42b33', '#7a121b', '#40070c'], metal: ['#fff6d0', '#e5b444', '#7d4f0e'], veio: '#2a0306', cruz: '#7d4f0e', luz: '#ffe28a', joias: true, forro: ['#8e1b3a', '#4a0718'] },
+  safira: { corpo: ['#2a6fd1', '#174a99', '#0a2457'], tampa: ['#3a80e0', '#1d56ad', '#0c2a66'], metal: ['#ffffff', '#cfd8e6', '#6b7a90'], veio: '#04122e', cruz: '#6b7a90', luz: '#bfe0ff', joias: true, forro: ['#173c80', '#071a3f'] },
+  ametista: { corpo: ['#8a4fd0', '#5a2a9a', '#2e1159'], tampa: ['#9b62dd', '#6633aa', '#341466'], metal: ['#fff6d0', '#e5b444', '#7d4f0e'], veio: '#1a0533', cruz: '#7d4f0e', luz: '#ecd2ff', joias: true, forro: ['#5a2a9a', '#260c4a'] },
 };
 const DESAFIOS_DO_DIA = {
   missoes1: { texto: 'Faça 1 missão', icone: 'trilha', ir: 'trilhas' },
@@ -252,7 +254,7 @@ async function tocarNoBauDaTrilha(botao) {
 }
 
 function nomeDoBau(tipo) {
-  return trDoBau({ ouro: 'Baú de ouro', prata: 'Baú de prata', madeira: 'Baú de madeira' }[tipo] || 'Baú');
+  return trDoBau({ ametista: 'Baú de ametista', safira: 'Baú de safira', ouro: 'Baú de ouro', prata: 'Baú de prata', madeira: 'Baú de madeira' }[tipo] || 'Baú');
 }
 
 async function chamarDosBaus(funcao, parametros) {
@@ -366,6 +368,10 @@ function desenharMochila() {
     </div>`;
   lugar.querySelectorAll('[data-abrir-bau]').forEach((botao) => botao.addEventListener('click', () => abrirBau(Number(botao.dataset.abrirBau), botao.dataset.tipo)));
   lugar.querySelectorAll('[data-frasco]').forEach((botao) => botao.addEventListener('click', () => mostrarFrasco(botao.dataset.frasco)));
+  if (typeof abrirColecaoDeItens === 'function' && !lugar.querySelector('.mochila-itens')) {
+    lugar.insertAdjacentHTML('beforeend', `<button type="button" class="mochila-itens">${escaparDoBau(trDoBau('Itens raros'))}</button>`);
+    lugar.querySelector('.mochila-itens').addEventListener('click', () => abrirColecaoDeItens('todos'));
+  }
   clearTimeout(reloginhoDoFrasco);
   if (dobro) reloginhoDoFrasco = setTimeout(desenharMochila, 30000);
 }
@@ -507,7 +513,11 @@ async function abrirBau(id, tipo, opcoes) {
     const premios = fundo.querySelector('#bau-premios');
     const itens = [`<span class="bau-premio bau-premio-fe" style="--i:0">${typeof estrelaDaFe === 'function' ? estrelaDaFe('fe-grande') : iconeDoBau('estrela')}<b>+${Number(resultado.fe) || 0}</b><small>${trDoBau('de Fé')}</small></span>`]
       .concat((resultado.frascos || []).map((t, i) => `<span class="bau-premio" style="--i:${i + 1}">${svgDoFrasco(t, 46)}<small>${escaparDoBau(trDoBau((FRASCOS_DE_AZEITE[t] || {}).nome || t))}</small></span>`));
-    if (premios) premios.innerHTML = itens.join('');
+    const itemDoBau = typeof htmlDoItemDoBau === 'function' ? htmlDoItemDoBau(resultado.item, itens.length) : '';
+    if (premios) {
+      premios.innerHTML = itens.join('') + itemDoBau;
+      if (typeof ligarItemDoBau === 'function') ligarItemDoBau(premios, resultado.item);
+    }
     if (botao) { botao.disabled = false; botao.textContent = trDoBau('Continuar'); botao.addEventListener('click', fecharJanelaDoBau); botao.focus({ preventScroll: true }); }
     const membro = typeof obterMembroAtivo === 'function' ? obterMembroAtivo() : null;
     if (membro && typeof membro.fe === 'number') membro.fe += Number(resultado.fe) || 0;

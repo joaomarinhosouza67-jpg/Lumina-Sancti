@@ -77,9 +77,9 @@
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z"/></svg>
           </button>
           <div id="idioma-menu" class="idioma-menu">
-            <button class="idioma-opcao" data-lang="pt"><svg class="bandeira" viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" fill="#009c3b"/><path d="M10 1.8 18.2 7 10 12.2 1.8 7z" fill="#ffdf00"/><circle cx="10" cy="7" r="2.9" fill="#002776"/></svg> Português</button>
-            <button class="idioma-opcao" data-lang="en"><svg class="bandeira" viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" fill="#ffffff"/><path d="M0 0h20v2H0zM0 4h20v2H0zM0 8h20v2H0zM0 12h20v2H0z" fill="#b22234"/><rect width="9" height="8" fill="#3c3b6e"/></svg> English</button>
-            <button class="idioma-opcao" data-lang="es"><svg class="bandeira" viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" fill="#aa151b"/><rect y="3.5" width="20" height="7" fill="#f1bf00"/></svg> Español</button>
+            <button class="idioma-opcao" data-lang="pt"><svg class="bandeira" viewBox="0 0 30 20" aria-hidden="true"><defs><linearGradient id="bandeira-luz-pt" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".18"/></linearGradient></defs><rect width="30" height="20" rx="3" fill="#009b3a"/><path d="M15 2.6 27.2 10 15 17.4 2.8 10z" fill="#fedf00"/><circle cx="15" cy="10" r="4.6" fill="#002776"/><path d="M10.6 9.1 Q15 7.6 19.4 10.3" fill="none" stroke="#fff" stroke-width=".9"/><circle cx="13.4" cy="11.4" r=".45" fill="#fff"/><circle cx="15.6" cy="12.3" r=".45" fill="#fff"/><circle cx="17" cy="11.2" r=".4" fill="#fff"/><circle cx="14.6" cy="13.3" r=".35" fill="#fff"/><rect width="30" height="20" rx="3" fill="url(#bandeira-luz-pt)"/></svg> Português</button>
+            <button class="idioma-opcao" data-lang="en"><svg class="bandeira" viewBox="0 0 30 20" aria-hidden="true"><defs><linearGradient id="bandeira-luz-en" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".18"/></linearGradient><clipPath id="bandeira-recorte-en"><rect width="30" height="20" rx="3"/></clipPath></defs><g clip-path="url(#bandeira-recorte-en)"><rect width="30" height="20" fill="#fff"/><path d="M0 0h30v1.54H0zM0 3.08h30v1.54H0zM0 6.15h30v1.54H0zM0 9.23h30v1.54H0zM0 12.31h30v1.54H0zM0 15.38h30v1.54H0zM0 18.46h30V20H0z" fill="#b22234"/><rect width="13" height="10.77" fill="#3c3b6e"/><g fill="#fff"><circle cx="2.2" cy="2" r=".55"/><circle cx="5.2" cy="2" r=".55"/><circle cx="8.2" cy="2" r=".55"/><circle cx="11" cy="2" r=".55"/><circle cx="3.7" cy="4.2" r=".55"/><circle cx="6.7" cy="4.2" r=".55"/><circle cx="9.6" cy="4.2" r=".55"/><circle cx="2.2" cy="6.4" r=".55"/><circle cx="5.2" cy="6.4" r=".55"/><circle cx="8.2" cy="6.4" r=".55"/><circle cx="11" cy="6.4" r=".55"/><circle cx="3.7" cy="8.6" r=".55"/><circle cx="6.7" cy="8.6" r=".55"/><circle cx="9.6" cy="8.6" r=".55"/></g></g><rect width="30" height="20" rx="3" fill="url(#bandeira-luz-en)"/></svg> English</button>
+            <button class="idioma-opcao" data-lang="es"><svg class="bandeira" viewBox="0 0 30 20" aria-hidden="true"><defs><linearGradient id="bandeira-luz-es" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".18"/></linearGradient><clipPath id="bandeira-recorte-es"><rect width="30" height="20" rx="3"/></clipPath></defs><g clip-path="url(#bandeira-recorte-es)"><rect width="30" height="20" fill="#c60b1e"/><rect y="5" width="30" height="10" fill="#ffc400"/><rect x="7" y="7.3" width="3.4" height="5.2" rx=".6" fill="#ad1519"/><rect x="7.6" y="8" width="2.2" height="1.8" fill="#ffc400" opacity=".9"/><rect x="5.8" y="7.6" width=".8" height="4.6" fill="#c8b100"/><rect x="10.8" y="7.6" width=".8" height="4.6" fill="#c8b100"/><path d="M7 7.3 Q8.7 5.6 10.4 7.3" fill="#ad1519"/></g><rect width="30" height="20" rx="3" fill="url(#bandeira-luz-es)"/></svg> Español</button>
           </div>
         </div>
         <button id="search-btn" class="icon-btn" aria-label="Pesquisar" data-i18n-aria="aria_pesquisar" style="margin-left: 10px;">
@@ -299,12 +299,13 @@
       <p class="sidebar-secao">Mais</p>
       <button class="side-nav-link" id="nav-planos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-estrela"></use></svg><span>Planos</span></button>
       <button class="side-nav-link" id="nav-suporte"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-ajuda"></use></svg><span>Fale com a equipe</span><span class="aviso-suporte" data-aviso-suporte hidden></span></button>
+      <button class="side-nav-link" id="nav-sobre"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-cruz"></use></svg><span>Sobre o Lumina Sancti</span></button>
       <button class="side-nav-link" id="nav-instalar" hidden><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-baixar"></use></svg><span>Instalar o app</span></button>
       <p class="sidebar-secao">Idioma</p>
       <div class="side-idiomas" role="group" aria-label="Idioma / Language">
-        <button type="button" class="side-idioma" data-lang="pt" translate="no"><svg class="bandeira" viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" fill="#009c3b"/><path d="M10 1.8 18.2 7 10 12.2 1.8 7z" fill="#ffdf00"/><circle cx="10" cy="7" r="2.9" fill="#002776"/></svg>PT</button>
-        <button type="button" class="side-idioma" data-lang="en" translate="no"><svg class="bandeira" viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" fill="#ffffff"/><path d="M0 0h20v2H0zM0 4h20v2H0zM0 8h20v2H0zM0 12h20v2H0z" fill="#b22234"/><rect width="9" height="8" fill="#3c3b6e"/></svg>EN</button>
-        <button type="button" class="side-idioma" data-lang="es" translate="no"><svg class="bandeira" viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" fill="#aa151b"/><rect y="3.5" width="20" height="7" fill="#f1bf00"/></svg>ES</button>
+        <button type="button" class="side-idioma" data-lang="pt" translate="no"><svg class="bandeira" viewBox="0 0 30 20" aria-hidden="true"><defs><linearGradient id="bandeira-luz-pt" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".18"/></linearGradient></defs><rect width="30" height="20" rx="3" fill="#009b3a"/><path d="M15 2.6 27.2 10 15 17.4 2.8 10z" fill="#fedf00"/><circle cx="15" cy="10" r="4.6" fill="#002776"/><path d="M10.6 9.1 Q15 7.6 19.4 10.3" fill="none" stroke="#fff" stroke-width=".9"/><circle cx="13.4" cy="11.4" r=".45" fill="#fff"/><circle cx="15.6" cy="12.3" r=".45" fill="#fff"/><circle cx="17" cy="11.2" r=".4" fill="#fff"/><circle cx="14.6" cy="13.3" r=".35" fill="#fff"/><rect width="30" height="20" rx="3" fill="url(#bandeira-luz-pt)"/></svg>PT</button>
+        <button type="button" class="side-idioma" data-lang="en" translate="no"><svg class="bandeira" viewBox="0 0 30 20" aria-hidden="true"><defs><linearGradient id="bandeira-luz-en" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".18"/></linearGradient><clipPath id="bandeira-recorte-en"><rect width="30" height="20" rx="3"/></clipPath></defs><g clip-path="url(#bandeira-recorte-en)"><rect width="30" height="20" fill="#fff"/><path d="M0 0h30v1.54H0zM0 3.08h30v1.54H0zM0 6.15h30v1.54H0zM0 9.23h30v1.54H0zM0 12.31h30v1.54H0zM0 15.38h30v1.54H0zM0 18.46h30V20H0z" fill="#b22234"/><rect width="13" height="10.77" fill="#3c3b6e"/><g fill="#fff"><circle cx="2.2" cy="2" r=".55"/><circle cx="5.2" cy="2" r=".55"/><circle cx="8.2" cy="2" r=".55"/><circle cx="11" cy="2" r=".55"/><circle cx="3.7" cy="4.2" r=".55"/><circle cx="6.7" cy="4.2" r=".55"/><circle cx="9.6" cy="4.2" r=".55"/><circle cx="2.2" cy="6.4" r=".55"/><circle cx="5.2" cy="6.4" r=".55"/><circle cx="8.2" cy="6.4" r=".55"/><circle cx="11" cy="6.4" r=".55"/><circle cx="3.7" cy="8.6" r=".55"/><circle cx="6.7" cy="8.6" r=".55"/><circle cx="9.6" cy="8.6" r=".55"/></g></g><rect width="30" height="20" rx="3" fill="url(#bandeira-luz-en)"/></svg>EN</button>
+        <button type="button" class="side-idioma" data-lang="es" translate="no"><svg class="bandeira" viewBox="0 0 30 20" aria-hidden="true"><defs><linearGradient id="bandeira-luz-es" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".18"/></linearGradient><clipPath id="bandeira-recorte-es"><rect width="30" height="20" rx="3"/></clipPath></defs><g clip-path="url(#bandeira-recorte-es)"><rect width="30" height="20" fill="#c60b1e"/><rect y="5" width="30" height="10" fill="#ffc400"/><rect x="7" y="7.3" width="3.4" height="5.2" rx=".6" fill="#ad1519"/><rect x="7.6" y="8" width="2.2" height="1.8" fill="#ffc400" opacity=".9"/><rect x="5.8" y="7.6" width=".8" height="4.6" fill="#c8b100"/><rect x="10.8" y="7.6" width=".8" height="4.6" fill="#c8b100"/><path d="M7 7.3 Q8.7 5.6 10.4 7.3" fill="#ad1519"/></g><rect width="30" height="20" rx="3" fill="url(#bandeira-luz-es)"/></svg>ES</button>
       </div>
 
     </nav>
@@ -453,7 +454,15 @@
         </div>
       </section>
 
-      <section class="about container">
+    </section>
+
+    <section id="view-sobre" class="view">
+      <div class="container sobre-container">
+        <button class="btn-back" id="btn-back-sobre">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span data-i18n="voltar_inicio">Voltar para o início</span>
+        </button>
+      <section class="about">
         <h2 class="section-title" data-i18n="sobre_titulo">Sobre o Lumina Sancti</h2>
         <div class="title-divider"></div>
         <div class="about-pilares">
@@ -465,6 +474,7 @@
           O <strong>Lumina Sancti</strong> (Luz dos Santos) nasceu de uma certeza: os santos não são personagens distantes. Foram pessoas de verdade, com medos, quedas e recomeços, que deixaram Deus transformar a vida delas. Aqui você conhece a história de cada um, aprende como num jogo, reza com quem ama e descobre, um passo de cada vez, que a santidade também é para você.
         </p>
       </section>
+      </div>
     </section>
 
     <section id="view-detail" class="view">
@@ -567,6 +577,7 @@
             <svg class="auth-google-logo" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
             <span data-i18n="conta_google">Continuar com Google</span>
           </button>
+          <p class="auth-google-aviso" id="auth-google-aviso" data-i18n="conta_google_aviso">Ao continuar com o Google, você declara ter 18 anos ou mais e aceita os Termos de Uso e a Política de Privacidade.</p>
           <div class="auth-divisor" id="auth-divisor"><span data-i18n="conta_ou_email">ou com e-mail</span></div>
 
           <form id="auth-form-entrar" class="auth-form">
@@ -595,7 +606,11 @@
             <p class="auth-dica" data-i18n="conta_senha_dica">Pelo menos 8 caracteres, com letras e números.</p>
             <label class="auth-aceite">
               <input type="checkbox" id="cadastrar-aceite" required>
-              <span><span data-i18n="conta_aceito">Li e aceito a</span> <button type="button" class="auth-link auth-link-inline" id="auth-ver-privacidade" data-i18n="conta_politica">Política de Privacidade</button></span>
+              <span><span data-i18n="conta_aceito">Li e aceito os</span> <button type="button" class="auth-link auth-link-inline" id="auth-ver-termos" data-i18n="conta_termos">Termos de Uso</button> <span data-i18n="conta_e_a">e a</span> <button type="button" class="auth-link auth-link-inline" id="auth-ver-privacidade" data-i18n="conta_politica">Política de Privacidade</button></span>
+            </label>
+            <label class="auth-aceite">
+              <input type="checkbox" id="cadastrar-maioridade" required>
+              <span data-i18n="conta_maioridade">Declaro que tenho 18 anos ou mais</span>
             </label>
             <div class="auth-captcha" data-captcha="cadastrar"></div>
             <button type="submit" class="auth-botao" data-i18n="conta_cadastrar_botao">Criar minha conta</button>
@@ -647,97 +662,180 @@
         <h2 class="section-title" style="text-align:left; margin: 10px 0 4px;">Política de Privacidade</h2>
         <div class="title-divider" style="margin: 0 0 16px;"></div>
         <div data-i18n-bloco="privacidade">
-        <p class="privacidade-data">Atualizada em 24 de novembro de 2026.</p>
-        <p>Esta Política de Privacidade explica como o Lumina Sancti trata os dados pessoais de quem usa o site luminasancti.com e o aplicativo Lumina Sancti, de acordo com a Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018, a LGPD) e o Estatuto da Criança e do Adolescente.</p>
+        <p class="privacidade-data">Versão 3.0, em vigor desde 24 de novembro de 2026.</p>
 
-        <h3>Quem somos</h3>
-        <p>O Lumina Sancti é um site e aplicativo católico sobre a vida dos santos, mantido pela AMDG Studios, que é a controladora dos dados pessoais tratados no serviço. Para qualquer assunto sobre os seus dados, inclusive para falar com o encarregado pelo tratamento de dados pessoais, escreva para <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a>.</p>
+        <h3>1. Introdução</h3>
+        <p>1.1. Esta Política de Privacidade e Proteção de Dados Pessoais ("Política") descreve, de forma clara e transparente, como o Lumina Sancti coleta, utiliza, armazena, compartilha, protege e elimina os dados pessoais das pessoas que acessam o site luminasancti.com e o aplicativo Lumina Sancti (em conjunto, o "Serviço").</p>
+        <p>1.2. Esta Política foi elaborada em conformidade com a Lei nº 13.709/2018 (Lei Geral de Proteção de Dados Pessoais, "LGPD"), a Lei nº 12.965/2014 (Marco Civil da Internet), a Lei nº 8.069/1990 (Estatuto da Criança e do Adolescente), a Lei nº 8.078/1990 (Código de Defesa do Consumidor) e as demais normas aplicáveis.</p>
+        <p>1.3. Ao criar uma conta, o titular declara que leu e compreendeu esta Política e os Termos de Uso. O uso do Serviço sem conta também está sujeito a esta Política, no que couber.</p>
 
-        <h3>Uso sem conta</h3>
-        <p>Você pode usar o Lumina Sancti sem criar conta. Nesse caso, o progresso das trilhas, os santos favoritos e o idioma ficam guardados apenas no seu aparelho, e não recebemos dados pessoais seus. Registramos somente informações técnicas sobre erros, sem identificar você, para corrigir problemas do site.</p>
-
-        <h3>Dados que tratamos</h3>
-        <p><strong>Conta e perfis.</strong> Nome e e-mail; a senha, guardada de forma criptografada pelo serviço de login; os perfis da família, com nome, avatar ou foto, tipo de perfil (adulto ou criança) e faixa de idade das crianças; e um código do aparelho, usado para limitar o número de contas por aparelho.</p>
-        <p><strong>Uso do serviço.</strong> Progresso nas trilhas e missões, Fé, Santidade, ofensiva, medalhas, ligas semanais, baús, frascos, desafios do dia, jogos, cursos, enfeites e itens escolhidos, e o histórico necessário para calcular esses resultados.</p>
-        <p><strong>Conteúdos que você cria.</strong> Conversas com a Lumina; pedidos de oração e as orações feitas por eles; intenções do Diário de intenções; mensagens, áudios, GIFs, figurinhas, reações e mensagens fixadas nos Cenáculos; marcos e reações na Comunidade; pedidos de conversa, bloqueios e denúncias.</p>
-        <p><strong>Atendimento.</strong> As mensagens trocadas com o suporte, o assunto escolhido e o perfil que escreveu.</p>
-        <p><strong>Notificações.</strong> Se você ativar os lembretes, o endereço de notificação criado pelo navegador ou pelo celular.</p>
-        <p><strong>Pagamentos.</strong> O plano escolhido, a situação e a data de renovação da assinatura e o código de cliente devolvido pela empresa de pagamento. Não recebemos nem guardamos dados de cartão.</p>
-        <p><strong>Dados técnicos.</strong> Registros de erros, com a página, a mensagem do erro, o navegador e o tipo de aparelho.</p>
-
-        <h3>Dados sensíveis</h3>
-        <p>Como o Lumina Sancti é um serviço religioso, o uso de algumas funções, como orações, pedidos de oração e intenções, pode revelar a sua convicção religiosa, que a LGPD considera dado pessoal sensível. Tratamos esses dados apenas para oferecer as funções que você escolhe usar, com base no seu consentimento, dado ao criar a conta e ao usar cada função. Você pode retirar o consentimento a qualquer momento, apagando o conteúdo ou excluindo a conta.</p>
-
-        <h3>Para que usamos os dados</h3>
+        <h3>2. Definições</h3>
+        <p>Para os fins desta Política, consideram-se:</p>
         <ul>
-          <li>Criar e manter a sua conta, guardar o progresso e oferecer as funções do serviço, com base na execução do contrato (art. 7º, V, da LGPD) e, para dados sensíveis, no seu consentimento (art. 11, I).</li>
-          <li>Enviar e-mails de confirmação, de boas-vindas e avisos sobre a conta, com base na execução do contrato.</li>
-          <li>Enviar os lembretes que você ativou, com base no seu consentimento, que pode ser retirado a qualquer momento.</li>
-          <li>Responder às perguntas feitas à Lumina e ao suporte, com base na execução do contrato.</li>
-          <li>Moderar conteúdos, investigar denúncias e proteger os participantes, especialmente as crianças, com base no legítimo interesse (art. 7º, IX).</li>
-          <li>Corrigir erros e manter o serviço seguro, com base no legítimo interesse.</li>
-          <li>Processar pagamentos e cumprir obrigações legais e fiscais, com base na execução do contrato e no cumprimento de obrigação legal (art. 7º, II).</li>
-        </ul>
-        <p>Não vendemos dados pessoais nem os usamos para publicidade. O Lumina Sancti não mostra anúncios.</p>
-
-        <h3>Crianças</h3>
-        <p>Perfis infantis só podem ser criados pelo adulto titular da conta, que declara ser pai, mãe ou responsável legal pela criança e consente com o uso do perfil, nos termos do art. 14 da LGPD. Não pedimos e-mail nem dados de contato da criança. Perfis infantis não têm acesso aos Cenáculos, à Comunidade, aos Pedidos de oração, ao Diário de intenções nem às conversas com a Lumina, não aparecem para pessoas de fora da família e, para sair do modo infantil, é preciso o PIN do responsável.</p>
-
-        <h3>O que outras pessoas podem ver</h3>
-        <ul>
-          <li>No ranking geral, nas ligas semanais e na Comunidade, outros adultos veem o seu primeiro nome, a sua foto ou avatar e os seus números das trilhas.</li>
-          <li>Nos Pedidos de oração, os adultos que usam o Lumina Sancti veem o texto do pedido com o seu primeiro nome e a sua foto ou avatar, ou como "Anônimo", se você escolher não mostrar o nome. Pessoas da sua família veem o nome completo. Mostramos quantas pessoas rezaram pelo pedido, mas não quem rezou.</li>
-          <li>O Diário de intenções é particular: no aplicativo, só o próprio perfil vê as suas intenções.</li>
-          <li>Nos Cenáculos, os participantes de cada grupo ou conversa veem o nome, a foto, as mensagens e as reações de quem participa.</li>
-          <li>Pessoas da família, contatos aceitos e participantes do mesmo Cenáculo podem ver o seu perfil com nome, foto e números das trilhas.</li>
+          <li><strong>Dado pessoal:</strong> informação relacionada a pessoa natural identificada ou identificável.</li>
+          <li><strong>Dado pessoal sensível:</strong> dado pessoal sobre origem racial ou étnica, convicção religiosa, opinião política, saúde, vida sexual, dado genético ou biométrico, quando vinculado a uma pessoa natural.</li>
+          <li><strong>Titular:</strong> pessoa natural a quem se referem os dados pessoais.</li>
+          <li><strong>Controlador:</strong> a quem competem as decisões sobre o tratamento de dados pessoais.</li>
+          <li><strong>Operador:</strong> quem realiza o tratamento de dados pessoais em nome do controlador.</li>
+          <li><strong>Encarregado:</strong> pessoa indicada pelo controlador para atuar como canal de comunicação com os titulares e com a Autoridade Nacional de Proteção de Dados (ANPD).</li>
+          <li><strong>Tratamento:</strong> toda operação realizada com dados pessoais, como coleta, utilização, acesso, armazenamento, compartilhamento e eliminação.</li>
+          <li><strong>Conta:</strong> cadastro feito por um adulto, ao qual podem estar vinculados vários perfis da mesma família.</li>
+          <li><strong>Perfil:</strong> cada pessoa da família dentro de uma conta, podendo ser perfil de adulto ou perfil infantil.</li>
+          <li><strong>Responsável:</strong> o adulto titular da conta que cria e administra perfis infantis.</li>
+          <li><strong>Conteúdo do usuário:</strong> textos, mensagens, áudios, imagens, reações, pedidos de oração e demais materiais enviados pelo titular no Serviço.</li>
         </ul>
 
-        <h3>Moderação e segurança da comunidade</h3>
-        <p>Os Cenáculos, a Comunidade e os Pedidos de oração são só para adultos e seguem regras de convivência. As mensagens não têm criptografia de ponta a ponta: a equipe do Lumina Sancti pode ler mensagens, ouvir áudios e analisar pedidos de oração para investigar denúncias e proteger os participantes. Uma mensagem apagada deixa de aparecer, mas guardamos uma cópia para eventual investigação. Pedidos de oração com três denúncias são escondidos automaticamente até a análise da equipe. Usamos um filtro automático de palavras proibidas. Quem desrespeitar as regras pode ter conteúdos apagados ou escondidos, receber advertência e ter o perfil ou a conta suspensos.</p>
+        <h3>3. Controlador e encarregado</h3>
+        <p>3.1. O Serviço é mantido pela AMDG Studios, que atua como controladora dos dados pessoais tratados no Lumina Sancti.</p>
+        <p>3.2. O titular pode falar com o encarregado pelo tratamento de dados pessoais pelo e-mail <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a>, indicando no assunto "Proteção de dados".</p>
 
-        <h3>Permissões do aparelho</h3>
-        <p>O microfone só é usado enquanto você grava um áudio nos Cenáculos, e a câmera só enquanto você escaneia um QR Code. A imagem da câmera é lida no próprio aparelho e não é gravada nem enviada. As notificações só chegam se você permitir.</p>
+        <h3>4. Abrangência</h3>
+        <p>4.1. Esta Política se aplica a todas as funcionalidades do Serviço, incluindo trilhas e missões, orações, terço, novenas, exame de consciência, Leitura do dia, Calendário do Advento, jogos, cursos, ligas, baús e itens, Comunidade, Cenáculos, Pedidos de oração, Diário de intenções, a assistente Lumina e o atendimento ao usuário.</p>
+        <p>4.2. O Serviço é destinado ao público em geral. A conta deve ser criada por pessoa com 18 anos ou mais. Crianças e adolescentes usam o Serviço apenas por meio de perfis infantis criados e supervisionados pelo responsável, nos termos da Seção 9.</p>
 
-        <h3>Lumina, a assistente com inteligência artificial</h3>
-        <p>As perguntas feitas à Lumina e as mensagens enviadas ao suporte são processadas por um modelo de inteligência artificial executado pela Cloudflare (Workers AI) para gerar as respostas. As conversas com a Lumina ficam guardadas no seu perfil, e você pode apagar cada uma quando quiser. Contamos quantas perguntas são feitas para controlar os limites de uso. As respostas da Lumina podem conter erros e não substituem a orientação de um sacerdote. No suporte, você pode pedir para falar com uma pessoa da equipe a qualquer momento.</p>
+        <h3>5. Uso sem conta</h3>
+        <p>5.1. É possível usar parte do Serviço sem criar conta. Nesse caso, o progresso das trilhas, os santos favoritos, o idioma e as preferências ficam guardados apenas no armazenamento local do próprio aparelho, e o Lumina Sancti não recebe dados pessoais do titular.</p>
+        <p>5.2. Mesmo sem conta, são registradas informações técnicas sobre falhas de funcionamento, sem identificação do usuário, exclusivamente para corrigir erros e manter o Serviço estável.</p>
 
-        <h3>Lembretes</h3>
-        <p>Os lembretes são opcionais: o da Hora da Misericórdia, às 15h, e os da ofensiva, nos dias em que a missão ainda não foi feita. Eles podem mostrar o seu primeiro nome e quantos dias seguidos você tem. Você pode desligá-los em Meu perfil ou nas configurações do aparelho. O envio passa pelos serviços de notificação do navegador ou do sistema (Google, Apple ou Mozilla).</p>
-
-        <h3>Com quem compartilhamos</h3>
-        <p>Compartilhamos dados apenas com empresas que nos ajudam a prestar o serviço, chamadas de operadoras, que só podem usá-los para essa finalidade:</p>
+        <h3>6. Dados pessoais tratados</h3>
+        <p>6.1. <strong>Dados fornecidos pelo titular.</strong></p>
         <ul>
-          <li>Supabase: banco de dados, login e armazenamento de arquivos, com servidores em São Paulo.</li>
+          <li>Cadastro: nome, endereço de e-mail e senha. A senha é armazenada de forma criptografada pelo serviço de autenticação, e ninguém da equipe tem acesso a ela.</li>
+          <li>Perfis da família: nome, avatar ou foto, tipo de perfil (adulto ou infantil) e faixa de idade das crianças.</li>
+          <li>Declarações feitas no cadastro: aceite dos Termos de Uso e desta Política e declaração de maioridade, com data e hora.</li>
+          <li>Conteúdo do usuário: conversas com a Lumina; pedidos de oração; intenções e agradecimentos do Diário de intenções; mensagens, áudios, GIFs, figurinhas, reações e mensagens fixadas nos Cenáculos; marcos e reações na Comunidade; pedidos de conversa, bloqueios e denúncias.</li>
+          <li>Atendimento: mensagens trocadas com o suporte, assunto escolhido e perfil que escreveu.</li>
+        </ul>
+        <p>6.2. <strong>Dados gerados pelo uso do Serviço.</strong> Progresso nas trilhas e missões, respostas dadas, Fé, Santidade, ofensiva, medalhas, ligas semanais, posição em rankings, baús, frascos, itens raros, desafios do dia, partidas de jogos, cursos, enfeites escolhidos e o histórico necessário para calcular esses resultados.</p>
+        <p>6.3. <strong>Dados técnicos.</strong> Código gerado para o aparelho, usado para limitar o número de contas por aparelho; endereço de notificação criado pelo navegador ou celular, quando o titular ativa os lembretes; e registros de erros, com página, mensagem de erro, navegador e tipo de aparelho.</p>
+        <p>6.4. <strong>Dados recebidos de terceiros.</strong> Quando o titular entra com uma conta Google, recebemos do Google o nome e o e-mail. Nas assinaturas, recebemos da empresa de pagamento o plano escolhido, a situação e a data de renovação da assinatura e um código de cliente. Não recebemos nem armazenamos dados de cartão.</p>
+        <p>6.5. <strong>Dados que não tratamos.</strong> Não coletamos geolocalização precisa, contatos da agenda do aparelho, dados biométricos nem documentos de identidade, e não usamos ferramentas de rastreamento de terceiros para fins de publicidade.</p>
+
+        <h3>7. Dados pessoais sensíveis</h3>
+        <p>7.1. Por se tratar de um serviço de conteúdo religioso católico, o uso de determinadas funcionalidades, como orações, pedidos de oração, intenções e participação em grupos de oração, pode revelar a convicção religiosa do titular, que a LGPD qualifica como dado pessoal sensível.</p>
+        <p>7.2. Esses dados são tratados exclusivamente para prestar as funcionalidades escolhidas pelo titular, com fundamento no consentimento específico e destacado (art. 11, I, da LGPD), manifestado no cadastro e no uso de cada funcionalidade.</p>
+        <p>7.3. O titular pode revogar o consentimento a qualquer momento, apagando o conteúdo correspondente ou excluindo a conta, sem prejuízo da legalidade do tratamento realizado anteriormente.</p>
+
+        <h3>8. Finalidades e bases legais</h3>
+        <p>Os dados pessoais são tratados somente para as finalidades abaixo, com as respectivas bases legais:</p>
+        <ul>
+          <li>Criar e manter a conta, os perfis e o progresso, e prestar as funcionalidades contratadas: execução de contrato (art. 7º, V) e, quanto a dados sensíveis, consentimento (art. 11, I).</li>
+          <li>Enviar e-mails de confirmação, de boas-vindas, de recuperação de senha e avisos sobre a conta: execução de contrato (art. 7º, V).</li>
+          <li>Enviar lembretes e notificações ativados pelo titular: consentimento (art. 7º, I), revogável a qualquer tempo.</li>
+          <li>Responder às perguntas feitas à Lumina e ao suporte: execução de contrato (art. 7º, V).</li>
+          <li>Exibir rankings, ligas, Comunidade, Cenáculos e Pedidos de oração a outros usuários, nos limites da Seção 10: execução de contrato (art. 7º, V) e consentimento (art. 11, I).</li>
+          <li>Moderar conteúdos, investigar denúncias, prevenir fraudes e abusos e proteger os usuários, especialmente crianças: legítimo interesse (art. 7º, IX) e proteção da vida e da incolumidade física (art. 7º, VII).</li>
+          <li>Corrigir falhas, medir o funcionamento e manter a segurança do Serviço: legítimo interesse (art. 7º, IX).</li>
+          <li>Processar pagamentos, emitir comprovantes e cumprir obrigações legais, fiscais e regulatórias: execução de contrato (art. 7º, V) e cumprimento de obrigação legal (art. 7º, II).</li>
+          <li>Exercer direitos em processos judiciais, administrativos ou arbitrais: art. 7º, VI, da LGPD.</li>
+        </ul>
+        <p>Não vendemos, alugamos nem comercializamos dados pessoais, não os utilizamos para publicidade e o Serviço não exibe anúncios.</p>
+
+        <h3>9. Crianças e adolescentes</h3>
+        <p>9.1. O tratamento de dados de crianças e adolescentes é realizado em seu melhor interesse, nos termos do art. 14 da LGPD e do Estatuto da Criança e do Adolescente.</p>
+        <p>9.2. Perfis infantis só podem ser criados pelo responsável, que declara ser pai, mãe ou responsável legal pela criança e fornece o consentimento específico para o uso do perfil.</p>
+        <p>9.3. Nos perfis infantis, não coletamos e-mail, telefone ou qualquer dado de contato da criança, e coletamos apenas os dados estritamente necessários para o funcionamento do perfil: nome escolhido pelo responsável, avatar, faixa de idade e progresso.</p>
+        <p>9.4. Perfis infantis não têm acesso aos Cenáculos, à Comunidade, aos Pedidos de oração, ao Diário de intenções nem às conversas com a Lumina, não aparecem para pessoas de fora da família e não recebem mensagens de terceiros. Para sair do modo infantil, é necessário o PIN definido pelo responsável.</p>
+        <p>9.5. O responsável pode, a qualquer momento, consultar, corrigir ou apagar os dados dos perfis infantis da sua conta.</p>
+
+        <h3>10. Funcionalidades comunitárias e visibilidade</h3>
+        <p>10.1. Algumas funcionalidades envolvem a exibição de informações a outros usuários. O titular deve considerar essa característica antes de publicar qualquer conteúdo.</p>
+        <ul>
+          <li><strong>Ranking geral, ligas semanais e Comunidade:</strong> outros adultos veem o primeiro nome, a foto ou avatar e os números das trilhas do titular.</li>
+          <li><strong>Pedidos de oração:</strong> os adultos que usam o Serviço veem o texto do pedido com o primeiro nome e a foto ou avatar de quem pediu, ou a indicação "Anônimo", quando o titular escolhe não mostrar o nome. Pessoas da mesma família veem o nome completo. É exibido o número de pessoas que rezaram, mas não a identidade delas.</li>
+          <li><strong>Diário de intenções:</strong> é de uso particular; no aplicativo, apenas o próprio perfil vê as suas intenções.</li>
+          <li><strong>Cenáculos:</strong> os participantes de cada grupo ou conversa veem o nome, a foto, as mensagens, os áudios e as reações uns dos outros.</li>
+          <li><strong>Perfil:</strong> pessoas da família, contatos aceitos e participantes do mesmo Cenáculo podem ver o perfil do titular, com nome, foto e números das trilhas.</li>
+        </ul>
+        <p>10.2. Ninguém consegue iniciar uma conversa com o titular sem a sua aceitação, e o titular pode bloquear e denunciar outros usuários a qualquer momento.</p>
+
+        <h3>11. Moderação, segurança e prevenção de abusos</h3>
+        <p>11.1. Os Cenáculos, a Comunidade e os Pedidos de oração são destinados exclusivamente a adultos e seguem as regras de convivência do Serviço.</p>
+        <p>11.2. As mensagens não possuem criptografia de ponta a ponta. Para investigar denúncias e proteger os participantes, a equipe do Lumina Sancti pode acessar mensagens, áudios, pedidos de oração e demais conteúdos relacionados à denúncia.</p>
+        <p>11.3. Uma mensagem apagada deixa de ser exibida aos participantes, mas uma cópia é mantida pelo tempo necessário para eventual investigação. Pedidos de oração com três denúncias são ocultados automaticamente até a análise da equipe.</p>
+        <p>11.4. O Serviço utiliza filtro automático de palavras proibidas e limites de envio para prevenir abusos. Em caso de violação das regras, a equipe pode remover ou ocultar conteúdos, advertir, suspender perfis ou contas e, quando houver indícios de crime, comunicar as autoridades competentes.</p>
+
+        <h3>12. Permissões do aparelho</h3>
+        <p>12.1. O microfone é utilizado somente enquanto o titular grava um áudio nos Cenáculos. A câmera é utilizada somente enquanto o titular escaneia um QR Code; a imagem é processada no próprio aparelho e não é gravada nem enviada. As notificações só são exibidas mediante permissão expressa do titular no aparelho.</p>
+
+        <h3>13. Inteligência artificial</h3>
+        <p>13.1. As perguntas feitas à Lumina e as mensagens enviadas ao atendimento são processadas por modelo de inteligência artificial executado pela Cloudflare (Workers AI), com a finalidade exclusiva de gerar as respostas.</p>
+        <p>13.2. As conversas com a Lumina ficam armazenadas no perfil do titular, que pode apagá-las individualmente a qualquer momento. O número de perguntas é contabilizado para controle dos limites de uso de cada plano.</p>
+        <p>13.3. As respostas geradas por inteligência artificial podem conter imprecisões e não substituem a orientação de um sacerdote, de um diretor espiritual ou de um profissional. O Serviço não toma decisões unicamente automatizadas que produzam efeitos jurídicos ao titular. No atendimento, o titular pode solicitar, a qualquer momento, contato com uma pessoa da equipe.</p>
+
+        <h3>14. Comunicações e lembretes</h3>
+        <p>14.1. Os lembretes são opcionais: o da Hora da Misericórdia, às 15h, e os da ofensiva, nos dias em que a missão ainda não foi realizada. Podem conter o primeiro nome do titular e o número de dias seguidos de uso.</p>
+        <p>14.2. O titular pode desativar os lembretes em "Meu perfil" ou nas configurações do aparelho. O envio é intermediado pelos serviços de notificação do navegador ou do sistema operacional (Google, Apple ou Mozilla).</p>
+        <p>14.3. E-mails transacionais, como confirmação de cadastro e recuperação de senha, são necessários ao funcionamento da conta. Eventuais comunicações informativas poderão ser recusadas a qualquer momento.</p>
+
+        <h3>15. Compartilhamento de dados</h3>
+        <p>15.1. Os dados pessoais são compartilhados somente com operadores contratados para viabilizar o Serviço, que estão obrigados a tratá-los apenas para essa finalidade, de acordo com as instruções do controlador e com padrões adequados de segurança:</p>
+        <ul>
+          <li>Supabase: banco de dados, autenticação e armazenamento de arquivos, com servidores em São Paulo.</li>
           <li>Vercel: hospedagem do site.</li>
-          <li>Cloudflare: inteligência artificial da Lumina e do suporte.</li>
+          <li>Cloudflare: execução da inteligência artificial da Lumina e do atendimento e verificação contra robôs.</li>
           <li>Resend: envio de e-mails.</li>
-          <li>Stripe e Google Play: processamento dos pagamentos.</li>
-          <li>Google Meet: reuniões por vídeo dos Cenáculos, que acontecem no próprio Google.</li>
-          <li>GIPHY: busca de GIFs, feita diretamente pelo seu navegador.</li>
-          <li>Wikimedia, Google Fonts e jsDelivr: fotos dos santos, fontes e bibliotecas carregadas diretamente pelo seu navegador.</li>
+          <li>Stripe e Google Play: processamento de pagamentos.</li>
+          <li>Google Meet: reuniões por vídeo dos Cenáculos, realizadas na própria plataforma do Google e sujeitas às regras dela.</li>
+          <li>GIPHY: busca de GIFs, realizada diretamente pelo navegador do titular.</li>
+          <li>Wikimedia, Google Fonts e jsDelivr: fotos dos santos, fontes e bibliotecas carregadas diretamente pelo navegador do titular.</li>
         </ul>
-        <p>Alguns desses serviços podem tratar dados fora do Brasil. Nesses casos, a transferência internacional segue o art. 33 da LGPD. Também podemos compartilhar dados quando a lei ou uma ordem judicial exigir.</p>
+        <p>15.2. Os dados também poderão ser compartilhados com autoridades públicas mediante requisição legal ou ordem judicial, e com eventual sucessor em caso de reorganização, fusão ou venda do Serviço, que ficará obrigado a respeitar esta Política.</p>
 
-        <h3>Por quanto tempo guardamos</h3>
-        <p>Guardamos os dados enquanto a sua conta existir. Os áudios dos Cenáculos ficam guardados por até 90 dias. Quando você exclui a conta, os dados são apagados, exceto o que precisamos manter para cumprir obrigações legais, exercer direitos em processos ou concluir a investigação de denúncias. Cópias de segurança técnicas podem levar alguns dias para serem substituídas.</p>
+        <h3>16. Transferência internacional</h3>
+        <p>16.1. Alguns operadores podem armazenar ou processar dados fora do Brasil. Nesses casos, a transferência internacional é realizada nas hipóteses do art. 33 da LGPD, inclusive mediante cláusulas contratuais que asseguram nível de proteção compatível com a legislação brasileira.</p>
 
-        <h3>Seus direitos</h3>
-        <p>Pela LGPD, você pode, a qualquer momento: confirmar se tratamos os seus dados; acessá-los; corrigir dados incompletos ou desatualizados; pedir a anonimização, o bloqueio ou a eliminação de dados desnecessários; pedir a portabilidade; saber com quem compartilhamos os dados; retirar o consentimento; e se opor a um tratamento irregular. Muitas dessas ações você faz no próprio aplicativo, como editar perfis e apagar conteúdos. Para os demais pedidos, escreva para <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a>. Respondemos em até 15 dias. Você também pode apresentar reclamação à Autoridade Nacional de Proteção de Dados (ANPD).</p>
+        <h3>17. Armazenamento local e cookies</h3>
+        <p>17.1. O Serviço utiliza o armazenamento local do navegador para guardar o idioma, o progresso sem conta, as preferências do titular e a sessão de login, permitindo que o Serviço funcione corretamente.</p>
+        <p>17.2. Não utilizamos cookies de publicidade nem ferramentas de rastreamento de terceiros. O titular pode limpar o armazenamento local pelas configurações do navegador, ciente de que isso pode encerrar a sessão e apagar o progresso feito sem conta.</p>
 
-        <h3>Como excluir a sua conta</h3>
-        <p>Em Meu perfil, toque em "Excluir minha conta". Você também pode pedir a exclusão pelo e-mail <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a>, a partir do e-mail cadastrado. Veja os detalhes em <a href="/excluir-conta.html">luminasancti.com/excluir-conta.html</a>.</p>
+        <h3>18. Retenção e eliminação</h3>
+        <p>18.1. Os dados pessoais são mantidos enquanto a conta estiver ativa ou enquanto forem necessários para as finalidades desta Política.</p>
+        <p>18.2. Os áudios dos Cenáculos são mantidos por até 90 dias. Os registros de erros são mantidos pelo tempo necessário à correção das falhas.</p>
+        <p>18.3. Encerrada a finalidade ou excluída a conta, os dados são eliminados, ressalvada a conservação autorizada pelo art. 16 da LGPD, como o cumprimento de obrigação legal ou regulatória, o exercício regular de direitos e a conclusão de investigações de denúncias. Cópias de segurança técnicas são substituídas automaticamente em poucos dias.</p>
 
-        <h3>Segurança</h3>
-        <p>Usamos criptografia em toda a comunicação (HTTPS), senhas guardadas de forma criptografada pelo serviço de login, regras de acesso por perfil no banco de dados e acesso restrito da equipe. Nenhum sistema é totalmente imune a falhas. Se acontecer um incidente de segurança que possa trazer risco ou dano relevante a você, avisaremos você e a ANPD, como determina a lei.</p>
+        <h3>19. Direitos do titular</h3>
+        <p>19.1. Nos termos do art. 18 da LGPD, o titular tem direito a obter, a qualquer momento e mediante requisição:</p>
+        <ul>
+          <li>confirmação da existência de tratamento;</li>
+          <li>acesso aos dados;</li>
+          <li>correção de dados incompletos, inexatos ou desatualizados;</li>
+          <li>anonimização, bloqueio ou eliminação de dados desnecessários, excessivos ou tratados em desconformidade com a LGPD;</li>
+          <li>portabilidade dos dados a outro fornecedor;</li>
+          <li>eliminação dos dados tratados com base no consentimento;</li>
+          <li>informação sobre as entidades com as quais os dados foram compartilhados;</li>
+          <li>informação sobre a possibilidade de não fornecer consentimento e sobre as consequências da negativa;</li>
+          <li>revogação do consentimento;</li>
+          <li>oposição a tratamento realizado em desconformidade com a LGPD.</li>
+        </ul>
+        <p>19.2. Muitas dessas ações podem ser realizadas diretamente no Serviço, como editar perfis, apagar conteúdos e excluir a conta. Os demais pedidos devem ser enviados para <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a>, a partir do e-mail cadastrado. Para proteger o titular, poderemos solicitar informações que confirmem a sua identidade.</p>
+        <p>19.3. Os pedidos são atendidos gratuitamente, no prazo de até 15 dias. O titular também pode apresentar petição à Autoridade Nacional de Proteção de Dados (ANPD).</p>
 
-        <h3>Armazenamento no aparelho</h3>
-        <p>O Lumina Sancti guarda no seu aparelho, no armazenamento local do navegador, informações como o idioma, o progresso sem conta, as suas preferências e a sessão de login. Não usamos cookies de publicidade nem ferramentas de rastreamento de terceiros.</p>
+        <h3>20. Exclusão da conta</h3>
+        <p>20.1. O titular pode excluir a conta a qualquer momento em "Meu perfil", na opção "Excluir minha conta", ou solicitar a exclusão pelo e-mail <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a>. Os detalhes estão em <a href="/excluir-conta.html">luminasancti.com/excluir-conta.html</a>.</p>
+        <p>20.2. A exclusão é imediata e alcança todos os perfis da conta. Assinaturas contratadas pelo site são canceladas automaticamente; assinaturas contratadas pelo Google Play devem ser canceladas previamente no próprio Google Play.</p>
 
-        <h3>Mudanças nesta política</h3>
-        <p>Podemos atualizar esta política. A data no começo da página indica a versão em vigor, e mudanças importantes serão avisadas no próprio aplicativo.</p>
+        <h3>21. Segurança da informação</h3>
+        <p>21.1. Adotamos medidas técnicas e administrativas aptas a proteger os dados pessoais contra acessos não autorizados e situações acidentais ou ilícitas, entre elas: criptografia de toda a comunicação (HTTPS); armazenamento criptografado de senhas; regras de acesso por perfil no banco de dados; controle e registro dos acessos da equipe; verificação em duas etapas no painel da equipe; e limites contra uso abusivo.</p>
+        <p>21.2. Nenhum sistema é absolutamente imune a falhas. O titular também deve proteger a sua senha, não compartilhá-la e encerrar a sessão em aparelhos de uso coletivo.</p>
 
-        <h3>Contato</h3>
-        <p>AMDG Studios, responsável pelo Lumina Sancti. E-mail: <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a>.</p>
+        <h3>22. Incidentes de segurança</h3>
+        <p>22.1. Na ocorrência de incidente de segurança que possa acarretar risco ou dano relevante aos titulares, comunicaremos os titulares afetados e a ANPD, em prazo razoável, com as informações exigidas pelo art. 48 da LGPD e pela regulamentação da ANPD.</p>
+
+        <h3>23. Pagamentos</h3>
+        <p>23.1. Os pagamentos são processados por Stripe ou Google Play, conforme o meio escolhido. Os dados de cartão são tratados exclusivamente por essas empresas, de acordo com as respectivas políticas de privacidade. O Lumina Sancti armazena somente as informações necessárias para gerir a assinatura.</p>
+
+        <h3>24. Serviços de terceiros</h3>
+        <p>24.1. O Serviço pode conter links ou integrações com serviços de terceiros, como Google Meet e o site da CNBB. Ao acessá-los, o titular passa a se sujeitar às políticas desses terceiros, pelas quais o Lumina Sancti não se responsabiliza.</p>
+
+        <h3>25. Alterações desta Política</h3>
+        <p>25.1. Esta Política poderá ser atualizada para refletir melhorias no Serviço ou mudanças legais. A versão e a data em vigor constam no início do documento. Alterações relevantes serão comunicadas no próprio Serviço e, quando a lei exigir, será solicitado novo consentimento.</p>
+
+        <h3>26. Legislação aplicável e foro</h3>
+        <p>26.1. Esta Política é regida pelas leis da República Federativa do Brasil. Fica eleito o foro do domicílio do titular para dirimir eventuais controvérsias, nos termos do Código de Defesa do Consumidor.</p>
+
+        <h3>27. Contato</h3>
+        <p>AMDG Studios, responsável pelo Lumina Sancti. Encarregado pelo tratamento de dados pessoais e atendimento ao titular: <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a>.</p>
         </div>
         <div class="privacidade-creditos">
           <h3>Fotos dos santos</h3>
@@ -1104,7 +1202,7 @@
           <div id="planos-situacao" class="planos-situacao" hidden></div>
           <p class="planos-mensagem" id="planos-mensagem" aria-live="polite"></p>
           <p class="planos-letras">Pagamento seguro pelo Stripe, com cartão. A assinatura renova sozinha e pode ser cancelada quando você quiser. Se desistir em até 7 dias da primeira compra, devolvemos todo o valor.</p>
-          <button type="button" class="footer-privacidade" id="planos-termos">Termos da Assinatura</button>
+          <button type="button" class="footer-privacidade" id="planos-termos">Termos de Uso</button>
         </div>
       </div>
     </section>
@@ -1115,48 +1213,94 @@
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
           <span>Voltar</span>
         </button>
-        <h2 class="section-title" style="text-align:left; margin: 10px 0 4px;">Termos da Assinatura</h2>
+        <h2 class="section-title" style="text-align:left; margin: 10px 0 4px;">Termos de Uso</h2>
         <div class="title-divider" style="margin: 0 0 16px;"></div>
         <div data-i18n-bloco="termos">
-        <p class="privacidade-data">Atualizados em 29 de setembro de 2026.</p>
+        <p class="privacidade-data">Versão 2.0, em vigor desde 24 de novembro de 2026.</p>
 
-        <h3>O que é a assinatura</h3>
-        <p>O Lumina Sancti (luminasancti.com) tem um plano Gratuito e três planos pagos: Individual, Duo e Família. O plano Gratuito continua existindo sempre, com as biografias dos santos, as orações, o terço guiado e as trilhas, para um perfil (de adulto ou de criança). Os planos pagos liberam mais perfis e outros recursos, descritos na página Planos. Os recursos marcados como "em breve" ainda não estão prontos e não fazem parte do que é cobrado hoje.</p>
+        <h3>1. Aceitação</h3>
+        <p>1.1. Estes Termos de Uso ("Termos") regulam o acesso e a utilização do site luminasancti.com e do aplicativo Lumina Sancti (em conjunto, o "Serviço"), mantidos pela AMDG Studios.</p>
+        <p>1.2. Ao criar uma conta, o usuário declara ter lido, compreendido e aceitado estes Termos e a Política de Privacidade, que deles faz parte. Quem não concordar com estes Termos não deve criar conta nem utilizar o Serviço.</p>
 
-        <h3>Preços</h3>
+        <h3>2. O Serviço</h3>
+        <p>2.1. O Lumina Sancti é um serviço católico de formação e oração, com biografias dos santos, trilhas e missões, orações, terço, novenas, exame de consciência, Leitura do dia, jogos, cursos, ligas, baús e itens virtuais, Comunidade, Cenáculos, Pedidos de oração, Diário de intenções e a assistente Lumina.</p>
+        <p>2.2. O conteúdo religioso do Serviço tem finalidade de formação e devoção e não substitui os sacramentos, a orientação de um sacerdote ou o Magistério da Igreja.</p>
+
+        <h3>3. Cadastro e conta</h3>
+        <p>3.1. A conta deve ser criada por pessoa com 18 anos ou mais, que declara essa condição no cadastro. O titular da conta é responsável por todos os perfis a ela vinculados.</p>
+        <p>3.2. O usuário se compromete a fornecer informações verdadeiras, a manter a senha em sigilo e a comunicar imediatamente qualquer uso não autorizado da conta. É vedado criar contas com e-mails temporários ou descartáveis, por meios automatizados ou em nome de terceiros sem autorização.</p>
+        <p>3.3. Para prevenir abusos, o Serviço pode limitar o número de contas por aparelho, exigir confirmação do e-mail e utilizar verificação contra robôs.</p>
+
+        <h3>4. Perfis infantis</h3>
+        <p>4.1. Crianças e adolescentes somente podem usar o Serviço por meio de perfis infantis criados pelo titular da conta, que declara ser pai, mãe ou responsável legal e se compromete a supervisionar o uso.</p>
+        <p>4.2. Perfis infantis têm acesso apenas a conteúdos e funcionalidades adequados à idade, não participam da Comunidade, dos Cenáculos e dos Pedidos de oração e não podem ser contatados por pessoas de fora da família. A saída do modo infantil exige o PIN do responsável.</p>
+
+        <h3>5. Regras de conduta</h3>
+        <p>5.1. Ao usar o Serviço, o usuário se compromete a agir com respeito, caridade e boa-fé. É proibido, entre outras condutas:</p>
         <ul>
-          <li>Individual: R$ 19,90 por mês ou R$ 219 por ano, para 1 perfil.</li>
-          <li>Duo: R$ 31,90 por mês ou R$ 349 por ano, para 2 perfis.</li>
-          <li>Família: R$ 43,80 por mês ou R$ 481 por ano, para até 6 perfis.</li>
+          <li>publicar conteúdo ofensivo, discriminatório, violento, obsceno, difamatório ou contrário à lei;</li>
+          <li>assediar, ameaçar, enganar ou expor outras pessoas, especialmente crianças;</li>
+          <li>divulgar dados pessoais de terceiros sem autorização;</li>
+          <li>praticar spam, propaganda não autorizada, golpes ou esquemas financeiros;</li>
+          <li>usar pedidos de oração, mensagens ou perfis para fins comerciais ou alheios à finalidade do Serviço;</li>
+          <li>violar direitos autorais, marcas ou outros direitos de terceiros;</li>
+          <li>tentar acessar áreas restritas, contas de outras pessoas ou sistemas do Serviço, ou interferir no seu funcionamento;</li>
+          <li>usar robôs, programas ou meios automatizados para obter vantagens, coletar dados ou manipular rankings, ligas e prêmios.</li>
         </ul>
-        <p>O preço cobrado é sempre o que aparece na tela de pagamento. Se um preço mudar, avisaremos por e-mail com pelo menos 30 dias de antecedência, e você poderá cancelar antes da nova cobrança.</p>
+        <p>5.2. As regras específicas dos Cenáculos, apresentadas antes do primeiro acesso, complementam estes Termos.</p>
 
-        <h3>Como funciona a cobrança</h3>
-        <p>No site, o pagamento é feito com cartão pelo Stripe. No aplicativo para Android, será feito pela Google Play. O Lumina Sancti não recebe nem guarda os dados do seu cartão. A assinatura renova sozinha ao fim de cada período (todo mês ou todo ano, conforme a sua escolha), com a cobrança no mesmo cartão, até que você cancele.</p>
+        <h3>6. Conteúdo do usuário</h3>
+        <p>6.1. O usuário é o único responsável pelo conteúdo que publicar e declara ter os direitos necessários sobre ele.</p>
+        <p>6.2. Para viabilizar o funcionamento do Serviço, o usuário concede ao Lumina Sancti licença gratuita, não exclusiva e limitada para armazenar, exibir e transmitir esse conteúdo às pessoas com quem ele escolheu compartilhá-lo, enquanto o conteúdo permanecer no Serviço.</p>
 
-        <h3>Cancelamento</h3>
-        <p>Você pode cancelar quando quiser, sem multa: na página Planos, toque em "Gerenciar assinatura". Se assinou pela Google Play, cancele na própria Google Play. Depois de cancelar, o plano continua valendo até o fim do período que já foi pago, e não há novas cobranças.</p>
+        <h3>7. Moderação e sanções</h3>
+        <p>7.1. O Serviço conta com ferramentas de denúncia, bloqueio e filtro de palavras. A equipe pode analisar conteúdos denunciados e, constatada violação destes Termos, remover ou ocultar conteúdos, advertir o usuário e suspender perfis ou contas, temporária ou definitivamente, de forma proporcional à gravidade da conduta.</p>
+        <p>7.2. Havendo indícios de crime, especialmente contra crianças e adolescentes, as informações poderão ser preservadas e comunicadas às autoridades competentes.</p>
 
-        <h3>Direito de arrependimento</h3>
-        <p>Pelo Código de Defesa do Consumidor (artigo 49), você pode desistir da primeira assinatura em até 7 dias depois da compra e receber de volta todo o valor pago. Para isso, escreva para <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a> com o e-mail da sua conta. O valor volta para o mesmo cartão; o prazo para aparecer na fatura depende do banco. Fora desse prazo, não devolvemos valores de períodos já iniciados, mas você pode cancelar a renovação a qualquer momento.</p>
+        <h3>8. Planos e assinaturas</h3>
+        <p>8.1. O Serviço oferece um plano Gratuito, que continua existindo sempre, e três planos pagos: Individual (1 perfil), Duo (2 perfis) e Família (até 6 perfis), cujos recursos são descritos na página Planos. Recursos indicados como "em breve" não integram o que é cobrado.</p>
+        <p>8.2. Preços vigentes: Individual, R$ 19,90 por mês ou R$ 219 por ano; Duo, R$ 31,90 por mês ou R$ 349 por ano; Família, R$ 43,80 por mês ou R$ 481 por ano. O valor cobrado é sempre o exibido na tela de pagamento. Alterações de preço serão comunicadas por e-mail com pelo menos 30 dias de antecedência, podendo o usuário cancelar antes da nova cobrança.</p>
+        <p>8.3. No site, o pagamento é feito com cartão por meio do Stripe; no aplicativo para Android, pela Google Play. O Lumina Sancti não recebe nem armazena dados de cartão.</p>
+        <p>8.4. A assinatura é renovada automaticamente ao fim de cada período, mensal ou anual, até que o usuário a cancele.</p>
+        <p>8.5. <strong>Cancelamento.</strong> O usuário pode cancelar a qualquer momento, sem multa, em Planos, na opção "Gerenciar assinatura", ou na Google Play, conforme o meio de contratação. O plano permanece válido até o fim do período já pago, sem novas cobranças.</p>
+        <p>8.6. <strong>Direito de arrependimento.</strong> Nos termos do art. 49 do Código de Defesa do Consumidor, o usuário pode desistir da primeira contratação em até 7 dias da compra, com devolução integral do valor pago, mediante pedido para <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a>. Fora desse prazo, não há devolução de valores de períodos já iniciados.</p>
+        <p>8.7. <strong>Troca de plano.</strong> A troca pode ser feita em "Gerenciar assinatura", com cálculo proporcional da diferença de preço.</p>
+        <p>8.8. <strong>Falha no pagamento.</strong> Se a cobrança não for concluída, novas tentativas serão feitas nos dias seguintes e o plano continuará válido por mais 3 dias. Não regularizado o pagamento, a conta volta ao plano Gratuito.</p>
+        <p>8.9. <strong>Fim do plano.</strong> Nenhum dado é apagado quando um plano termina. Ficam liberados os perfis que cabem no plano atual, e os demais permanecem guardados até a contratação de um plano com mais perfis.</p>
 
-        <h3>Troca de plano</h3>
-        <p>Você pode trocar de plano pela opção "Gerenciar assinatura". A diferença de preço é calculada de forma proporcional ao tempo que falta no período.</p>
+        <h3>9. Itens virtuais</h3>
+        <p>9.1. Fé, Santidade, ofensiva, medalhas, baús, frascos, itens raros, enfeites e demais elementos de jogo são recursos virtuais de uso pessoal, sem valor monetário, não reembolsáveis, não transferíveis e não conversíveis em dinheiro.</p>
+        <p>9.2. Baús e itens não são vendidos por dinheiro. As chances de cada tipo de baú e de item podem ser ajustadas para equilíbrio do jogo. Recursos obtidos por fraude, falha técnica ou uso de meios automatizados podem ser removidos.</p>
 
-        <h3>Se o pagamento falhar</h3>
-        <p>Se não conseguirmos cobrar o cartão, tentaremos de novo nos dias seguintes, e o plano continua valendo por mais 3 dias. Se o pagamento não for resolvido, a conta volta ao plano Gratuito.</p>
+        <h3>10. Inteligência artificial</h3>
+        <p>10.1. A assistente Lumina e o atendimento automático utilizam inteligência artificial e podem produzir respostas imprecisas ou incompletas. As respostas têm caráter informativo e não constituem orientação espiritual, médica, jurídica ou psicológica.</p>
+        <p>10.2. O uso da Lumina está sujeito a limites por plano. É proibido utilizá-la para gerar conteúdo ilícito ou contrário a estes Termos.</p>
 
-        <h3>Quando o plano termina</h3>
-        <p>Nada é apagado. Os perfis continuam guardados, com a Fé, as medalhas e o progresso. Ficam liberados só os perfis que cabem no plano atual (os mais antigos da conta), e os outros ficam trancados até a conta ter um plano com mais perfis.</p>
+        <h3>11. Propriedade intelectual</h3>
+        <p>11.1. A marca Lumina Sancti, os textos, ilustrações, personagens, animações, missões, jogos, códigos e demais elementos do Serviço pertencem à AMDG Studios ou a seus licenciantes e são protegidos pela legislação de propriedade intelectual.</p>
+        <p>11.2. As fotos e pinturas dos santos provêm do Wikimedia Commons e são de domínio público ou de licenças livres, com os créditos indicados na Política de Privacidade. É proibido copiar, reproduzir ou explorar comercialmente o conteúdo do Serviço sem autorização.</p>
 
-        <h3>Excluir a conta</h3>
-        <p>Ao excluir a conta, uma assinatura feita pelo site é cancelada na hora, sem novas cobranças. Uma assinatura feita pela Google Play precisa ser cancelada na Google Play antes de excluir a conta.</p>
+        <h3>12. Disponibilidade e alterações do Serviço</h3>
+        <p>12.1. O Serviço é oferecido no estado em que se encontra. Empregamos esforços razoáveis para mantê-lo disponível e seguro, mas podem ocorrer interrupções para manutenção, atualizações ou por motivos alheios ao nosso controle.</p>
+        <p>12.2. Funcionalidades podem ser criadas, alteradas ou descontinuadas para melhoria do Serviço, preservados os direitos já adquiridos pelos assinantes no período pago.</p>
 
-        <h3>Uso correto</h3>
-        <p>A assinatura é para uso da sua família. Contas que desrespeitarem as regras do Lumina Sancti podem ser suspensas, como explicado nas Regras dos Cenáculos.</p>
+        <h3>13. Limitação de responsabilidade</h3>
+        <p>13.1. Nos limites permitidos pela lei, o Lumina Sancti não se responsabiliza por conteúdo publicado por usuários, por condutas de terceiros, por serviços externos acessados por links, nem por danos decorrentes do uso indevido da conta pelo próprio usuário ou da falta de supervisão dos perfis infantis pelo responsável. Nada nestes Termos limita os direitos garantidos ao consumidor pela legislação brasileira.</p>
 
-        <h3>Fale conosco</h3>
-        <p>Dúvidas, cobranças que você não reconhece ou pedidos de reembolso: <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a>.</p>
+        <h3>14. Encerramento</h3>
+        <p>14.1. O usuário pode encerrar o uso do Serviço a qualquer momento, excluindo a sua conta. O Lumina Sancti pode suspender ou encerrar contas que violem estes Termos, nos termos da Seção 7.</p>
+
+        <h3>15. Privacidade</h3>
+        <p>15.1. O tratamento de dados pessoais é regido pela Política de Privacidade, disponível em <a href="/privacidade.html">luminasancti.com/privacidade.html</a>.</p>
+
+        <h3>16. Alterações destes Termos</h3>
+        <p>16.1. Estes Termos podem ser atualizados. A versão e a data em vigor constam no início do documento, e alterações relevantes serão comunicadas no próprio Serviço. O uso continuado após a comunicação indica concordância com a nova versão.</p>
+
+        <h3>17. Legislação aplicável e foro</h3>
+        <p>17.1. Estes Termos são regidos pelas leis da República Federativa do Brasil. Fica eleito o foro do domicílio do usuário para dirimir eventuais controvérsias.</p>
+
+        <h3>18. Contato</h3>
+        <p>Dúvidas, reclamações, cobranças não reconhecidas e pedidos de reembolso: <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a>.</p>
         </div>
       </div>
     </section>
@@ -1212,7 +1356,7 @@
             </button>
             <button type="button" class="ajuste" id="meu-perfil-termos">
               <span class="ajuste-icone"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-livro"></use></svg></span>
-              <span class="ajuste-textos"><strong>Termos da Assinatura</strong><small>Regras de pagamento e cancelamento</small></span>
+              <span class="ajuste-textos"><strong>Termos de Uso</strong><small>Regras de uso, planos e pagamentos</small></span>
               <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-seta-direita"></use></svg>
             </button>
             <button type="button" class="ajuste" id="meu-perfil-indicar">
@@ -1393,7 +1537,7 @@
 
       <button type="button" id="footer-instalar" class="footer-instalar" hidden><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-baixar"></use></svg><span>Instalar o app no celular</span></button>
       <button type="button" id="footer-privacidade" class="footer-privacidade">Política de Privacidade</button>
-      <button type="button" id="footer-termos" class="footer-privacidade footer-termos">Termos da Assinatura</button>
+      <button type="button" id="footer-termos" class="footer-privacidade footer-termos">Termos de Uso</button>
       <button type="button" id="footer-suporte" class="footer-suporte"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-ajuda"></use></svg><span>Ajuda: fale com a equipe</span></button>
       <p class="footer-contato" data-i18n="footer_fale_conosco">Fale conosco: <a href="mailto:suporte@luminasancti.com">suporte@luminasancti.com</a></p>
     </div>
@@ -1497,6 +1641,7 @@
   <script src="jogos.js"></script>
   <script src="xadrez.js"></script>
   <script src="damas.js"></script>
+  <script src="itens.js"></script>
   <script src="jogos-mais.js"></script>
   <script src="layout-computador.js"></script>
   <script src="rive-site.js"></script>
