@@ -6438,3 +6438,16 @@ body.modo-kids .so-adultos-pedidos { display: none !important; }
 @keyframes cenaculoSobe { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes cenaculoDesce { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
 @keyframes cenaculoPulsa { 0%, 100% { box-shadow: 0 0 4px rgba(37, 211, 102, 0.35); } 50% { box-shadow: 0 0 12px rgba(37, 211, 102, 0.75); } }
+.leitura-conteudo { display: flex; justify-content: center; padding: 8px 0 28px; }
+.leitura-cartao { --cor-do-tempo: 111, 207, 151; position: relative; width: min(100%, 560px); display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 30px 24px 26px; border-radius: 26px; text-align: center; overflow: hidden; border: 1.5px solid rgba(var(--cor-do-tempo), 0.5); background: radial-gradient(120% 90% at 50% 0%, rgba(var(--cor-do-tempo), 0.22), transparent 65%), linear-gradient(180deg, rgba(20, 26, 60, 0.96), rgba(10, 14, 34, 0.96)); box-shadow: 0 20px 44px rgba(0, 0, 0, 0.45), 0 0 40px rgba(var(--cor-do-tempo), 0.12); }
+.leitura-cartao[data-cor="roxo"] { --cor-do-tempo: 183, 148, 244; }
+.leitura-cartao[data-cor="branco"] { --cor-do-tempo: 236, 230, 214; }
+.leitura-cartao[data-cor="vermelho"] { --cor-do-tempo: 242, 139, 130; }
+.leitura-cartao[data-cor="rosa"] { --cor-do-tempo: 244, 163, 200; }
+.leitura-dia { color: var(--text-muted); font-weight: 700; letter-spacing: 0.4px; }
+.leitura-tempo { font-family: var(--font-title); font-size: 2.2rem; line-height: 1.1; color: rgb(var(--cor-do-tempo)); }
+.leitura-cor { display: inline-flex; align-items: center; gap: 8px; padding: 5px 14px; border-radius: 999px; border: 1px solid rgba(var(--cor-do-tempo), 0.45); background: rgba(var(--cor-do-tempo), 0.1); color: rgb(var(--cor-do-tempo)); font-weight: 800; font-size: 0.9rem; }
+.leitura-cor i { width: 12px; height: 12px; border-radius: 50%; background: rgb(var(--cor-do-tempo)); box-shadow: 0 0 10px rgba(var(--cor-do-tempo), 0.85); }
+.leitura-santo { margin-top: 4px; padding: 0; border: 0; background: none; color: #f6e2a0; font: inherit; font-weight: 700; cursor: pointer; text-decoration: underline; text-decoration-color: rgba(246, 226, 160, 0.4); text-underline-offset: 4px; }
+.leitura-ler { display: inline-flex; justify-content: center; width: auto; min-width: 240px; margin-top: 12px; text-decoration: none; }
+.leitura-fonte { color: var(--text-muted); font-size: 0.8rem; }

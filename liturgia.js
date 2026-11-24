@@ -174,3 +174,46 @@ document.addEventListener('DOMContentLoaded', () => {
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { tempoLiturgicoDoDia, domingoDePascoa, inicioDoAdvento, batismoDoSenhor, numeroDoDia, TEMPOS_LITURGICOS };
 }
+
+const LINKS_DAS_LEITURAS = {
+  pt: { url: 'https://www.cnbb.org.br/liturgia-diaria/', fonte: 'Liturgia Diária da CNBB' },
+  en: { url: 'https://www.vaticannews.va/en/word-of-the-day.html', fonte: 'Vatican News' },
+  es: { url: 'https://www.vaticannews.va/es/evangelio-de-hoy.html', fonte: 'Vatican News' },
+};
+
+function escaparDaLeitura(texto) {
+  return String(texto == null ? '' : texto).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function desenharLeituraDoDia() {
+  const lugar = document.getElementById('leitura-conteudo');
+  if (!lugar) return;
+  const tempo = tempoLiturgicoAtual();
+  const idioma = idiomaDoTempoLiturgico();
+  const local = typeof localDoIdioma === 'function' ? localDoIdioma() : 'pt-BR';
+  const dataCrua = new Date().toLocaleDateString(local, { weekday: 'long', day: 'numeric', month: 'long' });
+  const data = dataCrua.charAt(0).toUpperCase() + dataCrua.slice(1);
+  const santo = typeof getSantoDeHoje === 'function' ? getSantoDeHoje() : null;
+  const nomeDoSanto = santo ? ((typeof textoDoSanto === 'function' ? textoDoSanto(santo).nome : santo.nome) || '') : '';
+  const link = LINKS_DAS_LEITURAS[idioma] || LINKS_DAS_LEITURAS.pt;
+  const traduzir = (texto, valores) => (typeof tr === 'function' ? tr(texto, valores) : texto);
+  lugar.innerHTML = `
+    <article class="leitura-cartao" data-cor="${escaparDaLeitura(tempo.cor)}">
+      <span class="leitura-dia">${escaparDaLeitura(data)}</span>
+      <strong class="leitura-tempo">${escaparDaLeitura(tempo.nome[idioma])}</strong>
+      <span class="leitura-cor"><i aria-hidden="true"></i>${escaparDaLeitura(traduzir('Cor litúrgica: {cor}', { cor: NOMES_DAS_CORES[tempo.cor][idioma] }))}</span>
+      ${santo ? `<button type="button" class="leitura-santo" data-santo="${escaparDaLeitura(santo.id)}">${escaparDaLeitura(traduzir('Hoje a Igreja celebra {nome}', { nome: nomeDoSanto }))}</button>` : ''}
+      <a class="licao-botao leitura-ler" href="${link.url}" target="_blank" rel="noopener noreferrer">${escaparDaLeitura(traduzir('Ler as leituras de hoje'))}</a>
+      <small class="leitura-fonte">${escaparDaLeitura(link.fonte)}</small>
+    </article>`;
+  const botao = lugar.querySelector('.leitura-santo');
+  if (botao && typeof showDetail === 'function') botao.addEventListener('click', () => showDetail(santo.id));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const desenhar = () => { try { desenharLeituraDoDia(); } catch (e) { } };
+  desenhar();
+  document.addEventListener('lumina-idioma', desenhar);
+  const menu = document.getElementById('nav-leitura');
+  if (menu) menu.addEventListener('click', desenhar);
+});
