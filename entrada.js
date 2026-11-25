@@ -12,7 +12,7 @@
   let quadro = null;
 
   function tocarBrilho() {
-    if (typeof tocarSomDeBrilho === 'function') tocarSomDeBrilho();
+    if (typeof tocarSomDeBrilho === 'function') tocarSomDeBrilho(inicio);
   }
 
   function encerrar() {
@@ -40,8 +40,7 @@
   });
   setTimeout(encerrarQuandoPuder, 6000);
   setTimeout(encerrar, 25000);
-  setTimeout(tocarBrilho, 900);
-  document.addEventListener('click', tocarBrilho, { once: true });
+  setTimeout(tocarBrilho, 820);
 
   const tela2d = document.getElementById('intro-canvas');
   const p = tela2d && tela2d.getContext ? tela2d.getContext('2d') : null;

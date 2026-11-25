@@ -565,6 +565,7 @@ async function abrirPerfilPublico(idDoPerfil) {
             ${iconeDoCenaculo('seta-direita')}
           </button>
         </section>`}
+        ${typeof htmlDosCertificadosDoPerfil === 'function' ? htmlDosCertificadosDoPerfil(dados.perfil_id, !!dados.eu) : ''}
         ${rodapeDoPerfil(dados)}
       </div>`;
     if (typeof aplicarEnfeitesNoCartao === 'function') aplicarEnfeitesNoCartao(corpo.querySelector('.perfil-publico'), dados.enfeites);
@@ -838,6 +839,8 @@ function blocoDasInsignias() {
 
 const CHAVE_TAMANHO_DO_TEXTO = 'lumina-sancti-tamanho-texto';
 const CHAVE_MENOS_MOVIMENTO = 'lumina-sancti-menos-movimento';
+const CHAVE_SEM_SOM_DA_ABERTURA = 'lumina-sancti-sem-som-abertura';
+const ICONE_DO_SOM = '<svg class="icone" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>';
 const IDIOMAS_DO_APP = [
   ['pt', 'Português', '<svg class="bandeira" viewBox="0 0 30 20" aria-hidden="true"><defs><linearGradient id="bandeira-luz-pt" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".18"/></linearGradient></defs><rect width="30" height="20" rx="3" fill="#009b3a"/><path d="M15 2.6 27.2 10 15 17.4 2.8 10z" fill="#fedf00"/><circle cx="15" cy="10" r="4.6" fill="#002776"/><path d="M10.6 9.1 Q15 7.6 19.4 10.3" fill="none" stroke="#fff" stroke-width=".9"/><circle cx="13.4" cy="11.4" r=".45" fill="#fff"/><circle cx="15.6" cy="12.3" r=".45" fill="#fff"/><circle cx="17" cy="11.2" r=".4" fill="#fff"/><circle cx="14.6" cy="13.3" r=".35" fill="#fff"/><rect width="30" height="20" rx="3" fill="url(#bandeira-luz-pt)"/></svg>'],
   ['en', 'English', '<svg class="bandeira" viewBox="0 0 30 20" aria-hidden="true"><defs><linearGradient id="bandeira-luz-en" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".18"/></linearGradient><clipPath id="bandeira-recorte-en"><rect width="30" height="20" rx="3"/></clipPath></defs><g clip-path="url(#bandeira-recorte-en)"><rect width="30" height="20" fill="#fff"/><path d="M0 0h30v1.54H0zM0 3.08h30v1.54H0zM0 6.15h30v1.54H0zM0 9.23h30v1.54H0zM0 12.31h30v1.54H0zM0 15.38h30v1.54H0zM0 18.46h30V20H0z" fill="#b22234"/><rect width="13" height="10.77" fill="#3c3b6e"/><g fill="#fff"><circle cx="2.2" cy="2" r=".55"/><circle cx="5.2" cy="2" r=".55"/><circle cx="8.2" cy="2" r=".55"/><circle cx="11" cy="2" r=".55"/><circle cx="3.7" cy="4.2" r=".55"/><circle cx="6.7" cy="4.2" r=".55"/><circle cx="9.6" cy="4.2" r=".55"/><circle cx="2.2" cy="6.4" r=".55"/><circle cx="5.2" cy="6.4" r=".55"/><circle cx="8.2" cy="6.4" r=".55"/><circle cx="11" cy="6.4" r=".55"/><circle cx="3.7" cy="8.6" r=".55"/><circle cx="6.7" cy="8.6" r=".55"/><circle cx="9.6" cy="8.6" r=".55"/></g></g><rect width="30" height="20" rx="3" fill="url(#bandeira-luz-en)"/></svg>'],
@@ -874,6 +877,7 @@ function blocoDasPreferencias() {
   const idioma = typeof idiomaAtual !== 'undefined' && idiomaAtual ? idiomaAtual : 'pt';
   const tamanho = lerPreferencia(CHAVE_TAMANHO_DO_TEXTO) || 'normal';
   const menos = lerPreferencia(CHAVE_MENOS_MOVIMENTO) === '1';
+  const somDaAbertura = lerPreferencia(CHAVE_SEM_SOM_DA_ABERTURA) !== '1';
   return `
       <section class="perfil-secao">
         <h4 class="perfil-secao-titulo">Preferências</h4>
@@ -881,7 +885,7 @@ function blocoDasPreferencias() {
           <div class="ajuste-bloco">
             <div class="ajuste-bloco-topo">
               <span class="ajuste-icone">${ICONE_DO_GLOBO}</span>
-              <span class="ajuste-textos"><strong>Idioma</strong><small>O app inteiro muda para o idioma escolhido</small></span>
+              <span class="ajuste-textos"><strong>Idioma</strong></span>
             </div>
             <div class="ajuste-escolhas" role="group" aria-label="Idioma">
               ${IDIOMAS_DO_APP.map(([codigo, nome, bandeira]) => `<button type="button" class="ajuste-escolha${codigo === idioma ? ' ativa' : ''}" data-idioma="${codigo}" aria-pressed="${codigo === idioma}" translate="no">${bandeira}<span>${nome}</span></button>`).join('')}
@@ -890,7 +894,7 @@ function blocoDasPreferencias() {
           <div class="ajuste-bloco">
             <div class="ajuste-bloco-topo">
               <span class="ajuste-icone">${ICONE_DO_TEXTO}</span>
-              <span class="ajuste-textos"><strong>Tamanho do texto</strong><small>Deixe as letras maiores para ler melhor</small></span>
+              <span class="ajuste-textos"><strong>Tamanho do texto</strong></span>
             </div>
             <div class="ajuste-escolhas" role="group" aria-label="Tamanho do texto">
               ${TAMANHOS_DO_TEXTO.map(([codigo, nome], i) => `<button type="button" class="ajuste-escolha${codigo === tamanho ? ' ativa' : ''}" data-tamanho="${codigo}" aria-pressed="${codigo === tamanho}"><span class="ajuste-aa ajuste-aa-${i}" aria-hidden="true">Aa</span><span>${nome}</span></button>`).join('')}
@@ -898,8 +902,14 @@ function blocoDasPreferencias() {
           </div>
           <label class="ajuste ajuste-chave">
             <span class="ajuste-icone">${ICONE_DO_MOVIMENTO}</span>
-            <span class="ajuste-textos"><strong>Menos animações</strong><small>Deixa o app mais calmo e economiza bateria</small></span>
+            <span class="ajuste-textos"><strong>Menos animações</strong></span>
             <input type="checkbox" class="chave" id="pref-menos-movimento"${menos ? ' checked' : ''}>
+            <span class="chave-trilho" aria-hidden="true"></span>
+          </label>
+          <label class="ajuste ajuste-chave">
+            <span class="ajuste-icone">${ICONE_DO_SOM}</span>
+            <span class="ajuste-textos"><strong>Som da abertura</strong></span>
+            <input type="checkbox" class="chave" id="pref-som-abertura"${somDaAbertura ? ' checked' : ''}>
             <span class="chave-trilho" aria-hidden="true"></span>
           </label>
         </div>
@@ -1639,6 +1649,8 @@ function ligarPreferencias(lugar) {
     guardarPreferencia(CHAVE_MENOS_MOVIMENTO, chave.checked ? '1' : '');
     aplicarPreferenciasDoAparelho();
   });
+  const somDaAbertura = lugar.querySelector('#pref-som-abertura');
+  if (somDaAbertura) somDaAbertura.addEventListener('change', () => guardarPreferencia(CHAVE_SEM_SOM_DA_ABERTURA, somDaAbertura.checked ? '' : '1'));
 }
 
 async function renderizarMeuPerfil() {
@@ -1678,6 +1690,7 @@ async function renderizarMeuPerfil() {
         </div>
       </section>` : ''}
       ${perfil ? blocoDasInsignias() : ''}
+      ${perfil && typeof htmlDosCertificadosDoPerfil === 'function' ? htmlDosCertificadosDoPerfil() : ''}
       ${blocoDosMeusSantos()}
       <h3 class="meu-perfil-config-titulo">Configurações</h3>
       ${blocoDasPreferencias()}
@@ -1687,7 +1700,7 @@ async function renderizarMeuPerfil() {
         <div class="ajustes-lista">
           <button type="button" class="ajuste" id="meu-perfil-enfeites">
             <span class="ajuste-icone">${iconeDoCenaculo('estrela')}</span>
-            <span class="ajuste-textos"><strong>Enfeites do perfil</strong><small>Moldura da foto, efeito ao abrir e faixa do nome</small></span>
+            <span class="ajuste-textos"><strong>Enfeites do perfil</strong></span>
             ${iconeDoCenaculo('seta-direita')}
           </button>
         </div>
@@ -1708,12 +1721,12 @@ async function renderizarMeuPerfil() {
         <div class="ajustes-lista">
           ${adulto ? `<button type="button" class="ajuste" id="meu-perfil-papel">
             <span class="ajuste-icone">${iconeDoCenaculo('paleta')}</span>
-            <span class="ajuste-textos"><strong>Papel de parede</strong><small>${fundo ? (fundo.foto ? 'Uma foto sua' : (FUNDOS_DA_CONVERSA.find((f) => f.id === fundo.pronto) || {}).nome || 'Personalizado') : 'O fundo de cada conversa'}</small></span>
+            <span class="ajuste-textos"><strong>Papel de parede</strong>${fundo ? `<small>${fundo.foto ? 'Uma foto sua' : (FUNDOS_DA_CONVERSA.find((f) => f.id === fundo.pronto) || {}).nome || 'Personalizado'}</small>` : ''}</span>
             ${iconeDoCenaculo('seta-direita')}
           </button>` : ''}
           <button type="button" class="ajuste" id="meu-perfil-ranking">
             <span class="ajuste-icone">${iconeDoCenaculo('trofeu')}</span>
-            <span class="ajuste-textos"><strong>Ranking</strong><small>Veja a sua posição na família e no mundo</small></span>
+            <span class="ajuste-textos"><strong>Ranking</strong></span>
             ${iconeDoCenaculo('seta-direita')}
           </button>
         </div>
@@ -1724,7 +1737,7 @@ async function renderizarMeuPerfil() {
         <div class="ajustes-lista">
           <button type="button" class="ajuste" id="meu-perfil-suporte">
             <span class="ajuste-icone">${iconeDoCenaculo('ajuda')}</span>
-            <span class="ajuste-textos"><strong>Fale com a equipe</strong><small>Dúvidas, problemas e sugestões</small></span>
+            <span class="ajuste-textos"><strong>Fale com a equipe</strong></span>
             <span class="aviso-suporte" data-aviso-suporte hidden></span>
             ${iconeDoCenaculo('seta-direita')}
           </button>

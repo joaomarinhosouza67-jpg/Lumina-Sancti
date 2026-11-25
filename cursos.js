@@ -241,6 +241,7 @@ function desenharCurso() {
         ${c.aberto === false
           ? `<div class="curso-trancado">${typeof icone === 'function' ? icone('cadeado') : ''}<span>${textoSeguroDoCurso(tr('Este curso é para assinantes. Assine um plano para assistir a todas as aulas.'))}</span><button type="button" class="curso-botao" id="curso-ver-planos">Ver os planos</button></div>`
           : (aulas.length ? `<button type="button" class="curso-botao" id="curso-comecar">${textoSeguroDoCurso(tr(feitas === aulas.length ? 'Ver de novo' : (comecou ? 'Continuar' : 'Começar o curso')))}</button>` : '')}
+          ${aulas.length && feitas === aulas.length ? `<button type="button" class="curso-botao curso-botao-certificado" data-certificado-curso="${textoSeguroDoCurso(c.slug)}">${textoSeguroDoCurso(tr('Ver meu certificado'))}</button>` : ''}
       </div>
     </header>
     ${c.aberto !== false && c.video ? `<section class="curso-secao">${htmlDoVideoDoCurso(c.video, c.titulo)}</section>` : ''}
@@ -319,6 +320,7 @@ async function marcarAula(indice, feita, calado) {
     const { error } = await supabaseCliente.rpc('curso_marcar_aula', { _pid: pid, _aula: a.id, _feita: feita });
     if (error) throw error;
     a.feita = feita;
+    if (feita && !calado && (c.aulas || []).length && (c.aulas || []).every((x) => x.feita) && typeof abrirCertificadoDoCurso === 'function') setTimeout(() => abrirCertificadoDoCurso(c), 700);
     if (listaDeCursos) {
       const daLista = listaDeCursos.find((x) => x.id === c.id);
       if (daLista) daLista.feitas = (c.aulas || []).filter((x) => x.feita).length;

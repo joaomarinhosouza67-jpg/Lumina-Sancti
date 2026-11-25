@@ -485,6 +485,19 @@ function somDoBauNovo(tipo, forca) {
     const ctx = somDoBauNovo.ctx;
     if (ctx.state === 'suspended') ctx.resume().catch(() => {});
     const agora = ctx.currentTime + 0.01;
+    if (tipo === 'subiu') {
+      [0, 4, 7, 12, 16].forEach((passo, i) => {
+        const o = ctx.createOscillator(); o.type = 'triangle'; o.frequency.value = 392 * Math.pow(2, (passo + (forca || 1) * 2) / 12);
+        const g = ctx.createGain(); const t = agora + i * 0.05;
+        g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.14, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.5);
+        o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t + 0.55);
+      });
+      const v = ctx.createOscillator(); v.type = 'sine';
+      v.frequency.setValueAtTime(300, agora); v.frequency.exponentialRampToValueAtTime(1400, agora + 0.35);
+      const gv = ctx.createGain(); gv.gain.setValueAtTime(0.0001, agora); gv.gain.exponentialRampToValueAtTime(0.08, agora + 0.05); gv.gain.exponentialRampToValueAtTime(0.0001, agora + 0.4);
+      v.connect(gv); gv.connect(ctx.destination); v.start(agora); v.stop(agora + 0.45);
+      return;
+    }
     if (tipo === 'batida') {
       const o = ctx.createOscillator(); o.type = 'sine';
       o.frequency.setValueAtTime(90 + forca * 25, agora); o.frequency.exponentialRampToValueAtTime(50, agora + 0.18);
@@ -528,6 +541,7 @@ async function abrirBau(id, tipo, opcoes) {
       <div class="bau-desenho" role="button" tabindex="0" aria-label="${escaparDoBau(trDoBau('Abrir'))}">${bauEm3d(tipo, 200)}</div>
       <div class="bau-premios" id="bau-premios"></div>
     </div>
+    <span class="bau-toques" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
     <span class="bau-clarao" aria-hidden="true"></span>
     <button type="button" class="bau-botao" id="bau-botao" disabled>${trDoBau('Abrindo...')}</button>`, 'abrindo tela-cheia');
   fundo.dataset.travada = 'sim';
@@ -536,27 +550,74 @@ async function abrirBau(id, tipo, opcoes) {
   let chegou = false;
   let batidas = 0;
   let abriu = false;
+  let ocupado = false;
+  let conferidas = 0;
+  let tipoNaTela = tipo;
+  let relogio = null;
+  const TOQUES_DO_BAU = 4;
   const relogios = [];
   let quandoChegar = null;
-  const pedido = chamarDosBaus('bau_abrir', { _id: id }).then((r) => r).catch(() => null).then((r) => { resultado = r; chegou = true; if (quandoChegar) quandoChegar(); });
+  const transformar = (novo, depois) => {
+    const palco = fundo.querySelector('.bau-palco');
+    const titulo = fundo.querySelector('.bau-titulo');
+    ocupado = true;
+    tipoNaTela = novo;
+    const ordem = ['madeira', 'prata', 'ouro', 'safira', 'ametista'].indexOf(novo);
+    fundo.style.setProperty('--cor-da-subida', (CORES_DOS_BAUS[novo] || {}).luz || '#ffe28a');
+    if (palco) palco.classList.add('subindo');
+    somDoBauNovo('subiu', Math.max(1, ordem));
+    if (navigator.vibrate) { try { navigator.vibrate([20, 30, 40]); } catch (e) {
+    } }
+    relogios.push(setTimeout(() => {
+      if (!document.body.contains(fundo)) return;
+      if (desenho) desenho.innerHTML = bauEm3d(novo, 200);
+      if (palco) { ['madeira', 'prata', 'ouro', 'safira', 'ametista'].forEach((t) => palco.classList.remove(`bau-${t}`)); palco.classList.add(`bau-${novo}`); palco.classList.remove('subindo'); palco.classList.add('subiu'); }
+      if (titulo) { titulo.textContent = nomeDoBau(novo); titulo.classList.remove('mudou'); void titulo.offsetWidth; titulo.classList.add('mudou'); }
+      relogios.push(setTimeout(() => { if (palco) palco.classList.remove('subiu'); ocupado = false; if (depois) depois(); }, 520));
+    }, 300));
+  };
+  const conferirSubidas = () => {
+    if (!chegou || ocupado || !resultado) return;
+    const subidas = Array.isArray(resultado.subidas) ? resultado.subidas : [];
+    while (conferidas < Math.min(batidas, TOQUES_DO_BAU - 1)) {
+      const proximo = subidas[conferidas];
+      conferidas += 1;
+      if (proximo && proximo !== tipoNaTela && CORES_DOS_BAUS[proximo]) { transformar(proximo, conferirSubidas); return; }
+    }
+    if (batidas >= TOQUES_DO_BAU) abrirDeVez();
+  };
+  const agendarToque = () => {
+    if (relogio) clearTimeout(relogio);
+    relogio = setTimeout(() => { if (ocupado) agendarToque(); else bater(); }, batidas === 0 ? 800 : 900);
+    relogios.push(relogio);
+  };
+  const pedido = chamarDosBaus('bau_abrir', { _id: id }).then((r) => r).catch(() => null).then((r) => { resultado = r; chegou = true; if (quandoChegar) quandoChegar(); conferirSubidas(); });
   const bater = () => {
-    if (abriu || !desenho || !document.body.contains(fundo)) return;
+    if (abriu || ocupado || batidas >= TOQUES_DO_BAU || !desenho || !document.body.contains(fundo)) return;
     batidas += 1;
     desenho.classList.remove('bate');
     void desenho.offsetWidth;
-    desenho.style.setProperty('--forca', String(batidas));
+    desenho.style.setProperty('--forca', String(Math.min(3, batidas)));
     desenho.classList.add('bate');
     fundo.classList.add(`batida-${Math.min(3, batidas)}`);
-    somDoBauNovo('batida', batidas);
+    const pontos = fundo.querySelectorAll('.bau-toques i');
+    if (pontos[batidas - 1]) pontos[batidas - 1].classList.add('feito');
+    somDoBauNovo('batida', Math.min(3, batidas));
     if (navigator.vibrate) { try { navigator.vibrate(18 + batidas * 12); } catch (e) {
     } }
-    if (batidas >= 3) { relogios.forEach(clearTimeout); if (chegou) abrirDeVez(); else quandoChegar = abrirDeVez; }
+    if (batidas >= TOQUES_DO_BAU) {
+      if (relogio) clearTimeout(relogio);
+      if (chegou) conferirSubidas(); else quandoChegar = conferirSubidas;
+      return;
+    }
+    conferirSubidas();
+    agendarToque();
   };
   if (desenho) {
     desenho.addEventListener('click', bater);
     desenho.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); bater(); } });
   }
-  [650, 1250, 1850].forEach((ms) => relogios.push(setTimeout(bater, ms)));
+  agendarToque();
   const abrirDeVez = () => {
     if (abriu) return;
     abriu = true;

@@ -265,23 +265,91 @@ function mxDesfazerNulo() {
   mx.roque = mx.uRoque[k]; mx.ep = mx.uEp[k]; mx.meio = mx.uMeio[k]; mx.lo = mx.uLo[k]; mx.hi = mx.uHi[k];
 }
 
+const MX_PASSADO_MG = [0, 5, 10, 15, 25, 45, 70, 0];
+const MX_PASSADO_EG = [0, 10, 18, 30, 50, 85, 130, 0];
+const mxPeoesB = new Int8Array(8);
+const mxPeoesP = new Int8Array(8);
+
+function mxMobilidade(s, cor, dirs, deslizante) {
+  const t = mx.tab;
+  const c = MX_CAIXA64[s];
+  let n = 0;
+  for (let i = 0; i < dirs.length; i += 1) {
+    let x = c + dirs[i];
+    for (;;) {
+      const a = MX_CAIXA[x];
+      if (a < 0) break;
+      const q = t[a];
+      if (q && (q > 0) === (cor > 0)) break;
+      n += 1;
+      if (q || !deslizante) break;
+      x += dirs[i];
+    }
+  }
+  return n;
+}
+
 function mxAvaliar() {
   const t = mx.tab;
   let mg = 0; let eg = 0; let fase = 0;
   let bispoB = 0; let bispoP = 0; let materialB = 0; let materialP = 0;
+  mxPeoesB.fill(0); mxPeoesP.fill(0);
+  for (let s = 0; s < 64; s += 1) {
+    const p = t[s];
+    if (p === MX_P) mxPeoesB[s & 7] += 1;
+    else if (p === -MX_P) mxPeoesP[s & 7] += 1;
+  }
   for (let s = 0; s < 64; s += 1) {
     const p = t[s];
     if (!p) continue;
-    if (p > 0) {
-      mg += MX_MG[p][s]; eg += MX_EG[p][s]; fase += MX_FASE[p];
-      if (p === MX_B) bispoB += 1;
-      if (p !== MX_K) materialB += MX_VALOR_EG[p];
-    } else {
-      const q = -p;
-      mg -= MX_MG[q + 6][s]; eg -= MX_EG[q + 6][s]; fase += MX_FASE[q];
-      if (q === MX_B) bispoP += 1;
-      if (q !== MX_K) materialP += MX_VALOR_EG[q];
+    const tipo = p > 0 ? p : -p;
+    const cor = p > 0 ? 1 : -1;
+    let m = cor > 0 ? MX_MG[tipo][s] : MX_MG[tipo + 6][s];
+    let e = cor > 0 ? MX_EG[tipo][s] : MX_EG[tipo + 6][s];
+    fase += MX_FASE[tipo];
+    const col = s & 7; const lin = s >> 3;
+    if (tipo === MX_P) {
+      const meus = cor > 0 ? mxPeoesB : mxPeoesP;
+      const deles = cor > 0 ? mxPeoesP : mxPeoesB;
+      if (meus[col] > 1) { m -= 8; e -= 18; }
+      if ((col === 0 || !meus[col - 1]) && (col === 7 || !meus[col + 1])) { m -= 10; e -= 12; }
+      let passado = true;
+      for (let f = Math.max(0, col - 1); f <= Math.min(7, col + 1) && passado; f += 1) {
+        if (!deles[f]) continue;
+        for (let r = cor > 0 ? lin - 1 : lin + 1; r >= 0 && r < 8; r += cor > 0 ? -1 : 1) {
+          if (t[r * 8 + f] === -MX_P * cor) { passado = false; break; }
+        }
+      }
+      if (passado) {
+        const avanco = cor > 0 ? 7 - lin : lin;
+        m += MX_PASSADO_MG[avanco]; e += MX_PASSADO_EG[avanco];
+      }
+    } else if (tipo === MX_N) {
+      const n = mxMobilidade(s, cor, MX_CAVALO, false); m += (n - 4) * 4; e += (n - 4) * 4;
+    } else if (tipo === MX_B) {
+      const n = mxMobilidade(s, cor, MX_DIAG, true); m += (n - 6) * 5; e += (n - 6) * 5;
+      if (cor > 0) bispoB += 1; else bispoP += 1;
+    } else if (tipo === MX_R) {
+      const n = mxMobilidade(s, cor, MX_RETA, true); m += (n - 7) * 2; e += (n - 7) * 4;
+      const meus = cor > 0 ? mxPeoesB : mxPeoesP;
+      const deles = cor > 0 ? mxPeoesP : mxPeoesB;
+      if (!meus[col]) { m += deles[col] ? 10 : 22; e += deles[col] ? 5 : 12; }
+      if ((cor > 0 && lin === 1) || (cor < 0 && lin === 6)) { m += 10; e += 20; }
+    } else if (tipo === MX_Q) {
+      const n = mxMobilidade(s, cor, MX_TODAS, true); m += (n - 13); e += (n - 13) * 2;
+    } else if (tipo === MX_K) {
+      const frente = cor > 0 ? -1 : 1;
+      let escudo = 0;
+      for (let f = Math.max(0, col - 1); f <= Math.min(7, col + 1); f += 1) {
+        const r1 = lin + frente; const r2 = lin + 2 * frente;
+        if (r1 >= 0 && r1 < 8 && t[r1 * 8 + f] === MX_P * cor) escudo += 12;
+        else if (r2 >= 0 && r2 < 8 && t[r2 * 8 + f] === MX_P * cor) escudo += 6;
+        else escudo -= 8;
+      }
+      m += escudo;
     }
+    if (tipo !== MX_K) { if (cor > 0) materialB += MX_VALOR_EG[tipo]; else materialP += MX_VALOR_EG[tipo]; }
+    if (cor > 0) { mg += m; eg += e; } else { mg -= m; eg -= e; }
   }
   if (bispoB >= 2) { mg += 30; eg += 50; }
   if (bispoP >= 2) { mg -= 30; eg -= 50; }

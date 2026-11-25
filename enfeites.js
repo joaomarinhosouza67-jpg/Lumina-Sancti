@@ -47,6 +47,12 @@ const DURACAO_DO_EFEITO = 3800;
 
 let sequenciaDosEnfeites = 0;
 let enfeitesDaFamilia = {};
+let enfeitesForaDoAr = new Set();
+const perfisComRecadoDeEnfeite = new Set();
+
+function enfeiteForaDoAr(tipo, id) {
+  return !!id && enfeitesForaDoAr.has(`${tipo}:${id}`);
+}
 
 function idDoEnfeite(nome) {
   sequenciaDosEnfeites += 1;
@@ -172,7 +178,7 @@ function margemDoEfeito(alvo) {
 
 function tocarEfeitoDoPerfil(alvo, id) {
   const criar = EFEITOS_DO_PERFIL[id];
-  if (!alvo || !criar || movimentoReduzido()) return null;
+  if (!alvo || !criar || movimentoReduzido() || enfeiteForaDoAr('efeito', id)) return null;
   alvo.querySelectorAll(':scope > .enfeite-efeito').forEach((antigo) => antigo.remove());
   if (getComputedStyle(alvo).position === 'static') alvo.style.position = 'relative';
   const m = criar.usaMargem ? margemDoEfeito(alvo) : { e: 0, d: 0, t: 0 };
@@ -257,7 +263,7 @@ function enfeiteLiberado(item, perfil) {
 
 function itensVisiveis(tipo, perfil) {
   const crianca = perfilEhCrianca(perfil);
-  return (ENFEITES[tipo] || []).filter((item) => (!item.exclusivo || enfeitesDaFamiliaLiberados()) && (!crianca || (item.criancas && enfeiteLiberado(item, perfil))));
+  return (ENFEITES[tipo] || []).filter((item) => !enfeiteForaDoAr(tipo, item.id) && (!item.exclusivo || enfeitesDaFamiliaLiberados()) && (!crianca || (item.criancas && enfeiteLiberado(item, perfil))));
 }
 
 async function carregarEnfeitesDaFamilia() {
@@ -274,7 +280,7 @@ async function carregarEnfeitesDaFamilia() {
 function colocarMoldura(lugar, id) {
   if (!lugar) return;
   lugar.querySelectorAll(':scope > .enfeite-moldura').forEach((antiga) => antiga.remove());
-  const tem = !!MOLDURAS[id];
+  const tem = !!MOLDURAS[id] && !enfeiteForaDoAr('moldura', id);
   lugar.classList.toggle('com-moldura', tem);
   if (tem) lugar.setAttribute('data-com-moldura', id);
   else lugar.removeAttribute('data-com-moldura');
@@ -284,7 +290,7 @@ function colocarMoldura(lugar, id) {
 function colocarFaixa(lugar, id, classe) {
   if (!lugar) return;
   lugar.querySelectorAll(':scope > .enfeite-faixa').forEach((antiga) => antiga.remove());
-  const tem = !!FAIXAS[id];
+  const tem = !!FAIXAS[id] && !enfeiteForaDoAr('faixa', id);
   lugar.classList.toggle('com-faixa', tem);
   if (tem) lugar.insertAdjacentHTML('afterbegin', `<span class="enfeite-faixa ${classe || ''}" aria-hidden="true">${svgDaFaixa(id)}</span>`);
 }
@@ -533,6 +539,7 @@ async function abrirEnfeitesDoPerfil() {
   const corpo = janelaDoCenaculo('Enfeites do perfil', '<p class="perfis-carregando">Carregando...</p>');
   await Promise.all([
     carregarEnfeitesDaFamilia(),
+    carregarEnfeitesForaDoAr(),
     typeof carregarAssinaturaSemFalhar === 'function' ? carregarAssinaturaSemFalhar() : null,
   ]);
   const atuais = enfeitesDaFamilia[perfil.id] || {};
@@ -580,4 +587,73 @@ async function abrirEnfeitesDoPerfil() {
   corpo.querySelector('#enfeites-salvar').addEventListener('click', salvarEnfeitesDoPerfil);
   renderizarEscolhaDeEnfeites();
   atualizarPreviaDosEnfeites(false);
+}
+
+async function carregarEnfeitesForaDoAr() {
+  if (typeof supabaseCliente === 'undefined' || !supabaseCliente) return enfeitesForaDoAr;
+  try {
+    const { data, error } = await supabaseCliente.rpc('enfeites_fora_do_ar');
+    if (!error && Array.isArray(data)) enfeitesForaDoAr = new Set(data.map((e) => `${e.tipo}:${e.id}`));
+  } catch (e) {
+    return enfeitesForaDoAr;
+  }
+  return enfeitesForaDoAr;
+}
+
+function textoDoRecadoDeEnfeite(recado) {
+  const item = itemDoEnfeite(recado.tipo, recado.enfeite);
+  const nome = item ? (typeof tr === 'function' ? tr(item.nome) : item.nome) : recado.enfeite;
+  const frases = {
+    moldura: 'A moldura "{nome}" foi tirada do ar por um tempo para ajustes.',
+    efeito: 'O efeito "{nome}" foi tirado do ar por um tempo para ajustes.',
+    faixa: 'A faixa "{nome}" foi tirada do ar por um tempo para ajustes.',
+  };
+  const frase = frases[recado.tipo] || frases.moldura;
+  return typeof tr === 'function' ? tr(frase, { nome }) : frase.replace('{nome}', nome);
+}
+
+function mostrarRecadoDosEnfeites(recados) {
+  if (!recados.length || document.getElementById('recado-enfeite')) return;
+  const t = (x) => (typeof tr === 'function' ? tr(x) : x);
+  const fundo = document.createElement('div');
+  fundo.id = 'recado-enfeite';
+  fundo.className = 'recado-enfeite-fundo';
+  fundo.innerHTML = `<div class="recado-enfeite" role="dialog" aria-modal="true" aria-labelledby="recado-enfeite-titulo">
+    <span class="recado-enfeite-icone" aria-hidden="true"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3 17.8V21h3.2l6.3-6.3a4 4 0 0 0 5.2-5.4l-2.6 2.6-2.4-.6-.6-2.4 2.6-2.6z"/></svg></span>
+    <h3 id="recado-enfeite-titulo">${t('Enfeite em ajustes')}</h3>
+    <div class="recado-enfeite-textos"></div>
+    <button type="button" class="recado-enfeite-botao">${t('Entendi')}</button>
+  </div>`;
+  const textos = fundo.querySelector('.recado-enfeite-textos');
+  recados.forEach((r) => { const linha = document.createElement('p'); linha.textContent = textoDoRecadoDeEnfeite(r); textos.appendChild(linha); });
+  document.body.appendChild(fundo);
+  requestAnimationFrame(() => fundo.classList.add('aberto'));
+  const fechar = () => fundo.remove();
+  fundo.querySelector('.recado-enfeite-botao').addEventListener('click', fechar);
+  fundo.addEventListener('click', (e) => { if (e.target === fundo) fechar(); });
+  setTimeout(() => { const b = fundo.querySelector('.recado-enfeite-botao'); if (b) b.focus(); }, 60);
+}
+
+async function verificarRecadosDosEnfeites() {
+  const perfil = typeof membroAtivo !== 'undefined' ? membroAtivo : null;
+  if (!perfil || !perfil.id || perfisComRecadoDeEnfeite.has(perfil.id)) return;
+  if (typeof supabaseCliente === 'undefined' || !supabaseCliente || typeof contaLogada !== 'function' || !contaLogada()) return;
+  if (document.body.classList.contains('intro-ativa')) return;
+  perfisComRecadoDeEnfeite.add(perfil.id);
+  let recados = [];
+  try {
+    const { data, error } = await supabaseCliente.rpc('enfeites_meus_recados', { _pid: perfil.id });
+    if (!error && Array.isArray(data)) recados = data;
+  } catch (e) {
+    recados = [];
+  }
+  if (recados.length) {
+    await carregarEnfeitesForaDoAr();
+    mostrarRecadoDosEnfeites(recados);
+  }
+}
+
+if (typeof document !== 'undefined' && typeof window !== 'undefined' && document.addEventListener) {
+  setTimeout(carregarEnfeitesForaDoAr, 1200);
+  setInterval(verificarRecadosDosEnfeites, 2500);
 }

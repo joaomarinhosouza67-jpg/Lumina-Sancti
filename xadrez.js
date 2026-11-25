@@ -228,7 +228,7 @@ const NIVEIS_DOS_TABULEIROS = [
   { id: 4, rotulo: 'Impossível' },
   { id: 5, rotulo: 'Gênio' },
 ];
-const CONFIG_DOS_MOTORES = { 2: { tempo: 450, profundidade: 4, ruido: 40 }, 3: { tempo: 1000, profundidade: 7, ruido: 12 }, 4: { tempo: 2400, ruido: 0 }, 5: { tempo: 5000, ruido: 0 } };
+const CONFIG_DOS_MOTORES = { 2: { tempo: 450, profundidade: 4, ruido: 40 }, 3: { tempo: 1000, profundidade: 7, ruido: 12 }, 4: { tempo: 3000, ruido: 0 }, 5: { tempo: 7000, ruido: 0 } };
 const motoresDosTabuleiros = {};
 
 function pedirAoMotor(arquivo, pedido) {
@@ -599,15 +599,14 @@ function formasDoXadrez(estilo, detalhe, linha) {
     };
   }
   if (estilo === 'facetada') {
-    const f = 'fill="none" stroke="#ffffff" stroke-opacity=".55" stroke-width="1.3" stroke-linejoin="round"';
-    const base = `<path d="M20 92 L27 82 H73 L80 92 Z"/><path d="M27 82 L50 92 L73 82" ${f}/>`;
+        const base = `<path d="M20 92 L27 82 H73 L80 92 Z"/>`;
     return {
-      p: `<path d="M50 16 L59 20 L63 29 L59 38 L50 42 L41 38 L37 29 L41 20 Z"/><path d="M41 20 L50 29 L59 20 M37 29 H63 M41 38 L50 29 L59 38" ${f}/><path d="M38 46 H62 L58 52 H42 Z"/><path d="M42 52 H58 L66 82 H34 Z"/><path d="M50 52 L44 82 M50 52 L56 82" ${f}/>${base}`,
-      r: `<path d="M28 14 H38 V22 H45 V14 H55 V22 H62 V14 H72 V30 L66 38 H34 L28 30 Z"/><path d="M35 38 H65 L62 74 L68 82 H32 L38 74 Z"/><path d="M28 30 H72 M35 38 L50 50 L65 38 M50 50 V74 M38 74 H62" ${f}/>${base}`,
-      n: `<path d="M68 82 H30 L34 68 L44 58 L36 60 L27 58 L23 52 L28 44 L40 32 L44 22 L52 14 L56 22 L66 30 L72 44 L72 62 Z"/><path d="M44 30 L49 27 L49 33 Z" fill="${detalhe}" stroke="none"/><path d="M44 22 L50 36 L66 30 M50 36 L40 32 M50 36 L56 52 L72 44 M56 52 L44 58 M56 52 L72 62 M56 52 L50 82" ${f}/>${base}`,
-      b: `<path d="M50 3 L54 9 L50 14 L46 9 Z"/><path d="M50 14 L63 30 L58 52 H42 L37 30 Z"/><path d="M56 23 L47 37" fill="none" stroke="${detalhe}" stroke-width="3" stroke-linecap="round"/><path d="M37 30 L50 40 L63 30 M50 40 V52" ${f}/><path d="M36 55 H64 L60 60 H40 Z"/><path d="M41 60 H59 L67 82 H33 Z"/><path d="M50 60 L42 82 M50 60 L58 82" ${f}/>${base}`,
-      q: `<path d="M26 52 L23 26 L36 38 L42 16 L50 30 L58 16 L64 38 L77 26 L74 52 Z"/><path d="M23 18 L26 23 L23 28 L20 23 Z M42 8 L45 13 L42 18 L39 13 Z M58 8 L61 13 L58 18 L55 13 Z M77 18 L80 23 L77 28 L74 23 Z"/><path d="M26 52 L50 44 L74 52 M36 38 L50 44 L64 38 M50 30 V44" ${f}/><path d="M28 52 H72 V58 H28 Z"/><path d="M33 58 H67 L72 82 H28 Z"/><path d="M50 58 L40 82 M50 58 L60 82" ${f}/>${base}`,
-      k: `<path d="M46 2 H54 V10 H62 V18 H54 V28 H46 V18 H38 V10 H46 Z"/><path d="M46 10 L50 14 L54 10 M46 18 L50 14 L54 18" ${f}/><path d="M30 46 L36 32 H64 L70 46 L64 54 H36 Z"/><path d="M36 32 L50 42 L64 32 M30 46 H70 M50 42 V54" ${f}/><path d="M33 54 H67 V60 H33 Z"/><path d="M36 60 H64 L72 82 H28 Z"/><path d="M50 60 L40 82 M50 60 L60 82" ${f}/>${base}`,
+      p: `<path d="M50 16 L59 20 L63 29 L59 38 L50 42 L41 38 L37 29 L41 20 Z"/><path d="M38 46 H62 L58 52 H42 Z"/><path d="M42 52 H58 L66 82 H34 Z"/>${base}`,
+      r: `<path d="M28 14 H38 V22 H45 V14 H55 V22 H62 V14 H72 V30 L66 38 H34 L28 30 Z"/><path d="M35 38 H65 L62 74 L68 82 H32 L38 74 Z"/>${base}`,
+      n: `<path d="M68 82 H30 L34 68 L44 58 L36 60 L27 58 L23 52 L28 44 L40 32 L44 22 L52 14 L56 22 L66 30 L72 44 L72 62 Z"/><path d="M44 30 L49 27 L49 33 Z" fill="${detalhe}" stroke="none"/>${base}`,
+      b: `<path d="M50 3 L54 9 L50 14 L46 9 Z"/><path d="M50 14 L63 30 L58 52 H42 L37 30 Z"/><path d="M56 23 L47 37" fill="none" stroke="${detalhe}" stroke-width="3" stroke-linecap="round"/><path d="M36 55 H64 L60 60 H40 Z"/><path d="M41 60 H59 L67 82 H33 Z"/>${base}`,
+      q: `<path d="M26 52 L23 26 L36 38 L42 16 L50 30 L58 16 L64 38 L77 26 L74 52 Z"/><path d="M23 18 L26 23 L23 28 L20 23 Z M42 8 L45 13 L42 18 L39 13 Z M58 8 L61 13 L58 18 L55 13 Z M77 18 L80 23 L77 28 L74 23 Z"/><path d="M28 52 H72 V58 H28 Z"/><path d="M33 58 H67 L72 82 H28 Z"/>${base}`,
+      k: `<path d="M46 2 H54 V10 H62 V18 H54 V28 H46 V18 H38 V10 H46 Z"/><path d="M30 46 L36 32 H64 L70 46 L64 54 H36 Z"/><path d="M33 54 H67 V60 H33 Z"/><path d="M36 60 H64 L72 82 H28 Z"/>${base}`,
     };
   }
   if (estilo === 'moderna') {
@@ -667,7 +666,6 @@ function xadrezPecaSvg(peca, conjunto) {
   return `<svg class="xadrez-peca-svg conjunto-${nomeDoConjunto} lado-${branca ? 'claro' : 'escuro'}" viewBox="0 0 100 100" aria-hidden="true"><g fill="${cores.corpo}" stroke="${cores.linha}" stroke-width="3" stroke-linejoin="round">${formas[peca.toLowerCase()]}</g>${estilo.reflexo ? `<g fill="url(#xz-reflexo)" stroke="none" pointer-events="none">${formas[peca.toLowerCase()].replace(/<path d="M50 10 C56[^>]*>|<path d="M50 17 C53[^>]*>/g, '')}</g>` : ''}${estilo.brilho ? '<path class="xadrez-brilho" d="M40 20 l3 6 l6 3 l-6 3 l-3 6 l-3 -6 l-6 -3 l6 -3 z" fill="#ffffff" opacity=".85"/>' : ''}</svg>`;
 }
 
-const RACHADURAS_DO_REI = '<svg class="xadrez-rachadura" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 30 L46 40 L53 47 L44 58 L50 66 L45 78"/><path d="M53 47 L62 52 L58 60 L66 70"/><path d="M46 40 L36 44 L32 54"/><path d="M44 58 L35 64"/><path class="luz" d="M51 31 L47 41 L54 48 L45 59 L51 67 L46 79"/></svg>';
 
 function tocarRachadura() {
   try {
@@ -710,8 +708,8 @@ function jogoDeXadrez(area) {
     falarNoJogo(textoDoJogo('Quer jogar contra a Lumina ou com outra pessoa?'));
     area.innerHTML = `
       <div class="xadrez-modos">
-        <button type="button" class="xadrez-modo" data-modo="lumina"><span class="xadrez-modo-arte">${xadrezPecaSvg('q')}</span><strong>${textoDoJogo('Contra a Lumina')}</strong><small>${textoDoJogo('Você joga com as brancas.')}</small></button>
-        <button type="button" class="xadrez-modo" data-modo="dois"><span class="xadrez-modo-arte">${xadrezPecaSvg('N')}${xadrezPecaSvg('n')}</span><strong>${textoDoJogo('Duas pessoas')}</strong><small>${textoDoJogo('No mesmo aparelho, cada um na sua vez.')}</small></button>
+        <button type="button" class="xadrez-modo" data-modo="lumina"><span class="xadrez-modo-arte">${xadrezPecaSvg('q')}</span><strong>${textoDoJogo('Contra a Lumina')}</strong></button>
+        <button type="button" class="xadrez-modo" data-modo="dois"><span class="xadrez-modo-arte">${xadrezPecaSvg('N')}${xadrezPecaSvg('n')}</span><strong>${textoDoJogo('Duas pessoas')}</strong></button>
       </div>
       <button type="button" class="xadrez-personalizar" id="xadrez-personalizar">${textoDoJogo('Personalizar peças e tabuleiro')}</button>`;
     const personalizar = area.querySelector('#xadrez-personalizar');
@@ -723,7 +721,7 @@ function jogoDeXadrez(area) {
   };
 
   const escolherNivel = () => {
-    falarNoJogo(textoDoJogo('Escolha o nível. Quanto mais difícil, mais a Lumina pensa.'));
+    falarNoJogo(textoDoJogo('Escolha o nível.'));
     area.innerHTML = `
       <div class="xadrez-modos">
         ${htmlDosNiveisDosTabuleiros()}
@@ -757,7 +755,7 @@ function jogoDeXadrez(area) {
       const rotulo = `${xadrezNome(i)}${p ? `, ${xadrezDescreverPeca(p)}` : ''}`;
       const coluna = i % 8 === 0 ? `<i class="xadrez-coord linha">${8 - Math.floor(i / 8)}</i>` : '';
       const linhaDeBaixo = i >= 56 ? `<i class="xadrez-coord coluna">${'abcdefgh'[i % 8]}</i>` : '';
-      return `<button type="button" class="${classes.join(' ')}" data-casa="${i}" aria-label="${rotulo}">${coluna}${linhaDeBaixo}${p ? `<span class="xadrez-peca${partida.ultima && partida.ultima.para === i ? ' chegou' : ''}">${xadrezPecaSvg(p)}${i === rei ? RACHADURAS_DO_REI : ''}</span>` : ''}</button>`;
+      return `<button type="button" class="${classes.join(' ')}" data-casa="${i}" aria-label="${rotulo}">${coluna}${linhaDeBaixo}${p ? `<span class="xadrez-peca${partida.ultima && partida.ultima.para === i ? ' chegou' : ''}${i === rei ? ' soltando' : ''}">${i === rei ? [1, 2, 3, 4].map((n) => `<span class="lasca lasca-${n}">${xadrezPecaSvg(p)}</span>`).join('') : xadrezPecaSvg(p)}</span>` : ''}</button>`;
     }).join('');
     const pontos = (cor) => partida.capturadas[cor].reduce((s, p) => s + (XADREZ_VALORES[p.toLowerCase()] || 0), 0);
     const vantagem = (cor) => { const d = pontos(cor) - pontos(cor === 'w' ? 'b' : 'w'); return d > 0 ? `<em class="xadrez-vantagem">+${d >= 100 ? Math.round(d / 100) : d}</em>` : ''; };

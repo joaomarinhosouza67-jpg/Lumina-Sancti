@@ -2471,6 +2471,7 @@ function finalizarLicao() {
         <div class="insignia-conquistada">
           <h3>${tt('insignia_de', { santo: trilha.santo })}</h3>
           <p>${tt('ganhou_medalha', { medalha: nomeDaMedalha(trilha) })}</p>
+          ${typeof todasAsTrilhasConcluidas === 'function' && todasAsTrilhasConcluidas() ? `<div class="certificado-botoes-fim"><button type="button" class="certificado-botao todas" data-certificado-todas>${tr('Ver meu certificado')}</button></div>` : ''}
         </div>` : ''}
       </div>`;
   }
@@ -2902,6 +2903,7 @@ async function finalizarLicaoNoServidor() {
         <div class="insignia-conquistada">
           <h3>${tt('insignia_de', { santo: trilha.santo })}</h3>
           <p>${tt('ganhou_medalha', { medalha: nomeDaMedalha(trilha) })}</p>
+          ${typeof todasAsTrilhasConcluidas === 'function' && todasAsTrilhasConcluidas() ? `<div class="certificado-botoes-fim"><button type="button" class="certificado-botao todas" data-certificado-todas>${tr('Ver meu certificado')}</button></div>` : ''}
         </div>` : ''}
       </div>`;
   }

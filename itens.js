@@ -191,16 +191,18 @@ function itensDoPacote(pacote) {
   return Object.keys(ITENS_DO_JOGO).filter((id) => ITENS_DO_JOGO[id].pacote === pacote);
 }
 
-function previaDoPacote(pacote) {
+function previaDoPacote(pacote, jogo) {
   const ids = itensDoPacote(pacote);
   const achar = (categoria) => ids.map((id) => ITENS_DO_JOGO[id]).find((i) => i.categoria === categoria) || {};
   const casas = '<i class="xadrez-casa clara"></i><i class="xadrez-casa escura"></i><i class="xadrez-casa escura"></i><i class="xadrez-casa clara"></i>';
-  const conjunto = achar('pecas_xadrez').conjunto;
-  const pecas = typeof xadrezPecaSvg === 'function' ? xadrezPecaSvg('K', conjunto) + xadrezPecaSvg('q', conjunto) : '';
+  const conjunto = achar(jogo === 'damas' ? 'pecas_damas' : 'pecas_xadrez').conjunto;
+  const pecas = jogo === 'damas'
+    ? (typeof damasPecaSvg === 'function' ? damasPecaSvg('W', conjunto) + damasPecaSvg('b', conjunto) : '')
+    : (typeof xadrezPecaSvg === 'function' ? xadrezPecaSvg('K', conjunto) + xadrezPecaSvg('q', conjunto) : '');
   return `<span class="item-previa pacote-previa"><span class="xadrez-tabuleiro item-previa-tabuleiro tema-${achar('tabuleiro').tema || 'madeira'} moldura-${achar('moldura').tema || 'ouro'}">${casas}</span><span class="pacote-pecas">${pecas}</span></span>`;
 }
 
-function htmlDosPacotes() {
+function htmlDosPacotes(jogo) {
   return `<div class="colecao-grade colecao-pacotes">${Object.keys(PACOTES_DOS_ITENS).map((pacote) => {
     const info = PACOTES_DOS_ITENS[pacote];
     const ids = itensDoPacote(pacote);
@@ -209,12 +211,12 @@ function htmlDosPacotes() {
     const misterio = info.raridade === 'secreto' && meus === 0;
     const emUso = meus > 0 && meusIds.every((id) => itemEquipado(ITENS_DO_JOGO[id].categoria) === id);
     let texto = trDoItem('Encontre em baús');
-    if (misterio) texto = trDoItem('Só a equipe pode dar de presente');
+    if (misterio) texto = '';
     else if (emUso && meus === ids.length) texto = trDoItem('Usando');
     else if (meus === ids.length) texto = trDoItem('Usar pacote');
     else if (meus) texto = trDoItem('{n} de {total} peças do pacote', { n: meus, total: ids.length });
     return `<button type="button" class="colecao-item colecao-pacote raridade-${info.raridade}${meus ? '' : ' bloqueado'}${misterio ? ' misterio' : ''}${emUso ? ' usando' : ''}" data-pacote="${pacote}" aria-pressed="${emUso ? 'true' : 'false'}">
-      ${misterio ? '<span class="item-previa pacote-misterio" aria-hidden="true">?</span>' : previaDoPacote(pacote)}
+      ${misterio ? '<span class="item-previa pacote-misterio" aria-hidden="true">?</span>' : previaDoPacote(pacote, jogo)}
       <b>${escaparDoItem(misterio ? trDoItem('Pacote secreto') : trDoItem(info.nome))}</b>
       ${seloDaRaridade(info.raridade)}
       <small>${escaparDoItem(texto)}</small>
@@ -241,7 +243,7 @@ function htmlDaColecao(jogo) {
     <strong class="bau-titulo">${escaparDoItem(trDoItem('Personalizar'))}</strong>
     <span class="colecao-conta">${escaparDoItem(trDoItem('{n} de {total} itens raros', { n: meus, total: total.length }))}</span>
     <div class="colecao-abas" role="tablist">${categorias.map((c) => `<button type="button" class="colecao-aba${c === categoriaAbertaNaColecao ? ' ativa' : ''}" data-categoria="${c}" role="tab">${escaparDoItem(trDoItem(CATEGORIAS_DOS_ITENS[c].nome))}</button>`).join('')}</div>
-    ${categoriaAbertaNaColecao === 'pacotes' ? htmlDosPacotes() : `<div class="colecao-grade">${ids.map((id) => {
+    ${categoriaAbertaNaColecao === 'pacotes' ? htmlDosPacotes(jogo) : `<div class="colecao-grade">${ids.map((id) => {
       const item = ITENS_DO_JOGO[id];
       const meu = temItem(id);
       const usando = id === equipado;
@@ -249,7 +251,7 @@ function htmlDaColecao(jogo) {
       let texto = trDoItem('Encontre em baús');
       if (usando) texto = trDoItem('Usando');
       else if (meu) texto = trDoItem('Usar');
-      else if (misterio) texto = trDoItem('Só a equipe pode dar de presente');
+      else if (misterio) texto = '';
       return `<button type="button" class="colecao-item raridade-${item.raridade}${meu ? '' : ' bloqueado'}${usando ? ' usando' : ''}${misterio ? ' misterio' : ''}" data-item="${id}" ${meu ? '' : 'aria-disabled="true"'}>
         ${misterio ? '<span class="item-previa pacote-misterio" aria-hidden="true">?</span>' : previaDoItem(id)}
         <b>${escaparDoItem(misterio ? trDoItem('Item secreto') : trDoItem(item.nome))}</b>
@@ -276,7 +278,7 @@ async function abrirColecaoDeItens(jogo, aoMudar) {
     caixa.querySelectorAll('.colecao-pacote').forEach((botao) => botao.addEventListener('click', async () => {
       const pacote = botao.dataset.pacote;
       if (!itensDoPacote(pacote).some((id) => temItem(id))) {
-        if (typeof mostrarAvisoTrilhas === 'function') mostrarAvisoTrilhas(PACOTES_DOS_ITENS[pacote].raridade === 'secreto' ? trDoItem('Esse pacote é secreto: só a equipe do Lumina Sancti pode dar de presente.') : trDoItem('Esse item aparece nos baús. Quanto mais raro o baú, maior a chance.'));
+        if (typeof mostrarAvisoTrilhas === 'function') mostrarAvisoTrilhas(PACOTES_DOS_ITENS[pacote].raridade === 'secreto' ? trDoItem('Pacote secreto') : trDoItem('Encontre em baús'));
         return;
       }
       await equiparPacote(pacote);
@@ -287,7 +289,7 @@ async function abrirColecaoDeItens(jogo, aoMudar) {
     caixa.querySelectorAll('.colecao-item[data-item]').forEach((botao) => botao.addEventListener('click', async () => {
       const id = botao.dataset.item;
       if (!temItem(id)) {
-        if (typeof mostrarAvisoTrilhas === 'function') mostrarAvisoTrilhas(ITENS_DO_JOGO[id] && ITENS_DO_JOGO[id].raridade === 'secreto' ? trDoItem('Esse pacote é secreto: só a equipe do Lumina Sancti pode dar de presente.') : trDoItem('Esse item aparece nos baús. Quanto mais raro o baú, maior a chance.'));
+        if (typeof mostrarAvisoTrilhas === 'function') mostrarAvisoTrilhas(ITENS_DO_JOGO[id] && ITENS_DO_JOGO[id].raridade === 'secreto' ? trDoItem('Pacote secreto') : trDoItem('Encontre em baús'));
         return;
       }
       await equiparItem(id);

@@ -8,8 +8,8 @@ const IDADES_DOS_JOGOS = [
   { id: 'adultos', rotulo: 'Adultos' },
 ];
 const JOGOS = [
-  { id: 'xadrez', nome: 'Xadrez', texto: 'Jogue contra a Lumina ou com outra pessoa.', idades: ['8a12', '13a17', 'adultos'], personagem: 'lumi', icone: 'coroa', cor: '#e8d3a2', destaque: true },
-  { id: 'damas', nome: 'Damas', texto: 'Jogue damas contra a Lumina ou com outra pessoa.', idades: ['8a12', '13a17', 'adultos'], personagem: 'dom', icone: 'medalha', cor: '#d8c6f0', destaque: true },
+  { id: 'xadrez', nome: 'Xadrez', texto: '', idades: ['8a12', '13a17', 'adultos'], personagem: 'lumi', icone: 'coroa', cor: '#e8d3a2', destaque: true },
+  { id: 'damas', nome: 'Damas', texto: '', idades: ['8a12', '13a17', 'adultos'], personagem: 'dom', icone: 'medalha', cor: '#d8c6f0', destaque: true },
   { id: 'quizia', nome: 'Quiz dos Santos', texto: 'A Lumina cria perguntas sobre o santo que você quiser.', idades: ['13a17', 'adultos'], personagem: 'lumi', icone: 'lampada', cor: '#c9b8ff', comIa: true },
   { id: 'estrelas', nome: 'Acenda as estrelas', texto: 'Toque nas estrelinhas para encher o céu de luz.', idades: ['pequeninos', 'ate7'], personagem: 'lumi', icone: 'estrela', cor: '#f0cf7a' },
   { id: 'bolhas', nome: 'Bolhas de luz', texto: 'Estoure as bolhas antes que elas voem embora.', idades: ['pequeninos', 'ate7'], personagem: 'mel', icone: 'coracao', cor: '#8fd3ff' },
@@ -503,6 +503,7 @@ function mostrarListaDeJogos(opcoes) {
   const lugar = document.getElementById('jogos-container');
   if (!lugar) return;
   pararJogoAtual();
+  if (typeof definirJogoDaMusica === 'function') definirJogoDaMusica(null);
   const recordes = recordesDosJogos();
   const jogos = JOGOS.filter((jogo) => jogo.idades.includes(idadeDosJogos));
   lugar.innerHTML = `
@@ -513,7 +514,6 @@ function mostrarListaDeJogos(opcoes) {
       <div class="jogos-turma">${['mel', 'lumi', 'clara', 'dom', 'burrinho'].map((id, i) => `<button type="button" class="jogos-amigo" data-amigo="${id}" style="--i:${i}" aria-label="${PERSONAGENS_DOS_JOGOS[id].nome}">${htmlDoPersonagem(id)}<small>${PERSONAGENS_DOS_JOGOS[id].nome}</small></button>`).join('')}</div>
       <span class="jogos-morro" aria-hidden="true"></span>
       <h2 class="jogos-titulo">${textoDoJogo('Joguinhos')}</h2>
-      <p class="jogos-sub">${textoDoJogo('Brinque e aprenda com a Lumi e os amigos dela.')}</p>
     </header>
     <div class="jogos-idades" role="tablist" aria-label="${textoDoJogo('Idade')}">${idadesVisiveisDosJogos().map((idade) => `<button type="button" class="jogos-idade${idade.id === idadeDosJogos ? ' ativa' : ''}" role="tab" aria-selected="${idade.id === idadeDosJogos}" data-idade="${idade.id}">${textoDoJogo(idade.rotulo)}</button>`).join('')}</div>
     ${idadeDosJogos === 'pequeninos' ? htmlDaTrilhaDosPequeninos() : ''}
@@ -523,7 +523,7 @@ function mostrarListaDeJogos(opcoes) {
         <span class="jogo-cartao-arte">${htmlDoPersonagem(jogo.personagem)}<span class="jogo-cartao-selo">${iconeDoJogo(jogo.icone)}</span></span>
         <span class="jogo-cartao-textos">
           <strong>${textoDoJogo(jogo.nome)}</strong>
-          <small>${textoDoJogo(jogo.texto)}</small>
+          ${jogo.texto ? `<small>${textoDoJogo(jogo.texto)}</small>` : ''}
           <span class="jogo-cartao-rodape">
             <span class="jogo-cartao-estrelas" aria-label="${textoDoJogo('{n} de 3 estrelas', { n: recordes[jogo.id] || 0 })}">${[1, 2, 3].map((n) => `<i class="${(recordes[jogo.id] || 0) >= n ? 'ganha' : ''}"></i>`).join('')}</span>
             ${jogo.contraIa ? `<span class="jogo-cartao-ia">${textoDoJogo('Contra a {nome}', { nome: nomeDaIaDoJogo() })}</span>` : ''}
@@ -575,6 +575,7 @@ function comecarJogo(id, opcoes) {
   const lugar = document.getElementById('jogos-container');
   if (!jogo || !lugar) return;
   pararJogoAtual();
+  if (typeof definirJogoDaMusica === 'function') definirJogoDaMusica(id);
   let configuracao = opcoes || {};
   if (jogo.modos && configuracao.nivel === undefined) {
     if (idadeDosModosDoPastor() && !configuracao.direto) {

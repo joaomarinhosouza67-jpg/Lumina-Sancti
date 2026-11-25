@@ -10,15 +10,36 @@ function avisosFechados() {
   }
 }
 
+const ICONES_DOS_AVISOS = {
+  novidade: '<svg viewBox="0 0 100 100" width="20" height="20" aria-hidden="true"><path d="M50 4 C52 36 64 48 96 50 C64 52 52 64 50 96 C48 64 36 52 4 50 C36 48 48 36 50 4 Z" fill="currentColor"/></svg>',
+  importante: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4M12 17h.01"/></svg>',
+  manutencao: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3 17.8V21h3.2l6.3-6.3a4 4 0 0 0 5.2-5.4l-2.6 2.6-2.4-.6-.6-2.4 2.6-2.6z"/></svg>',
+  evento: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
+};
+const avisosDoSite = { lista: [], indice: 0, vistos: new Set() };
+
+function perfilDosAvisos() {
+  const m = (typeof membroAtivo !== 'undefined' && membroAtivo) || null;
+  return m && m.id ? m.id : null;
+}
+
+function registrarAviso(id, acao) {
+  const pid = perfilDosAvisos();
+  if (!pid || typeof supabaseCliente === 'undefined' || !supabaseCliente) return;
+  try { supabaseCliente.rpc('aviso_registrar', { _pid: pid, _aviso: id, _acao: acao }).then(() => {}, () => {}); } catch (e) {
+  }
+}
+
 function fecharAvisoGeral(id) {
-  const faixa = document.getElementById('aviso-geral');
-  if (faixa) faixa.hidden = true;
   try {
-    const lista = avisosFechados().filter((x) => x !== id).concat(id).slice(-20);
+    const lista = avisosFechados().filter((x) => x !== id).concat(id).slice(-40);
     localStorage.setItem(CHAVE_DOS_AVISOS_FECHADOS, JSON.stringify(lista));
   } catch (e) {
-    return;
   }
+  registrarAviso(id, 'fechou');
+  avisosDoSite.lista = avisosDoSite.lista.filter((a) => a.id !== id);
+  if (avisosDoSite.indice >= avisosDoSite.lista.length) avisosDoSite.indice = 0;
+  mostrarAvisoDaVez();
 }
 
 function linkSeguroDoAviso(link) {
@@ -30,30 +51,62 @@ function linkSeguroDoAviso(link) {
   }
 }
 
+function mostrarAvisoDaVez() {
+  const faixa = document.getElementById('aviso-geral');
+  if (!faixa) return;
+  const total = avisosDoSite.lista.length;
+  const aviso = avisosDoSite.lista[avisosDoSite.indice];
+  if (!aviso) { faixa.hidden = true; faixa.innerHTML = ''; return; }
+  const tipo = ICONES_DOS_AVISOS[aviso.tipo] ? aviso.tipo : 'novidade';
+  const link = aviso.link ? linkSeguroDoAviso(aviso.link) : '';
+  faixa.className = `aviso-geral tipo-${tipo}`;
+  faixa.innerHTML = `
+    <span class="aviso-geral-icone">${ICONES_DOS_AVISOS[tipo]}</span>
+    <div class="aviso-geral-corpo">${aviso.titulo ? '<strong class="aviso-geral-titulo"></strong>' : ''}<p class="aviso-geral-texto"></p></div>
+    ${link ? '<a class="aviso-geral-link" target="_blank" rel="noopener noreferrer"></a>' : ''}
+    ${total > 1 ? `<div class="aviso-geral-navegar"><button type="button" class="aviso-geral-seta" data-passo="-1" aria-label="${typeof tr === 'function' ? tr('Aviso anterior') : 'Aviso anterior'}"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg></button><span class="aviso-geral-contagem">${avisosDoSite.indice + 1}/${total}</span><button type="button" class="aviso-geral-seta" data-passo="1" aria-label="${typeof tr === 'function' ? tr('Próximo aviso') : 'Próximo aviso'}"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg></button></div>` : ''}
+    <button type="button" class="aviso-geral-fechar" aria-label="Fechar aviso"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>`;
+  if (aviso.titulo) faixa.querySelector('.aviso-geral-titulo').textContent = aviso.titulo;
+  faixa.querySelector('.aviso-geral-texto').textContent = aviso.texto;
+  if (link) {
+    const a = faixa.querySelector('.aviso-geral-link');
+    a.href = link;
+    a.textContent = aviso.botao || (typeof tr === 'function' ? tr('Saiba mais') : 'Saiba mais');
+    a.addEventListener('click', () => registrarAviso(aviso.id, 'clicou'));
+  }
+  faixa.querySelectorAll('.aviso-geral-seta').forEach((b) => b.addEventListener('click', () => {
+    avisosDoSite.indice = (avisosDoSite.indice + Number(b.dataset.passo) + total) % total;
+    mostrarAvisoDaVez();
+  }));
+  faixa.querySelector('.aviso-geral-fechar').addEventListener('click', () => fecharAvisoGeral(aviso.id));
+  faixa.hidden = false;
+  if (!avisosDoSite.vistos.has(aviso.id)) { avisosDoSite.vistos.add(aviso.id); registrarAviso(aviso.id, 'viu'); }
+}
+
 async function carregarAvisoGeral() {
   const faixa = document.getElementById('aviso-geral');
   if (!faixa || typeof supabaseCliente === 'undefined' || !supabaseCliente) return;
-  let aviso = null;
+  let lista = null;
   try {
-    const { data, error } = await supabaseCliente.rpc('aviso_atual');
-    if (!error) aviso = data;
+    const { data, error } = await supabaseCliente.rpc('avisos_atuais', { _pid: perfilDosAvisos() });
+    if (!error && Array.isArray(data)) lista = data;
   } catch (e) {
-    aviso = null;
+    lista = null;
   }
-  if (!aviso || !aviso.id || avisosFechados().includes(aviso.id)) {
-    faixa.hidden = true;
-    return;
+  if (!lista) {
+    try {
+      const { data, error } = await supabaseCliente.rpc('aviso_atual');
+      lista = !error && data && data.id ? [data] : [];
+    } catch (e) {
+      lista = [];
+    }
   }
-  const link = aviso.link ? linkSeguroDoAviso(aviso.link) : '';
-  faixa.innerHTML = `
-    <span class="aviso-geral-icone">${typeof icone === 'function' ? icone('estrela') : ''}</span>
-    <p class="aviso-geral-texto"></p>
-    ${link ? '<a class="aviso-geral-link" target="_blank" rel="noopener noreferrer">Saiba mais</a>' : ''}
-    <button type="button" class="aviso-geral-fechar" aria-label="Fechar aviso"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>`;
-  faixa.querySelector('.aviso-geral-texto').textContent = aviso.texto;
-  if (link) faixa.querySelector('.aviso-geral-link').href = link;
-  faixa.querySelector('.aviso-geral-fechar').addEventListener('click', () => fecharAvisoGeral(aviso.id));
-  faixa.hidden = false;
+  const fechados = avisosFechados();
+  const atual = avisosDoSite.lista[avisosDoSite.indice];
+  avisosDoSite.lista = lista.filter((a) => a && a.id && a.texto && !fechados.includes(a.id));
+  const onde = atual ? avisosDoSite.lista.findIndex((a) => a.id === atual.id) : -1;
+  avisosDoSite.indice = onde >= 0 ? onde : 0;
+  mostrarAvisoDaVez();
 }
 
 function janelaDaAdvertencia() {
@@ -265,7 +318,7 @@ function iniciarAvisos() {
   setTimeout(verificarAdvertencia, 1500);
   if (typeof supabaseCliente !== 'undefined' && supabaseCliente) {
     supabaseCliente.auth.onAuthStateChange((evento) => {
-      if (evento === 'SIGNED_IN') setTimeout(verificarAdvertencia, 800);
+      if (evento === 'SIGNED_IN') { setTimeout(verificarAdvertencia, 800); setTimeout(carregarAvisoGeral, 1200); }
     });
   }
 }

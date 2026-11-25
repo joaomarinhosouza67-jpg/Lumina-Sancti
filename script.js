@@ -1927,38 +1927,46 @@ const santosData = [
   }
 ];
 let somDeBrilhoJaTocou = false;
+let contextoDoBrilho = null;
 
-function tocarSomDeBrilho() {
-  if (somDeBrilhoJaTocou) return;
+function somDaAberturaLigado() {
+  try { return localStorage.getItem('lumina-sancti-sem-som-abertura') !== '1'; } catch (e) { return true; }
+}
+
+function tocarSomDeBrilho(inicioDaEntrada) {
+  if (somDeBrilhoJaTocou || contextoDoBrilho || !somDaAberturaLigado()) return;
+  const aTempo = () => !inicioDaEntrada || performance.now() - inicioDaEntrada < 2400;
+  if (!aTempo()) return;
   try {
     const AudioContextClasse = window.AudioContext || window.webkitAudioContext;
     if (!AudioContextClasse) return;
     const ctx = new AudioContextClasse();
-
+    contextoDoBrilho = ctx;
     const tocar = () => {
-      const agora = ctx.currentTime;
-      const frequencias = [1046.5, 1318.5, 1568.0, 2093.0];
-      frequencias.forEach((freq, i) => {
+      if (somDeBrilhoJaTocou) return;
+      if (!aTempo() || ctx.state !== 'running') { ctx.close().catch(() => {}); return; }
+      somDeBrilhoJaTocou = true;
+      const agora = ctx.currentTime + 0.01;
+      [1046.5, 1318.5, 1568.0, 2093.0].forEach((freq, i) => {
         const osc = ctx.createOscillator();
         const ganho = ctx.createGain();
         osc.type = 'sine';
         osc.frequency.value = freq;
         const inicio = agora + i * 0.07;
         ganho.gain.setValueAtTime(0, inicio);
-        ganho.gain.linearRampToValueAtTime(0.07, inicio + 0.04);
+        ganho.gain.linearRampToValueAtTime(0.07, inicio + 0.03);
         ganho.gain.exponentialRampToValueAtTime(0.0001, inicio + 1.3);
         osc.connect(ganho);
         ganho.connect(ctx.destination);
         osc.start(inicio);
         osc.stop(inicio + 1.4);
       });
-      somDeBrilhoJaTocou = true;
+      setTimeout(() => ctx.close().catch(() => {}), 2200);
     };
-
-    if (ctx.state === 'suspended') {
+    if (ctx.state === 'running') tocar();
+    else {
       ctx.resume().then(tocar).catch(() => {});
-    } else {
-      tocar();
+      setTimeout(() => { if (!somDeBrilhoJaTocou) ctx.close().catch(() => {}); }, 900);
     }
   } catch (e) {
   }

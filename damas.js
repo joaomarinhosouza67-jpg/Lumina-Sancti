@@ -184,6 +184,38 @@ function damasOctogono(cy, rx, ry) {
   return pontos;
 }
 
+function tocarCoroacao(atraso) {
+  if (typeof somDosJogosLigado === 'function' && !somDosJogosLigado()) return;
+  try {
+    const Classe = window.AudioContext || window.webkitAudioContext;
+    if (!Classe) return;
+    if (typeof contextoDeSomDosJogos !== 'undefined' && !contextoDeSomDosJogos) contextoDeSomDosJogos = new Classe();
+    const ctx = typeof contextoDeSomDosJogos !== 'undefined' && contextoDeSomDosJogos ? contextoDeSomDosJogos : new Classe();
+    const agora = ctx.currentTime + (atraso || 0) / 1000;
+    [784, 988, 1175, 1568].forEach((f, i) => {
+      const o = ctx.createOscillator(); o.type = 'triangle'; o.frequency.value = f;
+      const g = ctx.createGain(); const t = agora + i * 0.09;
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.18, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.7);
+      o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t + 0.75);
+    });
+  } catch (e) {
+  }
+}
+
+function coroarNoTabuleiro(area, casa, atraso) {
+  setTimeout(() => {
+    const alvo = area && area.querySelector(`.xadrez-casa[data-casa="${casa}"]`);
+    if (!alvo) return;
+    const efeito = document.createElement('span');
+    efeito.className = 'damas-coroacao';
+    efeito.setAttribute('aria-hidden', 'true');
+    efeito.innerHTML = '<svg viewBox="0 0 100 100" class="damas-coroa-desce"><path d="M20 72 L26 34 L42 52 L50 22 L58 52 L74 34 L80 72 Z" fill="url(#dm-ouro)" stroke="#7a560e" stroke-width="3" stroke-linejoin="round"/><circle cx="50" cy="56" r="5" fill="#e8455a"/><circle cx="26" cy="32" r="4" fill="url(#dm-ouro)"/><circle cx="50" cy="19" r="4.5" fill="url(#dm-ouro)"/><circle cx="74" cy="32" r="4" fill="url(#dm-ouro)"/></svg><span class="damas-coroacao-onda"></span>' + Array.from({ length: 10 }, (_, i) => `<i style="--a:${i * 36}deg"></i>`).join('');
+    alvo.appendChild(efeito);
+    tocarCoroacao(450);
+    setTimeout(() => efeito.remove(), 1700);
+  }, atraso || 0);
+}
+
 function damasPecaSvg(p, conjunto) {
   if (typeof garantirGradientesDoTabuleiro === 'function') garantirGradientesDoTabuleiro();
   const nome = conjunto || (typeof conjuntoDasDamas === 'function' ? conjuntoDasDamas() : 'classico');
@@ -200,7 +232,7 @@ function damasPecaSvg(p, conjunto) {
     const dentro = damasOctogono(50, 22, 19);
     const lados = damasOctogono(58, 38, 33);
     const linhas = fora.map((pt, i) => `M${pt} L${dentro[i]}`).join(' ');
-    corpo = `<path d="M${lados.join(' L')} Z" fill="${c.lado}"/><path d="M${fora.join(' L')} Z" fill="${c.corpo}" stroke="${c.borda}" stroke-width="2.5" stroke-linejoin="round"/><path d="M${dentro.join(' L')} Z" fill="none" stroke="#ffffff" stroke-opacity=".55" stroke-width="1.4"/><path d="${linhas}" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="1.1"/><path d="M34 38 L44 34" stroke="#ffffff" stroke-opacity="${c.luz}" stroke-width="3" stroke-linecap="round"/>`;
+    corpo = `<path d="M${lados.join(' L')} Z" fill="${c.lado}"/><path d="M${fora.join(' L')} Z" fill="${c.corpo}" stroke="${c.borda}" stroke-width="2.5" stroke-linejoin="round"/><path d="M${dentro.join(' L')} Z" fill="#ffffff" fill-opacity=".12" stroke="none"/><path d="M34 38 L44 34" stroke="#ffffff" stroke-opacity="${c.luz}" stroke-width="3" stroke-linecap="round"/>`;
   } else {
     corpo = `<ellipse cx="50" cy="58" rx="38" ry="33" fill="${c.lado}"/><ellipse cx="50" cy="50" rx="38" ry="33" fill="${c.corpo}" stroke="${c.borda}" stroke-width="2.5"/>`;
     if (estilo.formas === 'gotica') {
@@ -238,8 +270,8 @@ function jogoDeDamas(area) {
     falarNoJogo(textoDoJogo('Quer jogar contra a Lumina ou com outra pessoa?'));
     area.innerHTML = `
       <div class="xadrez-modos">
-        <button type="button" class="xadrez-modo" data-modo="lumina"><span class="xadrez-modo-arte">${damasPecaSvg('W')}</span><strong>${textoDoJogo('Contra a Lumina')}</strong><small>${textoDoJogo('Você joga com as claras.')}</small></button>
-        <button type="button" class="xadrez-modo" data-modo="dois"><span class="xadrez-modo-arte">${damasPecaSvg('w')}${damasPecaSvg('b')}</span><strong>${textoDoJogo('Duas pessoas')}</strong><small>${textoDoJogo('No mesmo aparelho, cada um na sua vez.')}</small></button>
+        <button type="button" class="xadrez-modo" data-modo="lumina"><span class="xadrez-modo-arte">${damasPecaSvg('W')}</span><strong>${textoDoJogo('Contra a Lumina')}</strong></button>
+        <button type="button" class="xadrez-modo" data-modo="dois"><span class="xadrez-modo-arte">${damasPecaSvg('w')}${damasPecaSvg('b')}</span><strong>${textoDoJogo('Duas pessoas')}</strong></button>
       </div>
       <label class="damas-regra"><input type="checkbox" id="damas-obrigatoria"${capturaObrigatoriaNasDamas() ? ' checked' : ''}><span>${textoDoJogo('Comer é obrigatório (regra oficial)')}</span></label>
       <button type="button" class="xadrez-personalizar" id="damas-personalizar">${textoDoJogo('Personalizar peças e tabuleiro')}</button>`;
@@ -249,7 +281,7 @@ function jogoDeDamas(area) {
     if (personalizar) personalizar.addEventListener('click', () => { if (typeof abrirColecaoDeItens === 'function') abrirColecaoDeItens('damas', escolherModo); });
     area.querySelectorAll('.xadrez-modo').forEach((b) => b.addEventListener('click', () => {
       if (b.dataset.modo === 'dois') { partida.modo = 'dois'; comecar(); return; }
-      falarNoJogo(textoDoJogo('Escolha o nível. Quanto mais difícil, mais a Lumina pensa.'));
+      falarNoJogo(textoDoJogo('Escolha o nível.'));
       area.innerHTML = `<div class="xadrez-modos">${htmlDosNiveisDosTabuleiros()}</div>`;
       area.querySelectorAll('.jogo-nivel').forEach((n) => n.addEventListener('click', () => { partida.modo = 'lumina'; partida.nivel = Number(n.dataset.nivel); jogoAtual.nivel = partida.nivel; comecar(); }));
     }));
@@ -343,7 +375,7 @@ function jogoDeDamas(area) {
     if (!proximas.length) { fimDaPartida(antes.vez); return; }
     if (partida.est.semCaptura >= 40) { terminarJogo(2, textoDoJogo('Empate: 20 lances seguidos só com damas, sem captura.')); return; }
     const virou = damasEhDama(partida.est.tab[m.para]) && !damasEhDama(antes.tab[m.de]);
-    if (virou) falarNoJogo(textoDoJogo('Virou dama!'), 'feliz');
+    if (virou) { falarNoJogo(textoDoJogo('Virou dama!'), 'feliz'); coroarNoTabuleiro(area, m.para, 260 * Math.max(1, m.caminho.length)); }
     else if (m.capturadas.length > 1) falarNoJogo(textoDoJogo('Que captura!'), 'feliz');
     else if (partida.modo === 'dois') falarNoJogo(textoDoJogo('Vez das {cor}.', { cor: textoDoJogo(partida.est.vez === 'w' ? 'claras' : 'escuras') }));
     else if (partida.est.vez === 'w') falarNoJogo(textoDoJogo(!partida.est.capturaLivre && proximas[0].capturadas.length ? 'Você tem captura obrigatória!' : 'Sua vez.'));
