@@ -7044,3 +7044,8 @@ body.no-app .footer-social, body.no-app #footer-instalar, body.no-app #nav-insta
 .presente-recebido-abrir { width: 100%; margin-top: 6px; }
 .presente-recebido-depois { border: 0; background: none; color: var(--text-muted); font-family: var(--font-text); font-weight: 700; padding: 8px; cursor: pointer; }
 @media (prefers-reduced-motion: reduce) { .presente-recebido-arte { animation: none; } }
+
+#view-home .hero-icon-container { animation: estrelaDoInicioBrilha 4.5s ease-in-out infinite; }
+#view-home .hero-icon { animation: estrelaDoInicioGira 14s linear infinite; filter: drop-shadow(0 0 14px rgba(255, 214, 120, 0.7)); }
+@media (prefers-reduced-motion: reduce) { #view-home .hero-icon { animation: none; } }
+

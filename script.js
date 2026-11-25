@@ -6002,7 +6002,9 @@ function conviteDoAppAdiado() {
 function mostrarConviteDoApp() {
   const convite = document.getElementById('convite-app');
   if (convite) convite.hidden = appJaInstalado() || conviteDoAppAdiado();
+  const mudou = document.body.classList.contains('no-app') !== appJaInstalado();
   document.body.classList.toggle('no-app', appJaInstalado());
+  if (mudou && typeof desenharColunaDireita === 'function') desenharColunaDireita();
 }
 
 function abrirJanelaDoApp() {
