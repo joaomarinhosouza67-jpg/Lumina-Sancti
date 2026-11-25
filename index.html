@@ -93,12 +93,14 @@
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           </button>
           <div id="conta-menu" class="idioma-menu">
-            <button id="conta-menu-entrar" class="conta-opcao" data-i18n="conta_entrar">Entrar / Criar conta</button>
-            <button id="conta-menu-perfil" class="conta-opcao" style="display:none;" data-i18n="conta_perfil">Meu perfil</button>
-            <button id="conta-menu-perfis" class="conta-opcao" style="display:none;">Trocar perfil</button>
-            <button id="conta-menu-config-perfis" class="conta-opcao" style="display:none;">Configurações de perfil</button>
-            <button id="conta-menu-sair" class="conta-opcao" style="display:none;" data-i18n="conta_sair">Sair</button>
-            <button id="conta-menu-sair-kids" class="conta-opcao" style="display:none;">Sair do modo infantil</button>
+            <div class="conta-menu-cabeca" id="conta-menu-cabeca" hidden></div>
+            <button id="conta-menu-entrar" class="conta-opcao"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-pessoa"></use></svg><span data-i18n="conta_entrar">Entrar / Criar conta</span></button>
+            <button id="conta-menu-perfil" class="conta-opcao" style="display:none;"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-pessoa"></use></svg><span data-i18n="conta_perfil">Meu perfil</span></button>
+            <button id="conta-menu-perfis" class="conta-opcao" style="display:none;"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-usuarios"></use></svg><span>Trocar perfil</span></button>
+            <button id="conta-menu-config-perfis" class="conta-opcao" style="display:none;"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5h0a1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span>Configurações</span></button>
+            <span class="conta-menu-linha" aria-hidden="true"></span>
+            <button id="conta-menu-sair" class="conta-opcao" style="display:none;"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-sair"></use></svg><span data-i18n="conta_sair">Sair</span></button>
+            <button id="conta-menu-sair-kids" class="conta-opcao" style="display:none;"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-sair"></use></svg><span>Sair do modo infantil</span></button>
           </div>
         </div>
       </div>
@@ -359,6 +361,18 @@
         </div>
       </section>
 
+      <section class="convite-app container" id="convite-app" hidden aria-label="Baixe o app">
+        <div class="convite-app-cartao">
+          <img class="convite-app-icone" src="icon-192.png" alt="" width="64" height="64">
+          <div class="convite-app-textos">
+            <strong>Baixe o app do Lumina Sancti</strong>
+            <span>Abra direto da tela do celular ou do computador, em tela cheia.</span>
+          </div>
+          <button type="button" class="convite-app-baixar" id="convite-app-baixar"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-baixar"></use></svg><span>Baixar o app</span></button>
+          <button type="button" class="convite-app-fechar" id="convite-app-fechar" aria-label="Agora não">&times;</button>
+        </div>
+      </section>
+
       <section class="advento-inicio container" id="advento-inicio" aria-label="Calendário do Advento" hidden></section>
 
       <section class="evento-inicio container" id="evento-inicio" aria-label="Eventos" hidden></section>
@@ -440,14 +454,14 @@
           <span class="catalogo-conta" id="catalogo-conta" aria-live="polite"></span>
         </div>
         <div class="filters-container">
-          <button class="filter-btn active" data-filter="todos" data-i18n="filtro_todos_curto">Todos</button>
+          <button class="filter-btn active" data-filter="todos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-estrela"></use></svg><span data-i18n="filtro_todos_curto">Todos</span></button>
           <button class="filter-btn" data-filter="favoritos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-coracao"></use></svg><span data-i18n="filtro_favoritos">Favoritos</span></button>
-          <button class="filter-btn" data-filter="sagrada-familia" data-i18n="filtro_sagrada_familia">Sagrada Família</button>
-          <button class="filter-btn" data-filter="arcanjos" data-i18n="filtro_arcanjos">Arcanjos</button>
-          <button class="filter-btn" data-filter="doutores" data-i18n="filtro_doutores_curto">Doutores</button>
-          <button class="filter-btn" data-filter="grandes-santos" data-i18n="filtro_grandes_santos">Grandes Santos</button>
-          <button class="filter-btn" data-filter="santos-jovens" data-i18n="filtro_santos_jovens">Santos Jovens</button>
-          <button class="filter-btn" data-filter="beatos" data-i18n="filtro_beatos">Beatos</button>
+          <button class="filter-btn" data-filter="sagrada-familia"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-usuarios"></use></svg><span data-i18n="filtro_sagrada_familia">Sagrada Família</span></button>
+          <button class="filter-btn" data-filter="arcanjos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-pomba"></use></svg><span data-i18n="filtro_arcanjos">Arcanjos</span></button>
+          <button class="filter-btn" data-filter="doutores"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-capelo"></use></svg><span data-i18n="filtro_doutores_curto">Doutores</span></button>
+          <button class="filter-btn" data-filter="grandes-santos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-coroa"></use></svg><span data-i18n="filtro_grandes_santos">Grandes Santos</span></button>
+          <button class="filter-btn" data-filter="santos-jovens"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-chama"></use></svg><span data-i18n="filtro_santos_jovens">Santos Jovens</span></button>
+          <button class="filter-btn" data-filter="beatos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-vela"></use></svg><span data-i18n="filtro_beatos">Beatos</span></button>
         </div>
 
         <div id="cards-grid" class="cards-grid">
@@ -502,7 +516,7 @@
         </button>
           <div class="lumina-topo-acoes" id="lumina-topo-acoes">
             <button type="button" class="lumina-topo-botao" id="lumina-conversas" aria-label="Conversas" hidden><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-conversa"></use></svg><span>Conversas</span></button>
-            <button type="button" class="lumina-topo-botao" id="lumina-nova" aria-label="Nova conversa" hidden><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-mais"></use></svg><span>Nova conversa</span></button>
+            <button type="button" class="lumina-topo-botao lumina-topo-nova" id="lumina-nova" aria-label="Nova conversa" hidden><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-mais"></use></svg><span>Nova conversa</span></button>
             <button type="button" class="lumina-topo-botao lumina-topo-quiz" id="lumina-quiz" aria-label="Quiz dos Santos"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-lampada"></use></svg><span>Quiz dos Santos</span></button>
           </div>
         </div>
@@ -747,6 +761,8 @@
           <li><strong>Diário de intenções:</strong> é de uso particular; no aplicativo, apenas o próprio perfil vê as suas intenções.</li>
           <li><strong>Cenáculos:</strong> os participantes de cada grupo ou conversa veem o nome, a foto, as mensagens, os áudios e as reações uns dos outros.</li>
           <li><strong>Perfil:</strong> pessoas da família, contatos aceitos e participantes do mesmo Cenáculo podem ver o perfil do titular, com nome, foto e números das trilhas.</li>
+          <li><strong>Nome de usuário:</strong> quando o titular escolhe um nome de usuário, ele fica visível para os outros adultos que usam o Serviço e pode ser usado para encontrá-lo.</li>
+          <li><strong>Encontrar amigos:</strong> quando o titular escolhe procurar nos seus contatos, o aparelho transforma os e-mails dos contatos selecionados em códigos embaralhados (resumo criptográfico) e envia apenas esses códigos, usados somente para mostrar quem já tem conta e permite ser encontrado. A agenda do aparelho não é guardada. O titular pode desligar a opção "Deixar meus amigos me acharem pelo e-mail" na tela Encontrar amigos, e perfis infantis nunca aparecem nessa busca.</li>
         </ul>
         <p>10.2. Ninguém consegue iniciar uma conversa com o titular sem a sua aceitação, e o titular pode bloquear e denunciar outros usuários a qualquer momento.</p>
 
@@ -1441,6 +1457,7 @@
             <h2 class="section-title comunidade-titulo">Comunidade</h2>
             <p class="comunidade-lema">Celebre cada passo com quem caminha com você.</p>
           </div>
+          <button type="button" class="comunidade-amigos" id="comunidade-amigos-btn"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-seguir"></use></svg><span>Encontrar amigos</span></button>
           <button type="button" class="comunidade-postar" id="comunidade-postar-btn"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-mais"></use></svg><span>Compartilhar um marco</span></button>
         </div>
         <div class="comunidade-eu" id="comunidade-eu"></div>
@@ -1671,6 +1688,7 @@
   <script src="amigos.js"></script>
   <script src="certificados.js"></script>
   <script src="criadores.js"></script>
+  <script src="encontrar-amigos.js"></script>
   <script src="planos.js"></script>
   <script src="enfeites.js"></script>
   <script src="enfeites-novos.js"></script>

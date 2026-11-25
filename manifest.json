@@ -4,6 +4,11 @@
   "description": "Biografias de santos, beatos, doutores da Igreja e anjos, com Santo do Dia, trilhas estilo Duolingo, orações, terço guiado e a assistente Lumina.",
   "start_url": "./index.html",
   "scope": "./",
+  "id": "./",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone"
+  ],
   "display": "standalone",
   "background_color": "#0a0e22",
   "theme_color": "#0a0e22",
@@ -35,7 +40,6 @@
       "purpose": "maskable"
     }
   ],
-  "id": "./",
   "categories": [
     "education",
     "books",

@@ -708,3 +708,67 @@ document.addEventListener('DOMContentLoaded', () => {
   if (typeof rodarComSeguranca === 'function') rodarComSeguranca('baus', iniciarBaus);
   else iniciarBaus();
 });
+
+const perfisComPresentesConferidos = {};
+
+function nomeDoPresenteRecebido(p) {
+  const n = Number(p.quantidade) || 1;
+  if (String(p.tipo).startsWith('bau_')) return `${n} × ${nomeDoBau(p.tipo.replace('bau_', ''))}`;
+  if (p.tipo === 'fe') return trDoBau('{n} de Fé', { n });
+  const frasco = FRASCOS_DE_AZEITE[p.tipo];
+  return `${n} × ${trDoBau(frasco ? frasco.nome : p.tipo)}`;
+}
+
+function mostrarPresentesRecebidos(lista) {
+  if (!lista.length || document.getElementById('presente-recebido')) return;
+  const primeiroBau = lista.find((p) => String(p.tipo).startsWith('bau_'));
+  const motivos = [...new Set(lista.map((p) => p.motivo).filter(Boolean))];
+  const fundo = document.createElement('div');
+  fundo.id = 'presente-recebido';
+  fundo.className = 'presente-recebido-fundo';
+  fundo.innerHTML = `<div class="presente-recebido" role="dialog" aria-modal="true" aria-labelledby="presente-recebido-titulo">
+    <div class="presente-recebido-arte">${primeiroBau ? bauEm3d(primeiroBau.tipo.replace('bau_', ''), 150) : svgDoFrasco(lista[0].tipo === 'fe' ? 'fe_dobro' : lista[0].tipo, 96)}</div>
+    <h3 id="presente-recebido-titulo">${escaparDoBau(trDoBau('Você ganhou um presente da equipe!'))}</h3>
+    <ul class="presente-recebido-lista">${lista.map((p) => `<li>${escaparDoBau(nomeDoPresenteRecebido(p))}</li>`).join('')}</ul>
+    ${motivos.length ? `<p class="presente-recebido-motivo">${motivos.map((m) => `“${escaparDoBau(m)}”`).join('<br>')}</p>` : ''}
+    <button type="button" class="bau-botao presente-recebido-abrir">${escaparDoBau(trDoBau(primeiroBau ? 'Abrir agora' : 'Ver na mochila'))}</button>
+    <button type="button" class="presente-recebido-depois">${escaparDoBau(trDoBau('Depois'))}</button>
+  </div>`;
+  document.body.appendChild(fundo);
+  requestAnimationFrame(() => fundo.classList.add('aberto'));
+  if (typeof somDoBauNovo === 'function') somDoBauNovo('raro');
+  const fechar = () => fundo.remove();
+  fundo.querySelector('.presente-recebido-depois').addEventListener('click', fechar);
+  fundo.querySelector('.presente-recebido-abrir').addEventListener('click', () => {
+    fechar();
+    if (typeof abrirTrilhas === 'function') abrirTrilhas();
+    setTimeout(() => {
+      if (typeof atualizarCaixasDoDia === 'function') atualizarCaixasDoDia();
+      const mochila = document.getElementById('mochila-cartao');
+      if (mochila) mochila.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 900);
+  });
+}
+
+async function verificarPresentesRecebidos() {
+  const perfil = typeof membroAtivo !== 'undefined' ? membroAtivo : null;
+  if (!perfil || !perfil.id || typeof supabaseCliente === 'undefined' || !supabaseCliente) return;
+  if (typeof contaLogada === 'function' && !contaLogada()) return;
+  if (document.body.classList.contains('intro-ativa') || document.getElementById('presente-recebido')) return;
+  const ultimo = perfisComPresentesConferidos[perfil.id] || 0;
+  if (Date.now() - ultimo < 45000) return;
+  perfisComPresentesConferidos[perfil.id] = Date.now();
+  try {
+    const { data, error } = await supabaseCliente.rpc('meus_presentes_novos', { _pid: perfil.id });
+    if (!error && Array.isArray(data) && data.length) {
+      mostrarPresentesRecebidos(data);
+      if (typeof atualizarCaixasDoDia === 'function') atualizarCaixasDoDia();
+    }
+  } catch (e) {
+  }
+}
+
+if (typeof document !== 'undefined' && typeof window !== 'undefined' && document.addEventListener) {
+  setInterval(verificarPresentesRecebidos, 3000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) { const p = typeof membroAtivo !== 'undefined' && membroAtivo; if (p) perfisComPresentesConferidos[p.id] = 0; verificarPresentesRecebidos(); } });
+}

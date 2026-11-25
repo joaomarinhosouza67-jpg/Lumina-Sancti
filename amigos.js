@@ -536,6 +536,7 @@ async function abrirPerfilPublico(idDoPerfil) {
         </div>
         <div class="perfil-publico-topo">
           <strong class="perfil-publico-nome" data-perfil="${escaparTexto(dados.perfil_id || '')}">${escaparTexto(dados.nome)}</strong>
+          <small class="perfil-publico-usuario" id="perfil-publico-usuario" translate="no"></small>
           <small>${desdeQuando(dados.desde)}</small>
           <div class="perfil-social" id="perfil-publico-social"></div>
           <div class="perfil-selos">
@@ -1670,6 +1671,7 @@ async function renderizarMeuPerfil() {
       </div>
       <div class="perfil-publico-topo">
         <strong class="perfil-publico-nome" id="meu-perfil-nome" translate="no" data-perfil="${perfil ? escaparTexto(perfil.id) : ''}">${escaparTexto(nome)}</strong>
+        ${adulto ? '<div class="meu-usuario" id="meu-usuario"></div>' : ''}
         <small>${perfil ? (nomeDaConta ? tr(adulto ? 'Perfil de adulto na conta de {nome}' : 'Perfil de criança na conta de {nome}', { nome: escaparTexto(nomeDaConta) }) : tr(adulto ? 'Perfil de adulto' : 'Perfil de criança')) : 'Escolha um perfil para ver as suas estatísticas'}</small>
         <small id="meu-perfil-desde"></small>
         ${adulto ? '<div class="perfil-social" id="meu-perfil-social"></div>' : ''}

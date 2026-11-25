@@ -2740,7 +2740,7 @@ function atualizarInterfaceDeConta() {
   const infantil = logado && document.body.classList.contains('modo-kids');
   const mostrar = (id, visivel) => {
     const botao = document.getElementById(id);
-    if (botao) botao.style.display = visivel ? 'block' : 'none';
+    if (botao) botao.style.display = visivel ? '' : 'none';
   };
   mostrar('conta-menu-entrar', !logado);
   mostrar('conta-menu-perfil', logado && !infantil);
@@ -2748,6 +2748,7 @@ function atualizarInterfaceDeConta() {
   mostrar('conta-menu-perfis', logado && !infantil);
   mostrar('conta-menu-config-perfis', logado && !infantil);
   mostrar('conta-menu-sair-kids', infantil);
+  preencherCabecaDoMenuDaConta(logado && !infantil);
 
   const precisaLogin = document.getElementById('lumina-precisa-login');
   const chatArea = document.getElementById('lumina-chat-area');
@@ -3301,15 +3302,38 @@ function historicoDaConversaComLumina(area) {
     .slice(-6);
 }
 
-const FRASES_DA_LUMINA_PENSANDO = ['Pensando', 'Procurando na vida dos santos', 'Preparando a resposta'];
+let FRASES_DA_LUMINA_PENSANDO = ['Pensando'];
 let temporizadorDaLuminaPensando = null;
+const CUMPRIMENTOS_DA_LUMINA = /^(oi+|ola|olá|oie|eai|e ai|e aí|bom dia|boa tarde|boa noite|tudo bem|td bem|obrigad[oa]|valeu|amem|amém|hello|hi|hey|thanks|thank you|hola|buenos dias|buenas|gracias)\b/i;
 
-function tempoDaLuminaPensar() {
-  return 2000 + Math.round(Math.random() * 1000);
+function luminaSoCumprimento(pergunta) {
+  const texto = String(pergunta || '').trim();
+  return texto.length <= 28 && CUMPRIMENTOS_DA_LUMINA.test(texto);
 }
 
-function criarIndicadorPensando() {
+function frasesParaAPergunta(pergunta) {
+  const texto = typeof normalizarBuscaDoCatalogo === 'function' ? normalizarBuscaDoCatalogo(pergunta) : String(pergunta || '').toLowerCase();
+  if (luminaSoCumprimento(pergunta)) return ['Pensando'];
+  let citados = [];
+  try { citados = typeof santosCitadosPelaLumina === 'function' ? santosCitadosPelaLumina(pergunta) : []; } catch (e) {
+    citados = [];
+  }
+  if (citados.length) return [tr('Lendo sobre {nome}', { nome: citados[0].nome }), 'Preparando a resposta'];
+  if (/\b(oracao|oracoes|rezar|reza|terco|rosario|novena|ladainha|pai nosso|ave maria)\b/.test(texto)) return ['Buscando a oração', 'Preparando a resposta'];
+  if (/\b(biblia|evangelho|versiculo|salmo|apostolo|profeta|genesis|apocalipse)\b/.test(texto)) return ['Abrindo a Bíblia', 'Preparando a resposta'];
+  if (/\b(missa|sacramento|confissao|batismo|eucaristia|crisma|catecismo|igreja|papa|pecado)\b/.test(texto)) return ['Consultando o Catecismo', 'Preparando a resposta'];
+  if (/\b(santo|santa|sao|beato|beata|martir|padroeir)/.test(texto)) return ['Procurando na vida dos santos', 'Preparando a resposta'];
+  return ['Pensando', 'Preparando a resposta'];
+}
+
+function tempoDaLuminaPensar(pergunta) {
+  if (luminaSoCumprimento(pergunta)) return 500 + Math.round(Math.random() * 300);
+  return 1100 + Math.round(Math.random() * 600);
+}
+
+function criarIndicadorPensando(pergunta) {
   esconderIndicadorPensando();
+  FRASES_DA_LUMINA_PENSANDO = frasesParaAPergunta(pergunta);
   const area = document.getElementById('lumina-resposta-area');
   if (!area) return;
   const bolha = document.createElement('div');
@@ -3328,7 +3352,9 @@ function criarIndicadorPensando() {
     void texto.offsetWidth;
     texto.textContent = tr(FRASES_DA_LUMINA_PENSANDO[frase]);
     texto.classList.add('trocando');
-  }, 1300);
+  }, 1400);
+  const primeira = bolha.querySelector('.lumina-pensando-texto');
+  if (primeira) primeira.textContent = tr(FRASES_DA_LUMINA_PENSANDO[0]);
 }
 function esconderIndicadorPensando() {
   clearInterval(temporizadorDaLuminaPensando);
@@ -3343,14 +3369,14 @@ function efeitoMaquinaDeEscrever(elemento, textoCompleto) {
     const duracao = Math.min(1500, Math.max(300, texto.length * 2));
     const inicio = Date.now();
     elemento.textContent = '';
-    elemento.classList.add('cursor-digitando');
+    elemento.classList.add('cursor-digitando', 'escrevendo');
     function escrever() {
       const fracao = Math.min(1, (Date.now() - inicio) / duracao);
       elemento.textContent = texto.slice(0, Math.ceil(texto.length * fracao));
       if (fracao < 1) {
         setTimeout(escrever, 16);
       } else {
-        elemento.classList.remove('cursor-digitando');
+        elemento.classList.remove('cursor-digitando', 'escrevendo');
         resolve();
       }
     }
@@ -3384,7 +3410,7 @@ async function enviarPerguntaLumina() {
   areaResposta.appendChild(blocoPergunta);
   areaResposta.scrollTop = areaResposta.scrollHeight;
 
-  criarIndicadorPensando();
+  criarIndicadorPensando(pergunta);
 
   try {
     const { data: sessaoDaPergunta } = await supabaseCliente.auth.getSession();
@@ -3395,7 +3421,7 @@ async function enviarPerguntaLumina() {
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ pergunta, historico, idioma: idiomaAtual, perfil: perfilDaPergunta ? perfilDaPergunta.id : null }),
       }),
-      esperarDaLumina(tempoDaLuminaPensar()),
+      esperarDaLumina(tempoDaLuminaPensar(pergunta)),
     ]);
     const dados = await resp.json().catch(() => null);
 
@@ -3459,8 +3485,8 @@ async function responderComRespostaPronta(item) {
   blocoPergunta.className = 'lumina-mensagem lumina-mensagem-pergunta';
   blocoPergunta.textContent = pergunta;
   area.appendChild(blocoPergunta);
-  criarIndicadorPensando();
-  await esperarDaLumina(tempoDaLuminaPensar());
+  criarIndicadorPensando(pergunta);
+  await esperarDaLumina(tempoDaLuminaPensar(pergunta));
   esconderIndicadorPensando();
   const blocoResposta = document.createElement('div');
   blocoResposta.className = 'lumina-mensagem';
@@ -5957,7 +5983,7 @@ function iniciarNavegacaoDoMenuLateral() {
 let pedidoDeInstalacao = null;
 
 function appJaInstalado() {
-  const standalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+  const standalone = window.matchMedia && (window.matchMedia('(display-mode: standalone)').matches || window.matchMedia('(display-mode: window-controls-overlay)').matches);
   return !!standalone || (typeof navigator !== 'undefined' && navigator.standalone === true);
 }
 
@@ -5966,7 +5992,48 @@ function aparelhoApple() {
   return /iphone|ipad|ipod/i.test(agente) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 }
 
+const CHAVE_DO_CONVITE_DO_APP = 'lumina-sancti-convite-app';
+const CHAVE_DA_JANELA_DO_APP = 'lumina-sancti-janela-do-app';
+
+function conviteDoAppAdiado() {
+  try { return Number(localStorage.getItem(CHAVE_DO_CONVITE_DO_APP) || 0) > Date.now(); } catch (e) { return false; }
+}
+
+function mostrarConviteDoApp() {
+  const convite = document.getElementById('convite-app');
+  if (convite) convite.hidden = appJaInstalado() || conviteDoAppAdiado();
+  document.body.classList.toggle('no-app', appJaInstalado());
+}
+
+function abrirJanelaDoApp() {
+  if (appJaInstalado() || document.getElementById('janela-do-app') || (typeof navigator !== 'undefined' && navigator.webdriver)) return;
+  try { if (localStorage.getItem(CHAVE_DA_JANELA_DO_APP)) return; localStorage.setItem(CHAVE_DA_JANELA_DO_APP, String(Date.now())); } catch (e) {
+    return;
+  }
+  const fundo = document.createElement('div');
+  fundo.id = 'janela-do-app';
+  fundo.className = 'janela-do-app-fundo';
+  fundo.innerHTML = `<div class="janela-do-app" role="dialog" aria-modal="true" aria-labelledby="janela-do-app-titulo">
+    <img src="icon-192.png" alt="" width="84" height="84" class="janela-do-app-icone">
+    <h3 id="janela-do-app-titulo">${tr('Baixe o app do Lumina Sancti')}</h3>
+    <ul>
+      <li>${tr('Abre direto da tela do celular ou do computador')}</li>
+      <li>${tr('Tela cheia, sem a barra do navegador')}</li>
+      <li>${tr('Lembretes da ofensiva e da Hora da Misericórdia')}</li>
+    </ul>
+    <button type="button" class="convite-app-baixar janela-do-app-baixar">${tr('Baixar o app')}</button>
+    <button type="button" class="janela-do-app-depois">${tr('Agora não')}</button>
+  </div>`;
+  document.body.appendChild(fundo);
+  requestAnimationFrame(() => fundo.classList.add('aberta'));
+  const fechar = () => fundo.remove();
+  fundo.querySelector('.janela-do-app-depois').addEventListener('click', fechar);
+  fundo.addEventListener('click', (e) => { if (e.target === fundo) fechar(); });
+  fundo.querySelector('.janela-do-app-baixar').addEventListener('click', () => { fechar(); instalarApp(); });
+}
+
 function atualizarBotoesDeInstalar() {
+  mostrarConviteDoApp();
   const mostrar = !appJaInstalado();
   ['nav-instalar', 'footer-instalar'].forEach((id) => {
     const botao = document.getElementById(id);
@@ -6010,10 +6077,25 @@ function iniciarInstalacaoDoApp() {
     pedidoDeInstalacao = null;
     atualizarBotoesDeInstalar();
   });
-  ['nav-instalar', 'footer-instalar'].forEach((id) => {
+  ['nav-instalar', 'footer-instalar', 'convite-app-baixar'].forEach((id) => {
     const botao = document.getElementById(id);
     if (botao) botao.addEventListener('click', instalarApp);
   });
+  const fecharConvite = document.getElementById('convite-app-fechar');
+  if (fecharConvite) fecharConvite.addEventListener('click', () => {
+    try { localStorage.setItem(CHAVE_DO_CONVITE_DO_APP, String(Date.now() + 3 * 24 * 60 * 60 * 1000)); } catch (e) {
+    }
+    mostrarConviteDoApp();
+  });
+  if (window.matchMedia) {
+    ['(display-mode: standalone)', '(display-mode: window-controls-overlay)'].forEach((modo) => {
+      const consulta = window.matchMedia(modo);
+      if (consulta && consulta.addEventListener) consulta.addEventListener('change', atualizarBotoesDeInstalar);
+    });
+  }
+  setInterval(() => {
+    if (typeof sessaoAtual !== 'undefined' && sessaoAtual && !appJaInstalado() && !document.body.classList.contains('modo-kids') && !document.body.classList.contains('intro-ativa') && !document.querySelector('.search-modal.active, #certificado-janela, #recado-enfeite, #bau-janela')) abrirJanelaDoApp();
+  }, 8000);
   const janela = document.getElementById('instalar-modal');
   const fechar = document.getElementById('instalar-fechar');
   if (fechar) fechar.addEventListener('click', () => janela.classList.remove('active'));
@@ -6219,4 +6301,37 @@ function desenharPerfilNoMenu() {
   lugar.innerHTML = `<button type="button" class="sidebar-perfil-eu" id="sidebar-perfil-eu">${avatar}<span class="sidebar-perfil-textos"><b translate="no">${nome}</b><small>${tr('Meu perfil')}</small></span></button><button type="button" class="sidebar-perfil-trocar" id="sidebar-perfil-trocar">${tr('Trocar perfil')}</button>`;
   lugar.querySelector('#sidebar-perfil-eu').addEventListener('click', () => { if (typeof closeSidebar === 'function') closeSidebar(); const botao = document.getElementById('conta-menu-perfil'); if (botao) botao.click(); });
   lugar.querySelector('#sidebar-perfil-trocar').addEventListener('click', () => { if (typeof closeSidebar === 'function') closeSidebar(); if (typeof abrirSelecaoDePerfis === 'function') abrirSelecaoDePerfis('inicio'); });
+}
+
+let usuarioDoMenuDaConta = { perfil: null, usuario: '' };
+
+function preencherCabecaDoMenuDaConta(mostrarCabeca) {
+  const cabeca = document.getElementById('conta-menu-cabeca');
+  if (!cabeca) return;
+  const membro = typeof membroAtivo !== 'undefined' && membroAtivo ? membroAtivo : null;
+  if (!mostrarCabeca || !membro) { cabeca.hidden = true; cabeca.innerHTML = ''; return; }
+  const usuario = usuarioDoMenuDaConta.perfil === membro.id ? usuarioDoMenuDaConta.usuario : '';
+  cabeca.hidden = false;
+  cabeca.innerHTML = `${typeof desenharAvatar === 'function' ? desenharAvatar(membro.avatar, membro.fotoUrl || '', 'pequeno') : ''}<span class="conta-menu-quem"><strong translate="no">${escaparTexto(membro.nome || '')}</strong>${usuario ? `<small translate="no">@${escaparTexto(usuario)}</small>` : ''}</span>`;
+  if (usuarioDoMenuDaConta.perfil !== membro.id && membro.tipo === 'adulto' && typeof supabaseCliente !== 'undefined' && supabaseCliente) {
+    usuarioDoMenuDaConta = { perfil: membro.id, usuario: '' };
+    supabaseCliente.rpc('meu_usuario', { _pid: membro.id }).then(({ data }) => {
+      if (data && data.usuario && usuarioDoMenuDaConta.perfil === membro.id) { usuarioDoMenuDaConta.usuario = data.usuario; preencherCabecaDoMenuDaConta(true); }
+    }, () => {});
+  }
+}
+
+const SELETOR_DO_TOQUE = '.filter-btn, .card, .sdd-card, .atalho-cartao, .jogo-cartao, .perfil-cartao, .barra-app-botao, .conta-opcao, .lumina-pronta, .amigos-opcao';
+if (typeof document !== 'undefined' && document.addEventListener) {
+  document.addEventListener('pointerdown', (evento) => {
+    const alvo = evento.target && evento.target.closest ? evento.target.closest(SELETOR_DO_TOQUE) : null;
+    if (!alvo) return;
+    alvo.classList.remove('tocado');
+    void alvo.offsetWidth;
+    alvo.classList.add('tocado');
+    setTimeout(() => alvo.classList.remove('tocado'), 500);
+  }, { passive: true });
+  document.addEventListener('click', (evento) => {
+    if (evento.target && evento.target.closest && evento.target.closest('#conta-btn')) preencherCabecaDoMenuDaConta(!!sessaoAtual && !document.body.classList.contains('modo-kids'));
+  }, true);
 }
