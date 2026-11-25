@@ -25,15 +25,15 @@ const FUNDOS_DA_CONVERSA = [
 ];
 
 const REGRAS_DOS_CENACULOS = `
-  <ol class="cenaculo-regras">
-    <li>Os Cenáculos são só para adultos (18 anos ou mais). Perfis infantis não têm acesso.</li>
-    <li>Trate todos com respeito e caridade. Não é permitido xingar, ofender, discriminar, espalhar mentiras, fazer propaganda, pedir dinheiro ou enviar conteúdo impróprio.</li>
-    <li>As conversas não são secretas: a equipe do Lumina Sancti (criadores e programadores) pode ler as mensagens e ouvir os áudios dos cenáculos, para proteger os participantes e investigar denúncias.</li>
-    <li>Se alguém desrespeitar as regras, denuncie a mensagem ou bloqueie a pessoa. A equipe pode apagar mensagens e suspender um perfil ou a conta inteira, por um tempo ou por tempo indeterminado, enquanto investiga.</li>
-    <li>Um perfil suspenso não pode escrever nos cenáculos nem usar as trilhas, mas nada dele é apagado. Quando a conta inteira é suspensa, isso vale para todos os perfis dela.</li>
-    <li>As reuniões por vídeo acontecem no Google Meet, fora do Lumina Sancti. O Lumina Sancti não grava, não guarda e não se responsabiliza pelo que acontece nas chamadas do Meet.</li>
-    <li>Não compartilhe dados pessoais seus ou de outras pessoas (endereço, documentos, telefone), principalmente de crianças.</li>
-  </ol>`;
+  <ul class="cenaculo-regras">
+    <li>Trate todos com respeito e caridade, como irmãos em Cristo.</li>
+    <li>Nada de ofensas, assédio, conteúdo impróprio, golpes, propaganda ou pedidos de dinheiro.</li>
+    <li>Não compartilhe dados pessoais, seus ou de outras pessoas, e nunca de crianças.</li>
+    <li>As conversas não são secretas: a equipe pode ler mensagens e ouvir áudios para proteger as pessoas e investigar denúncias.</li>
+    <li>Viu algo errado? Denuncie a mensagem ou bloqueie a pessoa. Quem quebrar as regras pode ser advertido, suspenso ou excluído.</li>
+    <li>Qualquer forma de abuso ou exploração de crianças é proibida e é levada às autoridades.</li>
+  </ul>
+  <a class="cenaculo-regras-completas" href="/regras-da-comunidade" target="_blank" rel="noopener">Ler as regras completas</a>`;
 
 const ERROS_DO_CENACULO = {
   account_suspended: 'Sua conta está suspensa. Enquanto isso, os Cenáculos e as trilhas ficam parados, mas nada é apagado.',
@@ -66,6 +66,13 @@ const ERROS_DO_CENACULO = {
 
 let suspensaoAtual = null;
 let contaEhDaEquipe = false;
+let cenaculosLiberados = false;
+let cenaculosConferidos = false;
+
+function aplicarCenaculosLiberados() {
+  if (typeof document === 'undefined' || !document.body) return;
+  document.body.classList.toggle('cenaculos-liberados', !!cenaculosLiberados);
+}
 let cenaculoAberto = null;
 let mensagensDoCenaculo = [];
 let canalDoCenaculo = null;
@@ -207,17 +214,24 @@ async function atualizarSituacaoDaConta() {
   if (typeof contaLogada !== 'function' || !contaLogada()) {
     suspensaoAtual = null;
     contaEhDaEquipe = false;
+    cenaculosLiberados = false;
+    cenaculosConferidos = true;
+    aplicarCenaculosLiberados();
     return;
   }
   try {
-    const [suspensao, equipe] = await Promise.all([
+    const [suspensao, equipe, liberados] = await Promise.all([
       supabaseCliente.rpc('minha_suspensao', { _pid: (typeof membroAtivo !== 'undefined' && membroAtivo && membroAtivo.id) || null }),
       supabaseCliente.rpc('equipe_membro'),
+      supabaseCliente.rpc('cenaculos_liberado'),
     ]);
     suspensaoAtual = suspensao && !suspensao.error && suspensao.data ? suspensao.data : null;
     contaEhDaEquipe = !!(equipe && !equipe.error && equipe.data === true);
+    cenaculosLiberados = !!(liberados && !liberados.error && liberados.data === true);
+    cenaculosConferidos = true;
   } catch (e) {
   }
+  aplicarCenaculosLiberados();
   if (suspensaoAtual) {
     if (typeof pedidosRecebidos !== 'undefined') pedidosRecebidos = [];
     if (typeof atualizarSelosDePedidos === 'function') atualizarSelosDePedidos();
@@ -319,7 +333,12 @@ async function garantirAceite() {
   return pedirAceite();
 }
 
-function abrirCenaculos() {
+function abrirCenaculos(jaConferiu) {
+  if (typeof contaLogada === 'function' && contaLogada() && !cenaculosLiberados) {
+    if (jaConferiu !== true && !cenaculosConferidos) { atualizarSituacaoDaConta().then(() => abrirCenaculos(true)); return; }
+    if (typeof abrirJogos === 'function') abrirJogos();
+    return;
+  }
   if (typeof contaLogada !== 'function' || !contaLogada()) {
     avisoDoCenaculo('Entre na sua conta para participar dos Cenáculos.');
     if (typeof irParaLogin === 'function') irParaLogin();
@@ -630,7 +649,7 @@ function blocoDeAceite(idDoCampo) {
     </div>
     <label class="perfil-consentimento cenaculo-aceite">
       <input type="checkbox" id="${idDoCampo}">
-      <span>Declaro que tenho 18 anos ou mais e aceito as Regras dos Cenáculos e a <button type="button" class="cenaculo-link-privacidade">Política de Privacidade</button>.</span>
+      <span>Declaro que tenho 18 anos ou mais e aceito as <a href="/regras-da-comunidade" target="_blank" rel="noopener">Regras da Comunidade e dos Cenáculos</a> e a <button type="button" class="cenaculo-link-privacidade">Política de Privacidade</button>.</span>
     </label>`;
 }
 

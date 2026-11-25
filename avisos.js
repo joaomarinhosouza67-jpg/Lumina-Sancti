@@ -220,6 +220,7 @@ const DESTINOS_DA_NOVIDADE = {
   oracoes: 'Ver as orações',
   cenaculos: 'Abrir os Cenáculos',
   comunidade: 'Ver a Comunidade',
+  jogos: 'Ver os joguinhos',
 };
 
 function irParaDestinoDaNovidade(destino) {
@@ -228,6 +229,7 @@ function irParaDestinoDaNovidade(destino) {
   else if (destino === 'oracoes') mudarDeView('view-oracoes');
   else if (destino === 'cenaculos' && typeof abrirCenaculos === 'function') abrirCenaculos();
   else if (destino === 'comunidade' && typeof abrirComunidade === 'function') abrirComunidade();
+  else if (destino === 'jogos' && typeof abrirJogos === 'function') abrirJogos();
 }
 
 function janelaDaNovidade() {

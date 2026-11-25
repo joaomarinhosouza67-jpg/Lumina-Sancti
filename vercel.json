@@ -1,19 +1,60 @@
 {
+  "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/termos",
+      "destination": "/termos-de-uso",
+      "permanent": true
+    },
+    {
+      "source": "/termos.html",
+      "destination": "/termos-de-uso",
+      "permanent": true
+    },
+    {
+      "source": "/regras",
+      "destination": "/regras-da-comunidade",
+      "permanent": true
+    },
+    {
+      "source": "/assinatura",
+      "destination": "/termos-da-assinatura",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/fundo-login(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=604800" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800"
+        }
       ]
     },
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains" },
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "Permissions-Policy", "value": "camera=(self), microphone=(self), geolocation=(self), payment=()" },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(self), microphone=(self), geolocation=(self), payment=()"
+        },
         {
           "key": "Content-Security-Policy",
           "value": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval' https://cdn.jsdelivr.net https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://upload.wikimedia.org https://*.wikimedia.org https://*.wikipedia.org https://upvualhciytwypmwtpye.supabase.co https://*.giphy.com https://i.ytimg.com; connect-src 'self' https://lumina-ia.5dh6gl58df5c.workers.dev https://upvualhciytwypmwtpye.supabase.co wss://upvualhciytwypmwtpye.supabase.co https://*.wikipedia.org https://*.wikimedia.org https://api.giphy.com https://cdn.jsdelivr.net; frame-src https://challenges.cloudflare.com https://www.youtube-nocookie.com https://player.vimeo.com; worker-src 'self'; manifest-src 'self'; media-src 'self' blob: https://upvualhciytwypmwtpye.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"

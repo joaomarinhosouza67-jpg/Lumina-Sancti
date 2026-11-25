@@ -6885,3 +6885,27 @@ option { background: #141b38; color: #e8ecf6; }
 @media (prefers-reduced-motion: reduce) { .bau-palco.subindo .bau-desenho, .bau-palco.subiu .bau-desenho, .bau-titulo.mudou { animation: none; } }
 html, body, * { scrollbar-width: none !important; }
 html::-webkit-scrollbar, body::-webkit-scrollbar, *::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
+
+body:not(.cenaculos-liberados) [data-destino="cenaculos"], body:not(.cenaculos-liberados) #nav-cenaculos, body:not(.cenaculos-liberados) #perfil-publico-conversar, body:not(.cenaculos-liberados) #perfil-publico-audio, body:not(.cenaculos-liberados) #perfil-publico-pedido, body:not(.cenaculos-liberados) #perfil-publico-meu-codigo, body:not(.cenaculos-liberados) #perfeita-enviar { display: none !important; }
+body:not(.cenaculos-liberados) .barra-app .barra-app-botao.so-computador[data-destino="jogos"] { display: flex; }
+
+.selo-criador { position: relative; display: inline-flex; align-items: center; gap: 5px; height: 22px; padding: 0 10px 0 8px; margin-left: 6px; vertical-align: middle; overflow: hidden; border-radius: 999px; border: 1px solid rgba(61, 255, 122, 0.75); background: #021a0c; box-shadow: 0 0 10px rgba(61, 255, 122, 0.45), inset 0 0 10px rgba(61, 255, 122, 0.25); color: #b9ffcf; font-family: ui-monospace, 'Cascadia Code', Consolas, monospace; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; line-height: 1; }
+.selo-criador b { position: relative; z-index: 1; font-weight: 800; text-shadow: 0 0 6px rgba(61, 255, 122, 0.9); }
+.selo-criador-icone { position: relative; z-index: 1; width: 13px; height: 13px; color: #3dff7a; filter: drop-shadow(0 0 4px rgba(61, 255, 122, 0.9)); flex: none; }
+.selo-criador-chuva { position: absolute; inset: 0; pointer-events: none; -webkit-mask: linear-gradient(180deg, transparent, #000 30%, #000 70%, transparent); mask: linear-gradient(180deg, transparent, #000 30%, #000 70%, transparent); }
+.selo-criador-chuva i { position: absolute; top: 0; transform: translate(-50%, -50%); font-style: normal; font-size: 7px; line-height: 7px; white-space: pre; color: rgba(61, 255, 122, 0.55); animation-name: seloCriadorChuva; animation-timing-function: linear; animation-iteration-count: infinite; }
+.selo-criador.grande { height: 30px; margin: 6px 0 2px; padding: 0 14px 0 11px; gap: 7px; font-size: 0.82rem; }
+.selo-criador.grande .selo-criador-icone { width: 16px; height: 16px; }
+.selo-criador.grande .selo-criador-chuva i { font-size: 9px; line-height: 9px; }
+@keyframes seloCriadorChuva { from { transform: translate(-50%, -50%); } to { transform: translate(-50%, 0); } }
+.perfil-publico-topo .selo-criador.grande { display: flex; width: max-content; margin-left: auto; margin-right: auto; }
+.perfil-publico-capa.capa-criador { background: #02130a !important; box-shadow: inset 0 0 0 1px rgba(61, 255, 122, 0.45), 0 0 24px rgba(61, 255, 122, 0.18); }
+.capa-criador-chuva { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: inherit; pointer-events: none; z-index: 0; }
+.perfil-publico-capa.capa-criador .enfeite-faixa { display: none; }
+.perfil-publico-capa.capa-criador .perfil-publico-foto { z-index: 1; }
+@media (prefers-reduced-motion: reduce) { .selo-criador-chuva i { animation: none; } }
+
+.cenaculo-regras-completas { display: inline-block; margin-top: 8px; color: #f0cf7a; font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
+.footer-documentos { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 16px; max-width: 640px; margin: 14px auto 4px; font-size: 0.85rem; }
+.footer-documentos a { color: var(--text-muted); text-decoration: none; }
+.footer-documentos a:hover { color: var(--primary-color); text-decoration: underline; }

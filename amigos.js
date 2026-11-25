@@ -535,7 +535,7 @@ async function abrirPerfilPublico(idDoPerfil) {
           <span class="perfil-publico-foto">${avatarDoCenaculo(dados.avatar, foto, 'grande')}</span>
         </div>
         <div class="perfil-publico-topo">
-          <strong class="perfil-publico-nome">${escaparTexto(dados.nome)}</strong>
+          <strong class="perfil-publico-nome" data-perfil="${escaparTexto(dados.perfil_id || '')}">${escaparTexto(dados.nome)}</strong>
           <small>${desdeQuando(dados.desde)}</small>
           <div class="perfil-social" id="perfil-publico-social"></div>
           <div class="perfil-selos">
@@ -1669,7 +1669,7 @@ async function renderizarMeuPerfil() {
         ${perfil ? `<button type="button" class="meu-perfil-camera" id="meu-perfil-foto" aria-label="Trocar a foto do perfil">${iconeDoCenaculo('camera')}</button>` : ''}
       </div>
       <div class="perfil-publico-topo">
-        <strong class="perfil-publico-nome" id="meu-perfil-nome" translate="no">${escaparTexto(nome)}</strong>
+        <strong class="perfil-publico-nome" id="meu-perfil-nome" translate="no" data-perfil="${perfil ? escaparTexto(perfil.id) : ''}">${escaparTexto(nome)}</strong>
         <small>${perfil ? (nomeDaConta ? tr(adulto ? 'Perfil de adulto na conta de {nome}' : 'Perfil de criança na conta de {nome}', { nome: escaparTexto(nomeDaConta) }) : tr(adulto ? 'Perfil de adulto' : 'Perfil de criança')) : 'Escolha um perfil para ver as suas estatísticas'}</small>
         <small id="meu-perfil-desde"></small>
         ${adulto ? '<div class="perfil-social" id="meu-perfil-social"></div>' : ''}
