@@ -6032,7 +6032,7 @@ body.modo-kids .licao-cena .licao-enunciado::before { display: none; }
 .xadrez-lado.vez { background: rgba(var(--primary-rgb), 0.14); color: #f6e2a0; }
 .xadrez-tira { display: flex; flex-wrap: wrap; gap: 0; }
 .xadrez-capturada .xadrez-peca-svg { width: 20px; height: 20px; }
-.xadrez-tabuleiro { position: relative; width: min(92vw, 460px); aspect-ratio: 1 / 1; box-sizing: border-box; display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); grid-template-rows: repeat(8, minmax(0, 1fr)); padding: 9px; border-radius: 14px; background: linear-gradient(145deg, #fbe7a6 0%, #d6a945 22%, #8a5f17 50%, #e9c46a 78%, #9b6a1c 100%); box-shadow: 0 22px 44px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 236, 170, 0.35), inset 0 0 0 1px rgba(60, 36, 6, 0.6); touch-action: manipulation; }
+.xadrez-tabuleiro { position: relative; width: min(92vw, 460px); aspect-ratio: 1 / 1; box-sizing: border-box; display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); grid-template-rows: repeat(8, minmax(0, 1fr)); padding: 9px; border-radius: 14px; background: linear-gradient(145deg, #fbe7a6 0%, #d6a945 22%, #8a5f17 50%, #e9c46a 78%, #9b6a1c 100%); box-shadow: 0 22px 44px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 236, 170, 0.35), inset 0 0 0 1px rgba(60, 36, 6, 0.6), inset 0 2px 0 rgba(255, 246, 210, 0.5), inset 0 -3px 0 rgba(70, 40, 6, 0.4); touch-action: manipulation; }
 .xadrez-tabuleiro::before { content: ''; position: absolute; inset: 9px; border-radius: 4px; box-shadow: inset 0 0 0 2px rgba(50, 30, 6, 0.65), inset 0 0 18px rgba(0, 0, 0, 0.35); pointer-events: none; z-index: 3; }
 .xadrez-peca.voando { z-index: 6; }
 .xadrez-peca.voando .xadrez-peca-svg { filter: drop-shadow(0 10px 6px rgba(0, 0, 0, 0.45)); }
@@ -6048,8 +6048,8 @@ body.modo-kids .licao-cena .licao-enunciado::before { display: none; }
 .damas-conta .xadrez-peca-svg { width: 20px; height: 20px; }
 @media (hover: hover) { .xadrez-casa:hover .xadrez-peca { transform: translateY(-2px); transition: transform 0.12s ease; } }
 .xadrez-casa { position: relative; display: flex; align-items: center; justify-content: center; padding: 0; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.xadrez-casa.clara { background: linear-gradient(135deg, #f6e8c8, #e9d3a6); }
-.xadrez-casa.escura { background: linear-gradient(135deg, #b98b5c, #94683f); }
+.xadrez-casa.clara { background: repeating-linear-gradient(97deg, rgba(150, 100, 50, 0.07) 0 2px, transparent 2px 7px), repeating-linear-gradient(83deg, rgba(255, 255, 255, 0.1) 0 1px, transparent 1px 11px), linear-gradient(135deg, #f7e7c6 0%, #ead3a3 55%, #e2c690 100%); box-shadow: inset 0 0 0 0.5px rgba(90, 60, 20, 0.12); }
+.xadrez-casa.escura { background: repeating-linear-gradient(97deg, rgba(60, 30, 10, 0.17) 0 2px, transparent 2px 6px), repeating-linear-gradient(83deg, rgba(255, 220, 170, 0.08) 0 1px, transparent 1px 9px), linear-gradient(135deg, #b98a5c 0%, #9a6a40 55%, #845632 100%); box-shadow: inset 0 0 0 0.5px rgba(40, 20, 5, 0.25); }
 .xadrez-casa.ultima::before { content: ''; position: absolute; inset: 0; background: rgba(255, 214, 90, 0.38); }
 .xadrez-casa.selecionada::before { content: ''; position: absolute; inset: 0; background: rgba(255, 214, 90, 0.55); box-shadow: inset 0 0 0 3px #f6c94a; }
 .xadrez-casa.alvo::after { content: ''; position: absolute; width: 30%; height: 30%; border-radius: 50%; background: radial-gradient(circle, rgba(255, 236, 160, 0.95), rgba(214, 160, 40, 0.75)); box-shadow: 0 0 10px rgba(255, 214, 90, 0.8); }
@@ -6614,3 +6614,132 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, *::-webkit-scrollbar { display
 .colecao-item.misterio .item-previa { filter: none; }
 .colecao-item.misterio::after { display: none; }
 .colecao-pacotes { grid-template-columns: repeat(auto-fill, minmax(128px, 1fr)); }
+.xadrez-peca-svg { filter: drop-shadow(0 4px 2px rgba(0, 0, 0, 0.42)) drop-shadow(0 1px 0 rgba(0, 0, 0, 0.25)); }
+
+.conjunto-celestial { animation: none !important; }
+.xadrez-tabuleiro.tema-celestial .xadrez-casa.escura { animation: none !important; }
+
+.xadrez-tabuleiro.tema-cristal .xadrez-casa.clara { background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(220, 238, 255, 0.16)); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28); }
+.xadrez-tabuleiro.tema-cristal .xadrez-casa.escura { background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(160, 190, 230, 0.05)); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12); }
+.xadrez-tabuleiro.tema-cristal .xadrez-casa .xadrez-coord { color: rgba(235, 245, 255, 0.8); }
+.xadrez-tabuleiro.tema-cristal::before { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35); }
+.xadrez-tabuleiro.tema-safira .xadrez-casa.clara { background: linear-gradient(135deg, #f3f8ff 0%, #d6e4ff 48%, #f8fbff 60%, #c6d9ff 100%); }
+.xadrez-tabuleiro.tema-safira .xadrez-casa.escura { background: linear-gradient(135deg, #3a6be0 0%, #133a9e 48%, #4a7cf0 60%, #0d2c80 100%); }
+.xadrez-tabuleiro.tema-safira .xadrez-casa.clara .xadrez-coord { color: #133a9e; }
+.xadrez-tabuleiro.tema-safira .xadrez-casa.escura .xadrez-coord { color: #f3f8ff; }
+.xadrez-tabuleiro.tema-ametista .xadrez-casa.clara { background: linear-gradient(135deg, #fbf5ff 0%, #ead8ff 48%, #fdf9ff 60%, #e0c8ff 100%); }
+.xadrez-tabuleiro.tema-ametista .xadrez-casa.escura { background: linear-gradient(135deg, #9a5ce8 0%, #5a22a8 48%, #a874f0 60%, #46188a 100%); }
+.xadrez-tabuleiro.tema-ametista .xadrez-casa.clara .xadrez-coord { color: #5a22a8; }
+.xadrez-tabuleiro.tema-ametista .xadrez-casa.escura .xadrez-coord { color: #fbf5ff; }
+.xadrez-tabuleiro.tema-ambar .xadrez-casa.clara { background: linear-gradient(135deg, #fff8e4 0%, #ffe6b0 48%, #fffbef 60%, #ffdc9a 100%); }
+.xadrez-tabuleiro.tema-ambar .xadrez-casa.escura { background: radial-gradient(circle at 30% 35%, rgba(255, 230, 160, 0.35), transparent 45%), linear-gradient(135deg, #e0902a 0%, #a85810 48%, #ec9e38 60%, #8a4408 100%); }
+.xadrez-tabuleiro.tema-ambar .xadrez-casa.clara .xadrez-coord { color: #8a4408; }
+.xadrez-tabuleiro.tema-ambar .xadrez-casa.escura .xadrez-coord { color: #fff8e4; }
+.xadrez-tabuleiro.tema-gotico .xadrez-casa.clara { background: repeating-linear-gradient(0deg, rgba(120, 100, 70, 0.12) 0 1px, transparent 1px 12px), linear-gradient(135deg, #f4eddc, #ddd0b4); }
+.xadrez-tabuleiro.tema-gotico .xadrez-casa.escura { background: linear-gradient(45deg, transparent 46%, rgba(18, 16, 24, 0.85) 46% 54%, transparent 54%), linear-gradient(-45deg, transparent 46%, rgba(18, 16, 24, 0.85) 46% 54%, transparent 54%), radial-gradient(circle at 30% 30%, #5f8ff0, #1c348a 70%); box-shadow: inset 0 0 0 2px rgba(18, 16, 24, 0.9); }
+.xadrez-tabuleiro.tema-gotico .xadrez-casa.escura:nth-child(3n) { background: linear-gradient(45deg, transparent 46%, rgba(18, 16, 24, 0.85) 46% 54%, transparent 54%), linear-gradient(-45deg, transparent 46%, rgba(18, 16, 24, 0.85) 46% 54%, transparent 54%), radial-gradient(circle at 30% 30%, #f05a5a, #8a1420 70%); }
+.xadrez-tabuleiro.tema-gotico .xadrez-casa.escura:nth-child(3n+2) { background: linear-gradient(45deg, transparent 46%, rgba(18, 16, 24, 0.85) 46% 54%, transparent 54%), linear-gradient(-45deg, transparent 46%, rgba(18, 16, 24, 0.85) 46% 54%, transparent 54%), radial-gradient(circle at 30% 30%, #ffd86a, #b07a10 70%); }
+.xadrez-tabuleiro.tema-gotico .xadrez-casa.clara .xadrez-coord { color: #5a4a30; }
+.xadrez-tabuleiro.tema-gotico .xadrez-casa.escura .xadrez-coord { color: #fff3d0; text-shadow: 0 1px 2px #000; }
+.xadrez-tabuleiro.tema-sagrada .xadrez-casa.clara { background: radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.35), transparent 50%), linear-gradient(135deg, #fbe9cc, #e9c89a); }
+.xadrez-tabuleiro.tema-sagrada .xadrez-casa.escura { background: radial-gradient(circle at 22% 24%, #e0412f 0 11%, transparent 12%), radial-gradient(circle at 68% 26%, #f2c230 0 10%, transparent 11%), radial-gradient(circle at 42% 66%, #3aa35a 0 11%, transparent 12%), radial-gradient(circle at 80% 74%, #2f6fd0 0 10%, transparent 11%), radial-gradient(circle at 16% 82%, #fdeed6 0 7%, transparent 8%), radial-gradient(circle at 52% 40%, #ffffff 0 5%, transparent 6%), linear-gradient(135deg, #9a5634, #5a2a14); }
+.xadrez-tabuleiro.tema-sagrada .xadrez-casa.clara .xadrez-coord { color: #6a4420; }
+.xadrez-tabuleiro.tema-sagrada .xadrez-casa.escura .xadrez-coord { color: #fff3e0; text-shadow: 0 1px 2px #000; }
+.xadrez-tabuleiro.tema-safira::after, .xadrez-tabuleiro.tema-ametista::after, .xadrez-tabuleiro.tema-ambar::after, .xadrez-tabuleiro.tema-cristal::after { content: ''; position: absolute; inset: 9px; z-index: 4; pointer-events: none; border-radius: 4px; background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.3) 50%, transparent 65%); background-size: 250% 100%; animation: tabuleiroBrilha 6s ease-in-out infinite; }
+.xadrez-tabuleiro.item-previa-tabuleiro.tema-safira::after, .xadrez-tabuleiro.item-previa-tabuleiro.tema-ametista::after, .xadrez-tabuleiro.item-previa-tabuleiro.tema-ambar::after, .xadrez-tabuleiro.item-previa-tabuleiro.tema-cristal::after { inset: 5px; }
+
+.xadrez-tabuleiro.moldura-cristal { background: linear-gradient(145deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.04) 50%, rgba(255, 255, 255, 0.14)); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); box-shadow: 0 22px 44px rgba(0, 0, 0, 0.35), inset 0 0 0 1px rgba(255, 255, 255, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.8); }
+.xadrez-tabuleiro.moldura-safira { background: linear-gradient(145deg, #e0ecff 0%, #5a8ef0 20%, #0d2c80 50%, #7aa6ff 78%, #133a9e 100%); background-size: 200% 200%; animation: molduraBrilha 5s ease-in-out infinite; box-shadow: 0 22px 44px rgba(0, 0, 0, 0.55), 0 0 22px rgba(90, 142, 240, 0.45), inset 0 0 0 1px rgba(10, 30, 90, 0.6); }
+.xadrez-tabuleiro.moldura-ambar { background: linear-gradient(145deg, #fff0c8 0%, #f0a83a 22%, #8a4408 50%, #ffc860 78%, #a85810 100%); box-shadow: 0 22px 44px rgba(0, 0, 0, 0.55), 0 0 20px rgba(240, 168, 58, 0.4), inset 0 0 0 1px rgba(90, 40, 4, 0.6); }
+.xadrez-tabuleiro.moldura-gotica { background: repeating-linear-gradient(90deg, rgba(224, 184, 74, 0.55) 0 2px, transparent 2px 14px), linear-gradient(145deg, #4a4e5c 0%, #1a1c24 35%, #0a0b10 60%, #3a3e4c 100%); box-shadow: 0 22px 44px rgba(0, 0, 0, 0.6), 0 0 0 2px rgba(224, 184, 74, 0.55), inset 0 0 0 1px rgba(224, 184, 74, 0.6); }
+.xadrez-tabuleiro.moldura-sagrada { background: conic-gradient(from 20deg at 20% 30%, #e0412f 0 12%, #f2c230 0 24%, #3aa35a 0 38%, #2f6fd0 0 50%, #fdeed6 0 58%, #e0412f 0 70%, #f2c230 0 82%, #3aa35a 0 100%); box-shadow: 0 22px 44px rgba(0, 0, 0, 0.55), inset 0 0 0 2px rgba(60, 30, 10, 0.55), 0 0 18px rgba(242, 194, 48, 0.3); }
+@media (prefers-reduced-motion: reduce) {
+  .xadrez-tabuleiro.moldura-safira { animation: none; }
+}
+
+.xadrez-rachadura { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.xadrez-rachadura path { fill: none; stroke: rgba(24, 8, 8, 0.9); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 70; stroke-dashoffset: 70; animation: reiRachando 0.7s ease-out 0.15s forwards; }
+.xadrez-rachadura path.luz { stroke: rgba(255, 236, 210, 0.85); stroke-width: 1; }
+.xadrez-casa.xeque .xadrez-peca { animation: reiTremendo 0.55s ease-in-out infinite; }
+.xadrez-casa.xeque .xadrez-peca-svg { filter: drop-shadow(0 0 6px rgba(255, 70, 50, 0.85)) drop-shadow(0 4px 2px rgba(0, 0, 0, 0.45)); }
+@keyframes reiRachando { to { stroke-dashoffset: 0; } }
+@keyframes reiTremendo { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 15% { transform: translate(-1.5px, 0) rotate(-2.5deg); } 30% { transform: translate(1.5px, -1px) rotate(2.5deg); } 45% { transform: translate(-1px, 1px) rotate(-1.5deg); } 60% { transform: translate(1px, 0) rotate(1.5deg); } 75% { transform: translate(0, -0.5px) rotate(0deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .xadrez-casa.xeque .xadrez-peca { animation: none; }
+  .xadrez-rachadura path { animation: none; stroke-dashoffset: 0; }
+}
+
+.jogo-nivel.nivel-3 { border-color: rgba(255, 150, 90, 0.7); }
+.jogo-nivel.nivel-4 { border-color: rgba(255, 70, 70, 0.85); box-shadow: 0 6px 0 rgba(6, 8, 24, 0.55), 0 0 16px rgba(255, 70, 70, 0.25); }
+.jogo-nivel.nivel-5 { border-color: transparent; background: linear-gradient(160deg, rgba(40, 18, 70, 0.98), rgba(12, 8, 30, 0.98)) padding-box, linear-gradient(135deg, #ff9ad5, #9ad8ff, #b4ffb0, #ffe89a, #d2a6ff) border-box; color: #fff3ff; box-shadow: 0 6px 0 rgba(6, 8, 24, 0.55), 0 0 22px rgba(210, 166, 255, 0.35); }
+.jogo-nivel.nivel-5 i { background: linear-gradient(135deg, #ff9ad5, #ffe89a, #9ad8ff); }
+.jogo-nivel.nivel-4 i, .jogo-nivel.nivel-5 i { width: 11px; height: 11px; }
+.jogo-cartao.destaque { grid-column: 1 / -1; }
+.xadrez-casa.xeque::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle, rgba(255, 90, 70, 0.8), rgba(224, 68, 47, 0) 70%); pointer-events: none; }
+.musica-jogos-botao { position: fixed; right: 16px; bottom: calc(88px + env(safe-area-inset-bottom, 0px)); z-index: 1200; width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; border: 1.5px solid rgba(240, 207, 122, 0.55); background: radial-gradient(circle at 35% 30%, rgba(60, 66, 130, 0.98), rgba(14, 18, 48, 0.98)); color: #f6e2a0; cursor: pointer; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45); transition: transform 0.15s ease; }
+.musica-jogos-botao[hidden] { display: none; }
+.musica-jogos-botao:hover { transform: scale(1.06); }
+.musica-jogos-botao.desligada { color: rgba(246, 226, 160, 0.55); border-color: rgba(240, 207, 122, 0.25); }
+.musica-jogos-botao.tocando::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid rgba(240, 207, 122, 0.45); animation: musicaPulsa 1.8s ease-out infinite; pointer-events: none; }
+@keyframes musicaPulsa { 0% { transform: scale(0.9); opacity: 0.9; } 100% { transform: scale(1.35); opacity: 0; } }
+@media (min-width: 900px) { .musica-jogos-botao { bottom: 24px; right: 24px; } }
+.musica-jogos-painel { position: fixed; right: 16px; bottom: calc(146px + env(safe-area-inset-bottom, 0px)); z-index: 1201; width: min(320px, calc(100vw - 32px)); max-height: calc(100vh - 180px); overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: 20px; border: 1.5px solid rgba(240, 207, 122, 0.4); background: linear-gradient(180deg, rgba(24, 30, 72, 0.98), rgba(10, 13, 36, 0.98)); color: var(--text-main); font-family: var(--font-text); box-shadow: 0 20px 44px rgba(0, 0, 0, 0.55); animation: musicaAbre 0.18s ease-out; }
+@media (min-width: 900px) { .musica-jogos-painel { bottom: 84px; right: 24px; } }
+@keyframes musicaAbre { from { opacity: 0; transform: translateY(8px) scale(0.98); } to { opacity: 1; transform: none; } }
+.musica-jogos-topo { display: flex; align-items: center; justify-content: space-between; }
+.musica-jogos-topo strong { font-family: var(--font-title); color: #f6e2a0; font-size: 1.15rem; }
+.musica-jogos-fechar { width: 32px; height: 32px; border-radius: 50%; border: 0; background: rgba(255, 255, 255, 0.08); color: var(--text-main); font-size: 1.3rem; cursor: pointer; }
+.musica-jogos-chave { position: relative; display: flex; align-items: center; justify-content: space-between; padding: 8px 2px; font-weight: 800; cursor: pointer; }
+.musica-jogos-chave input { position: absolute; opacity: 0; pointer-events: none; }
+.musica-jogos-chave i { width: 44px; height: 24px; border-radius: 999px; background: rgba(255, 255, 255, 0.16); position: relative; transition: background 0.2s ease; }
+.musica-jogos-chave i::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #ffffff; transition: transform 0.2s ease; }
+.musica-jogos-chave input:checked + i { background: linear-gradient(180deg, #f6d987, #d9a93a); }
+.musica-jogos-chave input:checked + i::after { transform: translateX(20px); }
+.musica-jogos-chave input:focus-visible + i { outline: 2px solid #f6e2a0; outline-offset: 2px; }
+.musica-jogos-faixas { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.musica-jogos-faixas.apagadas { opacity: 0.55; }
+.musica-jogos-faixa { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 10px 12px; border-radius: 14px; border: 1.5px solid rgba(240, 207, 122, 0.22); background: rgba(255, 255, 255, 0.04); color: var(--text-main); font-family: var(--font-text); text-align: left; cursor: pointer; }
+.musica-jogos-faixa b { font-size: 0.86rem; }
+.musica-jogos-faixa small { color: var(--text-muted); font-size: 0.72rem; font-weight: 700; }
+.musica-jogos-faixa.ativa { border-color: rgba(240, 207, 122, 0.85); background: rgba(240, 207, 122, 0.14); box-shadow: 0 0 14px rgba(240, 207, 122, 0.2); }
+.musica-jogos-faixa.ativa b { color: #f6e2a0; }
+.musica-jogos-volume { display: flex; align-items: center; gap: 12px; font-weight: 800; }
+.musica-jogos-volume input { flex: 1; accent-color: #e0b54a; }
+.musica-jogos-botao.no-topo { position: relative; right: auto; bottom: auto; z-index: auto; width: auto; height: auto; margin-left: 10px; border: 0; border-radius: 0; background: none; box-shadow: none; display: inline-flex; color: inherit; }
+.musica-jogos-botao.no-topo[hidden] { display: none; }
+.musica-jogos-botao.no-topo:hover { transform: none; }
+.musica-jogos-botao.no-topo.tocando::after { inset: auto -3px -3px auto; width: 8px; height: 8px; border: 0; background: #f0cf7a; box-shadow: 0 0 8px rgba(240, 207, 122, 0.9); animation: none; }
+.musica-jogos-botao.no-topo.desligada { color: rgba(246, 226, 160, 0.5); }
+body .musica-jogos-painel { top: calc(64px + env(safe-area-inset-top, 0px)); bottom: auto; right: 12px; }
+@media (min-width: 900px) { body .musica-jogos-painel { top: 76px; bottom: auto; right: 24px; } }
+@media (max-width: 520px) { body:has(#view-jogos.active) #search-btn { display: none; } }
+.bau-janela { --cor-do-estouro: 255, 214, 110; }
+.bau-janela .bau-desenho { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.bau-janela.abrindo .bau-desenho { animation: bauChega 0.55s cubic-bezier(0.3, 1.5, 0.5, 1) both; }
+.bau-janela.abrindo .bau-desenho.bate { animation: bauBate 0.42s cubic-bezier(0.3, 1.6, 0.5, 1); }
+.bau-janela.abrindo.batida-1 .bau-raios { opacity: 0.25; transform: scale(0.6); transition: all 0.4s ease; }
+.bau-janela.abrindo.batida-2 .bau-raios { opacity: 0.45; transform: scale(0.8); }
+.bau-janela.abrindo.batida-3 .bau-raios { opacity: 0.7; transform: scale(0.95); }
+.bau-janela.abrindo.batida-2 .bau-desenho .bau-svg, .bau-janela.abrindo.batida-3 .bau-desenho .bau-svg { filter: drop-shadow(0 0 14px rgba(var(--cor-do-estouro), 0.65)); }
+.bau-clarao { position: fixed; inset: 0; z-index: 3; pointer-events: none; background: radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.95), rgba(var(--cor-do-estouro), 0.55) 30%, rgba(var(--cor-do-estouro), 0) 70%); opacity: 0; }
+.bau-onda { position: absolute; left: 50%; top: 90px; width: 40px; height: 40px; margin: -20px 0 0 -20px; border-radius: 50%; border: 4px solid rgba(var(--cor-do-estouro), 0.9); box-shadow: 0 0 24px rgba(var(--cor-do-estouro), 0.8); opacity: 0; pointer-events: none; z-index: 2; }
+.bau-moedas { position: absolute; left: 50%; top: 96px; width: 0; height: 0; z-index: 2; pointer-events: none; }
+.bau-moedas i { position: absolute; left: -7px; top: -7px; width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fffbe0, #f6cf55 45%, #b9861c 80%); box-shadow: inset 0 0 0 1.5px rgba(120, 80, 10, 0.6); opacity: 0; }
+.bau-moedas i:nth-child(3n) { width: 10px; height: 10px; border-radius: 2px; background: rgb(var(--cor-do-estouro)); box-shadow: 0 0 8px rgba(var(--cor-do-estouro), 0.9); clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); }
+.bau-janela.premio-secreto .bau-moedas i:nth-child(3n+1) { background: linear-gradient(135deg, #ff9ad5, #9ad8ff, #b4ffb0, #ffe89a); }
+@media (prefers-reduced-motion: no-preference) {
+  .bau-janela.aberto .bau-clarao { animation: bauClarao 0.7s ease-out forwards; }
+  .bau-janela.aberto .bau-onda { animation: bauOnda 0.8s cubic-bezier(0.1, 0.8, 0.3, 1) forwards; }
+  .bau-janela.aberto .bau-moedas i { animation: bauMoeda var(--t) cubic-bezier(0.15, 0.85, 0.35, 1) var(--g) forwards; }
+  .bau-janela.aberto.premio-lendario .bau-raios, .bau-janela.aberto.premio-secreto .bau-raios { animation: bauRaios 3s linear infinite, bauRaiosEntram 0.6s ease-out forwards; }
+}
+.bau-janela.aberto.premio-lendario .bau-raios { background: repeating-conic-gradient(from 0deg, rgba(255, 214, 90, 0.45) 0deg 10deg, transparent 10deg 30deg); }
+.bau-janela.aberto.premio-epico .bau-raios { background: repeating-conic-gradient(from 0deg, rgba(181, 123, 255, 0.4) 0deg 10deg, transparent 10deg 30deg); }
+.bau-janela.aberto.premio-secreto .bau-raios { background: repeating-conic-gradient(from 0deg, rgba(255, 154, 213, 0.4) 0deg 8deg, rgba(154, 216, 255, 0.4) 8deg 16deg, transparent 16deg 30deg); }
+@keyframes bauChega { 0% { transform: translateY(-160px) scale(0.7); opacity: 0; } 60% { transform: translateY(8px) scale(1.04, 0.94); opacity: 1; } 100% { transform: none; } }
+@keyframes bauBate { 0% { transform: none; } 20% { transform: translateY(calc(var(--forca, 1) * -6px)) rotate(calc(var(--forca, 1) * -4deg)) scale(calc(1 + var(--forca, 1) * 0.03)); } 45% { transform: rotate(calc(var(--forca, 1) * 5deg)); } 70% { transform: translateY(2px) scale(1.04, 0.95); } 100% { transform: none; } }
+@keyframes bauClarao { 0% { opacity: 0; } 15% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes bauOnda { 0% { opacity: 1; transform: scale(0.5); } 100% { opacity: 0; transform: scale(9); } }
+@keyframes bauMoeda { 0% { opacity: 1; transform: rotate(var(--a)) translateY(0) scale(0.6); } 55% { opacity: 1; } 100% { opacity: 0; transform: rotate(var(--a)) translateY(calc(var(--d) * -1)) scale(1.1) rotate(220deg); } }
+.bau-janela.aberto.premio-lendario .bau-premio-item, .bau-janela.aberto.premio-secreto .bau-premio-item { transform-origin: center; }
+@media (prefers-reduced-motion: reduce) { .bau-janela.abrindo .bau-desenho, .bau-janela.abrindo .bau-desenho.bate { animation: none; } }

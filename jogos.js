@@ -8,6 +8,8 @@ const IDADES_DOS_JOGOS = [
   { id: 'adultos', rotulo: 'Adultos' },
 ];
 const JOGOS = [
+  { id: 'xadrez', nome: 'Xadrez', texto: 'Jogue contra a Lumina ou com outra pessoa.', idades: ['8a12', '13a17', 'adultos'], personagem: 'lumi', icone: 'coroa', cor: '#e8d3a2', destaque: true },
+  { id: 'damas', nome: 'Damas', texto: 'Jogue damas contra a Lumina ou com outra pessoa.', idades: ['8a12', '13a17', 'adultos'], personagem: 'dom', icone: 'medalha', cor: '#d8c6f0', destaque: true },
   { id: 'quizia', nome: 'Quiz dos Santos', texto: 'A Lumina cria perguntas sobre o santo que você quiser.', idades: ['13a17', 'adultos'], personagem: 'lumi', icone: 'lampada', cor: '#c9b8ff', comIa: true },
   { id: 'estrelas', nome: 'Acenda as estrelas', texto: 'Toque nas estrelinhas para encher o céu de luz.', idades: ['pequeninos', 'ate7'], personagem: 'lumi', icone: 'estrela', cor: '#f0cf7a' },
   { id: 'bolhas', nome: 'Bolhas de luz', texto: 'Estoure as bolhas antes que elas voem embora.', idades: ['pequeninos', 'ate7'], personagem: 'mel', icone: 'coracao', cor: '#8fd3ff' },
@@ -27,8 +29,6 @@ const JOGOS = [
   { id: 'quemsou', nome: 'Quem sou eu?', texto: 'Leia a pista e descubra qual é o santo.', idades: ['8a12', '13a17', 'adultos'], personagem: 'dom', icone: 'pessoa', cor: '#ffd6a0' },
   { id: 'oracao', nome: 'Complete a oração', texto: 'Escolha a palavra que falta na oração.', idades: ['8a12', '13a17', 'adultos'], personagem: 'clara', icone: 'livro', cor: '#f7e3a1' },
   { id: 'anagrama', nome: 'Letras embaralhadas', texto: 'Monte a palavra da fé com as letras certas.', idades: ['8a12', '13a17', 'adultos'], personagem: 'dom', icone: 'lapis', cor: '#bfe3c6' },
-  { id: 'xadrez', nome: 'Xadrez', texto: 'Jogue contra a Lumina ou com outra pessoa.', idades: ['8a12', '13a17', 'adultos'], personagem: 'lumi', icone: 'coroa', cor: '#e8d3a2' },
-  { id: 'damas', nome: 'Damas', texto: 'Jogue damas contra a Lumina ou com outra pessoa.', idades: ['8a12', '13a17', 'adultos'], personagem: 'dom', icone: 'medalha', cor: '#d8c6f0' },
   { id: 'palavra', nome: 'Palavra secreta', texto: 'Descubra a palavra da fé antes que a vela apague.', idades: ['8a12', '13a17', 'adultos'], personagem: 'clara', icone: 'vela', cor: '#ffd9a0' },
   { id: 'quebra', nome: 'Quebra-cabeça do vitral', texto: 'Deslize as peças e monte o vitral.', idades: ['8a12', '13a17', 'adultos'], personagem: 'mel', icone: 'igreja', cor: '#bfe0ff' },
   { id: 'quiz', nome: 'Desafio contra a Lumina', texto: 'Responda mais rápido e melhor que a Lumina.', idades: ['8a12', '13a17', 'adultos'], personagem: 'lumi', icone: 'trofeu', cor: '#ffd36b', contraIa: true },
@@ -126,6 +126,7 @@ function repetirNoJogo(funcao, ms) {
 }
 
 function pararJogoAtual() {
+  if (typeof limparPecasArrastadas === 'function') limparPecasArrastadas();
   if (!jogoAtual) return;
   jogoAtual.timers.forEach(clearTimeout);
   jogoAtual.intervalos.forEach(clearInterval);
@@ -396,6 +397,7 @@ function somDoJogo(tipo) {
 }
 
 function tocarNotaDoJogo(frequencia) {
+  if (typeof somDosJogosLigado === 'function' && !somDosJogosLigado()) return;
   try {
     const Classe = window.AudioContext || window.webkitAudioContext;
     if (!Classe) return;
@@ -517,7 +519,7 @@ function mostrarListaDeJogos(opcoes) {
     ${idadeDosJogos === 'pequeninos' ? htmlDaTrilhaDosPequeninos() : ''}
     ${idadeDosJogos === 'pequeninos' ? `<h3 class="jogos-secao">${textoDoJogo('Brincar à vontade')}</h3>` : ''}
     <div class="jogos-grade">${jogos.map((jogo, i) => `
-      <button type="button" class="jogo-cartao" data-jogo="${jogo.id}" style="--i:${i};--cor:${jogo.cor}">
+      <button type="button" class="jogo-cartao${jogo.destaque ? ' destaque' : ''}" data-jogo="${jogo.id}" style="--i:${i};--cor:${jogo.cor}">
         <span class="jogo-cartao-arte">${htmlDoPersonagem(jogo.personagem)}<span class="jogo-cartao-selo">${iconeDoJogo(jogo.icone)}</span></span>
         <span class="jogo-cartao-textos">
           <strong>${textoDoJogo(jogo.nome)}</strong>
@@ -937,6 +939,7 @@ function desenhoDaArvoreDoPastor() {
 }
 
 function tocarSomDoPastor(tipo) {
+  if (typeof somDosJogosLigado === 'function' && !somDosJogosLigado()) return;
   try {
     const Classe = window.AudioContext || window.webkitAudioContext;
     if (!Classe) return;

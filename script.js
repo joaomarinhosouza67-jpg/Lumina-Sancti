@@ -2753,6 +2753,8 @@ function atualizarInterfaceDeConta() {
 
 function mudarDeView(idNovaView, opcoes) {
   if (typeof paginaSoParaAdultos === 'function' && paginaSoParaAdultos(idNovaView)) return;
+  if (typeof limparPecasArrastadas === 'function') limparPecasArrastadas();
+  if (typeof atualizarMusicaDosJogos === 'function') atualizarMusicaDosJogos(idNovaView);
   if (typeof paginaBloqueadaPelaSuspensao === 'function' && paginaBloqueadaPelaSuspensao(idNovaView)) return;
   if (idNovaView === 'view-home' && typeof avisarFestaDosSantosPessoais === 'function') setTimeout(avisarFestaDosSantosPessoais, 1800);
   if (idNovaView === 'view-home' && typeof desenharAdventoNoInicio === 'function') desenharAdventoNoInicio();

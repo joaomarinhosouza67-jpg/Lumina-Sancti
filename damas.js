@@ -160,14 +160,29 @@ const CONJUNTOS_DAS_DAMAS = {
   madeira: { b: { corpo: 'url(#dm-madeira-clara)', lado: '#8a5a26', borda: '#6e4318', anel: 'rgba(110, 67, 24, 0.5)', luz: 0.35 }, p: { corpo: 'url(#dm-madeira-escura)', lado: '#1e1006', borda: '#120903', anel: 'rgba(232, 199, 154, 0.35)', luz: 0.15 } },
   medalha: { cruz: true, b: { corpo: 'url(#dm-ouro-claro)', lado: '#8a5f0e', borda: '#6b4a0a', anel: 'rgba(107, 74, 10, 0.6)', luz: 0.5, cruz: '#7a520f' }, p: { corpo: 'url(#dm-bronze)', lado: '#3e1d08', borda: '#2a1205', anel: 'rgba(255, 220, 180, 0.4)', luz: 0.25, cruz: '#3e1d08' } },
   'ouro-prata': { b: { corpo: 'url(#dm-ouro-claro)', lado: '#8a5f0e', borda: '#6b4a0a', anel: 'rgba(107, 74, 10, 0.55)', luz: 0.5 }, p: { corpo: 'url(#dm-prata)', lado: '#262d36', borda: '#161b21', anel: 'rgba(240, 244, 248, 0.45)', luz: 0.3 } },
-  diamante: { brilho: true, b: { corpo: 'url(#dm-diamante)', lado: '#4f86c4', borda: '#3f6ea8', anel: 'rgba(63, 110, 168, 0.5)', luz: 0.7 }, p: { corpo: 'url(#dm-onix)', lado: '#000000', borda: '#000000', anel: 'rgba(143, 208, 255, 0.45)', luz: 0.3 } },
-  vidro: { b: { corpo: 'url(#dm-vidro-b)', lado: 'rgba(120, 160, 190, 0.55)', borda: '#7fa6c4', anel: 'rgba(255, 255, 255, 0.7)', luz: 0.75 }, p: { corpo: 'url(#dm-vidro-p)', lado: 'rgba(20, 24, 36, 0.7)', borda: '#141824', anel: 'rgba(217, 230, 242, 0.5)', luz: 0.45 } },
-  esmeralda: { b: { corpo: 'url(#dm-esmeralda-b)', lado: 'rgba(22, 112, 68, 0.75)', borda: '#1f7a4f', anel: 'rgba(255, 255, 255, 0.6)', luz: 0.7 }, p: { corpo: 'url(#dm-esmeralda-p)', lado: 'rgba(1, 32, 18, 0.85)', borda: '#012012', anel: 'rgba(184, 255, 217, 0.5)', luz: 0.45 } },
-  ouro: { b: { corpo: 'url(#dm-ouro-b)', lado: 'rgba(122, 86, 14, 0.8)', borda: '#7a560e', anel: 'rgba(255, 248, 210, 0.7)', luz: 0.7 }, p: { corpo: 'url(#dm-ouro-p)', lado: 'rgba(36, 22, 3, 0.88)', borda: '#241603', anel: 'rgba(255, 231, 163, 0.55)', luz: 0.4 } },
-  rubi: { b: { corpo: 'url(#dm-rubi-b)', lado: 'rgba(156, 21, 52, 0.75)', borda: '#9c1534', anel: 'rgba(255, 255, 255, 0.6)', luz: 0.7 }, p: { corpo: 'url(#dm-rubi-p)', lado: 'rgba(42, 1, 10, 0.88)', borda: '#2a010a', anel: 'rgba(255, 194, 207, 0.5)', luz: 0.42 } },
-  obsidiana: { b: { corpo: 'url(#dm-perola)', lado: '#9a8ca6', borda: '#8f8199', anel: 'rgba(160, 140, 190, 0.5)', luz: 0.8 }, p: { corpo: 'url(#dm-obsidiana)', lado: 'rgba(0, 0, 0, 0.92)', borda: '#000000', anel: 'rgba(201, 184, 255, 0.45)', luz: 0.4 } },
-  celestial: { brilho: true, b: { corpo: 'url(#dm-celestial-b)', lado: 'rgba(160, 122, 214, 0.7)', borda: '#a07ad6', anel: 'rgba(255, 255, 255, 0.75)', luz: 0.8 }, p: { corpo: 'url(#dm-celestial-p)', lado: 'rgba(18, 8, 58, 0.88)', borda: '#12083a', anel: 'rgba(255, 233, 168, 0.55)', luz: 0.45 } },
+  diamante: { formas: 'facetada', brilho: true, b: { corpo: 'url(#dm-diamante)', lado: '#4f86c4', borda: '#3f6ea8', anel: 'rgba(63, 110, 168, 0.5)', luz: 0.7 }, p: { corpo: 'url(#dm-onix)', lado: '#000000', borda: '#000000', anel: 'rgba(143, 208, 255, 0.45)', luz: 0.3 } },
+  vidro: { formas: 'moderna', b: { corpo: 'url(#dm-vidro-b)', lado: 'rgba(120, 160, 190, 0.55)', borda: '#7fa6c4', anel: 'rgba(255, 255, 255, 0.7)', luz: 0.75 }, p: { corpo: 'url(#dm-vidro-p)', lado: 'rgba(2, 3, 8, 0.85)', borda: '#020308', anel: 'rgba(159, 180, 201, 0.5)', luz: 0.4 } },
+  cristal: { formas: 'facetada', b: { corpo: 'url(#dm-cristal-b)', lado: 'rgba(216, 236, 255, 0.35)', borda: 'rgba(216, 236, 255, 0.9)', anel: 'rgba(255, 255, 255, 0.75)', luz: 0.8 }, p: { corpo: 'url(#dm-cristal-p)', lado: 'rgba(0, 0, 0, 0.45)', borda: 'rgba(26, 32, 48, 0.95)', anel: 'rgba(216, 236, 255, 0.55)', luz: 0.45 } },
+  esmeralda: { formas: 'facetada', b: { corpo: 'url(#dm-esmeralda-b)', lado: 'rgba(22, 112, 68, 0.75)', borda: '#1f7a4f', anel: 'rgba(255, 255, 255, 0.6)', luz: 0.72 }, p: { corpo: 'url(#dm-esmeralda-p)', lado: 'rgba(0, 8, 5, 0.92)', borda: '#000805', anel: 'rgba(143, 240, 191, 0.45)', luz: 0.35 } },
+  safira: { formas: 'facetada', b: { corpo: 'url(#dm-safira-b)', lado: 'rgba(36, 77, 160, 0.75)', borda: '#2c5bb8', anel: 'rgba(255, 255, 255, 0.6)', luz: 0.72 }, p: { corpo: 'url(#dm-safira-p)', lado: 'rgba(0, 3, 15, 0.92)', borda: '#00030f', anel: 'rgba(169, 200, 255, 0.45)', luz: 0.35 } },
+  ouro: { cruz: true, b: { corpo: 'url(#dm-ouro-b)', lado: 'rgba(138, 100, 16, 0.85)', borda: '#8a6410', anel: 'rgba(255, 248, 210, 0.7)', luz: 0.72, cruz: '#8a6410' }, p: { corpo: 'url(#dm-ouro-p)', lado: 'rgba(12, 6, 0, 0.92)', borda: '#0c0600', anel: 'rgba(255, 212, 107, 0.55)', luz: 0.35, cruz: '#ffd46b' } },
+  ambar: { formas: 'moderna', b: { corpo: 'url(#dm-ambar-b)', lado: 'rgba(164, 96, 14, 0.8)', borda: '#a4600e', anel: 'rgba(255, 250, 234, 0.7)', luz: 0.72 }, p: { corpo: 'url(#dm-ambar-p)', lado: 'rgba(12, 4, 0, 0.92)', borda: '#0c0400', anel: 'rgba(255, 196, 107, 0.5)', luz: 0.35 } },
+  rubi: { formas: 'facetada', b: { corpo: 'url(#dm-rubi-b)', lado: 'rgba(156, 21, 52, 0.75)', borda: '#b0173c', anel: 'rgba(255, 255, 255, 0.6)', luz: 0.72 }, p: { corpo: 'url(#dm-rubi-p)', lado: 'rgba(12, 0, 3, 0.92)', borda: '#0c0003', anel: 'rgba(255, 159, 181, 0.45)', luz: 0.35 } },
+  ametista: { formas: 'facetada', b: { corpo: 'url(#dm-ametista-b)', lado: 'rgba(106, 50, 176, 0.75)', borda: '#7a3fc0', anel: 'rgba(255, 255, 255, 0.6)', luz: 0.72 }, p: { corpo: 'url(#dm-ametista-p)', lado: 'rgba(5, 0, 15, 0.92)', borda: '#05000f', anel: 'rgba(216, 178, 255, 0.45)', luz: 0.35 } },
+  obsidiana: { formas: 'moderna', b: { corpo: 'url(#dm-perola)', lado: '#9a86b8', borda: '#9a86b8', anel: 'rgba(160, 140, 200, 0.5)', luz: 0.85 }, p: { corpo: 'url(#dm-obsidiana)', lado: 'rgba(0, 0, 0, 0.95)', borda: '#000000', anel: 'rgba(185, 163, 255, 0.5)', luz: 0.45 } },
+  gotico: { formas: 'gotica', b: { corpo: 'url(#dm-gotico-b)', lado: '#7a6a50', borda: '#5a4a30', anel: '#3a5aa8', luz: 0.45 }, p: { corpo: 'url(#dm-gotico-p)', lado: '#000000', borda: '#000000', anel: '#e0b84a', luz: 0.2 } },
+  sagrada: { formas: 'sagrada', b: { corpo: 'url(#dm-sagrada-b)', lado: '#8a5a2a', borda: '#6a4420', anel: 'rgba(106, 68, 32, 0.6)', luz: 0.45 }, p: { corpo: 'url(#dm-sagrada-p)', lado: '#0a0301', borda: '#0a0301', anel: 'rgba(242, 194, 48, 0.55)', luz: 0.2 } },
+  celestial: { formas: 'facetada', brilho: true, b: { corpo: 'url(#dm-celestial-b)', lado: 'rgba(160, 122, 214, 0.7)', borda: '#a07ad6', anel: 'rgba(255, 255, 255, 0.75)', luz: 0.8 }, p: { corpo: 'url(#dm-celestial-p)', lado: 'rgba(6, 2, 24, 0.92)', borda: '#060218', anel: 'rgba(255, 233, 168, 0.55)', luz: 0.4 } },
 };
+
+function damasOctogono(cy, rx, ry) {
+  const pontos = [];
+  for (let i = 0; i < 8; i += 1) {
+    const a = (Math.PI / 8) + (i * Math.PI) / 4;
+    pontos.push(`${(50 + rx * Math.cos(a)).toFixed(1)} ${(cy + ry * Math.sin(a)).toFixed(1)}`);
+  }
+  return pontos;
+}
 
 function damasPecaSvg(p, conjunto) {
   if (typeof garantirGradientesDoTabuleiro === 'function') garantirGradientesDoTabuleiro();
@@ -179,7 +194,32 @@ function damasPecaSvg(p, conjunto) {
   const coroa = dama ? `<path d="M32 58 L35 39 L44 48 L50 31 L56 48 L65 39 L68 58 Z" fill="url(#dm-ouro)" stroke="#7a560e" stroke-width="2" stroke-linejoin="round"/><circle cx="50" cy="47" r="3.2" fill="#e8455a" stroke="#7a1020" stroke-width="1"/><circle cx="35" cy="38" r="2.4" fill="url(#dm-ouro)"/><circle cx="50" cy="30" r="2.6" fill="url(#dm-ouro)"/><circle cx="65" cy="38" r="2.4" fill="url(#dm-ouro)"/>` : '';
   const cruz = !dama && estilo.cruz ? `<path d="M50 37 V63 M40 46 H60" stroke="${c.cruz}" stroke-width="4.5" stroke-linecap="round" fill="none"/>` : '';
   const faisca = estilo.brilho ? '<path class="xadrez-brilho" d="M64 30 l2.4 5 l5 2.4 l-5 2.4 l-2.4 5 l-2.4 -5 l-5 -2.4 l5 -2.4 z" fill="#ffffff" opacity=".9"/>' : '';
-  return `<svg class="xadrez-peca-svg conjunto-${nome}" viewBox="0 0 100 100" aria-hidden="true"><ellipse cx="50" cy="58" rx="38" ry="33" fill="${c.lado}"/><ellipse cx="50" cy="50" rx="38" ry="33" fill="${c.corpo}" stroke="${c.borda}" stroke-width="2.5"/><ellipse cx="50" cy="50" rx="27" ry="23" fill="none" stroke="${c.anel}" stroke-width="3"/><ellipse cx="50" cy="50" rx="19" ry="16" fill="none" stroke="${c.anel}" stroke-width="1.5"/><ellipse cx="40" cy="36" rx="12" ry="5" fill="#ffffff" opacity="${c.luz}"/>${cruz}${coroa}${faisca}</svg>`;
+  let corpo;
+  if (estilo.formas === 'facetada') {
+    const fora = damasOctogono(50, 38, 33);
+    const dentro = damasOctogono(50, 22, 19);
+    const lados = damasOctogono(58, 38, 33);
+    const linhas = fora.map((pt, i) => `M${pt} L${dentro[i]}`).join(' ');
+    corpo = `<path d="M${lados.join(' L')} Z" fill="${c.lado}"/><path d="M${fora.join(' L')} Z" fill="${c.corpo}" stroke="${c.borda}" stroke-width="2.5" stroke-linejoin="round"/><path d="M${dentro.join(' L')} Z" fill="none" stroke="#ffffff" stroke-opacity=".55" stroke-width="1.4"/><path d="${linhas}" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="1.1"/><path d="M34 38 L44 34" stroke="#ffffff" stroke-opacity="${c.luz}" stroke-width="3" stroke-linecap="round"/>`;
+  } else {
+    corpo = `<ellipse cx="50" cy="58" rx="38" ry="33" fill="${c.lado}"/><ellipse cx="50" cy="50" rx="38" ry="33" fill="${c.corpo}" stroke="${c.borda}" stroke-width="2.5"/>`;
+    if (estilo.formas === 'gotica') {
+      const petalas = [];
+      for (let i = 0; i < 8; i += 1) { const a = (i * Math.PI) / 4; petalas.push(`<circle cx="${(50 + 13 * Math.cos(a)).toFixed(1)}" cy="${(50 + 11 * Math.sin(a)).toFixed(1)}" r="4.6" fill="none" stroke="${c.anel}" stroke-width="1.6"/>`); }
+      corpo += `<ellipse cx="50" cy="50" rx="29" ry="25" fill="none" stroke="${c.anel}" stroke-width="2.4"/>${petalas.join('')}<circle cx="50" cy="50" r="3.4" fill="${c.anel}"/>`;
+    } else if (estilo.formas === 'sagrada') {
+      const cores = ['#e0412f', '#f2c230', '#3aa35a', '#2f6fd0'];
+      const pedras = [];
+      for (let i = 0; i < 14; i += 1) { const a = (i * 2 * Math.PI) / 14; const cx = 50 + 27 * Math.cos(a); const cy = 50 + 23 * Math.sin(a); pedras.push(`<path d="M${(cx - 3.4).toFixed(1)} ${(cy - 1.5).toFixed(1)} L${(cx + 0.5).toFixed(1)} ${(cy - 3.6).toFixed(1)} L${(cx + 3.6).toFixed(1)} ${(cy + 0.6).toFixed(1)} L${(cx - 0.8).toFixed(1)} ${(cy + 3.4).toFixed(1)} Z" fill="${cores[i % 4]}"/>`); }
+      corpo += `${pedras.join('')}<ellipse cx="50" cy="50" rx="17" ry="14" fill="none" stroke="${c.anel}" stroke-width="2"/>`;
+    } else if (estilo.formas === 'moderna') {
+      corpo += `<ellipse cx="50" cy="50" rx="24" ry="20" fill="none" stroke="${c.anel}" stroke-width="2"/>`;
+    } else {
+      corpo += `<ellipse cx="50" cy="50" rx="27" ry="23" fill="none" stroke="${c.anel}" stroke-width="3"/><ellipse cx="50" cy="50" rx="19" ry="16" fill="none" stroke="${c.anel}" stroke-width="1.5"/>`;
+    }
+    corpo += `<ellipse cx="40" cy="36" rx="12" ry="5" fill="#ffffff" opacity="${c.luz}"/>`;
+  }
+  return `<svg class="xadrez-peca-svg conjunto-${nome} lado-${branca ? 'claro' : 'escuro'}" viewBox="0 0 100 100" aria-hidden="true">${corpo}${cruz}${coroa}${faisca}</svg>`;
 }
 
 const CHAVE_DA_CAPTURA_DAS_DAMAS = 'lumina-sancti-damas-captura-obrigatoria';
@@ -210,7 +250,7 @@ function jogoDeDamas(area) {
     area.querySelectorAll('.xadrez-modo').forEach((b) => b.addEventListener('click', () => {
       if (b.dataset.modo === 'dois') { partida.modo = 'dois'; comecar(); return; }
       falarNoJogo(textoDoJogo('Escolha o nível. Quanto mais difícil, mais a Lumina pensa.'));
-      area.innerHTML = `<div class="xadrez-modos">${NIVEIS_DA_IA.map((n) => `<button type="button" class="jogo-nivel nivel-${n.id}" data-nivel="${n.id}"><span>${'<i></i>'.repeat(n.id + 1)}</span>${textoDoJogo(n.rotulo)}</button>`).join('')}</div>`;
+      area.innerHTML = `<div class="xadrez-modos">${htmlDosNiveisDosTabuleiros()}</div>`;
       area.querySelectorAll('.jogo-nivel').forEach((n) => n.addEventListener('click', () => { partida.modo = 'lumina'; partida.nivel = Number(n.dataset.nivel); jogoAtual.nivel = partida.nivel; comecar(); }));
     }));
   };
@@ -312,14 +352,29 @@ function jogoDeDamas(area) {
 
   const vezDaLumina = () => {
     partida.pensando = true;
-    falarNoJogo(textoDoJogo('A Lumina está pensando...'));
+    falarNoJogo(textoDoJogo(partida.nivel >= 4 ? 'A Lumina está pensando bem fundo...' : 'A Lumina está pensando...'));
     desenhar();
-    agendarNoJogo(() => {
-      if (!jogoAtual || jogoAtual.fim) return;
-      const m = damasMelhorJogada(partida.est, partida.nivel);
-      partida.pensando = false;
-      if (m) jogar(m);
-    }, 450);
+    const estado = partida.est;
+    const jogoDaVez = jogoAtual;
+    const inicio = Date.now();
+    const concluir = (m) => {
+      if (!jogoAtual || jogoAtual !== jogoDaVez || jogoAtual.fim || partida.est !== estado) return;
+      agendarNoJogo(() => {
+        if (!jogoAtual || jogoAtual !== jogoDaVez || jogoAtual.fim || partida.est !== estado) return;
+        partida.pensando = false;
+        if (m) jogar(m);
+      }, Math.max(0, 450 - (Date.now() - inicio)));
+    };
+    const config = typeof CONFIG_DOS_MOTORES !== 'undefined' ? CONFIG_DOS_MOTORES[partida.nivel] : null;
+    if (!config || typeof pedirAoMotor !== 'function') { agendarNoJogo(() => concluir(damasMelhorJogada(estado, Math.min(partida.nivel, 2))), 40); return; }
+    const chave = (e) => e.tab.map((p) => p || '.').join('') + e.vez;
+    const anteriores = (partida.historico || []).map((h) => (h && h.est ? chave(h.est) : null)).filter(Boolean);
+    pedirAoMotor('motor-damas.js', { tab: estado.tab, vez: estado.vez, semCaptura: estado.semCaptura, capturaLivre: !!estado.capturaLivre, tempo: config.tempo, profundidade: config.profundidade ? config.profundidade + 3 : 0, ruido: config.ruido || (partida.historico.length <= 6 ? 10 : 0), anteriores }).then((r) => {
+      const lista = damasJogadas(estado);
+      let m = r ? lista.find((x) => x.de === r.de && x.para === r.para && x.capturadas.slice().sort((a, b) => a - b).join() === (r.capturadas || []).join()) : null;
+      if (!m) m = damasMelhorJogada(estado, 2);
+      concluir(m);
+    });
   };
 
   const desfazer = () => {

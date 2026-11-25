@@ -37,7 +37,7 @@ const ITENS_DO_JOGO = {
   'moldura-bronze': { categoria: 'moldura', raridade: 'comum', nome: 'Bronze', tema: 'bronze' },
   'moldura-esmeralda': { categoria: 'moldura', raridade: 'raro', nome: 'Esmeralda', tema: 'esmeralda', pacote: 'esmeralda' },
   'moldura-rubi': { categoria: 'moldura', raridade: 'epico', nome: 'Rubi', tema: 'rubi', pacote: 'rubi' },
-  'moldura-ametista': { categoria: 'moldura', raridade: 'epico', nome: 'Ametista', tema: 'ametista' },
+  'moldura-ametista': { categoria: 'moldura', raridade: 'epico', nome: 'Ametista', tema: 'ametista', pacote: 'ametista' },
   'moldura-diamante': { categoria: 'moldura', raridade: 'lendario', nome: 'Diamante', tema: 'diamante', pacote: 'diamante' },
   'xadrez-vidro': { categoria: 'pecas_xadrez', raridade: 'comum', nome: 'Vidro', conjunto: 'vidro', pacote: 'vidro' },
   'damas-vidro': { categoria: 'pecas_damas', raridade: 'comum', nome: 'Vidro', conjunto: 'vidro', pacote: 'vidro' },
@@ -61,15 +61,44 @@ const ITENS_DO_JOGO = {
   'damas-celestial': { categoria: 'pecas_damas', raridade: 'secreto', nome: 'Pedra celestial', conjunto: 'celestial', pacote: 'celestial' },
   'tabuleiro-celestial': { categoria: 'tabuleiro', raridade: 'secreto', nome: 'Pedra celestial', tema: 'celestial', pacote: 'celestial' },
   'moldura-celestial': { categoria: 'moldura', raridade: 'secreto', nome: 'Pedra celestial', tema: 'celestial', pacote: 'celestial' },
+  'xadrez-cristal': { categoria: 'pecas_xadrez', raridade: 'epico', nome: 'Cristal', conjunto: 'cristal', pacote: 'cristal' },
+  'damas-cristal': { categoria: 'pecas_damas', raridade: 'epico', nome: 'Cristal', conjunto: 'cristal', pacote: 'cristal' },
+  'tabuleiro-cristal': { categoria: 'tabuleiro', raridade: 'epico', nome: 'Cristal', tema: 'cristal', pacote: 'cristal' },
+  'moldura-cristal': { categoria: 'moldura', raridade: 'epico', nome: 'Cristal', tema: 'cristal', pacote: 'cristal' },
+  'xadrez-safira': { categoria: 'pecas_xadrez', raridade: 'raro', nome: 'Safira', conjunto: 'safira', pacote: 'safira' },
+  'damas-safira': { categoria: 'pecas_damas', raridade: 'raro', nome: 'Safira', conjunto: 'safira', pacote: 'safira' },
+  'tabuleiro-safira': { categoria: 'tabuleiro', raridade: 'raro', nome: 'Safira', tema: 'safira', pacote: 'safira' },
+  'moldura-safira': { categoria: 'moldura', raridade: 'raro', nome: 'Safira', tema: 'safira', pacote: 'safira' },
+  'xadrez-ametista': { categoria: 'pecas_xadrez', raridade: 'epico', nome: 'Ametista', conjunto: 'ametista', pacote: 'ametista' },
+  'damas-ametista': { categoria: 'pecas_damas', raridade: 'epico', nome: 'Ametista', conjunto: 'ametista', pacote: 'ametista' },
+  'tabuleiro-ametista': { categoria: 'tabuleiro', raridade: 'epico', nome: 'Ametista', tema: 'ametista', pacote: 'ametista' },
+  'xadrez-ambar': { categoria: 'pecas_xadrez', raridade: 'raro', nome: 'Âmbar', conjunto: 'ambar', pacote: 'ambar' },
+  'damas-ambar': { categoria: 'pecas_damas', raridade: 'raro', nome: 'Âmbar', conjunto: 'ambar', pacote: 'ambar' },
+  'tabuleiro-ambar': { categoria: 'tabuleiro', raridade: 'raro', nome: 'Âmbar', tema: 'ambar', pacote: 'ambar' },
+  'moldura-ambar': { categoria: 'moldura', raridade: 'raro', nome: 'Âmbar', tema: 'ambar', pacote: 'ambar' },
+  'xadrez-gotico': { categoria: 'pecas_xadrez', raridade: 'lendario', nome: 'Catedral gótica', conjunto: 'gotico', pacote: 'gotico' },
+  'damas-gotico': { categoria: 'pecas_damas', raridade: 'lendario', nome: 'Catedral gótica', conjunto: 'gotico', pacote: 'gotico' },
+  'tabuleiro-gotico': { categoria: 'tabuleiro', raridade: 'lendario', nome: 'Catedral gótica', tema: 'gotico', pacote: 'gotico' },
+  'moldura-gotica': { categoria: 'moldura', raridade: 'lendario', nome: 'Catedral gótica', tema: 'gotica', pacote: 'gotico' },
+  'xadrez-sagrada': { categoria: 'pecas_xadrez', raridade: 'lendario', nome: 'Sagrada Família', conjunto: 'sagrada', pacote: 'sagrada' },
+  'damas-sagrada': { categoria: 'pecas_damas', raridade: 'lendario', nome: 'Sagrada Família', conjunto: 'sagrada', pacote: 'sagrada' },
+  'tabuleiro-sagrada': { categoria: 'tabuleiro', raridade: 'lendario', nome: 'Sagrada Família', tema: 'sagrada', pacote: 'sagrada' },
+  'moldura-sagrada': { categoria: 'moldura', raridade: 'lendario', nome: 'Sagrada Família', tema: 'sagrada', pacote: 'sagrada' },
 };
 
 const PACOTES_DOS_ITENS = {
   vidro: { nome: 'Pacote Vidro', raridade: 'comum' },
+  safira: { nome: 'Pacote Safira', raridade: 'raro' },
   esmeralda: { nome: 'Pacote Esmeralda', raridade: 'raro' },
   ouro: { nome: 'Pacote Ouro', raridade: 'raro' },
+  ambar: { nome: 'Pacote Âmbar', raridade: 'raro' },
+  cristal: { nome: 'Pacote Cristal', raridade: 'epico' },
   rubi: { nome: 'Pacote Rubi', raridade: 'epico' },
+  ametista: { nome: 'Pacote Ametista', raridade: 'epico' },
   obsidiana: { nome: 'Pacote Obsidiana', raridade: 'epico' },
   diamante: { nome: 'Pacote Diamante', raridade: 'lendario' },
+  gotico: { nome: 'Pacote Catedral gótica', raridade: 'lendario' },
+  sagrada: { nome: 'Pacote Sagrada Família', raridade: 'lendario' },
   celestial: { nome: 'Pacote Pedra celestial', raridade: 'secreto' },
 };
 
@@ -175,13 +204,16 @@ function htmlDosPacotes() {
   return `<div class="colecao-grade colecao-pacotes">${Object.keys(PACOTES_DOS_ITENS).map((pacote) => {
     const info = PACOTES_DOS_ITENS[pacote];
     const ids = itensDoPacote(pacote);
-    const meus = ids.filter((id) => temItem(id)).length;
+    const meusIds = ids.filter((id) => temItem(id));
+    const meus = meusIds.length;
     const misterio = info.raridade === 'secreto' && meus === 0;
+    const emUso = meus > 0 && meusIds.every((id) => itemEquipado(ITENS_DO_JOGO[id].categoria) === id);
     let texto = trDoItem('Encontre em baús');
     if (misterio) texto = trDoItem('Só a equipe pode dar de presente');
+    else if (emUso && meus === ids.length) texto = trDoItem('Usando');
     else if (meus === ids.length) texto = trDoItem('Usar pacote');
     else if (meus) texto = trDoItem('{n} de {total} peças do pacote', { n: meus, total: ids.length });
-    return `<button type="button" class="colecao-item colecao-pacote raridade-${info.raridade}${meus ? '' : ' bloqueado'}${misterio ? ' misterio' : ''}" data-pacote="${pacote}">
+    return `<button type="button" class="colecao-item colecao-pacote raridade-${info.raridade}${meus ? '' : ' bloqueado'}${misterio ? ' misterio' : ''}${emUso ? ' usando' : ''}" data-pacote="${pacote}" aria-pressed="${emUso ? 'true' : 'false'}">
       ${misterio ? '<span class="item-previa pacote-misterio" aria-hidden="true">?</span>' : previaDoPacote(pacote)}
       <b>${escaparDoItem(misterio ? trDoItem('Pacote secreto') : trDoItem(info.nome))}</b>
       ${seloDaRaridade(info.raridade)}

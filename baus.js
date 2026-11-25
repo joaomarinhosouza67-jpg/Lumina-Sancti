@@ -474,6 +474,46 @@ function tocarSomDoBau(tipo) {
   }
 }
 
+const CORES_DO_ESTOURO = { comum: '206, 214, 226', raro: '78, 163, 255', epico: '181, 123, 255', lendario: '255, 204, 77', secreto: '255, 140, 220' };
+
+function somDoBauNovo(tipo, forca) {
+  try {
+    const Classe = window.AudioContext || window.webkitAudioContext;
+    if (!Classe) return;
+    if (typeof contextoDeSomDosJogos !== 'undefined' && contextoDeSomDosJogos) somDoBauNovo.ctx = contextoDeSomDosJogos;
+    if (!somDoBauNovo.ctx) somDoBauNovo.ctx = new Classe();
+    const ctx = somDoBauNovo.ctx;
+    if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+    const agora = ctx.currentTime + 0.01;
+    if (tipo === 'batida') {
+      const o = ctx.createOscillator(); o.type = 'sine';
+      o.frequency.setValueAtTime(90 + forca * 25, agora); o.frequency.exponentialRampToValueAtTime(50, agora + 0.18);
+      const g = ctx.createGain(); g.gain.setValueAtTime(0.45, agora); g.gain.exponentialRampToValueAtTime(0.001, agora + 0.22);
+      o.connect(g); g.connect(ctx.destination); o.start(agora); o.stop(agora + 0.25);
+      const sino = ctx.createOscillator(); sino.type = 'triangle'; sino.frequency.value = 660 * Math.pow(1.26, forca);
+      const gs = ctx.createGain(); gs.gain.setValueAtTime(0.0001, agora); gs.gain.exponentialRampToValueAtTime(0.12, agora + 0.01); gs.gain.exponentialRampToValueAtTime(0.0001, agora + 0.35);
+      sino.connect(gs); gs.connect(ctx.destination); sino.start(agora); sino.stop(agora + 0.4);
+      return;
+    }
+    const notas = tipo === 'raro' ? [523, 659, 784, 1047, 1319, 1568] : [523, 659, 784, 1047];
+    notas.forEach((f, i) => {
+      const o = ctx.createOscillator(); o.type = 'triangle'; o.frequency.value = f;
+      const g = ctx.createGain(); const t = agora + i * 0.07;
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.16, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.9);
+      o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t + 1);
+    });
+    const tamanho = Math.floor(ctx.sampleRate * 0.5);
+    const buffer = ctx.createBuffer(1, tamanho, ctx.sampleRate);
+    const dados = buffer.getChannelData(0);
+    for (let i = 0; i < tamanho; i += 1) dados[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / tamanho, 2);
+    const ruido = ctx.createBufferSource(); ruido.buffer = buffer;
+    const filtro = ctx.createBiquadFilter(); filtro.type = 'highpass'; filtro.frequency.value = 2500;
+    const gr = ctx.createGain(); gr.gain.value = 0.12;
+    ruido.connect(filtro); filtro.connect(gr); gr.connect(ctx.destination); ruido.start(agora);
+  } catch (e) {
+  }
+}
+
 async function abrirBau(id, tipo, opcoes) {
   if (!id) return;
   const extra = opcoes || {};
@@ -483,20 +523,44 @@ async function abrirBau(id, tipo, opcoes) {
     <div class="bau-palco bau-${escaparDoBau(tipo)}">
       <span class="bau-raios" aria-hidden="true"></span>
       <span class="bau-faiscas" aria-hidden="true">${Array.from({ length: 16 }, (_, i) => `<i style="--a:${Math.round(i * 22.5 + (i % 2) * 9)}deg;--d:${90 + (i % 4) * 22}px;--t:${(0.7 + (i % 3) * 0.18).toFixed(2)}s"></i>`).join('')}</span>
-      <div class="bau-desenho">${bauEm3d(tipo, 200)}</div>
+      <span class="bau-onda" aria-hidden="true"></span>
+      <span class="bau-moedas" aria-hidden="true">${Array.from({ length: 22 }, (_, i) => `<i style="--a:${Math.round(i * (360 / 22) + (i % 3) * 7)}deg;--d:${110 + (i % 5) * 26}px;--t:${(0.8 + (i % 4) * 0.15).toFixed(2)}s;--g:${(i % 6) * 0.03}s"></i>`).join('')}</span>
+      <div class="bau-desenho" role="button" tabindex="0" aria-label="${escaparDoBau(trDoBau('Abrir'))}">${bauEm3d(tipo, 200)}</div>
       <div class="bau-premios" id="bau-premios"></div>
     </div>
+    <span class="bau-clarao" aria-hidden="true"></span>
     <button type="button" class="bau-botao" id="bau-botao" disabled>${trDoBau('Abrindo...')}</button>`, 'abrindo tela-cheia');
   fundo.dataset.travada = 'sim';
-  const inicio = Date.now();
+  const desenho = fundo.querySelector('.bau-desenho');
   let resultado = null;
-  try {
-    resultado = await chamarDosBaus('bau_abrir', { _id: id });
-  } catch (e) {
-    resultado = null;
+  let chegou = false;
+  let batidas = 0;
+  let abriu = false;
+  const relogios = [];
+  let quandoChegar = null;
+  const pedido = chamarDosBaus('bau_abrir', { _id: id }).then((r) => r).catch(() => null).then((r) => { resultado = r; chegou = true; if (quandoChegar) quandoChegar(); });
+  const bater = () => {
+    if (abriu || !desenho || !document.body.contains(fundo)) return;
+    batidas += 1;
+    desenho.classList.remove('bate');
+    void desenho.offsetWidth;
+    desenho.style.setProperty('--forca', String(batidas));
+    desenho.classList.add('bate');
+    fundo.classList.add(`batida-${Math.min(3, batidas)}`);
+    somDoBauNovo('batida', batidas);
+    if (navigator.vibrate) { try { navigator.vibrate(18 + batidas * 12); } catch (e) {
+    } }
+    if (batidas >= 3) { relogios.forEach(clearTimeout); if (chegou) abrirDeVez(); else quandoChegar = abrirDeVez; }
+  };
+  if (desenho) {
+    desenho.addEventListener('click', bater);
+    desenho.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); bater(); } });
   }
-  const espera = Math.max(0, 1500 - (Date.now() - inicio));
-  setTimeout(() => {
+  [650, 1250, 1850].forEach((ms) => relogios.push(setTimeout(bater, ms)));
+  const abrirDeVez = () => {
+    if (abriu) return;
+    abriu = true;
+    relogios.forEach(clearTimeout);
     if (!document.body.contains(fundo)) return;
     const botao = fundo.querySelector('#bau-botao');
     fundo.dataset.travada = 'nao';
@@ -507,7 +571,12 @@ async function abrirBau(id, tipo, opcoes) {
       if (premios) premios.innerHTML = `<p class="bau-erro">${trDoBau('Não deu para abrir agora. Tente de novo.')}</p>`;
       return;
     }
-    tocarSomDoBau('abrir');
+    const raridadeDoItem = resultado.item && !resultado.item.duplicado ? resultado.item.raridade : '';
+    if (CORES_DO_ESTOURO[raridadeDoItem]) fundo.style.setProperty('--cor-do-estouro', CORES_DO_ESTOURO[raridadeDoItem]);
+    if (raridadeDoItem) fundo.classList.add(`premio-${raridadeDoItem}`);
+    somDoBauNovo(['epico', 'lendario', 'secreto'].includes(raridadeDoItem) ? 'raro' : 'abrir');
+    if (navigator.vibrate) { try { navigator.vibrate([30, 40, 60]); } catch (e) {
+    } }
     fundo.classList.remove('abrindo');
     fundo.classList.add('aberto');
     const premios = fundo.querySelector('#bau-premios');
@@ -523,7 +592,8 @@ async function abrirBau(id, tipo, opcoes) {
     if (membro && typeof membro.fe === 'number') membro.fe += Number(resultado.fe) || 0;
     if (typeof estadoEmMemoriaDaConta !== 'undefined' && estadoEmMemoriaDaConta && typeof estadoEmMemoriaDaConta.fe === 'number') estadoEmMemoriaDaConta.fe += Number(resultado.fe) || 0;
     redesenharDepoisDoBau = true;
-  }, espera);
+  };
+  await pedido;
 }
 
 function mostrarFrasco(tipo) {
