@@ -6883,3 +6883,5 @@ option { background: #141b38; color: #e8ecf6; }
 @keyframes bauChega { 0% { transform: scale(1.35); filter: brightness(2.6); } 100% { transform: none; filter: none; } }
 @keyframes bauNomeMuda { 0% { transform: scale(0.6); opacity: 0; } 100% { transform: none; opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .bau-palco.subindo .bau-desenho, .bau-palco.subiu .bau-desenho, .bau-titulo.mudou { animation: none; } }
+html, body, * { scrollbar-width: none !important; }
+html::-webkit-scrollbar, body::-webkit-scrollbar, *::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
