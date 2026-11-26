@@ -28,7 +28,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Merriweather+Sans:wght@300..800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Merriweather+Sans:wght@300..800&family=Alex+Brush&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 
   <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -51,11 +51,12 @@
 
   <div id="intro-screen" class="intro-screen" aria-hidden="true">
     <canvas id="intro-canvas" class="intro-canvas"></canvas>
-    <div class="intro-feixes"></div>
-    <div class="intro-brand">Lumina Sancti</div>
-    <div class="intro-lema" data-i18n="hero_subtitulo">Luz dos Santos</div>
-    <div class="intro-skip-hint">Toque para pular</div>
-    <div class="intro-carregando"><span>Preparando sua jornada...</span><i></i></div>
+    <div class="intro-feixes-caixa"><div class="intro-feixes"></div></div>
+    <div class="intro-preto"></div>
+    <div class="intro-nome"><svg class="intro-nome-svg" viewBox="0 0 1400 300"><defs><filter id="intro-brilho" x="-30%" y="-80%" width="160%" height="260%"><feGaussianBlur id="intro-borrao" stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><linearGradient id="intro-ouro-nome" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffdf0"/><stop offset=".38" stop-color="#f8e09a"/><stop offset=".72" stop-color="#e0b04a"/><stop offset="1" stop-color="#b8822a"/></linearGradient><linearGradient id="intro-reflexo" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="340" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".95"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs><text class="intro-nome-medida" x="700" y="200" text-anchor="middle">Lumina Sancti</text><g class="intro-letras" filter="url(#intro-brilho)"></g><text class="intro-nome-reflexo" x="700" y="200" text-anchor="middle" fill="url(#intro-reflexo)" opacity="0">Lumina Sancti</text><text class="intro-nome-luz" x="700" y="200" text-anchor="middle" opacity="0" filter="url(#intro-brilho)">Lumina Sancti</text></svg></div>
+    <canvas id="intro-faiscas" class="intro-canvas"></canvas>
+    <div class="intro-branco"></div>
+    <div class="intro-dica"></div>
   </div>
 
   <div id="tela-carregando" class="tela-carregando" aria-hidden="true">
@@ -336,30 +337,13 @@
     <div id="aviso-geral" class="aviso-geral" role="status" hidden></div>
 
     <section id="view-home" class="view active">
-      <section class="hero">
-        <div class="hero-content">
-          <div class="hero-icon-container">
-            <svg class="hero-icon" viewBox="0 0 100 100" width="84" height="84" aria-hidden="true">
-              <defs>
-                <radialGradient id="hero-ouro" cx="50%" cy="50%" r="55%"><stop offset="0" stop-color="#fffbe8"/><stop offset=".3" stop-color="#f8e19a"/><stop offset=".72" stop-color="#dcae45"/><stop offset="1" stop-color="#9a6a1c"/></radialGradient>
-                <radialGradient id="hero-brilho"><stop offset="0" stop-color="#fffef5"/><stop offset=".45" stop-color="#ffe9a8" stop-opacity=".5"/><stop offset="1" stop-color="#ffd76a" stop-opacity="0"/></radialGradient>
-              </defs>
-              <circle cx="50" cy="50" r="34" fill="url(#hero-brilho)" opacity=".5"/>
-              <g transform="rotate(45 50 50)" opacity=".65">
-                <path d="M50 15 C52 38 62 48 85 50 C62 52 52 62 50 85 C48 62 38 52 15 50 C38 48 48 38 50 15 Z" fill="url(#hero-ouro)"/>
-                <path d="M50 50 L50 15 C52 38 62 48 85 50 Z M50 50 L50 85 C48 62 38 52 15 50 Z" fill="#6e4710" opacity=".28"/>
-              </g>
-              <path d="M50 0 C52 35 65 48 100 50 C65 52 52 65 50 100 C48 65 35 52 0 50 C35 48 48 35 50 0 Z" fill="url(#hero-ouro)"/>
-              <path d="M50 50 L50 0 C52 35 65 48 100 50 Z M50 50 L50 100 C48 65 35 52 0 50 Z" fill="#6e4710" opacity=".26"/>
-              <path d="M50 50 V3 M50 50 H97 M50 50 V97 M50 50 H3" stroke="#fffbe8" stroke-width=".7" opacity=".6"/>
-              <circle cx="50" cy="50" r="5" fill="#fffef5"/>
-            </svg>
-          </div>
-          <h1 class="hero-title">Lumina Sancti</h1>
-          <p class="hero-subtitle" data-i18n="hero_subtitulo">Luz dos Santos</p>
-          <p class="hero-quote" data-i18n="hero_citacao">"A santidade não é o luxo de alguns, mas um chamado silencioso e ardente ao coração de todos nós, iluminando o mundo em cada época."</p>
-        </div>
+      <section class="hero vitrine" id="vitrine" aria-roledescription="carrossel" aria-label="Destaques">
+        <div class="vitrine-palco" id="vitrine-palco"></div>
+        <button type="button" class="vit-mudar vit-mudar-esq" data-vit-mudar="-1" aria-label="Anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button type="button" class="vit-mudar vit-mudar-dir" data-vit-mudar="1" aria-label="Próximo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="vitrine-pontos" id="vitrine-pontos"></div>
       </section>
+      <div class="vitrine-fileiras" id="vitrine-fileiras"></div>
 
       <section class="convite-app container" id="convite-app" hidden aria-label="Baixe o app">
         <div class="convite-app-cartao">
@@ -1699,5 +1683,6 @@
   <script src="presentes.js"></script>
   <script src="suporte.js"></script>
   <script src="eventos.js"></script>
+  <script src="vitrine.js"></script>
 </body>
 </html>

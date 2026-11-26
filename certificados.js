@@ -358,7 +358,7 @@ async function verificarCertificadoDoEndereco() {
   try { resposta = await chamarCertificado('certificado_verificar', { _codigo: codigo }); } catch (e) {
     resposta = null;
   }
-  for (let i = 0; i < 80 && document.body.classList.contains('intro-ativa'); i += 1) await esperarDoCertificado(100);
+  for (let i = 0; i < 130 && document.body.classList.contains('intro-ativa'); i += 1) await esperarDoCertificado(100);
   if (resposta && resposta.valido) { abrirCertificado(dadosDoCertificado(resposta), { verificado: true }); return; }
   montarJanelaDoCertificado(`<div class="certificado-invalido"><svg viewBox="0 0 100 100" width="56" height="56" aria-hidden="true"><path d="${ESTRELA_DO_CERTIFICADO}" fill="#d4af37"/></svg><h3>${escaparDoCertificado(trDoCertificado('Certificado não encontrado'))}</h3><p translate="no">${escaparDoCertificado(codigo)}</p></div>`);
 }
