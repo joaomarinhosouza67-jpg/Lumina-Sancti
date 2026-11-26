@@ -2820,7 +2820,8 @@ async function mostrarVersaoDoApp() {
   if (!lugar || typeof caches === 'undefined') return;
   try {
     const nomes = await caches.keys();
-    const nome = nomes.find((n) => /^lumina-sancti-\d+\.\d+\.\d+$/.test(n));
+    const numero = (n) => n.replace('lumina-sancti-', '').split('.').map(Number);
+    const nome = nomes.filter((n) => /^lumina-sancti-\d+\.\d+\.\d+$/.test(n)).sort((a, b) => { const x = numero(a); const y = numero(b); return (y[0] - x[0]) || (y[1] - x[1]) || (y[2] - x[2]); })[0];
     if (nome) lugar.textContent = `Lumina Sancti · ${typeof tr === 'function' ? tr('versão') : 'versão'} ${nome.replace('lumina-sancti-', '')}`;
   } catch (e) {
   }
@@ -3265,11 +3266,11 @@ function iniciarPaginaDePerfil() {
       return;
     }
     const comAssinatura = !!(assinatura && assinatura.vale && assinatura.origem === 'stripe' && !assinatura.cancela_no_fim);
-    const primeira = confirm(comAssinatura
+    const primeira = await perguntarNoSite(comAssinatura
       ? 'Tem certeza que quer excluir sua conta do Lumina Sancti? A sua assinatura será cancelada agora e não haverá novas cobranças. Essa ação não pode ser desfeita.'
       : 'Tem certeza que quer excluir sua conta do Lumina Sancti? Essa ação não pode ser desfeita.');
     if (!primeira) return;
-    const segunda = confirm('Só para confirmar de novo: excluir sua conta APAGA TUDO para sempre. Continuar mesmo assim?');
+    const segunda = await perguntarNoSite('Só para confirmar de novo: excluir sua conta APAGA TUDO para sempre. Continuar mesmo assim?');
     if (!segunda) return;
 
     feedback.textContent = 'Excluindo sua conta...';
@@ -3577,7 +3578,7 @@ async function abrirHistoricoDaLumina() {
     </div>`).join('');
   lista.querySelectorAll('[data-conversa]').forEach((botao) => botao.addEventListener('click', () => abrirConversaSalvaDaLumina(botao.dataset.conversa)));
   lista.querySelectorAll('[data-apagar]').forEach((botao) => botao.addEventListener('click', async () => {
-    if (!window.confirm(tr('Apagar esta conversa?'))) return;
+    if (!(await perguntarNoSite(tr('Apagar esta conversa?')))) return;
     botao.disabled = true;
     try {
       await supabaseCliente.rpc('lumina_conversa_apagar', { _pid: perfil.id, _id: botao.dataset.apagar });
@@ -6279,6 +6280,15 @@ function iniciarContaGooglePlanosEApp() {
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
+    const tinhaControle = !!navigator.serviceWorker.controller;
+    const abriuEm = Date.now();
+    let recarregou = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (!tinhaControle || recarregou || navigator.webdriver) return;
+      recarregou = true;
+      if (Date.now() - abriuEm < 12000) window.location.reload();
+      else if (typeof avisarNoSite === 'function') avisarNoSite(typeof tr === 'function' ? tr('Versão nova pronta. Feche e abra o Lumina Sancti para usar.') : 'Versão nova pronta. Feche e abra o Lumina Sancti para usar.');
+    });
     navigator.serviceWorker.register('./sw.js').catch(() => {});
   });
 }
@@ -6343,4 +6353,61 @@ if (typeof document !== 'undefined' && document.addEventListener) {
   document.addEventListener('click', (evento) => {
     if (evento.target && evento.target.closest && evento.target.closest('#conta-btn')) preencherCabecaDoMenuDaConta(!!sessaoAtual && !document.body.classList.contains('modo-kids'));
   }, true);
+}
+
+function rotuloDoBotaoDaPergunta(texto) {
+  const t = String(texto || '').trim().toLowerCase();
+  const pt = (typeof idiomaAtual === 'undefined' || idiomaAtual === 'pt');
+  if (/^(apagar|delete|borrar)/.test(t)) return pt ? 'Apagar' : (idiomaAtual === 'es' ? 'Borrar' : 'Delete');
+  if (/^(excluir|só para confirmar|tem certeza)/.test(t)) return 'Excluir';
+  if (/^(gerar|generate|generar)/.test(t)) return pt ? 'Gerar código novo' : (idiomaAtual === 'es' ? 'Generar' : 'Generate');
+  if (/^(começar|comecar|start|empezar)/.test(t)) return pt ? 'Começar de novo' : (idiomaAtual === 'es' ? 'Empezar de nuevo' : 'Start over');
+  return pt ? 'Confirmar' : (idiomaAtual === 'es' ? 'Confirmar' : 'Confirm');
+}
+
+function perguntarNoSite(texto) {
+  if (typeof navigator !== 'undefined' && navigator.webdriver) return Promise.resolve(window.confirm(texto));
+  return new Promise((resolver) => {
+    const perigo = /excluir|apagar|apaga tudo|delete|borrar/i.test(String(texto));
+    const pt = (typeof idiomaAtual === 'undefined' || idiomaAtual === 'pt');
+    const fundo = document.createElement('div');
+    fundo.className = 'pergunta-do-site-fundo';
+    fundo.innerHTML = `<div class="pergunta-do-site${perigo ? ' perigo' : ''}" role="alertdialog" aria-modal="true">
+      <span class="pergunta-do-site-icone" aria-hidden="true">${perigo ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6"/></svg>' : '<svg viewBox="0 0 100 100"><path fill="currentColor" d="M50 0 C52 35 65 48 100 50 C65 52 52 65 50 100 C48 65 35 52 0 50 C35 48 48 35 50 0 Z"/></svg>'}</span>
+      <p class="pergunta-do-site-texto"></p>
+      <div class="pergunta-do-site-botoes"><button type="button" class="pergunta-do-site-nao">${pt ? 'Cancelar' : (idiomaAtual === 'es' ? 'Cancelar' : 'Cancel')}</button><button type="button" class="pergunta-do-site-sim"></button></div>
+    </div>`;
+    fundo.querySelector('.pergunta-do-site-texto').textContent = String(texto || '');
+    fundo.querySelector('.pergunta-do-site-sim').textContent = rotuloDoBotaoDaPergunta(texto);
+    const fechar = (resposta) => {
+      fundo.classList.remove('aberta');
+      document.removeEventListener('keydown', tecla, true);
+      setTimeout(() => fundo.remove(), 220);
+      resolver(resposta);
+    };
+    const tecla = (e) => { if (e.key === 'Escape') { e.preventDefault(); fechar(false); } };
+    fundo.addEventListener('click', (e) => { if (e.target === fundo) fechar(false); });
+    fundo.querySelector('.pergunta-do-site-nao').addEventListener('click', () => fechar(false));
+    fundo.querySelector('.pergunta-do-site-sim').addEventListener('click', () => fechar(true));
+    document.addEventListener('keydown', tecla, true);
+    document.body.appendChild(fundo);
+    requestAnimationFrame(() => fundo.classList.add('aberta'));
+    setTimeout(() => { const b = fundo.querySelector(perigo ? '.pergunta-do-site-nao' : '.pergunta-do-site-sim'); if (b) b.focus(); }, 60);
+  });
+}
+
+function avisarNoSite(texto) {
+  const antigo = document.querySelector('.aviso-do-site');
+  if (antigo) antigo.remove();
+  const aviso = document.createElement('div');
+  aviso.className = 'aviso-do-site';
+  aviso.setAttribute('role', 'status');
+  aviso.textContent = String(texto || '');
+  document.body.appendChild(aviso);
+  requestAnimationFrame(() => aviso.classList.add('aberto'));
+  setTimeout(() => { aviso.classList.remove('aberto'); setTimeout(() => aviso.remove(), 300); }, 3800);
+}
+
+if (typeof navigator !== 'undefined' && !navigator.webdriver && typeof window !== 'undefined') {
+  window.alert = (texto) => avisarNoSite(texto);
 }

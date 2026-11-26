@@ -1204,7 +1204,7 @@ function tirarPinDoPerfil() {
 async function excluirPerfilDoEditor() {
   const e = editorEstado;
   if (!e || !e.membro) return;
-  const confirmou = confirm(tr('Excluir o perfil "{nome}"? A Fé, a ofensiva e as insígnias dele serão apagadas para sempre.', { nome: e.membro.nome }));
+  const confirmou = await perguntarNoSite(tr('Excluir o perfil "{nome}"? A Fé, a ofensiva e as insígnias dele serão apagadas para sempre.', { nome: e.membro.nome }));
   if (!confirmou) return;
   const feedback = document.getElementById('perfil-editor-feedback');
   try {

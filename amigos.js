@@ -187,7 +187,7 @@ function mostrarCartaoDoCodigo(corpo, codigo) {
     aviso.textContent = (await copiarTexto(`${texto}\n${link}`)) ? 'Link copiado!' : 'Não foi possível copiar.';
   });
   corpo.querySelector('#meu-codigo-novo').addEventListener('click', async () => {
-    if (!window.confirm(tr('Gerar um código novo? Quem tiver o código antigo não vai mais conseguir adicionar você. As conversas que você já tem continuam.'))) return;
+    if (!(await perguntarNoSite(tr('Gerar um código novo? Quem tiver o código antigo não vai mais conseguir adicionar você. As conversas que você já tem continuam.')))) return;
     try {
       const novo = await chamarCenaculo('amigo_novo_codigo', { _pid: perfilAdultoAtivo().id });
       mostrarCartaoDoCodigo(corpo, novo);

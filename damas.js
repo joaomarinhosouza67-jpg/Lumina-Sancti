@@ -329,7 +329,7 @@ function jogoDeDamas(area) {
     });
     area.querySelector('#damas-desfazer').addEventListener('click', desfazer);
     area.querySelector('#damas-visual').addEventListener('click', () => { if (typeof abrirColecaoDeItens === 'function') abrirColecaoDeItens('damas', desenhar); });
-    area.querySelector('#damas-novo').addEventListener('click', () => { if (!partida.historico.length || window.confirm(textoDoJogo('Começar uma nova partida?'))) escolherModo(); });
+    area.querySelector('#damas-novo').addEventListener('click', async () => { if (!partida.historico.length || await perguntarNoSite(textoDoJogo('Começar uma nova partida?'))) escolherModo(); });
     if (partida.animar && typeof animarJogadaNoTabuleiro === 'function') {
       animarJogadaNoTabuleiro(area.querySelector('.xadrez-tabuleiro'), partida.animar.caminho, partida.animar.fantasmas);
       partida.animar = null;

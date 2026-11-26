@@ -258,7 +258,7 @@ function htmlDaFileiraDeJogos() {
 const FILEIRA_DE_NATAL = [['sagrada-familia', 'natalSelo'], ['jose', 'natalSelo'], ['francisco-assis', 'presepio'], ['gabriel', 'anunciacao'], ['sao-nicolau', '6/12'], ['juan-diego', '9/12'], ['santa-luzia', '13/12'], ['joao-da-cruz', '14/12'], ['estevao-protomartir', '26/12'], ['tomas-becket', '29/12'], ['joaquim-ana', '']];
 
 function htmlDaFileiraDeNatal() {
-  if (!(typeof epocaDeNatal === 'function' && epocaDeNatal())) return '';
+  if (!(typeof epocaDeNatal === 'function' && epocaDeNatal()) || (typeof preferenciaLigada === 'function' && !preferenciaLigada('lumina-sancti-sem-enfeites-natal'))) return '';
   const posters = FILEIRA_DE_NATAL.map(([id, selo], i) => htmlDoPoster(id, selo && !/\d/.test(selo) ? textoDaVitrine(selo) : selo, i)).filter(Boolean);
   return htmlDaFileira(textoDaVitrine('natal'), posters).replace('class="vit-fileira"', 'class="vit-fileira vit-natal"');
 }
@@ -406,7 +406,7 @@ function mostrarSlideDaVitrine(indice) {
 
 function agendarVitrine() {
   clearTimeout(vitrine.relogio);
-  if (vitrine.parado || vitrine.slides.length < 2) return;
+  if (vitrine.parado || vitrine.slides.length < 2 || (typeof preferenciaLigada === 'function' && !preferenciaLigada('lumina-sancti-sem-destaque-sozinho'))) return;
   vitrine.relogio = setTimeout(() => {
     const home = document.getElementById('view-home');
     if (document.hidden || !home || !home.classList.contains('active')) { agendarVitrine(); return; }

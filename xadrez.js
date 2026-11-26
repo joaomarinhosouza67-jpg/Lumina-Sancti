@@ -781,7 +781,7 @@ function jogoDeXadrez(area) {
     });
     area.querySelector('#xadrez-desfazer').addEventListener('click', desfazer);
     area.querySelector('#xadrez-visual').addEventListener('click', () => { if (typeof abrirColecaoDeItens === 'function') abrirColecaoDeItens('xadrez', desenhar); });
-    area.querySelector('#xadrez-novo').addEventListener('click', () => { if (!partida.historico.length || window.confirm(textoDoJogo('Começar uma nova partida?'))) escolherModo(); });
+    area.querySelector('#xadrez-novo').addEventListener('click', async () => { if (!partida.historico.length || await perguntarNoSite(textoDoJogo('Começar uma nova partida?'))) escolherModo(); });
     if (partida.animar) {
       animarJogadaNoTabuleiro(area.querySelector('.xadrez-tabuleiro'), partida.animar.caminho, partida.animar.fantasmas);
       partida.animar = null;

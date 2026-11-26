@@ -823,6 +823,8 @@ function montarMenuDasConfiguracoes() {
     som.id = 'config-som';
     conta.before(som);
   }
+  montarSecaoDasAnimacoes(caixa);
+  montarSecoesDeConfigMais(caixa);
   const som = document.getElementById('config-som');
   if (som) {
     const aberturaLigada = (() => { try { return localStorage.getItem('lumina-sancti-sem-som-abertura') !== '1'; } catch (e) { return true; } })();
@@ -848,7 +850,7 @@ function montarMenuDasConfiguracoes() {
     const voltar = document.getElementById('btn-back-perfil');
     if (voltar) voltar.after(menu); else caixa.prepend(menu);
   }
-  const secoes = [...caixa.querySelectorAll('.meu-perfil-config-titulo ~ .perfil-secao, .config-som')].filter((s) => s.querySelector('.perfil-secao-titulo'));
+  const secoes = [...caixa.querySelectorAll('.meu-perfil-config-titulo ~ .perfil-secao, .config-som, .config-animacoes, .config-mais')].filter((s) => s.querySelector('.perfil-secao-titulo'));
   secoes.forEach((s, i) => { if (!s.id) s.id = `config-secao-${i}`; });
   const itens = [['conta', 'pessoa', textoDo140('conta')], ['perfis', 'usuarios', textoDo140('perfis')]]
     .concat(secoes.map((s) => [`#${s.id}`, '', s.querySelector('.perfil-secao-titulo').textContent.trim()]))
@@ -861,9 +863,11 @@ function montarMenuDasConfiguracoes() {
     menu.querySelectorAll('.config-item').forEach((x) => x.classList.toggle('ativo', x === b));
     if (alvo === 'perfis') { document.body.classList.remove('vendo-config'); if (typeof abrirConfiguracoesDePerfis === 'function') abrirConfiguracoesDePerfis(); return; }
     if (alvo === 'ajuda' || alvo === 'sobre') { document.body.classList.remove('vendo-config'); const n = document.getElementById(alvo === 'ajuda' ? 'nav-suporte' : 'nav-sobre'); if (n) n.click(); return; }
-    const destino = alvo === 'conta' ? caixa.querySelector('.meu-perfil-conta') : caixa.querySelector(alvo);
-    if (destino) window.scrollTo({ top: destino.getBoundingClientRect().top + window.scrollY - 96, behavior: 'smooth' });
+    mostrarSecaoDaConfig(caixa, alvo);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+  const existe = secaoDaConfigAtual === 'conta' || !!caixa.querySelector(secaoDaConfigAtual);
+  mostrarSecaoDaConfig(caixa, existe ? secaoDaConfigAtual : 'conta');
 }
 
 let abrindoConfiguracoes = false;
@@ -871,6 +875,7 @@ function abrirConfiguracoesNovas() {
   const menuDaConta = document.getElementById('conta-menu');
   if (menuDaConta) menuDaConta.classList.remove('aberto');
   abrindoConfiguracoes = true;
+  secaoDaConfigAtual = 'conta';
   document.body.classList.add('vendo-config');
   const botao = document.getElementById('conta-menu-perfil');
   if (botao) botao.click();
@@ -892,7 +897,7 @@ function colocarBotaoDeConfiguracoesNoPerfil() {
 }
 
 function iniciarPartesNovasDo140() {
-  if (epocaDeNatal()) document.body.classList.add('natal');
+  if (epocaDeNatal() && preferenciaLigada('lumina-sancti-sem-enfeites-natal')) document.body.classList.add('natal');
   if (typeof iconeCoracao === 'function') {
     iconeCoracao = function (preenchido) { return preenchido ? MARCADOR_CHEIO : MARCADOR_VAZIO; };
   }
@@ -969,6 +974,8 @@ function vestirPaginaAtual() {
 }
 
 function iniciarPartesNovasDo141() {
+  aplicarNeveDoSite();
+  aplicarPreferenciasDoSite();
   iniciarFileirasDasPaginas();
   if (typeof MutationObserver !== 'undefined') new MutationObserver(vestirPaginaAtual).observe(document.body, { attributes: true, attributeFilter: ['data-vista'] });
   vestirPaginaAtual();
@@ -1053,4 +1060,169 @@ function colocarFileirasNaPaginaAtual() {
 function iniciarFileirasDasPaginas() {
   if (typeof MutationObserver !== 'undefined') new MutationObserver(colocarFileirasNaPaginaAtual).observe(document.body, { attributes: true, attributeFilter: ['data-vista'] });
   colocarFileirasNaPaginaAtual();
+}
+
+const TEXTOS_DAS_ANIMACOES = {
+  pt: { titulo: 'Animações e Natal', entrada: 'Animação de entrada', entradaSub: 'Assistir de novo à estrela e ao nome escrito', assistir: 'Assistir', neve: 'Neve caindo', neveSub: 'Flocos de neve em todo o site', enfeites: 'Enfeites de Natal', enfeitesSub: 'Pisca-pisca, bolas, bengalinhas e a fileira de Natal' },
+  en: { titulo: 'Animations and Christmas', entrada: 'Opening animation', entradaSub: 'Watch the star and the written name again', assistir: 'Watch', neve: 'Falling snow', neveSub: 'Snowflakes across the site', enfeites: 'Christmas decorations', enfeitesSub: 'Lights, ornaments, candy canes and the Christmas row' },
+  es: { titulo: 'Animaciones y Navidad', entrada: 'Animación de entrada', entradaSub: 'Ver de nuevo la estrella y el nombre escrito', assistir: 'Ver', neve: 'Nieve cayendo', neveSub: 'Copos de nieve en todo el sitio', enfeites: 'Adornos de Navidad', enfeitesSub: 'Luces, bolas, bastones y la fila de Navidad' },
+};
+
+function textoDasAnimacoes(chave) {
+  const idioma = (typeof idiomaAtual !== 'undefined' && TEXTOS_DAS_ANIMACOES[idiomaAtual]) ? idiomaAtual : 'pt';
+  return TEXTOS_DAS_ANIMACOES[idioma][chave] || TEXTOS_DAS_ANIMACOES.pt[chave];
+}
+
+function preferenciaLigada(chave) {
+  try { return localStorage.getItem(chave) !== '1'; } catch (e) { return true; }
+}
+
+function guardarPreferencia(chave, ligada) {
+  try { if (ligada) localStorage.removeItem(chave); else localStorage.setItem(chave, '1'); } catch (e) { }
+}
+
+function aplicarNeveDoSite() {
+  const principal = document.querySelector('main');
+  if (principal && !document.getElementById('montanhas-de-neve')) principal.insertAdjacentHTML('beforeend', '<div id="montanhas-de-neve" class="montanhas-de-neve" aria-hidden="true"></div>');
+  const ligada = document.body.classList.contains('natal') && preferenciaLigada('lumina-sancti-sem-neve');
+  document.body.classList.toggle('sem-neve', !preferenciaLigada('lumina-sancti-sem-neve'));
+  let neve = document.getElementById('neve-do-site');
+  if (ligada && !neve) {
+    neve = document.createElement('div');
+    neve.id = 'neve-do-site';
+    neve.className = 'neve-natal neve-do-site';
+    neve.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(neve);
+  } else if (!ligada && neve) neve.remove();
+}
+
+function montarSecaoDasAnimacoes(caixa) {
+  const conta = caixa.querySelector('.meu-perfil-conta');
+  if (!conta) return;
+  let secao = document.getElementById('config-animacoes');
+  if (!secao) {
+    secao = document.createElement('section');
+    secao.className = 'perfil-secao config-animacoes';
+    secao.id = 'config-animacoes';
+    conta.before(secao);
+    secao.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-animacao]');
+      if (!b) return;
+      const tipo = b.dataset.animacao;
+      if (tipo === 'entrada') { try { sessionStorage.setItem('lumina-sancti-rever-entrada', '1'); } catch (erro) { } window.location.reload(); return; }
+      if (tipo === 'neve') { guardarPreferencia('lumina-sancti-sem-neve', !preferenciaLigada('lumina-sancti-sem-neve')); aplicarNeveDoSite(); }
+      if (tipo === 'enfeites') {
+        const ligar = !preferenciaLigada('lumina-sancti-sem-enfeites-natal');
+        guardarPreferencia('lumina-sancti-sem-enfeites-natal', ligar);
+        document.body.classList.toggle('natal', ligar && epocaDeNatal());
+        aplicarNeveDoSite();
+        if (typeof montarVitrine === 'function') montarVitrine();
+        if (ligar) enfeitarNatal();
+      }
+      montarSecaoDasAnimacoes(caixa);
+    });
+  }
+  const neve = preferenciaLigada('lumina-sancti-sem-neve');
+  const enfeites = preferenciaLigada('lumina-sancti-sem-enfeites-natal');
+  const linha = (tipo, titulo, sub, direita) => `<button type="button" class="ajuste config-chave" data-animacao="${tipo}"><span class="ajuste-textos"><strong>${escaparDoAppNovo(titulo)}</strong><small>${escaparDoAppNovo(sub)}</small></span>${direita}</button>`;
+  secao.innerHTML = `<h4 class="perfil-secao-titulo">${escaparDoAppNovo(textoDasAnimacoes('titulo'))}</h4>
+    <div class="ajustes-lista">
+      ${linha('entrada', textoDasAnimacoes('entrada'), textoDasAnimacoes('entradaSub'), `<span class="config-acao-ouro">${escaparDoAppNovo(textoDasAnimacoes('assistir'))}</span>`)}
+      ${linha('neve', textoDasAnimacoes('neve'), textoDasAnimacoes('neveSub'), `<span class="chave-visual${neve ? ' ligada' : ''}"></span>`)}
+      ${linha('enfeites', textoDasAnimacoes('enfeites'), textoDasAnimacoes('enfeitesSub'), `<span class="chave-visual${enfeites ? ' ligada' : ''}"></span>`)}
+    </div>`;
+}
+
+let secaoDaConfigAtual = 'conta';
+function secoesDaConfig(caixa) {
+  return [...caixa.querySelectorAll('.meu-perfil-config-titulo ~ .perfil-secao, .config-som, .config-animacoes, .config-mais, .meu-perfil-conta')];
+}
+
+function mostrarSecaoDaConfig(caixa, alvo) {
+  secaoDaConfigAtual = alvo;
+  const destino = alvo === 'conta' ? caixa.querySelector('.meu-perfil-conta') : caixa.querySelector(alvo);
+  secoesDaConfig(caixa).forEach((s) => {
+    const mostrar = s === destino;
+    s.classList.toggle('config-escondida', !mostrar);
+    if (mostrar) { s.classList.remove('config-entrando'); void s.offsetWidth; s.classList.add('config-entrando'); }
+  });
+  caixa.querySelectorAll('.config-item').forEach((x) => x.classList.toggle('ativo', x.dataset.configIr === alvo));
+}
+
+const TEXTOS_DAS_CONFIGS_MAIS = {
+  pt: { reproducao: 'Reprodução', destaque: 'Destaque do início passando sozinho', destaqueSub: 'Os santos e joguinhos do banner trocam a cada 5 segundos', dados: 'Dados e armazenamento', economia: 'Economia de dados', economiaSub: 'Não toca vídeos de fundo e carrega menos imagens grandes', historico: 'Histórico de pesquisa', historicoSub: 'Apaga as pesquisas recentes deste aparelho', limpar: 'Limpar', limpo: 'Limpo', espaco: 'Liberar espaço e atualizar', espacoSub: 'Apaga os arquivos guardados e baixa tudo de novo', atualizar: 'Atualizar', app: 'Sobre o aplicativo', versao: 'Versão instalada', procurar: 'Procurar atualização', procurarSub: 'Confere se tem uma versão nova do Lumina Sancti', procurarBotao: 'Procurar', emDia: 'Em dia' },
+  en: { reproducao: 'Playback', destaque: 'Home banner plays by itself', destaqueSub: 'Saints and games in the banner change every 5 seconds', dados: 'Data and storage', economia: 'Data saver', economiaSub: 'No background videos and fewer large images', historico: 'Search history', historicoSub: 'Deletes recent searches on this device', limpar: 'Clear', limpo: 'Cleared', espaco: 'Free up space and update', espacoSub: 'Deletes saved files and downloads everything again', atualizar: 'Update', app: 'About the app', versao: 'Installed version', procurar: 'Check for updates', procurarSub: 'Checks if there is a new version of Lumina Sancti', procurarBotao: 'Check', emDia: 'Up to date' },
+  es: { reproducao: 'Reproducción', destaque: 'Destacado del inicio pasando solo', destaqueSub: 'Los santos y juegos del banner cambian cada 5 segundos', dados: 'Datos y almacenamiento', economia: 'Ahorro de datos', economiaSub: 'Sin videos de fondo y menos imágenes grandes', historico: 'Historial de búsqueda', historicoSub: 'Borra las búsquedas recientes de este dispositivo', limpar: 'Borrar', limpo: 'Borrado', espaco: 'Liberar espacio y actualizar', espacoSub: 'Borra los archivos guardados y descarga todo de nuevo', atualizar: 'Actualizar', app: 'Sobre la aplicación', versao: 'Versión instalada', procurar: 'Buscar actualización', procurarSub: 'Revisa si hay una versión nueva de Lumina Sancti', procurarBotao: 'Buscar', emDia: 'Al día' },
+};
+
+function textoDasConfigsMais(chave) {
+  const idioma = (typeof idiomaAtual !== 'undefined' && TEXTOS_DAS_CONFIGS_MAIS[idiomaAtual]) ? idiomaAtual : 'pt';
+  return TEXTOS_DAS_CONFIGS_MAIS[idioma][chave] || TEXTOS_DAS_CONFIGS_MAIS.pt[chave];
+}
+
+function aplicarPreferenciasDoSite() {
+  document.body.classList.toggle('economia-de-dados', !preferenciaLigada('lumina-sancti-economia-dados'));
+}
+
+async function versaoInstaladaDoApp() {
+  try {
+    const nomes = typeof caches !== 'undefined' ? await caches.keys() : [];
+    const lista = nomes.filter((n) => /^lumina-sancti-\d+\.\d+\.\d+$/.test(n)).map((n) => n.replace('lumina-sancti-', ''));
+    lista.sort((p, q) => { const x = p.split('.').map(Number); const y = q.split('.').map(Number); return (y[0] - x[0]) || (y[1] - x[1]) || (y[2] - x[2]); });
+    return lista[0] || '';
+  } catch (e) { return ''; }
+}
+
+function montarSecoesDeConfigMais(caixa) {
+  const conta = caixa.querySelector('.meu-perfil-conta');
+  if (!conta) return;
+  const criar = (id) => {
+    let s = document.getElementById(id);
+    if (!s) { s = document.createElement('section'); s.id = id; s.className = 'perfil-secao config-mais'; conta.before(s); }
+    return s;
+  };
+  const linha = (acao, titulo, sub, direita) => `<button type="button" class="ajuste config-chave" data-config-mais="${acao}"><span class="ajuste-textos"><strong>${escaparDoAppNovo(titulo)}</strong>${sub ? `<small>${escaparDoAppNovo(sub)}</small>` : ''}</span>${direita}</button>`;
+  const chave = (ligada) => `<span class="chave-visual${ligada ? ' ligada' : ''}"></span>`;
+  const botao = (texto) => `<span class="config-acao-ouro">${escaparDoAppNovo(texto)}</span>`;
+  const reproducao = criar('config-reproducao');
+  reproducao.innerHTML = `<h4 class="perfil-secao-titulo">${escaparDoAppNovo(textoDasConfigsMais('reproducao'))}</h4><div class="ajustes-lista">${linha('destaque', textoDasConfigsMais('destaque'), textoDasConfigsMais('destaqueSub'), chave(preferenciaLigada('lumina-sancti-sem-destaque-sozinho')))}</div>`;
+  const dados = criar('config-dados');
+  dados.innerHTML = `<h4 class="perfil-secao-titulo">${escaparDoAppNovo(textoDasConfigsMais('dados'))}</h4><div class="ajustes-lista">${linha('economia', textoDasConfigsMais('economia'), textoDasConfigsMais('economiaSub'), chave(!preferenciaLigada('lumina-sancti-economia-dados')))}${linha('historico', textoDasConfigsMais('historico'), textoDasConfigsMais('historicoSub'), botao(textoDasConfigsMais('limpar')))}${linha('espaco', textoDasConfigsMais('espaco'), textoDasConfigsMais('espacoSub'), botao(textoDasConfigsMais('atualizar')))}</div>`;
+  const app = criar('config-app');
+  if (!app.dataset.montada) {
+    app.dataset.montada = '1';
+    app.innerHTML = `<h4 class="perfil-secao-titulo">${escaparDoAppNovo(textoDasConfigsMais('app'))}</h4><div class="ajustes-lista">${linha('nada', textoDasConfigsMais('versao'), '', '<span class="config-versao" translate="no">…</span>')}${linha('procurar', textoDasConfigsMais('procurar'), textoDasConfigsMais('procurarSub'), botao(textoDasConfigsMais('procurarBotao')))}</div>`;
+    versaoInstaladaDoApp().then((v) => { const lugar = app.querySelector('.config-versao'); if (lugar) lugar.textContent = v || '—'; });
+  }
+  [reproducao, dados, app].forEach((s) => {
+    if (s.dataset.ligada) return;
+    s.dataset.ligada = '1';
+    s.addEventListener('click', async (e) => {
+      const b = e.target.closest('[data-config-mais]');
+      if (!b) return;
+      const acao = b.dataset.configMais;
+      if (acao === 'destaque') {
+        const ligar = !preferenciaLigada('lumina-sancti-sem-destaque-sozinho');
+        guardarPreferencia('lumina-sancti-sem-destaque-sozinho', ligar);
+        if (typeof vitrine !== 'undefined') { vitrine.parado = !ligar; if (ligar && typeof agendarVitrine === 'function') agendarVitrine(); else clearTimeout(vitrine.relogio); }
+      } else if (acao === 'economia') {
+        guardarPreferencia('lumina-sancti-economia-dados', !preferenciaLigada('lumina-sancti-economia-dados'));
+        aplicarPreferenciasDoSite();
+      } else if (acao === 'historico') {
+        try { localStorage.removeItem('lumina-sancti-buscas-recentes'); } catch (erro) { }
+        const alvo = b.querySelector('.config-acao-ouro'); if (alvo) alvo.textContent = textoDasConfigsMais('limpo');
+        return;
+      } else if (acao === 'espaco') {
+        try { if (typeof caches !== 'undefined') { const nomes = await caches.keys(); await Promise.all(nomes.map((n) => caches.delete(n))); } } catch (erro) { }
+        window.location.reload();
+        return;
+      } else if (acao === 'procurar') {
+        const alvo = b.querySelector('.config-acao-ouro');
+        try { const reg = navigator.serviceWorker && await navigator.serviceWorker.getRegistration(); if (reg) await reg.update(); } catch (erro) { }
+        if (alvo) alvo.textContent = textoDasConfigsMais('emDia');
+        return;
+      } else return;
+      montarSecoesDeConfigMais(caixa);
+    });
+  });
 }
