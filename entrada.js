@@ -839,10 +839,38 @@ function somDaEntradaLumina(ctx, destino, t0, apartirDe) {
     c2.restore();
   }
 
+  const NATAL = (() => { const d = new Date(); const m = d.getMonth(); const dia = d.getDate(); return (m === 10 && dia >= 20) || m === 11 || (m === 0 && dia <= 6); })();
+  const CORES_DOS_RAIOS = NATAL
+    ? [[255, 244, 210, 255, 224, 150], [255, 244, 210, 255, 224, 150], [255, 190, 190, 235, 70, 80], [205, 255, 215, 90, 200, 120]]
+    : [[255, 244, 210, 255, 224, 150]];
+  const neve = [];
+  function desenharNeve(t, dt, w, h) {
+    if (!NATAL) return;
+    const forca = suave(T.preto - 0.1, T.escreve + 0.4, t) * (1 - suave(T.brilha, T.branco, t));
+    if (forca <= 0) return;
+    if (!neve.length) {
+      const total = Math.round(Math.min(160, Math.max(60, (w * h) / 9000)));
+      for (let i = 0; i < total; i += 1) neve.push({ x: Math.random() * w, y: Math.random() * h, r: 0.8 + Math.random() * 2.4, v: 18 + Math.random() * 38, fase: Math.random() * 6.28, balanco: 10 + Math.random() * 26 });
+    }
+    c2.globalCompositeOperation = 'source-over';
+    neve.forEach((f) => {
+      f.y += f.v * dt * (0.6 + f.r / 3);
+      if (f.y > h + 6) { f.y = -6; f.x = Math.random() * w; }
+      const x = f.x + Math.sin(t * 0.9 + f.fase) * f.balanco;
+      const a = forca * (0.35 + f.r / 4.5);
+      const g = c2.createRadialGradient(x, f.y, 0, x, f.y, f.r * 2.2);
+      g.addColorStop(0, `rgba(255, 255, 255, ${Math.min(1, a)})`);
+      g.addColorStop(1, 'rgba(255, 255, 255, 0)');
+      c2.fillStyle = g;
+      c2.beginPath(); c2.arc(x, f.y, f.r * 2.2, 0, 6.29); c2.fill();
+    });
+  }
+
   function desenharNome(t, dt) {
     const { w, h } = mundo;
     c2.setTransform(mundo.dpr, 0, 0, mundo.dpr, 0, 0);
     c2.clearRect(0, 0, w, h);
+    desenharNeve(t, dt, w, h);
     const visivel = t >= T.escreve - 0.05;
     nomeEl.style.opacity = visivel ? '1' : '0';
     if (!visivel || !escrita.pronta) return;
@@ -880,7 +908,7 @@ function somDaEntradaLumina(ctx, destino, t0, apartirDe) {
         const ponto = pontoDeTinta(x);
         const naTela = ponto && pontoNaTela(ponto.x, ponto.y);
         if (!naTela) continue;
-        lampejos.push({ x: naTela.x, y: naTela.y, ang: -Math.PI / 2 + (Math.random() - 0.5) * 1.3, comp: 90 + Math.random() * 170, larg: 5 + Math.random() * 12, vida: 0, max: 1.1 + Math.random() * 0.9 });
+        lampejos.push({ x: naTela.x, y: naTela.y, ang: -Math.PI / 2 + (Math.random() - 0.5) * 1.3, comp: 90 + Math.random() * 170, larg: 5 + Math.random() * 12, vida: 0, max: 1.1 + Math.random() * 0.9, cor: CORES_DOS_RAIOS[Math.floor(Math.random() * CORES_DOS_RAIOS.length)] });
       }
     }
 
@@ -896,8 +924,8 @@ function somDaEntradaLumina(ctx, destino, t0, apartirDe) {
         c2.scale(1, 0.42);
         const aura = c2.createRadialGradient(0, 0, 0, 0, 0, meia);
         const forte = 0.16 + 0.1 * Math.sin(t * 2.2);
-        aura.addColorStop(0, `rgba(255, 228, 160, ${forte})`);
-        aura.addColorStop(0.6, `rgba(255, 210, 120, ${forte * 0.4})`);
+        aura.addColorStop(0, NATAL ? `rgba(255, 200, 170, ${forte})` : `rgba(255, 228, 160, ${forte})`);
+        aura.addColorStop(0.6, NATAL ? `rgba(220, 60, 70, ${forte * 0.35})` : `rgba(255, 210, 120, ${forte * 0.4})`);
         aura.addColorStop(1, 'rgba(255, 200, 100, 0)');
         c2.fillStyle = aura;
         c2.beginPath(); c2.arc(0, 0, meia, 0, 6.29); c2.fill();
@@ -914,9 +942,11 @@ function somDaEntradaLumina(ctx, destino, t0, apartirDe) {
       c2.translate(l.x, l.y);
       c2.rotate(l.ang + Math.PI / 2);
       const g = c2.createLinearGradient(0, 0, 0, -comp);
-      g.addColorStop(0, `rgba(255, 244, 210, ${0.34 * s})`);
-      g.addColorStop(0.35, `rgba(255, 224, 150, ${0.16 * s})`);
-      g.addColorStop(1, 'rgba(255, 210, 120, 0)');
+      const cor = l.cor || CORES_DOS_RAIOS[0];
+      const vivo = cor === CORES_DOS_RAIOS[0] ? 1 : 1.5;
+      g.addColorStop(0, `rgba(${cor[0]}, ${cor[1]}, ${cor[2]}, ${0.34 * s * vivo})`);
+      g.addColorStop(0.35, `rgba(${cor[3]}, ${cor[4]}, ${cor[5]}, ${0.16 * s * vivo})`);
+      g.addColorStop(1, `rgba(${cor[3]}, ${cor[4]}, ${cor[5]}, 0)`);
       c2.fillStyle = g;
       c2.beginPath();
       c2.moveTo(-l.larg * 0.35, 0);

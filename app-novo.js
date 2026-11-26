@@ -32,6 +32,27 @@ function avatarEstrela(classe) {
   return `<span class="avatar-estrela${classe ? ` ${classe}` : ''}">${ICONES_DO_APP_NOVO.estrela}</span>`;
 }
 
+function avatarDoMembro(membro, classe) {
+  const foto = membro && membro.fotoUrl ? String(membro.fotoUrl) : '';
+  if (!foto) return avatarEstrela(classe);
+  return `<span class="avatar-estrela tem-foto${classe ? ` ${classe}` : ''}"><img src="${escaparDoAppNovo(foto)}" alt="" loading="lazy" decoding="async"></span>`;
+}
+
+function membroDoMenu() {
+  const logada = typeof contaLogada === 'function' ? contaLogada() : false;
+  return logada && typeof membroAtivo !== 'undefined' && membroAtivo ? membroAtivo : null;
+}
+
+function atualizarBotaoDaConta() {
+  const conta = document.getElementById('conta-btn');
+  if (!conta) return;
+  const membro = membroDoMenu();
+  const chave = membro ? `${membro.id}|${membro.fotoUrl || ''}` : 'sem';
+  if (conta.dataset.avatarDe === chave && conta.querySelector('.avatar-estrela')) return;
+  conta.dataset.avatarDe = chave;
+  conta.innerHTML = avatarDoMembro(membro);
+}
+
 function pinturaDoAppNovo(id, grande) {
   if (typeof PINTURAS_GUARDADAS !== 'undefined' && PINTURAS_GUARDADAS.has(id)) return grande ? `santos/grande/${id}.webp` : `santos/${id}.webp`;
   return typeof enderecoDaFotoDoSanto === 'function' ? enderecoDaFotoDoSanto(id, grande) || '' : '';
@@ -57,8 +78,7 @@ function ligarCabecalhoNovo() {
     document.getElementById('musica-topo-btn').addEventListener('click', alternarMusicaDoTopo);
     document.getElementById('salvos-btn').addEventListener('click', abrirSalvos);
   }
-  const conta = document.getElementById('conta-btn');
-  if (conta && !conta.querySelector('.avatar-estrela')) conta.innerHTML = avatarEstrela();
+  atualizarBotaoDaConta();
 }
 
 const barraDoAppNovo = { casa: null, depois: null };
@@ -114,8 +134,13 @@ function montarGradeDePerfis() {
   if (velho) velho.remove();
   menu.classList.remove('tem-grade');
   const cabeca = document.getElementById('conta-menu-cabeca');
-  if (cabeca && !cabeca.hidden && !cabeca.querySelector('.avatar-estrela')) {
-    cabeca.insertAdjacentHTML('afterbegin', avatarEstrela('grande'));
+  atualizarBotaoDaConta();
+  if (cabeca && !cabeca.hidden) {
+    const antigo = cabeca.querySelector('.avatar-estrela');
+    if (antigo) antigo.remove();
+    cabeca.insertAdjacentHTML('afterbegin', avatarDoMembro(membroDoMenu(), 'grande'));
+  }
+  if (cabeca && !cabeca.hidden && !cabeca.querySelector('.conta-ver-perfil')) {
     const ver = document.createElement('button');
     ver.type = 'button';
     ver.className = 'conta-ver-perfil';
@@ -134,7 +159,7 @@ function montarGradeDePerfis() {
     return;
   }
   const atual = typeof membroAtivo !== 'undefined' && membroAtivo ? membroAtivo.id : null;
-  const itens = membrosDaConta.map((m) => `<button type="button" class="conta-perfil-item${m.id === atual ? ' atual' : ''}" data-perfil-menu="${escaparDoAppNovo(m.id)}">${avatarEstrela()}<span translate="no">${escaparDoAppNovo(m.nome)}</span></button>`);
+  const itens = membrosDaConta.map((m) => `<button type="button" class="conta-perfil-item${m.id === atual ? ' atual' : ''}" data-perfil-menu="${escaparDoAppNovo(m.id)}">${avatarDoMembro(m)}<span translate="no">${escaparDoAppNovo(m.nome)}</span></button>`);
   const limite = typeof limiteDePerfis === 'function' ? limiteDePerfis() : 0;
   if (membrosDaConta.length < limite) itens.push(`<button type="button" class="conta-perfil-item" data-perfil-menu="novo">${avatarEstrela('mais').replace(ICONES_DO_APP_NOVO.estrela, ICONES_DO_APP_NOVO.mais)}<span>${escaparDoAppNovo(textoDoAppNovo('adicionar'))}</span></button>`);
   const bloco = document.createElement('div');
@@ -186,6 +211,8 @@ function alternarMusicaDoTopo() {
     tocarMusicaDosJogos();
   }
   atualizarBotaoDaMusicaDoTopo();
+  atualizarBotaoDaConta();
+  pedirEncaixeDoTopo();
 }
 
 function ligarMusicaDoTopo() {
@@ -473,7 +500,7 @@ function ligarInicioNovo() {
       const alvo = b ? document.getElementById(b.dataset.clicar) : null;
       if (alvo) alvo.click();
     });
-    const catalogo = document.getElementById('catalogo-interno-topo') || home.querySelector('#materias');
+    const catalogo = document.getElementById('vitrine-fileiras-mais') || document.getElementById('catalogo-interno-topo') || home.querySelector('#materias');
     if (catalogo) catalogo.before(secao);
   }
   const titulos = [['.hoje-area', 'hoje'], ['#vit-atalhos', 'rezar'], ['#materias', 'todos']];
@@ -537,8 +564,21 @@ function ligarLuminaNova() {
   if (titulo) titulo.textContent = textoDoAppNovo('ajuda');
 }
 
+const MURAL_DOS_PLANOS = ['padre-pio', 'teresinha', 'francisco-assis', 'joana-darc', 'miguel', 'carlo-acutis', 'rita-cassia', 'agostinho', 'teresa-calcuta', 'joao-paulo-ii', 'antonio-padua', 'faustina', 'bernadete', 'dulce-pobres', 'teresa-avila', 'jose', 'clara-assis', 'tomas-aquino', 'maximiliano-kolbe', 'catarina-sena', 'inacio-loyola', 'gabriel', 'monica', 'sebastiao'];
+function montarMuralDosPlanos() {
+  const tela = document.getElementById('view-planos');
+  if (!tela || tela.querySelector('.planos-mural')) return;
+  const mural = document.createElement('div');
+  mural.className = 'planos-mural';
+  mural.setAttribute('aria-hidden', 'true');
+  const imagens = MURAL_DOS_PLANOS.map((id) => pinturaDoAppNovo(id)).filter(Boolean);
+  mural.innerHTML = `<div class="planos-mural-grade">${imagens.concat(imagens).slice(0, 36).map((src) => `<img src="${escaparDoAppNovo(src)}" alt="" loading="lazy" decoding="async">`).join('')}</div>`;
+  tela.prepend(mural);
+}
+
 function aoMudarDeVistaNoAppNovo() {
   const vista = document.body.dataset.vista || '';
+  if (vista === 'view-planos') montarMuralDosPlanos();
   const larga = window.matchMedia && window.matchMedia('(min-width: 1024px)').matches;
   if (vista === 'view-ia' && larga) {
     if (!document.body.classList.contains('lumina-com-lado')) {
@@ -570,8 +610,50 @@ function trocarFotosDoCatalogo() {
   });
 }
 
+const NIVEIS_DO_TOPO = ['topo-1', 'topo-2', 'topo-3', 'topo-4', 'topo-5'];
+function ajustarJanelaDoApp() {
+  const wco = navigator.windowControlsOverlay;
+  const raiz = document.documentElement;
+  if (wco && wco.visible && typeof wco.getTitlebarAreaRect === 'function') {
+    const r = wco.getTitlebarAreaRect();
+    raiz.style.setProperty('--janela-direita', `${Math.max(0, Math.round(window.innerWidth - r.x - r.width))}px`);
+    raiz.style.setProperty('--janela-esquerda', `${Math.max(0, Math.round(r.x))}px`);
+    document.body.classList.add('janela-sem-borda');
+  } else {
+    document.body.classList.remove('janela-sem-borda');
+  }
+}
+
+function encaixarTopoDoAppNovo() {
+  const corpo = document.body;
+  const caixa = document.querySelector('#navbar .nav-container');
+  if (!caixa) return;
+  ajustarJanelaDoApp();
+  NIVEIS_DO_TOPO.forEach((n) => corpo.classList.remove(n));
+  const larga = window.matchMedia && window.matchMedia('(min-width: 1100px)').matches;
+  if (!larga) return;
+  const passou = () => {
+    const limite = caixa.getBoundingClientRect().right - 6;
+    const itens = caixa.querySelectorAll('.nav-right-actions .icon-btn, #conta-btn, .barra-app-botao, .nav-brand, #menu-btn');
+    let maior = 0;
+    itens.forEach((el) => { if (el.offsetParent) maior = Math.max(maior, el.getBoundingClientRect().right); });
+    return maior > limite;
+  };
+  for (const nivel of NIVEIS_DO_TOPO) {
+    if (!passou()) break;
+    corpo.classList.add(nivel);
+  }
+}
+
+let relogioDoTopo = null;
+function pedirEncaixeDoTopo() {
+  clearTimeout(relogioDoTopo);
+  relogioDoTopo = setTimeout(encaixarTopoDoAppNovo, 60);
+}
+
 function iniciarAppNovo() {
   document.body.classList.add('app-novo');
+  iniciarPartesNovasDo140();
   ligarCabecalhoNovo();
   posicionarBarraDoAppNovo();
   if (window.matchMedia) {
@@ -580,6 +662,15 @@ function iniciarAppNovo() {
     else if (consulta.addListener) consulta.addListener(posicionarBarraDoAppNovo);
   }
   ligarGavetaNova();
+  window.addEventListener('resize', pedirEncaixeDoTopo);
+  if (navigator.windowControlsOverlay && navigator.windowControlsOverlay.addEventListener) navigator.windowControlsOverlay.addEventListener('geometrychange', pedirEncaixeDoTopo);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(pedirEncaixeDoTopo);
+  document.addEventListener('lumina-idioma', pedirEncaixeDoTopo);
+  setTimeout(encaixarTopoDoAppNovo, 0);
+  if (typeof ResizeObserver !== 'undefined') {
+    const olho = new ResizeObserver(pedirEncaixeDoTopo);
+    document.querySelectorAll('#navbar, #navbar .nav-container > *, #navbar .barra-app, #navbar .nav-right-actions').forEach((el) => olho.observe(el));
+  }
   ligarMusicaDoTopo();
   ligarSalvos();
   ligarBuscaNova();
@@ -606,3 +697,360 @@ function iniciarAppNovo() {
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => setTimeout(iniciarAppNovo, 0));
 else setTimeout(iniciarAppNovo, 0);
+
+const TEXTOS_DO_140 = {
+  pt: { festaEm: 'Festa em {data}', leitura: 'Leitura de {n} minutos', ouvir: 'Ouvir a história', trilha: 'Fazer a trilha', salvar: 'Salvar', salvo: 'Salvo', partilhar: 'Compartilhar', lumina: 'Perguntar à Lumina', config: 'Configurações', conta: 'Minha conta', perfis: 'Perfis da família', som: 'Som e música', somAbertura: 'Som da abertura', somAberturaSub: 'Toca quando o site abre', musica: 'Música enquanto navega', musicaSub: 'Música instrumental de fundo', ajuda: 'Fale com a equipe', sobre: 'Sobre o Lumina Sancti' },
+  en: { festaEm: 'Feast on {data}', leitura: '{n} min read', ouvir: 'Listen to the story', trilha: 'Do the trail', salvar: 'Save', salvo: 'Saved', partilhar: 'Share', lumina: 'Ask Lumina', config: 'Settings', conta: 'My account', perfis: 'Family profiles', som: 'Sound and music', somAbertura: 'Opening sound', somAberturaSub: 'Plays when the site opens', musica: 'Music while browsing', musicaSub: 'Instrumental background music', ajuda: 'Talk to the team', sobre: 'About Lumina Sancti' },
+  es: { festaEm: 'Fiesta el {data}', leitura: 'Lectura de {n} minutos', ouvir: 'Escuchar la historia', trilha: 'Hacer el sendero', salvar: 'Guardar', salvo: 'Guardado', partilhar: 'Compartir', lumina: 'Preguntar a Lumina', config: 'Configuración', conta: 'Mi cuenta', perfis: 'Perfiles de la familia', som: 'Sonido y música', somAbertura: 'Sonido de apertura', somAberturaSub: 'Suena cuando se abre el sitio', musica: 'Música mientras navegas', musicaSub: 'Música instrumental de fondo', ajuda: 'Habla con el equipo', sobre: 'Sobre Lumina Sancti' },
+};
+
+function textoDo140(chave, valores) {
+  const idioma = (typeof idiomaAtual !== 'undefined' && TEXTOS_DO_140[idiomaAtual]) ? idiomaAtual : 'pt';
+  return String(TEXTOS_DO_140[idioma][chave] || TEXTOS_DO_140.pt[chave] || '').replace(/\{(\w+)\}/g, (_, k) => (valores && valores[k] !== undefined ? valores[k] : ''));
+}
+
+const MARCADOR_VAZIO = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M18 21l-6-4.3L6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z"/></svg>';
+const MARCADOR_CHEIO = '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M18 21l-6-4.3L6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z"/></svg>';
+
+function epocaDeNatal() {
+  const d = new Date();
+  const m = d.getMonth();
+  const dia = d.getDate();
+  return (m === 10 && dia >= 20) || m === 11 || (m === 0 && dia <= 6);
+}
+
+function colocarNeve(lugar) {
+  if (!lugar || lugar.querySelector(':scope > .neve-natal')) return;
+  const neve = document.createElement('div');
+  neve.className = 'neve-natal';
+  neve.setAttribute('aria-hidden', 'true');
+  lugar.appendChild(neve);
+}
+
+function enfeitarNatal() {
+  if (!document.body.classList.contains('natal')) return;
+  colocarNeve(document.getElementById('vitrine'));
+  colocarNeve(document.getElementById('view-planos'));
+  colocarNeve(document.getElementById('view-perfis'));
+}
+
+function dataDaFestaDoSanto(santo) {
+  const m = /^(\d{2})-(\d{2})$/.exec(santo.data || santo.festa || '');
+  if (!m) return '';
+  const local = typeof localDoIdioma === 'function' ? localDoIdioma() : 'pt-BR';
+  return new Date(2024, Number(m[1]) - 1, Number(m[2])).toLocaleDateString(local, { day: 'numeric', month: 'long' });
+}
+
+function atualizarSalvarDoSanto(botao, id) {
+  const ativo = typeof ehFavorito === 'function' && ehFavorito(id);
+  botao.classList.toggle('ativo', ativo);
+  botao.setAttribute('aria-pressed', ativo ? 'true' : 'false');
+  botao.innerHTML = `${ativo ? MARCADOR_CHEIO : MARCADOR_VAZIO}<span>${escaparDoAppNovo(textoDo140(ativo ? 'salvo' : 'salvar'))}</span>`;
+}
+
+function montarHeroiDoSanto(id) {
+  const tela = document.getElementById('view-detail');
+  const caixa = document.getElementById('bio-container');
+  if (!tela || !caixa || typeof santosData === 'undefined') return;
+  const santo = santosData.find((s) => s.id === id);
+  if (!santo) return;
+  const textos = typeof textoDoSanto === 'function' ? textoDoSanto(santo) : santo;
+  const nome = textos.nome || santo.nome;
+  let heroi = document.getElementById('santo-heroi-novo');
+  if (!heroi) {
+    heroi = document.createElement('section');
+    heroi.id = 'santo-heroi-novo';
+    heroi.className = 'santo-heroi-novo';
+    tela.insertBefore(heroi, caixa);
+  }
+  const imagem = pinturaDoAppNovo(id, true);
+  const rotulo = typeof rotuloDaCategoria === 'function' ? rotuloDaCategoria(santo, nome) : '';
+  const festa = dataDaFestaDoSanto(santo);
+  const palavras = String(textos.texto || '').replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
+  const minutos = Math.max(2, Math.round(palavras / 190));
+  const temTrilha = !!document.getElementById('btn-fazer-trilha');
+  const icone = (nomeDoIcone) => `<svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-${nomeDoIcone}"></use></svg>`;
+  heroi.innerHTML = `
+    <div class="sh-fundo" aria-hidden="true">${imagem ? `<img src="${escaparDoAppNovo(imagem)}" alt="">` : ''}</div>
+    <div class="sh-conteudo">
+      <div class="sh-texto">
+        ${rotulo ? `<span class="sh-selo">${escaparDoAppNovo(rotulo)}</span>` : ''}
+        <h1 class="sh-nome" translate="no">${escaparDoAppNovo(nome)}</h1>
+        <div class="sh-meta">${festa ? `<span>${escaparDoAppNovo(textoDo140('festaEm', { data: festa }))}</span><i aria-hidden="true">·</i>` : ''}<span>${escaparDoAppNovo(textoDo140('leitura', { n: minutos }))}</span></div>
+        ${textos.resumo ? `<p class="sh-resumo">${escaparDoAppNovo(textos.resumo)}</p>` : ''}
+        <div class="sh-botoes">
+          <button type="button" class="sh-botao sh-ouro" data-sh="ouvir">${icone('som')}<span>${escaparDoAppNovo(textoDo140('ouvir'))}</span></button>
+          ${temTrilha ? `<button type="button" class="sh-botao" data-sh="trilha">${icone('trilha')}<span>${escaparDoAppNovo(textoDo140('trilha'))}</span></button>` : ''}
+          <button type="button" class="sh-botao sh-redondo-texto" data-sh="salvar"></button>
+          <button type="button" class="sh-botao sh-redondo" data-sh="partilhar" aria-label="${escaparDoAppNovo(textoDo140('partilhar'))}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></button>
+          <button type="button" class="sh-botao sh-redondo" data-sh="lumina" aria-label="${escaparDoAppNovo(textoDo140('lumina'))}">${ICONES_DO_APP_NOVO.estrela}</button>
+        </div>
+      </div>
+      ${imagem ? `<figure class="sh-quadro"><img src="${escaparDoAppNovo(imagem)}" alt="${escaparDoAppNovo(nome)}"></figure>` : ''}
+    </div>`;
+  const salvar = heroi.querySelector('[data-sh="salvar"]');
+  atualizarSalvarDoSanto(salvar, id);
+  heroi.onclick = (e) => {
+    const b = e.target.closest('[data-sh]');
+    if (!b) return;
+    const acao = b.dataset.sh;
+    const clicar = (alvo) => { const el = document.getElementById(alvo); if (el) el.click(); };
+    if (acao === 'ouvir') clicar('btn-ouvir-bio');
+    else if (acao === 'trilha') clicar('btn-fazer-trilha');
+    else if (acao === 'partilhar') clicar('btn-share');
+    else if (acao === 'lumina') clicar('btn-ask-ai-santo');
+    else if (acao === 'salvar' && typeof toggleFavorito === 'function') {
+      toggleFavorito(id);
+      atualizarSalvarDoSanto(salvar, id);
+      if (salvar.classList.contains('ativo') && typeof animarSalvo === 'function') animarSalvo(salvar);
+      if (typeof atualizarContadorDeSalvos === 'function') atualizarContadorDeSalvos();
+    }
+  };
+  document.body.classList.add('santo-novo');
+}
+
+function lugarDasConfiguracoes() {
+  return document.querySelector('#view-perfil .meu-perfil-container');
+}
+
+function montarMenuDasConfiguracoes() {
+  const caixa = lugarDasConfiguracoes();
+  if (!caixa) return;
+  const conta = caixa.querySelector('.meu-perfil-conta');
+  if (conta && !document.getElementById('config-som')) {
+    const som = document.createElement('section');
+    som.className = 'perfil-secao config-som';
+    som.id = 'config-som';
+    conta.before(som);
+  }
+  const som = document.getElementById('config-som');
+  if (som) {
+    const aberturaLigada = (() => { try { return localStorage.getItem('lumina-sancti-sem-som-abertura') !== '1'; } catch (e) { return true; } })();
+    const musicaLigada = typeof musicaNoSiteLigada === 'function' ? musicaNoSiteLigada() : false;
+    som.innerHTML = `<h4 class="perfil-secao-titulo">${escaparDoAppNovo(textoDo140('som'))}</h4>
+      <div class="ajustes-lista">
+        <button type="button" class="ajuste config-chave" data-config-chave="musica" aria-pressed="${musicaLigada}"><span class="ajuste-textos"><strong>${escaparDoAppNovo(textoDo140('musica'))}</strong><small>${escaparDoAppNovo(textoDo140('musicaSub'))}</small></span><span class="chave-visual${musicaLigada ? ' ligada' : ''}"></span></button>
+      </div>`;
+    som.onclick = (e) => {
+      const b = e.target.closest('[data-config-chave]');
+      if (!b) return;
+      if (b.dataset.configChave === 'abertura') {
+        const ligar = b.getAttribute('aria-pressed') !== 'true';
+        try { if (ligar) localStorage.removeItem('lumina-sancti-sem-som-abertura'); else localStorage.setItem('lumina-sancti-sem-som-abertura', '1'); } catch (erro) { }
+      } else if (typeof alternarMusicaDoTopo === 'function') alternarMusicaDoTopo();
+      setTimeout(montarMenuDasConfiguracoes, 60);
+    };
+  }
+  let menu = caixa.querySelector('.config-menu-lateral');
+  if (!menu) {
+    menu = document.createElement('nav');
+    menu.className = 'config-menu-lateral';
+    const voltar = document.getElementById('btn-back-perfil');
+    if (voltar) voltar.after(menu); else caixa.prepend(menu);
+  }
+  const secoes = [...caixa.querySelectorAll('.meu-perfil-config-titulo ~ .perfil-secao, .config-som')].filter((s) => s.querySelector('.perfil-secao-titulo'));
+  secoes.forEach((s, i) => { if (!s.id) s.id = `config-secao-${i}`; });
+  const itens = [['conta', 'pessoa', textoDo140('conta')], ['perfis', 'usuarios', textoDo140('perfis')]]
+    .concat(secoes.map((s) => [`#${s.id}`, '', s.querySelector('.perfil-secao-titulo').textContent.trim()]))
+    .concat([['ajuda', 'conversa', textoDo140('ajuda')], ['sobre', 'estrela', textoDo140('sobre')]]);
+  menu.innerHTML = `<h2 class="config-titulo">${escaparDoAppNovo(textoDo140('config'))}</h2>${itens.map(([alvo, ic, rotulo], i) => `<button type="button" class="config-item${i === 0 ? ' ativo' : ''}" data-config-ir="${escaparDoAppNovo(alvo)}">${ic ? `<svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-${ic}"></use></svg>` : '<span class="config-ponto" aria-hidden="true"></span>'}<span>${escaparDoAppNovo(rotulo)}</span></button>`).join('')}`;
+  menu.onclick = (e) => {
+    const b = e.target.closest('[data-config-ir]');
+    if (!b) return;
+    const alvo = b.dataset.configIr;
+    menu.querySelectorAll('.config-item').forEach((x) => x.classList.toggle('ativo', x === b));
+    if (alvo === 'perfis') { document.body.classList.remove('vendo-config'); if (typeof abrirConfiguracoesDePerfis === 'function') abrirConfiguracoesDePerfis(); return; }
+    if (alvo === 'ajuda' || alvo === 'sobre') { document.body.classList.remove('vendo-config'); const n = document.getElementById(alvo === 'ajuda' ? 'nav-suporte' : 'nav-sobre'); if (n) n.click(); return; }
+    const destino = alvo === 'conta' ? caixa.querySelector('.meu-perfil-conta') : caixa.querySelector(alvo);
+    if (destino) window.scrollTo({ top: destino.getBoundingClientRect().top + window.scrollY - 96, behavior: 'smooth' });
+  };
+}
+
+let abrindoConfiguracoes = false;
+function abrirConfiguracoesNovas() {
+  const menuDaConta = document.getElementById('conta-menu');
+  if (menuDaConta) menuDaConta.classList.remove('aberto');
+  abrindoConfiguracoes = true;
+  document.body.classList.add('vendo-config');
+  const botao = document.getElementById('conta-menu-perfil');
+  if (botao) botao.click();
+  abrindoConfiguracoes = false;
+  document.body.classList.add('vendo-config');
+  setTimeout(montarMenuDasConfiguracoes, 80);
+  setTimeout(montarMenuDasConfiguracoes, 700);
+}
+
+function colocarBotaoDeConfiguracoesNoPerfil() {
+  const acoes = document.querySelector('#meu-perfil-cabecalho .perfil-acoes');
+  if (!acoes || acoes.querySelector('.meu-perfil-config-botao')) return;
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'perfil-acao meu-perfil-config-botao';
+  b.innerHTML = `<svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg><span>${escaparDoAppNovo(textoDo140('config'))}</span>`;
+  b.addEventListener('click', abrirConfiguracoesNovas);
+  acoes.appendChild(b);
+}
+
+function iniciarPartesNovasDo140() {
+  if (epocaDeNatal()) document.body.classList.add('natal');
+  if (typeof iconeCoracao === 'function') {
+    iconeCoracao = function (preenchido) { return preenchido ? MARCADOR_CHEIO : MARCADOR_VAZIO; };
+  }
+  if (typeof showDetail === 'function' && !showDetail.doApp140) {
+    const original = showDetail;
+    showDetail = function (id) {
+      const resposta = original.apply(this, arguments);
+      setTimeout(() => montarHeroiDoSanto(id), 0);
+      setTimeout(() => montarHeroiDoSanto(id), 400);
+      return resposta;
+    };
+    showDetail.doApp140 = true;
+  }
+  const config = document.getElementById('conta-menu-config-perfis');
+  if (config) config.addEventListener('click', (e) => { e.stopImmediatePropagation(); e.preventDefault(); abrirConfiguracoesNovas(); }, true);
+  const meuPerfil = document.getElementById('conta-menu-perfil');
+  if (meuPerfil) meuPerfil.addEventListener('click', () => { if (!abrindoConfiguracoes) document.body.classList.remove('vendo-config'); }, true);
+  const cabecalho = document.getElementById('meu-perfil-cabecalho');
+  if (cabecalho && typeof MutationObserver !== 'undefined') new MutationObserver(() => { colocarBotaoDeConfiguracoesNoPerfil(); if (document.body.classList.contains('vendo-config')) montarMenuDasConfiguracoes(); }).observe(cabecalho, { childList: true });
+  if (typeof MutationObserver !== 'undefined') new MutationObserver(() => {
+    const vista = document.body.dataset.vista || '';
+    if (vista && vista !== 'view-perfil') document.body.classList.remove('vendo-config');
+    if (vista && vista !== 'view-detail') document.body.classList.remove('santo-novo');
+    enfeitarNatal();
+  }).observe(document.body, { attributes: true, attributeFilter: ['data-vista'] });
+  enfeitarNatal();
+  setTimeout(enfeitarNatal, 1500);
+  iniciarPartesNovasDo141();
+}
+
+const PAGINAS_VESTIDAS = {
+  'view-trilhas': 'francisco-assis', 'view-jogos': 'joana-darc', 'view-oracoes': 'teresa-avila', 'view-terco': 'domingos-gusmao',
+  'view-novenas': 'sagrada-familia', 'view-leitura': 'jeronimo', 'view-exame': 'inacio-loyola', 'view-pedidos': 'rita-cassia',
+  'view-intencoes': 'teresinha', 'view-padroeiro': 'antonio-padua', 'view-dormir': 'anjos-guarda', 'view-advento': 'gabriel',
+  'view-cursos': 'tomas-aquino', 'view-cenaculos': 'pedro-paulo-apostolos', 'view-comunidade': 'filipe-neri', 'view-ranking': 'joana-darc',
+  'view-suporte': 'dulce-pobres', 'view-sobre': 'joao-paulo-ii',
+};
+
+function tituloDaPagina(tela) {
+  const candidatos = [...tela.querySelectorAll('.section-title, .trilhas-titulo, h2')].filter((h) => !h.closest('.pagina-heroi') && !h.closest('.vit-fileira') && h.textContent.trim().length > 1);
+  return candidatos[0] || null;
+}
+
+function vestirPagina(id) {
+  const tela = document.getElementById(id);
+  const santo = PAGINAS_VESTIDAS[id];
+  if (!tela || !santo) return;
+  const titulo = tituloDaPagina(tela);
+  let heroi = tela.querySelector(':scope > .pagina-heroi');
+  if (!heroi) {
+    heroi = document.createElement('div');
+    heroi.className = 'pagina-heroi';
+    const imagem = pinturaDoAppNovo(santo, true);
+    heroi.innerHTML = `<div class="ph-fundo" aria-hidden="true">${imagem ? `<img src="${escaparDoAppNovo(imagem)}" alt="">` : ''}</div><div class="ph-conteudo"><div class="ph-esquerda"><h1 class="ph-titulo"></h1></div>${imagem ? `<figure class="ph-quadro" aria-hidden="true"><img src="${escaparDoAppNovo(imagem)}" alt=""></figure>` : ''}</div>`;
+    tela.prepend(heroi);
+  }
+  const caixa = heroi.querySelector('.ph-esquerda');
+  const voltar = tela.querySelector('.btn-back:not(.pagina-heroi .btn-back)');
+  if (voltar && caixa && !caixa.contains(voltar)) caixa.prepend(voltar);
+  const h1 = heroi.querySelector('.ph-titulo');
+  if (titulo) {
+    titulo.classList.add('titulo-no-heroi');
+    if (h1.textContent !== titulo.textContent.trim()) h1.textContent = titulo.textContent.trim();
+  }
+  if (document.body.classList.contains('natal')) colocarNeve(heroi);
+}
+
+function vestirPaginaAtual() {
+  const vista = document.body.dataset.vista || '';
+  if (!PAGINAS_VESTIDAS[vista]) return;
+  vestirPagina(vista);
+  setTimeout(() => vestirPagina(vista), 350);
+  setTimeout(() => vestirPagina(vista), 1200);
+}
+
+function iniciarPartesNovasDo141() {
+  iniciarFileirasDasPaginas();
+  if (typeof MutationObserver !== 'undefined') new MutationObserver(vestirPaginaAtual).observe(document.body, { attributes: true, attributeFilter: ['data-vista'] });
+  vestirPaginaAtual();
+  if (document.body.classList.contains('natal')) {
+    const vitrine = document.getElementById('vitrine');
+    if (vitrine && !vitrine.querySelector('.bolas-de-natal')) vitrine.insertAdjacentHTML('beforeend', '<div class="bolas-de-natal" aria-hidden="true"><i style="--x:6%;--h:70px;--c:#d1263b"></i><i style="--x:11%;--h:120px;--c:#f0cf7a"></i><i style="--x:16%;--h:46px;--c:#2f8a4a"></i><i style="--x:84%;--h:56px;--c:#2f8a4a"></i><i style="--x:89%;--h:110px;--c:#d1263b"></i><i style="--x:94%;--h:74px;--c:#f0cf7a"></i></div>');
+  }
+}
+
+const TEXTOS_DAS_FILEIRAS_DAS_PAGINAS = {
+  pt: { contraLumina: 'Contra a Lumina', pequeninos: 'Para os pequeninos', criancas: 'Para crianças', jovens: 'Para jovens e adultos', todasTrilhas: 'Todas as trilhas' },
+  en: { contraLumina: 'Against Lumina', pequeninos: 'For the little ones', criancas: 'For kids', jovens: 'For teens and adults', todasTrilhas: 'All trails' },
+  es: { contraLumina: 'Contra Lumina', pequeninos: 'Para los pequeñitos', criancas: 'Para niños', jovens: 'Para jóvenes y adultos', todasTrilhas: 'Todos los senderos' },
+};
+
+function textoDasFileirasDasPaginas(chave) {
+  const idioma = (typeof idiomaAtual !== 'undefined' && TEXTOS_DAS_FILEIRAS_DAS_PAGINAS[idiomaAtual]) ? idiomaAtual : 'pt';
+  return TEXTOS_DAS_FILEIRAS_DAS_PAGINAS[idioma][chave] || TEXTOS_DAS_FILEIRAS_DAS_PAGINAS.pt[chave];
+}
+
+function cartaoDeJogoDaPagina(j, i) {
+  const nome = j.id === 'xadrez' && typeof textoDaVitrine === 'function' ? textoDaVitrine('xadrez') : (typeof textoDoJogo === 'function' ? textoDoJogo(j.nome) : j.nome);
+  const capa = j.id === 'xadrez' || j.id === 'damas'
+    ? `<img src="capas/${j.id}-pequena.webp" alt="" loading="lazy" decoding="async">`
+    : `<span class="vit-jogo-arte" style="--cor:${escaparDoAppNovo(j.cor || '#f0cf7a')}"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-${escaparDoAppNovo(j.icone || 'estrela')}"></use></svg></span>`;
+  return `<button type="button" class="vit-cartao vit-cartao-jogo" style="--i:${i}" data-pagina-jogo="${escaparDoAppNovo(j.id)}">${capa}<strong>${escaparDoAppNovo(nome)}</strong></button>`;
+}
+
+function htmlDasFileirasDeJogosDaPagina() {
+  if (typeof JOGOS === 'undefined' || typeof htmlDaFileira !== 'function') return '';
+  const infantil = document.body.classList.contains('modo-kids');
+  const grupos = [
+    ['contraLumina', (j) => j.contraIa || j.destaque || j.comIa],
+    ['pequeninos', (j) => (j.idades || []).includes('pequeninos')],
+    ['criancas', (j) => (j.idades || []).some((x) => x === 'ate7' || x === '8a12')],
+    ['jovens', (j) => (j.idades || []).some((x) => x === '13a17' || x === 'adultos')],
+  ];
+  return grupos.map(([chave, filtro]) => {
+    if (infantil && (chave === 'jovens' || chave === 'contraLumina')) return '';
+    const cartoes = JOGOS.filter(filtro).map(cartaoDeJogoDaPagina);
+    return htmlDaFileira(textoDasFileirasDasPaginas(chave), cartoes).replace('class="vit-fileira"', 'class="vit-fileira vit-continue vit-jogos visivel"');
+  }).join('');
+}
+
+function colocarFileirasNaPagina(id) {
+  const tela = document.getElementById(id);
+  if (!tela) return;
+  const heroi = tela.querySelector(':scope > .pagina-heroi');
+  if (!heroi) return;
+  let lugar = tela.querySelector(':scope > .pagina-fileiras');
+  const montar = () => {
+    if (id === 'view-jogos') return htmlDasFileirasDeJogosDaPagina();
+    if (id === 'view-trilhas' && typeof htmlDaFileiraDeTrilhas === 'function') return htmlDaFileiraDeTrilhas().replace(/class="vit-fileira-titulo">[^<]*</, `class="vit-fileira-titulo">${escaparDoAppNovo(textoDasFileirasDasPaginas('todasTrilhas'))}<`).replace(/<button type="button" class="vit-ver-todos"[\s\S]*?<\/button>/, '').replace('class="vit-fileira ', 'class="vit-fileira visivel ');
+    return '';
+  };
+  const html = montar();
+  if (!html) return;
+  if (!lugar) {
+    lugar = document.createElement('div');
+    lugar.className = 'vitrine-fileiras pagina-fileiras';
+    heroi.after(lugar);
+    lugar.addEventListener('click', (e) => {
+      const rolar = e.target.closest('[data-vit-rolar]');
+      if (rolar) { const t = rolar.parentElement.querySelector('.vit-trilho'); if (t) t.scrollBy({ left: Number(rolar.dataset.vitRolar) * t.clientWidth * 0.85, behavior: 'smooth' }); return; }
+      const jogo = e.target.closest('[data-pagina-jogo]');
+      if (jogo && typeof comecarJogo === 'function') { comecarJogo(jogo.dataset.paginaJogo); return; }
+      const acao = e.target.closest('[data-vit-acao]');
+      if (acao && typeof abrirAcaoDaVitrine === 'function') abrirAcaoDaVitrine(acao.dataset.vitAcao);
+    });
+    if (typeof ligarArrasteDasFileiras === 'function') ligarArrasteDasFileiras(lugar);
+  }
+  if (lugar.dataset.html !== html) { lugar.innerHTML = html; lugar.dataset.html = html; }
+}
+
+function colocarFileirasNaPaginaAtual() {
+  const vista = document.body.dataset.vista || '';
+  if (vista !== 'view-jogos' && vista !== 'view-trilhas') return;
+  setTimeout(() => colocarFileirasNaPagina(vista), 380);
+  setTimeout(() => colocarFileirasNaPagina(vista), 1300);
+}
+
+function iniciarFileirasDasPaginas() {
+  if (typeof MutationObserver !== 'undefined') new MutationObserver(colocarFileirasNaPaginaAtual).observe(document.body, { attributes: true, attributeFilter: ['data-vista'] });
+  colocarFileirasNaPaginaAtual();
+}

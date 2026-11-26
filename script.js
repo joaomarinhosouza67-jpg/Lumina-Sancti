@@ -2827,6 +2827,7 @@ async function mostrarVersaoDoApp() {
 }
 
 function tocarVideoDeFundo(video) {
+  if (document.body.classList.contains('app-novo') && video.id === 'perfis-video') return;
   const semMovimento = (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) || document.documentElement.classList.contains('menos-movimento');
   const economia = navigator.connection && navigator.connection.saveData;
   const toca = typeof video.canPlayType === 'function' && video.canPlayType('video/webm; codecs="vp9"');
@@ -4749,7 +4750,7 @@ let origemDoCatalogo = null;
 
 function abrirCatalogo() {
   const atual = idDaPaginaVisivel();
-  if (atual === 'view-home') return false;
+  if (atual === 'view-home' && document.body.classList.contains('catalogo-interno')) return false;
   const interno = true;
   if (interno) {
     if (atual === 'view-detail') {
@@ -6008,6 +6009,7 @@ function mostrarConviteDoApp() {
 }
 
 function abrirJanelaDoApp() {
+  if (/SmartTV|SMART-TV|Tizen|Web0S|WebOS|NetCast|HbbTV|Android TV|GoogleTV|AFT[A-Z]|BRAVIA|CrKey/i.test(navigator.userAgent || '')) return;
   if (appJaInstalado() || document.getElementById('janela-do-app') || (typeof navigator !== 'undefined' && navigator.webdriver)) return;
   try { if (localStorage.getItem(CHAVE_DA_JANELA_DO_APP)) return; localStorage.setItem(CHAVE_DA_JANELA_DO_APP, String(Date.now())); } catch (e) {
     return;
@@ -6195,13 +6197,18 @@ function renderizarPlanos() {
   grade.innerHTML = PLANOS.map((plano, ordem) => `
     <div class="plano-cartao plano-${plano.id}${plano.destaque ? ' destaque' : ''}" data-plano-cartao="${plano.id}" style="--ordem:${ordem}">
       ${plano.destaque ? '<span class="plano-selo">Mais completo</span>' : ''}
-      <span class="plano-emblema" aria-hidden="true">${icone(plano.emblema)}</span>
-      <h3 class="plano-nome">${plano.nome}</h3>
-      <p class="plano-perfis">${plano.perfis}</p>
-      ${precoDoPlano(plano)}
-      <ul class="plano-itens">
-        ${plano.itens.map(([nomeDoIcone, texto, base]) => `<li${base ? ' class="plano-item-base"' : ''}><span class="plano-item-icone">${icone(nomeDoIcone)}</span><span>${texto}</span></li>`).join('')}
-      </ul>
+      <div class="plano-cabeca">
+        <span class="plano-emblema" aria-hidden="true">${icone(plano.emblema)}</span>
+        <h3 class="plano-nome">${plano.nome}</h3>
+        <p class="plano-perfis">${plano.perfis}</p>
+        ${plano.destaque ? `<span class="plano-marca" aria-hidden="true">${icone('check')}</span>` : ''}
+      </div>
+      <div class="plano-corpo">
+        ${precoDoPlano(plano)}
+        <ul class="plano-itens">
+          ${plano.itens.map(([nomeDoIcone, texto, base]) => `<li${base ? ' class="plano-item-base"' : ''}><span class="plano-item-icone">${icone(nomeDoIcone)}</span><span>${texto}</span></li>`).join('')}
+        </ul>
+      </div>
       ${botaoDoPlano(plano)}
     </div>`).join('');
   grade.querySelectorAll('[data-plano]').forEach((botao) => {

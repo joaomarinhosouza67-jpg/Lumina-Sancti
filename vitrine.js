@@ -9,6 +9,7 @@ const TEXTOS_DA_VITRINE = {
     lavoura: 'Lavoura', internet: 'Internet',
     joguinhos: 'Joguinhos', jogar: 'Jogar agora', xadrez: 'Xadrez contra a Lumina', xadrezTexto: 'Um tabuleiro dourado para treinar a mente. Escolha o nível e desafie a Lumina.', damas: 'Damas', damasTexto: 'Uma partida de damas para treinar a paciência e a estratégia, do jeito clássico.', jogo: 'Jogo', niveis: 'Vários níveis',
     continuar: 'Continue de onde parou', comecePorAqui: 'Comece por aqui', cTrilha: 'Trilha', cTerco: 'Terço', cJogo: 'Jogo', cCurso: 'Curso', cOracao: 'Oração', cLeitura: 'Leitura', terco: 'Terço da Misericórdia', cursos: 'Cursos da fé', leitura: 'Evangelho de hoje',
+    natal: 'Natal com os santos', natalSelo: 'Natal', presepio: 'Presépio', anunciacao: 'Anunciação', trilhas: 'Trilhas dos santos', martires: 'Mártires da fé', brasil: 'Santos do Brasil e da América Latina', apostolos: 'Apóstolos e evangelistas', fundadores: 'Fundadores e missionários', doentes: 'Santos que cuidaram dos doentes', misticos: 'Místicos e grandes orantes', familias: 'Santos de família', anjosFamilia: 'Arcanjos e Sagrada Família', papas: 'Papas e pastores', beatos: 'Beatos', verTodos: 'Ver todos', todosOsSantos: 'Ver todos os {n} santos',
   },
   en: {
     santoDoDia: 'Saint of the day', proximaFesta: 'Next feast', proximas: 'Upcoming feasts', festaEm: 'Feast on {data}', hoje: 'Today',
@@ -20,6 +21,7 @@ const TEXTOS_DA_VITRINE = {
     lavoura: 'Farming', internet: 'Internet',
     joguinhos: 'Games', jogar: 'Play now', xadrez: 'Chess against Lumina', xadrezTexto: 'A golden board to train your mind. Pick a level and challenge Lumina.', damas: 'Checkers', damasTexto: 'A game of checkers to practice patience and strategy, the classic way.', jogo: 'Game', niveis: 'Several levels',
     continuar: 'Continue where you left off', comecePorAqui: 'Start here', cTrilha: 'Trail', cTerco: 'Rosary', cJogo: 'Game', cCurso: 'Course', cOracao: 'Prayer', cLeitura: 'Reading', terco: 'Divine Mercy Chaplet', cursos: 'Faith courses', leitura: 'Today’s Gospel',
+    natal: 'Christmas with the saints', natalSelo: 'Christmas', presepio: 'Nativity scene', anunciacao: 'Annunciation', trilhas: 'Saint trails', martires: 'Martyrs of the faith', brasil: 'Saints of Brazil and Latin America', apostolos: 'Apostles and evangelists', fundadores: 'Founders and missionaries', doentes: 'Saints who cared for the sick', misticos: 'Mystics and people of prayer', familias: 'Family saints', anjosFamilia: 'Archangels and the Holy Family', papas: 'Popes and shepherds', beatos: 'Blessed', verTodos: 'See all', todosOsSantos: 'See all {n} saints',
   },
   es: {
     santoDoDia: 'Santo del día', proximaFesta: 'Próxima fiesta', proximas: 'Próximas fiestas', festaEm: 'Fiesta el {data}', hoje: 'Hoy',
@@ -31,11 +33,23 @@ const TEXTOS_DA_VITRINE = {
     lavoura: 'Campo', internet: 'Internet',
     joguinhos: 'Juegos', jogar: 'Jugar ahora', xadrez: 'Ajedrez contra Lumina', xadrezTexto: 'Un tablero dorado para entrenar la mente. Elige el nivel y desafía a Lumina.', damas: 'Damas', damasTexto: 'Una partida de damas para entrenar la paciencia y la estrategia, al estilo clásico.', jogo: 'Juego', niveis: 'Varios niveles',
     continuar: 'Continúa donde lo dejaste', comecePorAqui: 'Empieza aquí', cTrilha: 'Sendero', cTerco: 'Rosario', cJogo: 'Juego', cCurso: 'Curso', cOracao: 'Oración', cLeitura: 'Lectura', terco: 'Coronilla de la Misericordia', cursos: 'Cursos de la fe', leitura: 'Evangelio de hoy',
+    natal: 'Navidad con los santos', natalSelo: 'Navidad', presepio: 'Pesebre', anunciacao: 'Anunciación', trilhas: 'Senderos de los santos', martires: 'Mártires de la fe', brasil: 'Santos de Brasil y América Latina', apostolos: 'Apóstoles y evangelistas', fundadores: 'Fundadores y misioneros', doentes: 'Santos que cuidaron a los enfermos', misticos: 'Místicos y grandes orantes', familias: 'Santos de familia', anjosFamilia: 'Arcángeles y Sagrada Familia', papas: 'Papas y pastores', beatos: 'Beatos', verTodos: 'Ver todos', todosOsSantos: 'Ver los {n} santos',
   },
 };
 
 const SANTOS_PARA_CONHECER = ['padre-pio', 'teresinha', 'francisco-assis', 'antonio-padua', 'rita-cassia', 'carlo-acutis', 'joana-darc', 'agostinho', 'jose', 'teresa-calcuta', 'joao-paulo-ii', 'miguel', 'dulce-pobres', 'maximiliano-kolbe', 'bernadete', 'faustina'];
 const PADROEIROS_DA_VITRINE = [['jose', 'trabalho'], ['tomas-aquino', 'estudos'], ['bento-nursia', 'protecao'], ['rita-cassia', 'impossiveis'], ['antonio-padua', 'perdidas'], ['judas-tadeu', 'desesperadas'], ['expedito', 'urgentes'], ['cristovao', 'viagens'], ['cosme-damiao', 'medicos'], ['francisco-assis', 'animais'], ['santa-luzia', 'visao'], ['monica', 'maes'], ['clara-assis', 'televisao'], ['isidro-lavrador', 'lavoura'], ['carlo-acutis', 'internet']];
+
+const FILEIRAS_DE_TEMAS = [
+  ['martires', ['lourenco', 'sebastiao', 'jorge', 'cecilia', 'ines-roma', 'santa-agueda', 'santa-luzia', 'barbara', 'perpetua-felicidade', 'policarpo', 'maximiliano-kolbe', 'edith-stein', 'paulo-miki', 'andre-kim-taegon', 'miguel-pro', 'jose-sanchez-rio', 'tomas-more', 'tarcisio', 'estevao-protomartir']],
+  ['brasil', ['dulce-pobres', 'frei-galvao', 'madre-paulina', 'jose-anchieta', 'nha-chica', 'rosa-lima', 'martin-porres', 'juan-diego', 'turibio-mogrovejo', 'teresa-dos-andes', 'laura-vicuna', 'oscar-romero', 'miguel-pro', 'jose-sanchez-rio']],
+  ['misticos', ['padre-pio', 'teresa-avila', 'joao-da-cruz', 'teresinha', 'faustina', 'catarina-sena', 'hildegarda', 'gemma-galgani', 'margarida-maria-alacoque', 'catarina-laboure', 'bernadete', 'gertrudes', 'brigida-suecia', 'charles-foucauld']],
+  ['apostolos', ['pedro-paulo-apostolos', 'andre-apostolo', 'tome-apostolo', 'mateus-apostolo', 'filipe-tiago', 'judas-tadeu', 'matias-apostolo', 'barnabe-apostolo', 'marcos-evangelista', 'lucas-evangelista', 'maria-madalena', 'marta-maria-lazaro']],
+  ['fundadores', ['francisco-assis', 'clara-assis', 'bento-nursia', 'domingos-gusmao', 'inacio-loyola', 'francisco-xavier', 'teresa-calcuta', 'sao-patricio', 'junipero-serra', 'pedro-claver', 'frances-cabrini', 'angela-merici', 'maria-mazzarello', 'josemaria-escriva', 'luis-orione', 'joao-batista-lasalle', 'cirilo-metodio', 'sao-bruno', 'filipe-neri']],
+  ['doentes', ['dulce-pobres', 'teresa-calcuta', 'cosme-damiao', 'camilo-lelis', 'joao-de-deus', 'damiao-molokai', 'martin-porres', 'isabel-hungria', 'solanus-casey', 'andre-bessette', 'madre-paulina', 'rafael', 'gianna-molla', 'charbel-makhlouf']],
+  ['familias', ['jose', 'joaquim-ana', 'monica', 'rita-cassia', 'gianna-molla', 'isabel-hungria', 'isabel-portugal', 'isidro-lavrador', 'zita', 'luis-ix-franca', 'edwiges', 'isabel-ana-seton', 'perpetua-felicidade']],
+  ['papas', ['joao-paulo-ii', 'joao-xxiii', 'paulo-vi', 'pio-x', 'gregorio-magno', 'pedro-paulo-apostolos', 'cornelio-cipriano', 'carlos-borromeu', 'sao-nicolau', 'martinho-tours', 'ambrosio', 'joao-maria-vianney', 'tomas-becket', 'oscar-romero']],
+];
 
 const vitrine = { slides: [], atual: 0, relogio: null, parado: false, montada: false, toqueX: null };
 
@@ -216,6 +230,129 @@ function htmlDaFileiraContinue() {
   return htmlDaFileira(titulo, cartoes).replace('class="vit-fileira"', 'class="vit-fileira vit-continue"');
 }
 
+function htmlDaFileiraDeTrilhas() {
+  let trilhas = [];
+  let estado = null;
+  try { trilhas = (typeof trilhasEmUso === 'function' ? trilhasEmUso() : []) || []; } catch (e) { trilhas = []; }
+  try { estado = typeof carregarProgressoTrilhas === 'function' ? carregarProgressoTrilhas() : null; } catch (e) { estado = null; }
+  const cartoes = trilhas.filter((t) => t.licoes && t.licoes.length && !(typeof trilhaSecreta === 'function' && trilhaSecreta(t))).slice(0, 24).map((t, i) => {
+    const feitas = estado && estado.licoes ? t.licoes.filter((l) => estado.licoes[l.slug]).length : 0;
+    const santoId = t.santoId || 'francisco-assis';
+    return htmlDoCartaoDaVitrine(`trilha:${t.slug}`, textoDaVitrine('cTrilha'), t.santo || t.titulo || '', fotoGuardadaDoSanto(santoId, true), feitas / t.licoes.length, i, fotoDeReservaDoSanto(santoId, true));
+  });
+  return htmlDaFileira(textoDaVitrine('trilhas'), cartoes, 'trilhas').replace('class="vit-fileira"', 'class="vit-fileira vit-continue"');
+}
+
+function htmlDaFileiraDeJogos() {
+  if (typeof JOGOS === 'undefined' || !Array.isArray(JOGOS)) return '';
+  const cartoes = JOGOS.map((j, i) => {
+    const nome = j.id === 'xadrez' ? textoDaVitrine('xadrez') : (typeof textoDoJogo === 'function' ? textoDoJogo(j.nome) : j.nome);
+    const capa = j.id === 'xadrez' || j.id === 'damas'
+      ? `<img src="capas/${j.id}-pequena.webp" alt="" loading="lazy" decoding="async">`
+      : `<span class="vit-jogo-arte" style="--cor:${escaparDaVitrine(j.cor || '#f0cf7a')}"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><use href="#icone-${escaparDaVitrine(j.icone || 'estrela')}"></use></svg></span>`;
+    return `<button type="button" class="vit-cartao vit-cartao-jogo" style="--i:${i}" data-vit-jogo="${escaparDaVitrine(j.id)}">${capa}<strong>${escaparDaVitrine(nome)}</strong></button>`;
+  });
+  return htmlDaFileira(textoDaVitrine('joguinhos'), cartoes, 'jogos').replace('class="vit-fileira"', 'class="vit-fileira vit-continue vit-jogos"');
+}
+
+const FILEIRA_DE_NATAL = [['sagrada-familia', 'natalSelo'], ['jose', 'natalSelo'], ['francisco-assis', 'presepio'], ['gabriel', 'anunciacao'], ['sao-nicolau', '6/12'], ['juan-diego', '9/12'], ['santa-luzia', '13/12'], ['joao-da-cruz', '14/12'], ['estevao-protomartir', '26/12'], ['tomas-becket', '29/12'], ['joaquim-ana', '']];
+
+function htmlDaFileiraDeNatal() {
+  if (!(typeof epocaDeNatal === 'function' && epocaDeNatal())) return '';
+  const posters = FILEIRA_DE_NATAL.map(([id, selo], i) => htmlDoPoster(id, selo && !/\d/.test(selo) ? textoDaVitrine(selo) : selo, i)).filter(Boolean);
+  return htmlDaFileira(textoDaVitrine('natal'), posters).replace('class="vit-fileira"', 'class="vit-fileira vit-natal"');
+}
+
+function htmlDasFileirasDeTemas() {
+  const posters = (ids) => ids.map((id, i) => htmlDoPoster(id, '', i)).filter(Boolean);
+  const linhas = FILEIRAS_DE_TEMAS.map(([chave, ids]) => htmlDaFileira(textoDaVitrine(chave), posters(ids)));
+  const anjos = idsDaCategoria('arcanjos', 8).concat(idsDaCategoria('sagrada-familia', 8));
+  linhas.push(htmlDaFileira(textoDaVitrine('anjosFamilia'), posters(anjos)));
+  linhas.push(htmlDaFileira(textoDaVitrine('beatos'), posters(idsDaCategoria('beatos', 16)), 'cat:beatos'));
+  const total = typeof santosData !== 'undefined' ? santosData.length : 0;
+  linhas.push(`<div class="vit-fim"><button type="button" class="vit-botao vit-botao-catalogo" data-vit-ver="cat:todos">${escaparDaVitrine(textoDaVitrine('todosOsSantos').replace('{n}', total))}</button></div>`);
+  return linhas.join('');
+}
+
+function abrirCatalogoDaVitrine(filtro) {
+  if (typeof origemDoCatalogo !== 'undefined') { try { origemDoCatalogo = null; } catch (e) { } }
+  if (typeof mudarDeView === 'function') mudarDeView('view-home', { catalogoInterno: true });
+  setTimeout(() => {
+    document.querySelectorAll('[data-filter]').forEach((b) => b.classList.toggle('active', b.dataset.filter === filtro));
+    if (typeof renderGrid === 'function') renderGrid(filtro);
+  }, 380);
+}
+
+function abrirVerTodosDaVitrine(acao) {
+  const [tipo, valor] = String(acao).split(':');
+  if (tipo === 'trilhas') { if (typeof abrirTrilhas === 'function') abrirTrilhas(); else if (typeof mudarDeView === 'function') mudarDeView('view-trilhas'); }
+  else if (tipo === 'jogos') { if (typeof abrirJogos === 'function') abrirJogos(); }
+  else if (tipo === 'cat') abrirCatalogoDaVitrine(valor || 'todos');
+}
+
+function lugarDasFileirasDeBaixo() {
+  let mais = document.getElementById('vitrine-fileiras-mais');
+  if (!mais) {
+    const topo = document.getElementById('catalogo-interno-topo');
+    if (!topo) return null;
+    mais = document.createElement('div');
+    mais.id = 'vitrine-fileiras-mais';
+    mais.className = 'vitrine-fileiras vitrine-fileiras-mais';
+    const atalhos = document.getElementById('vit-atalhos');
+    if (atalhos && atalhos.parentNode === topo.parentNode) atalhos.after(mais); else topo.before(mais);
+  }
+  return mais;
+}
+
+function ligarArrasteDasFileiras(lugar) {
+  if (!lugar || lugar.dataset.arraste) return;
+  lugar.dataset.arraste = '1';
+  let arraste = null;
+  lugar.addEventListener('pointerdown', (e) => {
+    if (e.pointerType !== 'mouse' || e.button !== 0) return;
+    const trilho = e.target.closest('.vit-trilho');
+    if (!trilho) return;
+    arraste = { trilho, x: e.clientX, inicio: trilho.scrollLeft, moveu: false };
+  });
+  window.addEventListener('pointermove', (e) => {
+    if (!arraste) return;
+    const dx = e.clientX - arraste.x;
+    if (!arraste.moveu && Math.abs(dx) < 6) return;
+    if (!arraste.moveu) { arraste.moveu = true; arraste.trilho.classList.add('arrastando'); }
+    arraste.trilho.scrollLeft = arraste.inicio - dx;
+  });
+  const soltar = () => {
+    if (!arraste) return;
+    const foi = arraste;
+    arraste = null;
+    foi.trilho.classList.remove('arrastando');
+    if (foi.moveu) { const parar = (ev) => { ev.stopPropagation(); ev.preventDefault(); }; window.addEventListener('click', parar, { capture: true, once: true }); setTimeout(() => window.removeEventListener('click', parar, true), 50); }
+  };
+  window.addEventListener('pointerup', soltar);
+  window.addEventListener('pointercancel', soltar);
+  lugar.addEventListener('dragstart', (e) => { if (e.target.closest('.vit-trilho')) e.preventDefault(); });
+  lugar.addEventListener('keydown', (e) => {
+    const atual = e.target.closest('.vit-poster, .vit-cartao');
+    if (!atual) return;
+    const trilho = atual.parentElement;
+    const itens = [...trilho.children];
+    const pos = itens.indexOf(atual);
+    let alvo = null;
+    if (e.key === 'ArrowRight') alvo = itens[pos + 1];
+    else if (e.key === 'ArrowLeft') alvo = itens[pos - 1];
+    else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      const todas = [...document.querySelectorAll('#view-home .vit-trilho')].filter((t) => t.offsetParent);
+      const i = todas.indexOf(trilho) + (e.key === 'ArrowDown' ? 1 : -1);
+      if (todas[i]) {
+        const filhos = [...todas[i].children];
+        const meio = atual.getBoundingClientRect().left;
+        alvo = filhos.reduce((melhor, f) => (Math.abs(f.getBoundingClientRect().left - meio) < Math.abs(melhor.getBoundingClientRect().left - meio) ? f : melhor), filhos[0]);
+      }
+    }
+    if (alvo) { e.preventDefault(); alvo.focus({ preventScroll: true }); alvo.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' }); }
+  });
+}
+
 function abrirAcaoDaVitrine(acao) {
   const [tipo, valor] = String(acao).split(':');
   const clicar = (id) => { const b = document.getElementById(id); if (b) b.click(); };
@@ -232,10 +369,11 @@ function abrirJogoDaVitrine(id) {
   if (typeof comecarJogo === 'function') setTimeout(() => comecarJogo(id), 60);
 }
 
-function htmlDaFileira(titulo, posters) {
+function htmlDaFileira(titulo, posters, verTodos) {
   if (!posters.length) return '';
+  const ver = verTodos ? `<button type="button" class="vit-ver-todos" data-vit-ver="${escaparDaVitrine(verTodos)}">${escaparDaVitrine(textoDaVitrine('verTodos'))}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>` : '';
   return `<section class="vit-fileira">
-    <h2 class="vit-fileira-titulo">${escaparDaVitrine(titulo)}</h2>
+    <div class="vit-fileira-cabeca"><h2 class="vit-fileira-titulo">${escaparDaVitrine(titulo)}</h2>${ver}</div>
     <div class="vit-fileira-caixa">
       <button type="button" class="vit-seta vit-seta-esq" data-vit-rolar="-1" aria-label="${escaparDaVitrine(textoDaVitrine('anterior'))}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <div class="vit-trilho">${posters.join('')}</div>
@@ -308,11 +446,18 @@ function montarVitrine() {
   const doutores = idsDaCategoria('doutores', 16);
   fileiras.innerHTML = [
     htmlDaFileiraContinue(),
+    htmlDaFileiraDeNatal(),
     htmlDaFileira(textoDaVitrine('conhecer'), SANTOS_PARA_CONHECER.map((id, i) => htmlDoPoster(id, '', i)).filter(Boolean)),
+    htmlDaFileiraDeTrilhas(),
     htmlDaFileira(textoDaVitrine('padroeiros'), PADROEIROS_DA_VITRINE.map(([id, tag], i) => htmlDoPoster(id, textoDaVitrine(tag), i)).filter(Boolean)),
-    htmlDaFileira(textoDaVitrine('jovens'), jovens.map((id, i) => htmlDoPoster(id, '', i)).filter(Boolean)),
-    htmlDaFileira(textoDaVitrine('doutores'), doutores.map((id, i) => htmlDoPoster(id, '', i)).filter(Boolean)),
+    htmlDaFileiraDeJogos(),
+    htmlDaFileira(textoDaVitrine('jovens'), jovens.map((id, i) => htmlDoPoster(id, '', i)).filter(Boolean), 'cat:santos-jovens'),
+    htmlDaFileira(textoDaVitrine('doutores'), doutores.map((id, i) => htmlDoPoster(id, '', i)).filter(Boolean), 'cat:doutores'),
   ].join('');
+  const mais = lugarDasFileirasDeBaixo();
+  if (mais) mais.innerHTML = htmlDasFileirasDeTemas();
+  ligarArrasteDasFileiras(fileiras);
+  ligarArrasteDasFileiras(mais);
   mostrarSlideDaVitrine(0);
   observarFileiras();
   if (!vitrine.montada) ligarVitrine();
@@ -320,7 +465,7 @@ function montarVitrine() {
 }
 
 function observarFileiras() {
-  const fileiras = document.querySelectorAll('#vitrine-fileiras .vit-fileira');
+  const fileiras = document.querySelectorAll('#vitrine-fileiras .vit-fileira, #vitrine-fileiras-mais .vit-fileira');
   if (!('IntersectionObserver' in window)) { fileiras.forEach((f) => f.classList.add('visivel')); return; }
   const olho = new IntersectionObserver((entradas) => {
     entradas.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('visivel'); olho.unobserve(e.target); } });
@@ -333,6 +478,8 @@ function ligarVitrine() {
   const fileiras = document.getElementById('vitrine-fileiras');
   document.addEventListener('error', trocarPelaReserva, true);
   const cliques = (e) => {
+    const ver = e.target.closest('[data-vit-ver]');
+    if (ver) { abrirVerTodosDaVitrine(ver.dataset.vitVer); return; }
     const jogo = e.target.closest('[data-vit-jogo]');
     if (jogo) { abrirJogoDaVitrine(jogo.dataset.vitJogo); return; }
     const acao = e.target.closest('[data-vit-acao]');
@@ -369,6 +516,8 @@ function ligarVitrine() {
     });
   }
   if (fileiras) fileiras.addEventListener('click', cliques);
+  const mais = lugarDasFileirasDeBaixo();
+  if (mais) mais.addEventListener('click', cliques);
   document.addEventListener('lumina-idioma', montarVitrine);
 }
 
