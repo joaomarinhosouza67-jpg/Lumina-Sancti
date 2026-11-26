@@ -7050,7 +7050,7 @@ body.no-app .footer-social, body.no-app #footer-instalar, body.no-app #nav-insta
 @media (prefers-reduced-motion: reduce) { #view-home .hero-icon { animation: none; } }
 
 .intro-screen { background: #020309; }
-.intro-preto { position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; }
+.intro-preto { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 70% at 50% 45%, #111a44 0%, #0a0f2a 45%, #060918 100%); opacity: 0; pointer-events: none; }
 .intro-nome { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; opacity: 0; }
 .intro-nome-svg { width: min(90vw, 1300px); height: auto; overflow: visible; }
 .intro-nome text { font-family: 'Alex Brush', 'Great Vibes', 'Cormorant Garamond', cursive; font-size: 200px; }

@@ -7,6 +7,8 @@ const TEXTOS_DA_VITRINE = {
     trabalho: 'Trabalho', estudos: 'Estudos', protecao: 'Proteção', televisao: 'Televisão', impossiveis: 'Causas impossíveis', perdidas: 'Coisas perdidas',
     desesperadas: 'Causas difíceis', viagens: 'Viagens', medicos: 'Médicos', animais: 'Animais', urgentes: 'Causas urgentes', visao: 'Olhos', maes: 'Mães',
     lavoura: 'Lavoura', internet: 'Internet',
+    joguinhos: 'Joguinhos', jogar: 'Jogar agora', xadrez: 'Xadrez contra a Lumina', xadrezTexto: 'Um tabuleiro dourado para treinar a mente. Escolha o nível e desafie a Lumina.', damas: 'Damas', damasTexto: 'Uma partida de damas para treinar a paciência e a estratégia, do jeito clássico.', jogo: 'Jogo', niveis: 'Vários níveis',
+    continuar: 'Continue de onde parou', comecePorAqui: 'Comece por aqui', cTrilha: 'Trilha', cTerco: 'Terço', cJogo: 'Jogo', cCurso: 'Curso', cOracao: 'Oração', cLeitura: 'Leitura', terco: 'Terço da Misericórdia', cursos: 'Cursos da fé', leitura: 'Evangelho de hoje',
   },
   en: {
     santoDoDia: 'Saint of the day', proximaFesta: 'Next feast', proximas: 'Upcoming feasts', festaEm: 'Feast on {data}', hoje: 'Today',
@@ -16,6 +18,8 @@ const TEXTOS_DA_VITRINE = {
     trabalho: 'Work', estudos: 'Studies', protecao: 'Protection', televisao: 'Television', impossiveis: 'Impossible causes', perdidas: 'Lost things',
     desesperadas: 'Hard causes', viagens: 'Travel', medicos: 'Doctors', animais: 'Animals', urgentes: 'Urgent causes', visao: 'Eyes', maes: 'Mothers',
     lavoura: 'Farming', internet: 'Internet',
+    joguinhos: 'Games', jogar: 'Play now', xadrez: 'Chess against Lumina', xadrezTexto: 'A golden board to train your mind. Pick a level and challenge Lumina.', damas: 'Checkers', damasTexto: 'A game of checkers to practice patience and strategy, the classic way.', jogo: 'Game', niveis: 'Several levels',
+    continuar: 'Continue where you left off', comecePorAqui: 'Start here', cTrilha: 'Trail', cTerco: 'Rosary', cJogo: 'Game', cCurso: 'Course', cOracao: 'Prayer', cLeitura: 'Reading', terco: 'Divine Mercy Chaplet', cursos: 'Faith courses', leitura: 'Today’s Gospel',
   },
   es: {
     santoDoDia: 'Santo del día', proximaFesta: 'Próxima fiesta', proximas: 'Próximas fiestas', festaEm: 'Fiesta el {data}', hoje: 'Hoy',
@@ -25,6 +29,8 @@ const TEXTOS_DA_VITRINE = {
     trabalho: 'Trabajo', estudos: 'Estudios', protecao: 'Protección', televisao: 'Televisión', impossiveis: 'Causas imposibles', perdidas: 'Cosas perdidas',
     desesperadas: 'Causas difíciles', viagens: 'Viajes', medicos: 'Médicos', animais: 'Animales', urgentes: 'Causas urgentes', visao: 'Ojos', maes: 'Madres',
     lavoura: 'Campo', internet: 'Internet',
+    joguinhos: 'Juegos', jogar: 'Jugar ahora', xadrez: 'Ajedrez contra Lumina', xadrezTexto: 'Un tablero dorado para entrenar la mente. Elige el nivel y desafía a Lumina.', damas: 'Damas', damasTexto: 'Una partida de damas para entrenar la paciencia y la estrategia, al estilo clásico.', jogo: 'Juego', niveis: 'Varios niveles',
+    continuar: 'Continúa donde lo dejaste', comecePorAqui: 'Empieza aquí', cTrilha: 'Sendero', cTerco: 'Rosario', cJogo: 'Juego', cCurso: 'Curso', cOracao: 'Oración', cLeitura: 'Lectura', terco: 'Coronilla de la Misericordia', cursos: 'Cursos de la fe', leitura: 'Evangelio de hoy',
   },
 };
 
@@ -64,14 +70,14 @@ function santoDaVitrine(id) {
   return typeof santosData !== 'undefined' ? santosData.find((s) => s.id === id) : null;
 }
 
-function rotuloDaCategoria(santo) {
+function rotuloDaCategoria(santo, nomeMostrado) {
   const c = Array.isArray(santo.categoria) ? santo.categoria : String(santo.categoria || '').split(',');
   if (c.includes('arcanjos')) return textoDaVitrine('arcanjo');
   if (c.includes('sagrada-familia')) return textoDaVitrine('familia');
   if (c.includes('doutores')) return textoDaVitrine('doutor');
   if (c.includes('beatos')) return textoDaVitrine('beato');
   if (c.includes('santos-jovens')) return textoDaVitrine('jovem');
-  return /^Santa/.test(santo.nome || '') ? textoDaVitrine('santa') : textoDaVitrine('santo');
+  return String(nomeMostrado || santo.nome || '').startsWith('Santa ') ? textoDaVitrine('santa') : textoDaVitrine('santo');
 }
 
 function dataDaFesta(santo) {
@@ -102,9 +108,12 @@ function escolherSlidesDaVitrine() {
   const lista = [];
   if (deHoje && comFoto.includes(deHoje)) lista.push({ santo: deHoje, selo: textoDaVitrine('santoDoDia') });
   proximos.forEach((s) => {
-    if (lista.length >= 5 || lista.some((x) => x.santo.id === s.id)) return;
+    if (lista.length >= 4 || lista.some((x) => x.santo.id === s.id)) return;
     lista.push({ santo: s, selo: textoDaVitrine('proximaFesta') });
   });
+  const jogos = [{ jogo: 'xadrez' }, { jogo: 'damas' }];
+  if (lista.length) lista.splice(1, 0, jogos[0]); else lista.push(jogos[0]);
+  lista.splice(Math.min(3, lista.length), 0, jogos[1]);
   return lista;
 }
 
@@ -112,11 +121,29 @@ function trilhaDaVitrine(id) {
   try { return typeof trilhaDoSanto === 'function' ? trilhaDoSanto(id) : null; } catch (e) { return null; }
 }
 
+function htmlDoSlideDeJogo(item, indice) {
+  const id = item.jogo;
+  const capa = `capas/${id}.webp`;
+  return `<article class="vit-slide jogo${indice === 0 ? ' ativo' : ''}" data-indice="${indice}" aria-roledescription="slide" aria-hidden="${indice === 0 ? 'false' : 'true'}">
+    <div class="vit-fundo"><img class="vit-fundo-img" src="${capa}" alt="" decoding="async"></div>
+    <div class="vit-degrade"></div>
+    <figure class="vit-quadro" data-vit-jogo="${id}"><img class="vit-quadro-img" src="${capa}" alt="" decoding="async"></figure>
+    <div class="vit-texto">
+      <span class="vit-selo">${escaparDaVitrine(textoDaVitrine('joguinhos'))}</span>
+      <h2 class="vit-nome">${escaparDaVitrine(textoDaVitrine(id))}</h2>
+      <div class="vit-meta"><b>${escaparDaVitrine(textoDaVitrine('jogo'))}</b><i aria-hidden="true">·</i><span>${escaparDaVitrine(textoDaVitrine('niveis'))}</span></div>
+      <p class="vit-resumo">${escaparDaVitrine(textoDaVitrine(`${id}Texto`))}</p>
+      <div class="vit-botoes"><button type="button" class="vit-botao vit-botao-ouro" data-vit-jogo="${id}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12-7.5z" fill="currentColor"/></svg>${escaparDaVitrine(textoDaVitrine('jogar'))}</button></div>
+    </div>
+  </article>`;
+}
+
 function htmlDoSlide(item, indice) {
+  if (item.jogo) return htmlDoSlideDeJogo(item, indice);
   const santo = item.santo;
   const textos = typeof textoDoSanto === 'function' ? textoDoSanto(santo) : { nome: santo.nome, resumo: santo.resumo };
   const trilha = trilhaDaVitrine(santo.id);
-  const meta = [`<b>${escaparDaVitrine(rotuloDaCategoria(santo))}</b>`];
+  const meta = [`<b>${escaparDaVitrine(rotuloDaCategoria(santo, textos.nome))}</b>`];
   const festa = textoDaFesta(santo);
   if (festa) meta.push(`<span>${escaparDaVitrine(festa)}</span>`);
   if (trilha && trilha.licoes && trilha.licoes.length) meta.push(`<span>${escaparDaVitrine(textoDaVitrine('trilha', { n: trilha.licoes.length }))}</span>`);
@@ -146,6 +173,63 @@ function htmlDoPoster(id, selo, ordem) {
     ${selo ? `<small class="vit-poster-selo">${escaparDaVitrine(selo)}</small>` : ''}
     <span class="vit-poster-nome" translate="no">${escaparDaVitrine(textos.nome)}</span>
   </button>`;
+}
+
+function progressoDasTrilhasDaVitrine() {
+  let trilhas = [];
+  let estado = null;
+  try { trilhas = (typeof trilhasEmUso === 'function' ? trilhasEmUso() : []) || []; } catch (e) { trilhas = []; }
+  try { estado = typeof carregarProgressoTrilhas === 'function' ? carregarProgressoTrilhas() : null; } catch (e) { estado = null; }
+  let melhor = null;
+  trilhas.forEach((t) => {
+    if (!t.licoes || !t.licoes.length) return;
+    const feitas = estado && estado.licoes ? t.licoes.filter((l) => estado.licoes[l.slug]).length : 0;
+    if (feitas > 0 && feitas < t.licoes.length && (!melhor || feitas / t.licoes.length > melhor.parte)) melhor = { trilha: t, parte: feitas / t.licoes.length };
+  });
+  if (melhor) return melhor;
+  return trilhas.length ? { trilha: trilhas[0], parte: 0 } : null;
+}
+
+function htmlDoCartaoDaVitrine(acao, selo, titulo, imagem, parte, ordem, reserva) {
+  const barra = parte > 0 ? `<span class="vit-barra"><i style="width:${Math.round(parte * 100)}%"></i></span>` : '';
+  return `<button type="button" class="vit-cartao" style="--i:${ordem}" data-vit-acao="${escaparDaVitrine(acao)}"><img src="${escaparDaVitrine(imagem)}" alt="" loading="lazy" decoding="async" data-reserva="${escaparDaVitrine(reserva || '')}"><small>${escaparDaVitrine(selo)}</small><strong>${escaparDaVitrine(titulo)}</strong>${barra}</button>`;
+}
+
+function htmlDaFileiraContinue() {
+  const progresso = progressoDasTrilhasDaVitrine();
+  const cartoes = [];
+  let ordem = 0;
+  if (progresso && progresso.trilha) {
+    const t = progresso.trilha;
+    const santoId = t.santoId || 'francisco-assis';
+    cartoes.push(htmlDoCartaoDaVitrine(`trilha:${t.slug}`, textoDaVitrine('cTrilha'), t.titulo || t.santo || '', fotoGuardadaDoSanto(santoId, true), progresso.parte, ordem++, fotoDeReservaDoSanto(santoId, true)));
+  }
+  cartoes.push(htmlDoCartaoDaVitrine('terco', textoDaVitrine('cTerco'), textoDaVitrine('terco'), fotoGuardadaDoSanto('faustina', true), 0, ordem++, fotoDeReservaDoSanto('faustina', true)));
+  cartoes.push(htmlDoCartaoDaVitrine('jogo:xadrez', textoDaVitrine('cJogo'), textoDaVitrine('xadrez'), 'capas/xadrez-pequena.webp', 0, ordem++));
+  let oracao = null;
+  try { oracao = typeof oracaoDoDia === 'function' ? oracaoDoDia() : null; } catch (e) { oracao = null; }
+  if (oracao) cartoes.push(htmlDoCartaoDaVitrine(`oracao:${oracao.id}`, textoDaVitrine('cOracao'), typeof noIdioma === 'function' ? noIdioma(oracao.t) : String(oracao.t), fotoGuardadaDoSanto('teresa-avila', true), 0, ordem++, fotoDeReservaDoSanto('teresa-avila', true)));
+  cartoes.push(htmlDoCartaoDaVitrine('cursos', textoDaVitrine('cCurso'), textoDaVitrine('cursos'), fotoGuardadaDoSanto('tomas-aquino', true), 0, ordem++, fotoDeReservaDoSanto('tomas-aquino', true)));
+  cartoes.push(htmlDoCartaoDaVitrine('jogo:damas', textoDaVitrine('cJogo'), textoDaVitrine('damas'), 'capas/damas-pequena.webp', 0, ordem++));
+  cartoes.push(htmlDoCartaoDaVitrine('leitura', textoDaVitrine('cLeitura'), textoDaVitrine('leitura'), fotoGuardadaDoSanto('agostinho', true), 0, ordem++, fotoDeReservaDoSanto('agostinho', true)));
+  const titulo = progresso && progresso.parte > 0 ? textoDaVitrine('continuar') : textoDaVitrine('comecePorAqui');
+  return htmlDaFileira(titulo, cartoes).replace('class="vit-fileira"', 'class="vit-fileira vit-continue"');
+}
+
+function abrirAcaoDaVitrine(acao) {
+  const [tipo, valor] = String(acao).split(':');
+  const clicar = (id) => { const b = document.getElementById(id); if (b) b.click(); };
+  if (tipo === 'trilha') abrirTrilhaDaVitrine(valor);
+  else if (tipo === 'jogo') abrirJogoDaVitrine(valor);
+  else if (tipo === 'terco') clicar('nav-terco');
+  else if (tipo === 'cursos') clicar('nav-cursos');
+  else if (tipo === 'leitura') clicar('nav-leitura');
+  else if (tipo === 'oracao' && typeof abrirLeitorDeOracao === 'function') abrirLeitorDeOracao(valor, [valor]);
+}
+
+function abrirJogoDaVitrine(id) {
+  if (typeof abrirJogos === 'function') abrirJogos();
+  if (typeof comecarJogo === 'function') setTimeout(() => comecarJogo(id), 60);
 }
 
 function htmlDaFileira(titulo, posters) {
@@ -189,7 +273,7 @@ function agendarVitrine() {
     const home = document.getElementById('view-home');
     if (document.hidden || !home || !home.classList.contains('active')) { agendarVitrine(); return; }
     mostrarSlideDaVitrine(vitrine.atual + 1);
-  }, 7000);
+  }, 5000);
 }
 
 function abrirSantoDaVitrine(id) {
@@ -217,12 +301,13 @@ function montarVitrine() {
   vitrine.slides = escolherSlidesDaVitrine();
   palco.innerHTML = vitrine.slides.map(htmlDoSlide).join('');
   if (pontos) {
-    pontos.innerHTML = vitrine.slides.length > 1 ? vitrine.slides.map((item, i) => `<button type="button" class="${i === 0 ? 'ativo' : ''}" data-vit-ponto="${i}" aria-label="${escaparDaVitrine(typeof textoDoSanto === 'function' ? textoDoSanto(item.santo).nome : item.santo.nome)}"></button>`).join('') : '';
+    pontos.innerHTML = vitrine.slides.length > 1 ? vitrine.slides.map((item, i) => `<button type="button" class="${i === 0 ? 'ativo' : ''}" data-vit-ponto="${i}" aria-label="${escaparDaVitrine(item.jogo ? textoDaVitrine(item.jogo) : (typeof textoDoSanto === 'function' ? textoDoSanto(item.santo).nome : item.santo.nome))}"></button>`).join('') : '';
   }
   vitrine.atual = 0;
   const jovens = idsDaCategoria('santos-jovens', 16);
   const doutores = idsDaCategoria('doutores', 16);
   fileiras.innerHTML = [
+    htmlDaFileiraContinue(),
     htmlDaFileira(textoDaVitrine('conhecer'), SANTOS_PARA_CONHECER.map((id, i) => htmlDoPoster(id, '', i)).filter(Boolean)),
     htmlDaFileira(textoDaVitrine('padroeiros'), PADROEIROS_DA_VITRINE.map(([id, tag], i) => htmlDoPoster(id, textoDaVitrine(tag), i)).filter(Boolean)),
     htmlDaFileira(textoDaVitrine('jovens'), jovens.map((id, i) => htmlDoPoster(id, '', i)).filter(Boolean)),
@@ -248,6 +333,10 @@ function ligarVitrine() {
   const fileiras = document.getElementById('vitrine-fileiras');
   document.addEventListener('error', trocarPelaReserva, true);
   const cliques = (e) => {
+    const jogo = e.target.closest('[data-vit-jogo]');
+    if (jogo) { abrirJogoDaVitrine(jogo.dataset.vitJogo); return; }
+    const acao = e.target.closest('[data-vit-acao]');
+    if (acao) { abrirAcaoDaVitrine(acao.dataset.vitAcao); return; }
     const trilha = e.target.closest('[data-vit-trilha]');
     if (trilha) { abrirTrilhaDaVitrine(trilha.dataset.vitTrilha); return; }
     const santo = e.target.closest('[data-vit-santo]');
@@ -264,9 +353,7 @@ function ligarVitrine() {
   };
   if (caixa) {
     caixa.addEventListener('click', cliques);
-    caixa.addEventListener('mouseenter', () => { vitrine.parado = true; clearTimeout(vitrine.relogio); });
-    caixa.addEventListener('mouseleave', () => { vitrine.parado = false; agendarVitrine(); });
-    caixa.addEventListener('focusin', () => { vitrine.parado = true; clearTimeout(vitrine.relogio); });
+    caixa.addEventListener('focusin', (e) => { if (!e.target.matches || !e.target.matches(':focus-visible')) return; vitrine.parado = true; clearTimeout(vitrine.relogio); });
     caixa.addEventListener('focusout', () => { vitrine.parado = false; agendarVitrine(); });
     caixa.addEventListener('touchstart', (e) => { vitrine.toqueX = e.touches[0].clientX; }, { passive: true });
     caixa.addEventListener('touchend', (e) => {

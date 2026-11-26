@@ -107,10 +107,9 @@ function somDaEntradaLumina(ctx, destino, t0, apartirDe) {
   for (let t = 2.1, i = 0; t < 3.75; t += 0.2 + ((i * 37) % 11) / 60, i += 1) tom(altos[(i * 5) % altos.length] * 1.5, t, 0.6, 0.016, 'sine', 0.01);
   vento(3.75, 0.9, 220, 4200, 0.2, true);
   grave(3.8, 0.85, 90, 34, 0.12);
-  acorde([523.25, 659.25, 783.99, 987.77], 4.9, 4.7, 0.022, 0.9, 1.0);
-  for (let t = 4.95, i = 0; t < 9.3; t += 0.13 + ((i * 53) % 9) / 90, i += 1) tom(altos[(i * 3 + (i >> 2)) % altos.length] * 2, t, 0.35, 0.013 + ((i * 7) % 5) / 400, 'sine', 0.005);
+  acorde([392.0, 523.25, 659.25, 783.99], 4.85, 2.7, 0.034, 1.3, 1.1);
+  acorde([440.0, 554.37, 659.25, 880.0], 7.1, 2.6, 0.032, 1.2, 1.1);
   acorde([261.6, 329.6, 392.0, 523.3, 587.3, 784.0], 9.35, 2.2, 0.075, 1.05, 1.0);
-  vento(9.4, 1.1, 1800, 9000, 0.05, false);
   [1046.5, 1568.0, 2093.0, 3136.0].forEach((f, i) => tom(f, 10.45 + i * 0.03, 2.6, 0.05 - i * 0.008, 'sine', 0.015));
   return mestre;
 }
@@ -504,7 +503,7 @@ function somDaEntradaLumina(ctx, destino, t0, apartirDe) {
     p.translate(-50, -50);
     p.globalCompositeOperation = 'source-over';
     p.shadowColor = 'rgba(255, 210, 90, 0.9)';
-    p.shadowBlur = Math.min(160, 26 * mundo.dpr * Math.max(0.6, tamanho / 110));
+    p.shadowBlur = tamanho > 420 ? 0 : Math.min(48, 26 * mundo.dpr * Math.max(0.6, tamanho / 110));
     const ouro = p.createLinearGradient(20, 0, 80, 100);
     ouro.addColorStop(0, '#fbe7a1');
     ouro.addColorStop(0.45, '#e2bd4f');
@@ -873,38 +872,60 @@ function somDaEntradaLumina(ctx, destino, t0, apartirDe) {
         forca = alvo.tinta ? 1 : 0.45;
       }
     }
-    if (pena && dt > 0 && forca > 0.5) {
-      const quantos = Math.min(10, Math.round(dt * 220));
-      for (let i = 0; i < quantos; i += 1) faiscas.push({ x: pena.x, y: pena.y, vx: (Math.random() - 0.5) * 130, vy: -30 - Math.random() * 90, g: 240, vida: 0, max: 0.5 + Math.random() * 0.6, r: 0.7 + Math.random() * 1.9 });
-    }
     if (dt > 0 && pr > 0) {
-      const taxa = 10 + 60 * k;
+      const taxa = 7 + 26 * k;
       const base = taxa * dt;
       const novos = Math.floor(base) + (Math.random() < base % 1 ? 1 : 0);
       for (let i = 0; i < novos; i += 1) {
         const ponto = pontoDeTinta(x);
         const naTela = ponto && pontoNaTela(ponto.x, ponto.y);
         if (!naTela) continue;
-        if (Math.random() < 0.45) lampejos.push({ x: naTela.x, y: naTela.y, vida: 0, max: 0.45 + Math.random() * 0.35, tam: 6 + Math.random() * 10 });
-        else faiscas.push({ x: naTela.x, y: naTela.y, vx: (Math.random() - 0.5) * 20, vy: -18 - Math.random() * 40, g: -6, vida: 0, max: 0.9 + Math.random() * 0.8, r: 0.6 + Math.random() * 1.4 });
+        lampejos.push({ x: naTela.x, y: naTela.y, ang: -Math.PI / 2 + (Math.random() - 0.5) * 1.3, comp: 90 + Math.random() * 170, larg: 5 + Math.random() * 12, vida: 0, max: 1.1 + Math.random() * 0.9 });
       }
     }
 
     c2.globalCompositeOperation = 'lighter';
-    for (let i = faiscas.length - 1; i >= 0; i -= 1) {
-      const f = faiscas[i];
-      f.vida += dt; f.vy += f.g * dt; f.x += f.vx * dt; f.y += f.vy * dt;
-      if (f.vida > f.max) { faiscas.splice(i, 1); continue; }
-      const a = 1 - f.vida / f.max;
-      c2.fillStyle = `rgba(255, ${220 + Math.round(30 * a)}, ${140 + Math.round(90 * a)}, ${a})`;
-      c2.beginPath(); c2.arc(f.x, f.y, Math.max(0.1, f.r * (0.6 + 0.4 * a)), 0, 6.29); c2.fill();
+    if (pr > 0) {
+      const ini = pontoNaTela(escrita.esquerda, escrita.caixa.y + escrita.caixa.height * 0.55);
+      const fimX = pontoNaTela(x, escrita.caixa.y + escrita.caixa.height * 0.55);
+      if (ini && fimX && fimX.x > ini.x) {
+        const cx = (ini.x + fimX.x) / 2;
+        const meia = (fimX.x - ini.x) / 2 + 60;
+        c2.save();
+        c2.translate(cx, ini.y);
+        c2.scale(1, 0.42);
+        const aura = c2.createRadialGradient(0, 0, 0, 0, 0, meia);
+        const forte = 0.16 + 0.1 * Math.sin(t * 2.2);
+        aura.addColorStop(0, `rgba(255, 228, 160, ${forte})`);
+        aura.addColorStop(0.6, `rgba(255, 210, 120, ${forte * 0.4})`);
+        aura.addColorStop(1, 'rgba(255, 200, 100, 0)');
+        c2.fillStyle = aura;
+        c2.beginPath(); c2.arc(0, 0, meia, 0, 6.29); c2.fill();
+        c2.restore();
+      }
     }
     for (let i = lampejos.length - 1; i >= 0; i -= 1) {
       const l = lampejos[i];
       l.vida += dt;
       if (l.vida > l.max) { lampejos.splice(i, 1); continue; }
       const s = Math.sin(Math.PI * (l.vida / l.max));
-      desenharLampejo(l.x, l.y, l.tam * (0.5 + 0.5 * s), s);
+      const comp = l.comp * (0.55 + 0.45 * s);
+      c2.save();
+      c2.translate(l.x, l.y);
+      c2.rotate(l.ang + Math.PI / 2);
+      const g = c2.createLinearGradient(0, 0, 0, -comp);
+      g.addColorStop(0, `rgba(255, 244, 210, ${0.34 * s})`);
+      g.addColorStop(0.35, `rgba(255, 224, 150, ${0.16 * s})`);
+      g.addColorStop(1, 'rgba(255, 210, 120, 0)');
+      c2.fillStyle = g;
+      c2.beginPath();
+      c2.moveTo(-l.larg * 0.35, 0);
+      c2.lineTo(-l.larg, -comp);
+      c2.lineTo(l.larg, -comp);
+      c2.lineTo(l.larg * 0.35, 0);
+      c2.closePath();
+      c2.fill();
+      c2.restore();
     }
     if (pena) {
       const raio = 34;
@@ -964,8 +985,9 @@ function somDaEntradaLumina(ctx, destino, t0, apartirDe) {
     const t = tempo(agora);
     const dt = Math.min(0.1, Math.max(0, t - ultimo));
     ultimo = t;
-    if (t < T.preto + 0.1) desenharCeu(t, dt);
-    desenharNome(t, dt);
+    const escondida = tela.style.display === 'none';
+    if (!escondida && t < T.preto + 0.1) desenharCeu(t, dt);
+    if (!escondida) desenharNome(t, dt);
     preto.style.opacity = String(suave(T.preto - 0.28, T.preto, t));
     branco.style.opacity = String(suave(T.branco - 0.35, T.branco, t) * (1 - suave(T.branco, T.fim, t)));
     if (temDica) dica.style.opacity = String(suave(0.5, 1.0, t) * (1 - suave(T.brilha - 0.3, T.brilha, t)));
